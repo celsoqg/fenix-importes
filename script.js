@@ -35,7 +35,7 @@ const produtos = [
   {
     id: 3,
     nome: "💦 WATER BARIOSTATIC VIAL 10ML",
-    preco: 100.00,
+    preco: 1000.00,
     categoria: "perda-peso",
     imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
     tag: "Disponível"
@@ -45,7 +45,7 @@ const produtos = [
   {
     id: 4,
     nome: "❤️ TIRZEDRAL 4X 15 MG",
-    preco: 100.00,
+    preco: 1000.00,
     categoria: "perda-peso",
     imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
     tag: "Disponível"
@@ -53,7 +53,7 @@ const produtos = [
   {
     id: 5,
     nome: "❤️ T36 MD 15MG",
-    preco: 100.00,
+    preco: 1000.00,
     categoria: "perda-peso",
     imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
     tag: "Disponível"
@@ -61,7 +61,7 @@ const produtos = [
   {
     id: 6,
     nome: "🟠 TG 15MG",
-    preco: 100.00,
+    preco: 1000.00,
     categoria: "perda-peso",
     imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
     tag: "Disponível"
