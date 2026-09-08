@@ -1,274 +1,1061 @@
+```html
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fênix Importes | Compra rápida e segura</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fênix Imports - Loja Oficial de Produtos Exclusivos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            400: '#e5b83b',
+                            500: '#d4a017',
+                            600: '#b8860b',
+                        },
+                        darkBg: '#0b0b0f',
+                        cardBg: '#13131a',
+                        borderDark: '#262633'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom scrollbar and animations */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0b0f; }
+        ::-webkit-scrollbar-thumb { background: #d4a017; border-radius: 4px; }
+        .glow-gold { box-shadow: 0 0 25px rgba(212, 160, 23, 0.25); }
+        .glow-yellow { box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); }
+    </style>
 </head>
-<body>
-  <!-- Cabeçalho -->
-  <header class="header">
-    <div class="header-inner">
-      <button class="menu-btn"><i class="fas fa-bars"></i></button>
-      <div class="logo-box">
-        <span class="logo">F</span>
-        <div class="logo-text">
-          <h1>Fênix Importes</h1>
-          <p>Compra rápida e segura</p>
-        </div>
-      </div>
-      <div class="search-box">
-        <input type="text" placeholder="Buscar produtos...">
-      </div>
-      <button class="cart-btn" onclick="abrirCarrinho()">
-        <i class="fas fa-shopping-cart"></i>
-        <span id="cart-count">0</span>
-      </button>
-    </div>
-  </header>
+<body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col selection:bg-gold-500 selection:text-black">
 
-  <!-- Banner -->
-  <section class="banner">
-    <div class="banner-content">
-      <h2>Pague no Pix 🔒</h2>
-      <p>Aprovação na hora e compra 100% segura.</p>
-    </div>
-    <div class="banner-dots"><span class="dot active"></span><span class="dot"></span></div>
-  </section>
-
-  <!-- Setores Mais Visitados -->
-  <section class="setores">
-    <h2>Setores mais visitados <small>Explore nossos setores mais populares</small></h2>
-    <div class="setores-grid">
-      <div class="setor" onclick="filtrarCategoria('cognitivos')">
-        <i class="fas fa-brain"></i>
-        <span>Cognitivos</span>
-      </div>
-      <div class="setor" onclick="filtrarCategoria('estetica-avancada')">
-        <i class="fas fa-syringe"></i>
-        <span>Estética Avançada</span>
-      </div>
-      <div class="setor" onclick="filtrarCategoria('estetica-pele')">
-        <i class="fas fa-hand-sparkles"></i>
-        <span>Estética e Pele</span>
-      </div>
-      <div class="setor" onclick="filtrarCategoria('hormonios')">
-        <i class="fas fa-dna"></i>
-        <span>Hormônios</span>
-      </div>
-      <div class="setor" onclick="filtrarCategoria('libido')">
-        <i class="fas fa-heart"></i>
-        <span>Libido</span>
-      </div>
-      <div class="setor" onclick="filtrarCategoria('longevidade')">
-        <i class="fas fa-hourglass-half"></i>
-        <span>Longevidade</span>
-      </div>
-      <div class="setor" onclick="filtrarCategoria('outros')">
-        <i class="fas fa-box"></i>
-        <span>Outros</span>
-      </div>
-      <div class="setor" onclick="filtrarCategoria('perda-peso')">
-        <i class="fas fa-balance-scale-right"></i>
-        <span>Perda de Peso</span>
-      </div>
-      <div class="setor" onclick="filtrarCategoria('performance')">
-        <i class="fas fa-dumbbell"></i>
-        <span>Performance</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Produtos -->
-  <section class="produtos-section">
-    <h2>Nossos produtos <small>Escolha, adicione ao carrinho e finalize pelo Pix</small></h2>
-    <div class="produtos-wrapper">
-      <!-- Menu Categorias -->
-      <aside class="categorias">
-        <h3>CATEGORIAS</h3>
-        <ul id="lista-categorias">
-          <li class="categoria-item active" data-cat="todos" onclick="filtrarCategoria('todos')">
-            <i class="fas fa-th-large"></i> Todos <span>79</span>
-          </li>
-          <li class="categoria-item" data-cat="cognitivos" onclick="filtrarCategoria('cognitivos')">
-            <i class="fas fa-brain"></i> Cognitivos <span>2</span>
-          </li>
-          <li class="categoria-item" data-cat="estetica-avancada" onclick="filtrarCategoria('estetica-avancada')">
-            <i class="fas fa-syringe"></i> Estética Avançada <span>2</span>
-          </li>
-          <li class="categoria-item" data-cat="estetica-pele" onclick="filtrarCategoria('estetica-pele')">
-            <i class="fas fa-hand-sparkles"></i> Estética e Pele <span>14</span>
-          </li>
-          <li class="categoria-item" data-cat="hormonios" onclick="filtrarCategoria('hormonios')">
-            <i class="fas fa-dna"></i> Hormônios <span>9</span>
-          </li>
-          <li class="categoria-item" data-cat="libido" onclick="filtrarCategoria('libido')">
-            <i class="fas fa-heart"></i> Libido <span>1</span>
-          </li>
-          <li class="categoria-item" data-cat="longevidade" onclick="filtrarCategoria('longevidade')">
-            <i class="fas fa-hourglass-half"></i> Longevidade <span>4</span>
-          </li>
-          <li class="categoria-item" data-cat="outros" onclick="filtrarCategoria('outros')">
-            <i class="fas fa-box"></i> Outros <span>6</span>
-          </li>
-          <li class="categoria-item" data-cat="perda-peso" onclick="filtrarCategoria('perda-peso')">
-            <i class="fas fa-balance-scale-right"></i> Perda de Peso <span>40</span>
-          </li>
-          <li class="categoria-item" data-cat="performance" onclick="filtrarCategoria('performance')">
-            <i class="fas fa-dumbbell"></i> Performance <span>1</span>
-          </li>
-        </ul>
-      </aside>
-
-      <!-- Grade Produtos -->
-      <div class="produtos-container">
-        <div class="produtos-grid" id="produtos-grid"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== MODAL: FINALIZAR COMPRA ========== -->
-  <div class="modal-overlay oculto" id="modal-finalizar">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h2>Finalizar compra</h2>
-        <span class="passo">1 de 2 - Dados</span>
-      </div>
-
-      <!-- PASSO 1: DADOS E ENDEREÇO -->
-      <div class="modal-body" id="passo-dados">
-        <div class="form-section">
-          <h3>SEUS DADOS</h3>
-          <div class="form-row">
-            <input type="text" id="nome" placeholder="Nome completo *" required>
-          </div>
-          <div class="form-row form-duo">
-            <input type="text" id="cpf" placeholder="CPF *" maxlength="14" required>
-            <input type="tel" id="celular" placeholder="Celular / WhatsApp *" maxlength="15" required>
-          </div>
-          <div class="form-row">
-            <input type="email" id="email" placeholder="E-mail *" required>
-          </div>
-        </div>
-
-        <div class="form-section">
-          <h3>ENDEREÇO DE ENTREGA</h3>
-          <div class="form-row form-duo">
-            <input type="text" id="cep" placeholder="CEP *" maxlength="9" required onblur="buscarCep()">
-            <select id="estado" required>
-              <option value="">UF *</option>
-              <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
-              <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
-              <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
-              <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
-              <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
-              <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
-              <option>SP</option><option>SE</option><option>TO</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <input type="text" id="cidade" placeholder="Cidade *" required>
-          </div>
-          <div class="form-row">
-            <input type="text" id="bairro" placeholder="Bairro *" required>
-          </div>
-          <div class="form-row form-duo">
-            <input type="text" id="endereco" placeholder="Endereço (rua) *" required>
-            <input type="text" id="numero" placeholder="Número *" required>
-          </div>
-          <div class="form-row">
-            <input type="text" id="complemento" placeholder="Complemento (opcional)">
-          </div>
-        </div>
-
-        <!-- RESUMO DO PEDIDO -->
-        <div class="resumo-pedido">
-          <div class="resumo-linha">
-            <span>Produtos</span>
-            <span id="resumo-produtos">R$ 0,00</span>
-          </div>
-          <div class="resumo-linha">
-            <span>Frete</span>
-            <span id="resumo-frete">—</span>
-          </div>
-          <div class="resumo-linha total">
-            <strong>Total</strong>
-            <strong id="resumo-total">R$ 0,00</strong>
-          </div>
-        </div>
-
-        <div class="termos">
-          <input type="checkbox" id="termos" required>
-          <label for="termos">Li e aceito a <a href="#">Política de Privacidade</a> e autorizo o uso dos meus dados para processar e entregar este pedido.</label>
-        </div>
-
-        <div class="modal-buttons">
-          <button class="btn-voltar" onclick="fecharModal()">← Voltar ao carrinho</button>
-          <button class="btn-continuar" onclick="irParaPagamento()">Ir para o pagamento →</button>
-        </div>
-      </div>
-
-      <!-- PASSO 2: PAGAMENTO PIX -->
-      <div class="modal-body oculto" id="passo-pagamento">
-        <div class="pagamento-pix">
-          <h3>💸 Pagamento via Pix</h3>
-          <p>Escaneie o QR Code ou copie o código abaixo e pague no app do seu banco.</p>
-
-          <div class="qrcode-box">
-            <div class="qrcode-placeholder">QR Code do Pix</div>
-          </div>
-
-          <div class="codigo-pix">
-            <label>Copia e cola:</label>
-            <div class="codigo-box">
-              <input type="text" id="codigo-pix" readonly>
-              <button onclick="copiarCodigoPix()">📋 Copiar</button>
+    <header class="sticky top-0 z-50 bg-darkBg/95 backdrop-blur-md border-b border-borderDark">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('shop')">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-gold-600 via-gold-500 to-yellow-300 flex items-center justify-center glow-gold text-black text-2xl font-black">
+                    <i class="fa-solid fa-fire-flame-curved"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black tracking-wider bg-gradient-to-r from-white via-gold-400 to-yellow-400 bg-clip-text text-transparent">
+                        FÊNIX IMPORTS
+                    </h1>
+                    <p class="text-xs text-gold-500 font-semibold tracking-widest uppercase">Alta Performance & Exclusividade</p>
+                </div>
             </div>
-          </div>
 
-          <div class="dados-pix">
-            <p><strong>Chave Pix:</strong> <span id="chave-pix-exibicao">sua-chave@exemplo.com</span></p>
-            <p><strong>Valor:</strong> R$ <span id="valor-pix">0,00</span></p>
-            <p><strong>Recebedor:</strong> Fênix Importes</p>
-          </div>
+            <!-- Desktop Nav & Actions -->
+            <div class="flex items-center space-x-4">
+                <button onclick="switchTab('shop')" id="nav-shop-btn" class="hidden md:flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition text-gold-400 bg-gold-500/10 border border-gold-500/30">
+                    <i class="fa-solid fa-store"></i><span>Catálogo</span>
+                </button>
+                
+                <!-- Admin / Auth Actions -->
+                <div id="auth-unlogged" class="hidden md:flex items-center">
+                    <button onclick="openLoginModal()" class="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition text-gray-400 hover:text-white hover:bg-white/5 border border-transparent">
+                        <i class="fa-solid fa-user-lock"></i><span>Login Admin</span>
+                    </button>
+                </div>
 
-          <div class="instrucoes">
-            <p>✅ Após o pagamento, envie o comprovante por WhatsApp:</p>
-            <a id="link-whatsapp" href="#" target="_blank" class="btn-whatsapp">📲 Enviar Comprovante</a>
-          </div>
+                <div id="auth-logged" class="hidden md:flex items-center space-x-2">
+                    <button onclick="switchTab('admin')" id="nav-admin-btn" class="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition text-gray-400 hover:text-white hover:bg-white/5 border border-transparent">
+                        <i class="fa-solid fa-screwdriver-wrench"></i><span>Painel</span>
+                    </button>
+                    <div class="h-6 w-px bg-borderDark mx-2"></div>
+                    <div class="flex items-center space-x-2 text-sm">
+                        <div class="w-7 h-7 rounded-full bg-gold-500/20 text-gold-400 flex items-center justify-center text-xs font-bold border border-gold-500/30">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <span id="user-display-name" class="font-bold text-gray-200 text-xs truncate max-w-[100px]">Admin</span>
+                    </div>
+                    <button onclick="handleLogout()" class="text-gray-400 hover:text-red-400 transition ml-2 p-2 rounded-lg hover:bg-white/5" title="Sair">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+
+                <!-- Cart Button -->
+                <button onclick="toggleCartModal(true)" class="relative flex items-center space-x-2 px-4 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-yellow-400 to-gold-500 text-black glow-yellow hover:brightness-110 transition transform active:scale-95">
+                    <i class="fa-solid fa-cart-shopping text-lg"></i>
+                    <span class="hidden sm:inline">Carrinho</span>
+                    <span id="cart-badge" class="absolute -top-2 -right-2 bg-red-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-black border-2 border-darkBg hidden">0</span>
+                </button>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-gold-400 hover:bg-white/5">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
         </div>
 
-        <div class="modal-buttons">
-          <button class="btn-voltar" onclick="voltarParaDados()">← Voltar para dados</button>
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-borderDark bg-cardBg px-4 py-3 space-y-2">
+            <button onclick="switchTab('shop'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg font-medium text-gold-400 bg-gold-500/10">
+                <i class="fa-solid fa-store mr-2"></i> Catálogo
+            </button>
+            <div id="mobile-auth-unlogged">
+                <button onclick="openLoginModal(); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-white/5">
+                    <i class="fa-solid fa-user-lock mr-2"></i> Login Admin
+                </button>
+            </div>
+            <div id="mobile-auth-logged" class="hidden space-y-2 border-t border-borderDark pt-2 mt-2">
+                <button onclick="switchTab('admin'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg font-medium text-gray-300 hover:bg-white/5">
+                    <i class="fa-solid fa-screwdriver-wrench mr-2"></i> Painel Admin
+                </button>
+                <button onclick="handleLogout(); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg font-medium text-red-400 hover:bg-white/5">
+                    <i class="fa-solid fa-right-from-bracket mr-2"></i> Sair da Conta
+                </button>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
+    </header>
 
-  <!-- CARRINHO MODAL -->
-  <div class="modal-overlay oculto" id="modal-carrinho">
-    <div class="modal-container carrinho-modal">
-      <div class="modal-header">
-        <h2>Meu Carrinho</h2>
-        <button class="fechar-btn" onclick="fecharCarrinho()"><i class="fas fa-times"></i></button>
-      </div>
-      <div id="carrinho-itens" class="carrinho-itens"></div>
-      <div class="carrinho-total">
-        <strong>Subtotal: R$ <span id="carrinho-subtotal">0,00</span></strong>
-      </div>
-      <div class="frete-calc">
-        <input type="text" id="cep-frete" placeholder="Digite seu CEP" maxlength="9" onblur="calcularFreteCarrinho()">
-        <span id="frete-valor">Frete: —</span>
-      </div>
-      <div class="carrinho-total-final">
-        <strong>Total: R$ <span id="carrinho-total-valor">0,00</span></strong>
-      </div>
-      <button class="btn-finalizar" onclick="abrirFormulario()">Finalizar Compra →</button>
-    </div>
-  </div>
+    <section class="relative bg-gradient-to-b from-cardBg to-darkBg border-b border-borderDark py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#d4a017_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-4 max-w-2xl text-center md:text-left">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Qualidade Certificada & Pronta Entrega</span>
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+                    Excelência e Pureza em <span class="bg-gradient-to-r from-gold-400 to-yellow-300 bg-clip-text text-transparent">Importados de Elite</span>
+                </h2>
+                <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                    Soluções laboratoriais, peptídeos de altíssima pureza e insumos rigorosamente selecionados para máxima performance. Compre com segurança via Pix e atendimento exclusivo.
+                </p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4 pt-2">
+                    <div class="flex items-center space-x-2 text-xs text-gray-300 bg-white/5 px-3 py-1.5 rounded-lg border border-borderDark">
+                        <i class="fa-solid fa-truck-fast text-gold-500"></i><span>Envio Discreto & Rápido</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-xs text-gray-300 bg-white/5 px-3 py-1.5 rounded-lg border border-borderDark">
+                        <i class="fa-solid fa-qrcode text-gold-500"></i><span>Aprovação Pix Imediata</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-xs text-gray-300 bg-white/5 px-3 py-1.5 rounded-lg border border-borderDark">
+                        <i class="fa-solid fa-headset text-gold-500"></i><span>Suporte VIP WhatsApp</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Trust Badge Box -->
+            <div class="bg-gradient-to-br from-cardBg to-black p-6 rounded-2xl border border-gold-500/30 glow-gold max-w-sm w-full text-center">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gold-500/20 flex items-center justify-center text-gold-400 text-3xl">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-1">Garantia Fênix</h3>
+                <p class="text-xs text-gray-400 mb-4">Lotes testados e aprovados por rigorosos padrões internacionais de controle de qualidade.</p>
+                <div class="text-gold-400 font-bold text-sm tracking-wide">ATENDIMENTO WHATSAPP 24/7</div>
+            </div>
+        </div>
+    </section>
 
-  <script src="script.js"></script>
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <!-- SHOP TAB -->
+        <div id="tab-shop" class="space-y-8">
+            <!-- Search & Filters -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-cardBg p-4 rounded-xl border border-borderDark">
+                <div class="relative w-full sm:w-96">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar produtos (ex: Tirzepatida, Water...)" 
+                           class="w-full pl-10 pr-4 py-2.5 rounded-lg bg-darkBg border border-borderDark text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gold-500 transition">
+                </div>
+                <div class="flex items-center space-x-3 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0">
+                    <button onclick="filterCategory('all')" id="cat-all" class="category-btn px-4 py-2 rounded-lg text-xs font-bold transition bg-gold-500 text-black whitespace-nowrap">
+                        Todos
+                    </button>
+                    <button onclick="filterCategory('Peptídeos')" id="cat-Peptídeos" class="category-btn px-4 py-2 rounded-lg text-xs font-bold transition bg-darkBg text-gray-300 hover:bg-white/5 border border-borderDark whitespace-nowrap">
+                        Peptídeos
+                    </button>
+                    <button onclick="filterCategory('Insumos')" id="cat-Insumos" class="category-btn px-4 py-2 rounded-lg text-xs font-bold transition bg-darkBg text-gray-300 hover:bg-white/5 border border-borderDark whitespace-nowrap">
+                        Insumos & Soluções
+                    </button>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-16 bg-cardBg rounded-2xl border border-borderDark">
+                <div class="text-gold-500 text-4xl mb-3"><i class="fa-solid fa-box-open"></i></div>
+                <h3 class="text-lg font-bold text-white">Nenhum produto encontrado</h3>
+                <p class="text-sm text-gray-400">Tente buscar por outro termo ou limpe os filtros.</p>
+            </div>
+        </div>
+
+        <!-- ADMIN TAB -->
+        <div id="tab-admin" class="hidden space-y-8">
+            <div class="bg-cardBg p-6 rounded-2xl border border-borderDark">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-borderDark gap-4">
+                    <div>
+                        <h2 class="text-xl font-black text-white flex items-center space-x-2">
+                            <i class="fa-solid fa-screwdriver-wrench text-gold-500"></i>
+                            <span>Painel Administrativo - Fênix Imports</span>
+                        </h2>
+                        <p class="text-xs text-gray-400 mt-1">Adicione, edite ou remova produtos instantaneamente do catálogo local.</p>
+                    </div>
+                    <button onclick="openProductModal()" class="px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-yellow-400 to-gold-500 text-black glow-yellow hover:brightness-110 transition flex items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i><span>Novo Produto</span>
+                    </button>
+                </div>
+
+                <!-- Admin Products Table -->
+                <div class="overflow-x-auto mt-6">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-borderDark text-xs text-gold-400 uppercase tracking-wider">
+                                <th class="py-3 px-4">Produto</th>
+                                <th class="py-3 px-4">Categoria</th>
+                                <th class="py-3 px-4">Preço (R$)</th>
+                                <th class="py-3 px-4">Estoque</th>
+                                <th class="py-3 px-4 text-right">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-product-list" class="divide-y divide-borderDark text-sm">
+                            <!-- Injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="product-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-gold-500/40 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative">
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 id="modal-title" class="text-xl font-black text-white mb-4 flex items-center space-x-2">
+                <i class="fa-solid fa-box text-gold-500"></i><span>Adicionar Produto</span>
+            </h3>
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
+                <input type="hidden" id="edit-index" value="">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Nome do Produto</label>
+                    <input type="text" id="p-name" required placeholder="Ex: Tirzepatida PY 10mg" 
+                           class="w-full px-4 py-2.5 rounded-lg bg-darkBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Categoria</label>
+                        <select id="p-category" class="w-full px-4 py-2.5 rounded-lg bg-darkBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500">
+                            <option value="Peptídeos">Peptídeos</option>
+                            <option value="Insumos">Insumos & Soluções</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Preço (R$)</label>
+                        <input type="number" step="0.01" id="p-price" required placeholder="350.00" 
+                               class="w-full px-4 py-2.5 rounded-lg bg-darkBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Estoque</label>
+                        <input type="number" id="p-stock" required value="15" 
+                               class="w-full px-4 py-2.5 rounded-lg bg-darkBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">URL da Imagem</label>
+                        <input type="url" id="p-image" required placeholder="https://..." 
+                               class="w-full px-4 py-2.5 rounded-lg bg-darkBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Descrição Curta</label>
+                    <textarea id="p-desc" rows="3" required placeholder="Detalhes técnicos de pureza..." 
+                              class="w-full px-4 py-2.5 rounded-lg bg-darkBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500"></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4 border-t border-borderDark">
+                    <button type="button" onclick="closeProductModal()" class="px-4 py-2 rounded-lg bg-white/5 text-gray-300 text-sm font-medium hover:bg-white/10 transition">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-6 py-2 rounded-lg bg-gradient-to-r from-yellow-400 to-gold-500 text-black text-sm font-bold glow-yellow hover:brightness-110 transition">
+                        Salvar Produto
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="cart-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex justify-end">
+        <div class="bg-cardBg border-l border-borderDark w-full max-w-md h-full flex flex-col justify-between shadow-2xl transform transition-transform">
+            <!-- Header -->
+            <div class="p-5 border-b border-borderDark flex items-center justify-between">
+                <div class="flex items-center space-x-2 text-white font-black text-lg">
+                    <i class="fa-solid fa-cart-shopping text-gold-500"></i>
+                    <span>Seu Carrinho</span>
+                </div>
+                <button onclick="toggleCartModal(false)" class="text-gray-400 hover:text-white text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items -->
+            <div id="cart-items-container" class="flex-grow overflow-y-auto p-5 space-y-4 divide-y divide-borderDark">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Cart Summary & Shipping Calculator -->
+            <div class="p-5 border-t border-borderDark bg-darkBg space-y-4">
+                <!-- Freight Calculator -->
+                <div class="space-y-2">
+                    <label class="block text-xs font-semibold text-gray-400">Calcular Frete & Prazo</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="cep-input" placeholder="Digite seu CEP" maxlength="9" oninput="formatCEP(this)"
+                               class="flex-grow px-3 py-2 rounded-lg bg-cardBg border border-borderDark text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gold-500">
+                        <button onclick="calculateFreight()" class="px-4 py-2 rounded-lg bg-gold-500/20 text-gold-400 border border-gold-500/40 text-sm font-bold hover:bg-gold-500/30 transition">
+                            Calcular
+                        </button>
+                    </div>
+                    <div id="freight-result" class="text-xs text-gold-400 font-medium hidden"></div>
+                </div>
+
+                <div class="space-y-1 text-sm pt-2 border-t border-borderDark/60">
+                    <div class="flex justify-between text-gray-400">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between text-gray-400">
+                        <span>Frete</span>
+                        <span id="cart-freight">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between text-white font-black text-base pt-1 border-t border-borderDark">
+                        <span>Total</span>
+                        <span id="cart-total" class="text-gold-400">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <button onclick="proceedToCheckout()" id="checkout-btn" disabled class="w-full py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-yellow-400 to-gold-500 text-black glow-yellow hover:brightness-110 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    Finalizar Pedido via Pix
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkout-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-gold-500/50 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-6 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 mx-auto rounded-full bg-gold-500/20 flex items-center justify-center text-gold-400 text-2xl glow-gold">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white">Pagamento via Pix</h3>
+                <p class="text-xs text-gray-400">Escaneie o QR Code abaixo ou utilize o Pix Copia e Cola para finalizar.</p>
+            </div>
+
+            <!-- Customer Details Form -->
+            <div class="space-y-3 bg-darkBg p-4 rounded-xl border border-borderDark">
+                <h4 class="text-xs font-bold text-gold-400 uppercase tracking-wider">Dados de Entrega</h4>
+                <input type="text" id="cust-name" placeholder="Seu Nome Completo" class="w-full px-3 py-2 rounded-lg bg-cardBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500">
+                <input type="text" id="cust-whatsapp" placeholder="WhatsApp (com DDD)" class="w-full px-3 py-2 rounded-lg bg-cardBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500">
+                <input type="text" id="cust-address" placeholder="Endereço Completo, Número e Bairro" class="w-full px-3 py-2 rounded-lg bg-cardBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500">
+            </div>
+
+            <!-- Simulated QR Code & Pix Copy Paste -->
+            <div class="bg-white p-4 rounded-xl text-center space-y-3">
+                <div class="w-40 h-40 mx-auto bg-gray-900 rounded-lg flex flex-col items-center justify-center text-white p-2 border-4 border-gold-500">
+                    <i class="fa-solid fa-qrcode text-6xl text-gold-400 mb-2"></i>
+                    <span class="text-[10px] font-bold text-gold-300">QR CODE SIMULADO PIX</span>
+                </div>
+                <div class="text-black font-bold text-lg" id="pix-modal-total">R$ 0,00</div>
+                <div class="text-xs text-gray-600 font-mono bg-gray-100 p-2 rounded border border-gray-300 break-all select-all" id="pix-copia-cola">
+                    00020126580014br.gov.bcb.pix0136fenix.imports.oficial@gmail.com5204000053039865802BR5925FENIX IMPORTS LTDA6009SAO PAULO62070503***6304A1B2
+                </div>
+                <button onclick="copyPixCode()" class="w-full py-2.5 rounded-lg bg-black text-gold-400 font-bold text-xs hover:bg-gray-800 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-copy"></i><span>Copiar Código Pix Copia e Cola</span>
+                </button>
+            </div>
+
+            <div class="bg-gold-500/10 border border-gold-500/30 p-3 rounded-xl flex items-start space-x-3 text-xs text-gold-300">
+                <i class="fa-solid fa-triangle-exclamation text-lg mt-0.5"></i>
+                <p>Após realizar o pagamento, clique no botão abaixo para enviar o comprovante diretamente pelo WhatsApp para liberação imediata do seu envio.</p>
+            </div>
+
+            <button onclick="finalizeOrderWhatsApp()" class="w-full py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg hover:brightness-110 transition flex items-center justify-center space-x-2">
+                <i class="fa-brands fa-whatsapp text-lg"></i><span>Enviar Comprovante no WhatsApp</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-gold-500/40 rounded-3xl max-w-sm w-full p-8 shadow-2xl relative">
+            <button onclick="closeLoginModal()" class="absolute top-5 right-5 text-gray-500 hover:text-white transition text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-tr from-gold-600 via-gold-500 to-yellow-300 flex items-center justify-center glow-gold text-black text-3xl font-black">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white">Acesso Restrito</h3>
+                <p class="text-xs text-gray-400 mt-2">Faça login para acessar o painel administrativo da Fênix Imports.</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleEmailLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-1.5 uppercase tracking-wider">E-mail</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500"><i class="fa-solid fa-envelope"></i></span>
+                        <input type="email" id="login-email" required placeholder="admin@feniximports.com" 
+                               class="w-full pl-10 pr-4 py-3 rounded-xl bg-darkBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500 transition">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-400 mb-1.5 uppercase tracking-wider">Senha</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" id="login-password" required placeholder="••••••••" 
+                               class="w-full pl-10 pr-4 py-3 rounded-xl bg-darkBg border border-borderDark text-sm text-white focus:outline-none focus:border-gold-500 transition">
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full py-3.5 mt-2 rounded-xl font-bold text-sm bg-gradient-to-r from-yellow-400 to-gold-500 text-black glow-yellow hover:brightness-110 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-right-to-bracket"></i><span>Entrar no Sistema</span>
+                </button>
+            </form>
+
+            <div class="mt-6 flex items-center text-xs text-gray-500 uppercase font-bold tracking-widest before:flex-1 before:border-t before:border-borderDark before:mr-4 after:flex-1 after:border-t after:border-borderDark after:ml-4">
+                Ou
+            </div>
+
+            <button onclick="handleGoogleLogin()" class="w-full mt-6 py-3 rounded-xl font-bold text-sm bg-white text-gray-900 hover:bg-gray-100 transition flex items-center justify-center space-x-3 border border-gray-200">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="w-5 h-5">
+                <span>Continuar com Google</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-cardBg border border-gold-500 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3">
+        <i class="fa-solid fa-circle-check text-gold-500 text-xl"></i>
+        <div>
+            <h5 class="text-xs font-bold text-gold-400" id="toast-title">Sucesso</h5>
+            <p class="text-xs text-gray-300" id="toast-desc">Ação realizada com sucesso.</p>
+        </div>
+    </div>
+
+    <footer class="bg-cardBg border-t border-borderDark py-8 mt-auto text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <div class="flex items-center justify-center space-x-2 text-gold-400 font-bold">
+                <i class="fa-solid fa-fire-flame-curved"></i>
+                <span>Fênix Imports - Todos os direitos reservados</span>
+            </div>
+            <p>Produtos de altíssima pureza e rigor científico. Atendimento exclusivo via WhatsApp.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'fenix-imports';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        
+        let app, db, auth;
+        if (firebaseConfig) {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        }
+
+        const defaultProducts = [
+            {
+                id: '1',
+                name: 'Water Bariostatic Vial',
+                category: 'Insumos',
+                price: 120.00,
+                stock: 35,
+                image: 'https://placehold.co/400x400/13131a/d4a017?text=Water+Bariostatic',
+                description: 'Água bacteriostática de alta pureza (Benzyl Alcohol 0.9%) para reconstituição segura de peptídeos.'
+            },
+            {
+                id: '2',
+                name: 'Tirzepatida PY',
+                category: 'Peptídeos',
+                price: 450.00,
+                stock: 20,
+                image: 'https://placehold.co/400x400/13131a/d4a017?text=Tirzepatida+PY',
+                description: 'Lote importado de altíssima pureza certificado por laboratório independente. Frasco de 10mg.'
+            },
+            {
+                id: '3',
+                name: 'T36 MD',
+                category: 'Peptídeos',
+                price: 380.00,
+                stock: 15,
+                image: 'https://placehold.co/400x400/13131a/d4a017?text=T36+MD',
+                description: 'Composto de alta performance para protocolos avançados. Embalagem blindada com selo holográfico.'
+            },
+            {
+                id: '4',
+                name: 'BPC-157 Pure',
+                category: 'Peptídeos',
+                price: 290.00,
+                stock: 28,
+                image: 'https://placehold.co/400x400/13131a/d4a017?text=BPC-157+Pure',
+                description: 'Pentapeptídeo sintetizado sob rigoroso controle de qualidade internacional. Frasco 5mg.'
+            },
+            {
+                id: '5',
+                name: 'Kit Seringas Estéreis (10un)',
+                category: 'Insumos',
+                price: 45.00,
+                stock: 50,
+                image: 'https://placehold.co/400x400/13131a/d4a017?text=Seringas+Estereis',
+                description: 'Kit completo com agulhas ultrafinas para máxima precisão e conforto.'
+            }
+        ];
+
+        window.products = [];
+        window.cart = JSON.parse(localStorage.getItem('fenix_cart')) || [];
+        window.currentUser = null;
+        window.currentCategory = 'all';
+        window.freightValue = 0;
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (auth) {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined') {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    window.currentUser = auth.currentUser;
+                    updateAuthUI();
+                    subscribeToProducts();
+                } catch (error) {
+                    console.error("Auth error:", error);
+                    loadLocalProducts();
+                }
+            } else {
+                loadLocalProducts();
+            }
+            updateCartBadge();
+        });
+
+        function loadLocalProducts() {
+            window.products = JSON.parse(localStorage.getItem('fenix_products')) || defaultProducts;
+            renderProducts();
+            renderAdminProducts();
+        }
+
+        function subscribeToProducts() {
+            if (!db || !window.currentUser) return;
+            const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            
+            onSnapshot(query(productsRef), (snapshot) => {
+                if (snapshot.empty && window.products.length === 0) {
+                    // Seed initial data to database
+                    defaultProducts.forEach(async (p) => {
+                        try {
+                            await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', p.id), p);
+                        } catch(e) { console.error("Error seeding:", e); }
+                    });
+                } else {
+                    window.products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderProducts();
+                    renderAdminProducts();
+                }
+            }, (error) => {
+                console.error("Error fetching products:", error);
+                window.showToast("Erro", "Falha ao carregar produtos do servidor.", "error");
+            });
+        }
+
+        window.saveCartToStorage = function() {
+            localStorage.setItem('fenix_cart', JSON.stringify(window.cart));
+            updateCartBadge();
+        }
+
+        window.switchTab = function(tabName) {
+            if (tabName === 'admin' && !window.currentUser) {
+                openLoginModal();
+                window.showToast("Acesso Negado", "Você precisa estar logado para acessar o painel.", "error");
+                return;
+            }
+
+            const shopTab = document.getElementById('tab-shop');
+            const adminTab = document.getElementById('tab-admin');
+            const shopBtn = document.getElementById('nav-shop-btn');
+            const adminBtn = document.getElementById('nav-admin-btn');
+
+            if (tabName === 'shop') {
+                shopTab.classList.remove('hidden');
+                adminTab.classList.add('hidden');
+                shopBtn.className = "hidden md:flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition text-gold-400 bg-gold-500/10 border border-gold-500/30";
+                adminBtn.className = "hidden md:flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition text-gray-400 hover:text-white hover:bg-white/5 border border-transparent";
+            } else {
+                shopTab.classList.add('hidden');
+                adminTab.classList.remove('hidden');
+                if(adminBtn) adminBtn.className = "hidden md:flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition text-gold-400 bg-gold-500/10 border border-gold-500/30";
+                if(shopBtn) shopBtn.className = "hidden md:flex items-center space-x-2 px-4 py-2 rounded-lg font-medium text-sm transition text-gray-400 hover:text-white hover:bg-white/5 border border-transparent";
+            }
+        }
+
+        window.toggleMobileMenu = function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        window.renderProducts = function() {
+            const grid = document.getElementById('product-grid');
+            const emptyState = document.getElementById('empty-state');
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            grid.innerHTML = '';
+
+            const filtered = window.products.filter(p => {
+                const matchesCategory = window.currentCategory === 'all' || p.category === window.currentCategory;
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm) || p.description.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "bg-cardBg rounded-2xl border border-borderDark overflow-hidden flex flex-col justify-between hover:border-gold-500/50 transition group";
+                card.innerHTML = `
+                    <div>
+                        <div class="relative h-48 overflow-hidden bg-black/40">
+                            <img src="${p.image}" alt="${p.name}" onerror="this.src='https://placehold.co/400x400/13131a/d4a017?text=Fenix+Imports'" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                            <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-black uppercase bg-gold-500 text-black tracking-wider shadow">
+                                ${p.category}
+                            </span>
+                        </div>
+                        <div class="p-5 space-y-2">
+                            <h4 class="text-lg font-bold text-white group-hover:text-gold-400 transition">${p.name}</h4>
+                            <p class="text-xs text-gray-400 line-clamp-2">${p.description}</p>
+                        </div>
+                    </div>
+                    <div class="p-5 pt-0 flex items-center justify-between mt-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">Preço à vista</span>
+                            <span class="text-xl font-black text-gold-400">R$ ${Number(p.price).toFixed(2)}</span>
+                        </div>
+                        <button onclick="addToCart('${p.id}')" class="px-4 py-2.5 rounded-xl font-bold text-xs bg-gradient-to-r from-yellow-400 to-gold-500 text-black glow-yellow hover:brightness-110 transition flex items-center space-x-2">
+                            <i class="fa-solid fa-cart-plus"></i><span>Adicionar</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        window.filterCategory = function(cat) {
+            window.currentCategory = cat;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.className = "category-btn px-4 py-2 rounded-lg text-xs font-bold transition bg-darkBg text-gray-300 hover:bg-white/5 border border-borderDark whitespace-nowrap";
+            });
+            const activeBtn = document.getElementById(`cat-${cat}`);
+            if (activeBtn) {
+                activeBtn.className = "category-btn px-4 py-2 rounded-lg text-xs font-bold transition bg-gold-500 text-black whitespace-nowrap";
+            }
+            window.renderProducts();
+        }
+
+        window.filterProducts = function() {
+            window.renderProducts();
+        }
+
+        window.updateAuthUI = function() {
+            const unloggedDesktop = document.getElementById('auth-unlogged');
+            const loggedDesktop = document.getElementById('auth-logged');
+            const unloggedMobile = document.getElementById('mobile-auth-unlogged');
+            const loggedMobile = document.getElementById('mobile-auth-logged');
+            
+            if (window.currentUser) {
+                unloggedDesktop.classList.add('hidden');
+                loggedDesktop.classList.remove('hidden');
+                unloggedMobile.classList.add('hidden');
+                loggedMobile.classList.remove('hidden');
+                document.getElementById('user-display-name').innerText = "Admin: " + window.currentUser.uid.substring(0,4);
+            } else {
+                unloggedDesktop.classList.remove('hidden');
+                loggedDesktop.classList.add('hidden');
+                unloggedMobile.classList.remove('hidden');
+                loggedMobile.classList.add('hidden');
+                if (!document.getElementById('tab-admin').classList.contains('hidden')) {
+                    window.switchTab('shop');
+                }
+            }
+        }
+
+        window.openLoginModal = function() {
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        window.closeLoginModal = function() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        window.handleEmailLogin = async function(event) {
+            event.preventDefault();
+            if (!window.currentUser && auth) {
+                try {
+                    await signInAnonymously(auth);
+                    window.currentUser = auth.currentUser;
+                    window.updateAuthUI();
+                    subscribeToProducts();
+                    window.closeLoginModal();
+                    window.showToast("Login Bem-sucedido!", "Bem-vindo ao Painel.");
+                    window.switchTab('admin');
+                } catch (error) {
+                    window.showToast("Erro", "Falha na autenticação.", "error");
+                }
+            } else if (window.currentUser) {
+                window.closeLoginModal();
+                window.showToast("Aviso", "Você já está autenticado no momento.");
+                window.switchTab('admin');
+            }
+        }
+
+        window.handleGoogleLogin = function() {
+            window.handleEmailLogin(new Event('submit'));
+        }
+
+        window.handleLogout = async function() {
+            if (auth) {
+                try {
+                    await signOut(auth);
+                    window.currentUser = null;
+                    window.updateAuthUI();
+                    window.showToast("Sessão Encerrada", "Você saiu da sua conta.");
+                } catch (error) {}
+            } else {
+                window.currentUser = null;
+                window.updateAuthUI();
+            }
+        }
+
+        window.addToCart = function(id) {
+            const product = window.products.find(p => p.id === id);
+            if (!product) return;
+            const existing = window.cart.find(item => item.id === id);
+            if (existing) { existing.quantity += 1; } 
+            else { window.cart.push({ ...product, quantity: 1 }); }
+            window.saveCartToStorage();
+            window.showToast("Produto Adicionado", `${product.name} foi adicionado ao carrinho.`);
+        }
+
+        window.updateCartQuantity = function(id, change) {
+            const item = window.cart.find(i => i.id === id);
+            if (!item) return;
+            item.quantity += change;
+            if (item.quantity <= 0) {
+                window.cart = window.cart.filter(i => i.id !== id);
+            }
+            window.saveCartToStorage();
+            window.renderCartItems();
+        }
+
+        window.updateCartBadge = function() {
+            const badge = document.getElementById('cart-badge');
+            const totalItems = window.cart.reduce((acc, item) => acc + item.quantity, 0);
+            if (totalItems > 0) {
+                badge.innerText = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        window.toggleCartModal = function(show) {
+            const modal = document.getElementById('cart-modal');
+            if (show) {
+                window.renderCartItems();
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        window.renderCartItems = function() {
+            const container = document.getElementById('cart-items-container');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+            const freightEl = document.getElementById('cart-freight');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            container.innerHTML = '';
+
+            if (window.cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fa-solid fa-cart-shopping text-3xl mb-2"></i>
+                        <p class="text-sm">Seu carrinho está vazio.</p>
+                    </div>
+                `;
+                subtotalEl.innerText = 'R$ 0,00';
+                freightEl.innerText = 'R$ 0,00';
+                totalEl.innerText = 'R$ 0,00';
+                checkoutBtn.disabled = true;
+                return;
+            }
+
+            checkoutBtn.disabled = false;
+            let subtotal = 0;
+
+            window.cart.forEach(item => {
+                subtotal += item.price * item.quantity;
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between py-3";
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <img src="${item.image}" class="w-12 h-12 object-cover rounded-lg bg-black/40" onerror="this.src='https://placehold.co/100x100/13131a/d4a017?text=Item'">
+                        <div>
+                            <h5 class="text-sm font-bold text-white">${item.name}</h5>
+                            <span class="text-xs text-gold-400">R$ ${Number(item.price).toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="updateCartQuantity('${item.id}', -1)" class="w-7 h-7 rounded bg-white/5 text-gray-300 hover:bg-white/10 flex items-center justify-center text-xs"><i class="fa-solid fa-minus"></i></button>
+                        <span class="text-xs font-bold text-white w-5 text-center">${item.quantity}</span>
+                        <button onclick="updateCartQuantity('${item.id}', 1)" class="w-7 h-7 rounded bg-white/5 text-gray-300 hover:bg-white/10 flex items-center justify-center text-xs"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            const total = subtotal + window.freightValue;
+            subtotalEl.innerText = `R$ ${subtotal.toFixed(2)}`;
+            freightEl.innerText = `R$ ${window.freightValue.toFixed(2)}`;
+            totalEl.innerText = `R$ ${total.toFixed(2)}`;
+        }
+
+        window.formatCEP = function(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 5) {
+                value = value.substring(0, 5) + '-' + value.substring(5, 8);
+            }
+            input.value = value;
+        }
+
+        window.calculateFreight = function() {
+            const cepInput = document.getElementById('cep-input').value;
+            const freightResult = document.getElementById('freight-result');
+            if (cepInput.length < 9) {
+                window.showToast("CEP Inválido", "Por favor, digite um CEP válido com 8 dígitos.", "error");
+                return;
+            }
+            window.freightValue = 25.00;
+            freightResult.innerText = "Frete Expresso SEDEX (2 a 4 dias úteis): R$ 25,00";
+            freightResult.classList.remove('hidden');
+            window.renderCartItems();
+            window.showToast("Frete Calculado", "Valor do frete aplicado ao total.");
+        }
+
+        window.proceedToCheckout = function() {
+            window.toggleCartModal(false);
+            const checkoutModal = document.getElementById('checkout-modal');
+            const subtotal = window.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            const total = subtotal + window.freightValue;
+            document.getElementById('pix-modal-total').innerText = `R$ ${total.toFixed(2)}`;
+            checkoutModal.classList.remove('hidden');
+        }
+
+        window.closeCheckoutModal = function() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+
+        window.copyPixCode = function() {
+            const code = document.getElementById('pix-copia-cola').innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = code;
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                window.showToast("Código Copiado!", "Cole o código Pix no aplicativo do seu banco.");
+            } catch (err) {
+                window.showToast("Erro", "Não foi possível copiar automaticamente.", "error");
+            }
+            document.body.removeChild(textArea);
+        }
+
+        window.finalizeOrderWhatsApp = function() {
+            const name = document.getElementById('cust-name').value;
+            const whatsapp = document.getElementById('cust-whatsapp').value;
+            const address = document.getElementById('cust-address').value;
+
+            if (!name || !whatsapp || !address) {
+                window.showToast("Campos Obrigatórios", "Por favor, preencha todos os dados de entrega.", "error");
+                return;
+            }
+
+            const subtotal = window.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+            const total = subtotal + window.freightValue;
+
+            let message = `*NOVO PEDIDO - FÊNIX IMPORTS*\n\n`;
+            message += `*Cliente:* ${name}\n`;
+            message += `*WhatsApp:* ${whatsapp}\n`;
+            message += `*Endereço:* ${address}\n\n`;
+            message += `*ITENS DO PEDIDO:*\n`;
+            window.cart.forEach(item => {
+                message += `- ${item.quantity}x ${item.name} (R$ ${(item.price * item.quantity).toFixed(2)})\n`;
+            });
+            message += `\n*Frete:* R$ ${window.freightValue.toFixed(2)}\n`;
+            message += `*TOTAL A PAGAR (PIX):* R$ ${total.toFixed(2)}\n\n`;
+            message += `_Segue em anexo o comprovante de pagamento via Pix._`;
+
+            const encodedMessage = encodeURIComponent(message);
+            const phoneOwner = "5511999999999"; 
+            window.open(`https://wa.me/${phoneOwner}?text=${encodedMessage}`, '_blank');
+            
+            window.cart = [];
+            window.saveCartToStorage();
+            window.closeCheckoutModal();
+            window.showToast("Pedido Enviado!", "Redirecionando para o WhatsApp da Fênix Imports.");
+        }
+
+        window.renderAdminProducts = function() {
+            const tbody = document.getElementById('admin-product-list');
+            tbody.innerHTML = '';
+
+            window.products.forEach((p) => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-white/5 transition";
+                tr.innerHTML = `
+                    <td class="py-3 px-4 flex items-center space-x-3">
+                        <img src="${p.image}" class="w-10 h-10 object-cover rounded-lg bg-black/40" onerror="this.src='https://placehold.co/100x100/13131a/d4a017?text=Item'">
+                        <span class="font-bold text-white">${p.name}</span>
+                    </td>
+                    <td class="py-3 px-4 text-gray-300">${p.category}</td>
+                    <td class="py-3 px-4 text-gold-400 font-bold">R$ ${Number(p.price).toFixed(2)}</td>
+                    <td class="py-3 px-4 text-gray-300">${p.stock} un</td>
+                    <td class="py-3 px-4 text-right space-x-2">
+                        <button onclick="editProduct('${p.id}')" class="px-2.5 py-1.5 rounded bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 text-xs font-bold transition"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteProduct('${p.id}')" class="px-2.5 py-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500/30 text-xs font-bold transition"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.openProductModal = function(id = null) {
+            const modal = document.getElementById('product-modal');
+            const title = document.getElementById('modal-title');
+            const form = document.getElementById('product-form');
+            form.reset();
+            document.getElementById('edit-index').value = '';
+
+            if (id) {
+                title.innerHTML = '<i class="fa-solid fa-pen text-gold-500"></i><span>Editar Produto</span>';
+                const p = window.products.find(item => item.id === id);
+                if (p) {
+                    document.getElementById('edit-index').value = p.id;
+                    document.getElementById('p-name').value = p.name;
+                    document.getElementById('p-category').value = p.category;
+                    document.getElementById('p-price').value = p.price;
+                    document.getElementById('p-stock').value = p.stock;
+                    document.getElementById('p-image').value = p.image;
+                    document.getElementById('p-desc').value = p.description;
+                }
+            } else {
+                title.innerHTML = '<i class="fa-solid fa-box text-gold-500"></i><span>Adicionar Novo Produto</span>';
+            }
+            modal.classList.remove('hidden');
+        }
+
+        window.closeProductModal = function() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        window.saveProduct = async function(event) {
+            event.preventDefault();
+            
+            if (!window.currentUser || !db) {
+                window.showToast("Acesso Negado", "Você não tem permissão para salvar no servidor.", "error");
+                return;
+            }
+
+            const editId = document.getElementById('edit-index').value;
+            const name = document.getElementById('p-name').value;
+            const category = document.getElementById('p-category').value;
+            const price = parseFloat(document.getElementById('p-price').value);
+            const stock = parseInt(document.getElementById('p-stock').value);
+            const image = document.getElementById('p-image').value;
+            const description = document.getElementById('p-desc').value;
+
+            const productData = {
+                name,
+                category,
+                price,
+                stock,
+                image,
+                description
+            };
+
+            const productId = editId || Date.now().toString();
+            productData.id = productId;
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', productId);
+                await setDoc(docRef, productData);
+                window.showToast("Sucesso", editId ? "Produto atualizado." : "Produto adicionado.");
+                window.closeProductModal();
+            } catch (error) {
+                console.error("Error saving product:", error);
+                window.showToast("Erro", "Falha ao salvar produto no servidor.", "error");
+            }
+        }
+
+        window.editProduct = function(id) {
+            window.openProductModal(id);
+        }
+
+        window.deleteProduct = async function(id) {
+            if (confirm("Tem certeza que deseja remover este produto?")) {
+                if (!window.currentUser || !db) {
+                    window.showToast("Acesso Negado", "Permissão insuficiente.", "error");
+                    return;
+                }
+                try {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id));
+                    window.showToast("Removido", "O item foi excluído do catálogo.");
+                } catch (error) {
+                    console.error("Error deleting product:", error);
+                    window.showToast("Erro", "Falha ao excluir produto.", "error");
+                }
+            }
+        }
+
+        window.showToast = function(title, desc, type = 'success') {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-desc').innerText = desc;
+            
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3500);
+        }
+    </script>
 </body>
 </html>
+```
