@@ -35,7 +35,7 @@ const produtos = [
   {
     id: 3,
     nome: "💦 WATER BARIOSTATIC VIAL 10ML",
-    preco: 1000.00,
+    preco: 100.00,
     categoria: "perda-peso",
     imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
     tag: "Disponível"
@@ -45,7 +45,7 @@ const produtos = [
   {
     id: 4,
     nome: "❤️ TIRZEDRAL 4X 15 MG",
-    preco: 700.00,
+    preco: 100.00,
     categoria: "perda-peso",
     imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
     tag: "Disponível"
@@ -53,7 +53,7 @@ const produtos = [
   {
     id: 5,
     nome: "❤️ T36 MD 15MG",
-    preco: 700.00,
+    preco: 100.00,
     categoria: "perda-peso",
     imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
     tag: "Disponível"
@@ -69,7 +69,7 @@ const produtos = [
   {
     id: 7,
     nome: "🟠 TG 5MG",
-    preco: 320.00,
+    preco: 420.00,
     categoria: "perda-peso",
     imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
     tag: "Disponível"
@@ -101,7 +101,7 @@ const produtos = [
   {
     id: 11,
     nome: "💜 LIPOLESS 4X 15MG",
-    preco: 700.00,
+    preco: 100.00,
     categoria: "perda-peso",
     imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
     tag: "Disponível"
@@ -139,120 +139,8 @@ const produtos = [
     tag: "Disponível"
   },
 
-  // === ZPHC ===
-  {
-    id: 16,
-    nome: "🌀 ZPHC AOD 12.5MG – 05 VIAL",
-    preco: 695.00,
-    categoria: "perda-peso",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 17,
-    nome: "🌀 ZPHC NAD+ 1000 MG – 01 VIAL",
-    preco: 610.00,
-    categoria: "longevidade",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 18,
-    nome: "🌀 ZPHC GLOW PRO MIX 60MG – 01 VIAL",
-    preco: 875.00,
-    categoria: "estetica-pele",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 19,
-    nome: "🌀 ZPHC IGF-1 L3 1MG – 05 VIAL",
-    preco: 770.00,
-    categoria: "performance",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 20,
-    nome: "🌀 ZPHC SUPER SLIM MIX 27,5 MG – 05 VIAL",
-    preco: 1250.00,
-    categoria: "perda-peso",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 21,
-    nome: "🌀 ZPHC GHK-CU 60MG – 01 VIAL",
-    preco: 562.00,
-    categoria: "hormonios",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 22,
-    nome: "🌀 ZPHC NAD+ 1000MG – 01 PEN",
-    preco: 590.00,
-    categoria: "longevidade",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 23,
-    nome: "🌀 ZPHC MEGA MASS MIX 50 MG – 05 VIAL",
-    preco: 975.00,
-    categoria: "performance",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 24,
-    nome: "🌀 ZPHC ULTRA REHAB MIX 50 MG – 05 VIAL",
-    preco: 847.00,
-    categoria: "performance",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 25,
-    nome: "🌀 ZPHC RETA 120MG (2 VIAL)",
-    preco: 2200.00,
-    categoria: "perda-peso",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 26,
-    nome: "🌀 ZPHC RETATRUTIDE 60MG PEN",
-    preco: 1461.00,
-    categoria: "perda-peso",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
 
-  // === SYNEDICA LABS ===
-  {
-    id: 27,
-    nome: "🇬🇧 TIRZE 240MG (60MG/3ML) EM PÓ",
-    preco: 1000.00,
-    categoria: "perda-peso",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 28,
-    nome: "🇬🇧 RETA 120MG (7ML) EM PÓ 🆕",
-    preco: 1000.00,
-    categoria: "perda-peso",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
-  },
-  {
-    id: 29,
-    nome: "🇬🇧 PEN NAD+ B120",
-    preco: 1380.00,
-    categoria: "longevidade",
-    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
-    tag: "Disponível"
+  }
   }
 ];
 
