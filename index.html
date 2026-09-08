@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fênix Importes | Compra rápida e segura</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header class="header">
+    <div class="header-inner">
+      <button class="menu-btn"><i class="fas fa-bars"></i></button>
+      <div class="logo-box">
+        <span class="logo">F</span>
+        <div class="logo-text">
+          <h1>Fênix Importes</h1>
+          <p>Compra rápida e segura</p>
+        </div>
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="Buscar produtos...">
+      </div>
+      <button class="cart-btn" onclick="abrirCarrinho()">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <section class="banner">
+    <div class="banner-content">
+      <h2>Pague no Pix 🔒</h2>
+      <p>Aprovação na hora e compra 100% segura.</p>
+    </div>
+    <div class="banner-dots"><span class="dot active"></span><span class="dot"></span></div>
+  </section>
+
+  <!-- Setores Mais Visitados -->
+  <section class="setores">
+    <h2>Setores mais visitados <small>Explore nossos setores mais populares</small></h2>
+    <div class="setores-grid">
+      <div class="setor" onclick="filtrarCategoria('cognitivos')">
+        <i class="fas fa-brain"></i>
+        <span>Cognitivos</span>
+      </div>
+      <div class="setor" onclick="filtrarCategoria('estetica-avancada')">
+        <i class="fas fa-syringe"></i>
+        <span>Estética Avançada</span>
+      </div>
+      <div class="setor" onclick="filtrarCategoria('estetica-pele')">
+        <i class="fas fa-hand-sparkles"></i>
+        <span>Estética e Pele</span>
+      </div>
+      <div class="setor" onclick="filtrarCategoria('hormonios')">
+        <i class="fas fa-dna"></i>
+        <span>Hormônios</span>
+      </div>
+      <div class="setor" onclick="filtrarCategoria('libido')">
+        <i class="fas fa-heart"></i>
+        <span>Libido</span>
+      </div>
+      <div class="setor" onclick="filtrarCategoria('longevidade')">
+        <i class="fas fa-hourglass-half"></i>
+        <span>Longevidade</span>
+      </div>
+      <div class="setor" onclick="filtrarCategoria('outros')">
+        <i class="fas fa-box"></i>
+        <span>Outros</span>
+      </div>
+      <div class="setor" onclick="filtrarCategoria('perda-peso')">
+        <i class="fas fa-balance-scale-right"></i>
+        <span>Perda de Peso</span>
+      </div>
+      <div class="setor" onclick="filtrarCategoria('performance')">
+        <i class="fas fa-dumbbell"></i>
+        <span>Performance</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Produtos -->
+  <section class="produtos-section">
+    <h2>Nossos produtos <small>Escolha, adicione ao carrinho e finalize pelo Pix</small></h2>
+    <div class="produtos-wrapper">
+      <!-- Menu Categorias -->
+      <aside class="categorias">
+        <h3>CATEGORIAS</h3>
+        <ul id="lista-categorias">
+          <li class="categoria-item active" data-cat="todos" onclick="filtrarCategoria('todos')">
+            <i class="fas fa-th-large"></i> Todos <span>79</span>
+          </li>
+          <li class="categoria-item" data-cat="cognitivos" onclick="filtrarCategoria('cognitivos')">
+            <i class="fas fa-brain"></i> Cognitivos <span>2</span>
+          </li>
+          <li class="categoria-item" data-cat="estetica-avancada" onclick="filtrarCategoria('estetica-avancada')">
+            <i class="fas fa-syringe"></i> Estética Avançada <span>2</span>
+          </li>
+          <li class="categoria-item" data-cat="estetica-pele" onclick="filtrarCategoria('estetica-pele')">
+            <i class="fas fa-hand-sparkles"></i> Estética e Pele <span>14</span>
+          </li>
+          <li class="categoria-item" data-cat="hormonios" onclick="filtrarCategoria('hormonios')">
+            <i class="fas fa-dna"></i> Hormônios <span>9</span>
+          </li>
+          <li class="categoria-item" data-cat="libido" onclick="filtrarCategoria('libido')">
+            <i class="fas fa-heart"></i> Libido <span>1</span>
+          </li>
+          <li class="categoria-item" data-cat="longevidade" onclick="filtrarCategoria('longevidade')">
+            <i class="fas fa-hourglass-half"></i> Longevidade <span>4</span>
+          </li>
+          <li class="categoria-item" data-cat="outros" onclick="filtrarCategoria('outros')">
+            <i class="fas fa-box"></i> Outros <span>6</span>
+          </li>
+          <li class="categoria-item" data-cat="perda-peso" onclick="filtrarCategoria('perda-peso')">
+            <i class="fas fa-balance-scale-right"></i> Perda de Peso <span>40</span>
+          </li>
+          <li class="categoria-item" data-cat="performance" onclick="filtrarCategoria('performance')">
+            <i class="fas fa-dumbbell"></i> Performance <span>1</span>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Grade Produtos -->
+      <div class="produtos-container">
+        <div class="produtos-grid" id="produtos-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MODAL: FINALIZAR COMPRA ========== -->
+  <div class="modal-overlay oculto" id="modal-finalizar">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Finalizar compra</h2>
+        <span class="passo">1 de 2 - Dados</span>
+      </div>
+
+      <!-- PASSO 1: DADOS E ENDEREÇO -->
+      <div class="modal-body" id="passo-dados">
+        <div class="form-section">
+          <h3>SEUS DADOS</h3>
+          <div class="form-row">
+            <input type="text" id="nome" placeholder="Nome completo *" required>
+          </div>
+          <div class="form-row form-duo">
+            <input type="text" id="cpf" placeholder="CPF *" maxlength="14" required>
+            <input type="tel" id="celular" placeholder="Celular / WhatsApp *" maxlength="15" required>
+          </div>
+          <div class="form-row">
+            <input type="email" id="email" placeholder="E-mail *" required>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>ENDEREÇO DE ENTREGA</h3>
+          <div class="form-row form-duo">
+            <input type="text" id="cep" placeholder="CEP *" maxlength="9" required onblur="buscarCep()">
+            <select id="estado" required>
+              <option value="">UF *</option>
+              <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+              <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+              <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+              <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+              <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+              <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+              <option>SP</option><option>SE</option><option>TO</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <input type="text" id="cidade" placeholder="Cidade *" required>
+          </div>
+          <div class="form-row">
+            <input type="text" id="bairro" placeholder="Bairro *" required>
+          </div>
+          <div class="form-row form-duo">
+            <input type="text" id="endereco" placeholder="Endereço (rua) *" required>
+            <input type="text" id="numero" placeholder="Número *" required>
+          </div>
+          <div class="form-row">
+            <input type="text" id="complemento" placeholder="Complemento (opcional)">
+          </div>
+        </div>
+
+        <!-- RESUMO DO PEDIDO -->
+        <div class="resumo-pedido">
+          <div class="resumo-linha">
+            <span>Produtos</span>
+            <span id="resumo-produtos">R$ 0,00</span>
+          </div>
+          <div class="resumo-linha">
+            <span>Frete</span>
+            <span id="resumo-frete">—</span>
+          </div>
+          <div class="resumo-linha total">
+            <strong>Total</strong>
+            <strong id="resumo-total">R$ 0,00</strong>
+          </div>
+        </div>
+
+        <div class="termos">
+          <input type="checkbox" id="termos" required>
+          <label for="termos">Li e aceito a <a href="#">Política de Privacidade</a> e autorizo o uso dos meus dados para processar e entregar este pedido.</label>
+        </div>
+
+        <div class="modal-buttons">
+          <button class="btn-voltar" onclick="fecharModal()">← Voltar ao carrinho</button>
+          <button class="btn-continuar" onclick="irParaPagamento()">Ir para o pagamento →</button>
+        </div>
+      </div>
+
+      <!-- PASSO 2: PAGAMENTO PIX -->
+      <div class="modal-body oculto" id="passo-pagamento">
+        <div class="pagamento-pix">
+          <h3>💸 Pagamento via Pix</h3>
+          <p>Escaneie o QR Code ou copie o código abaixo e pague no app do seu banco.</p>
+
+          <div class="qrcode-box">
+            <div class="qrcode-placeholder">QR Code do Pix</div>
+          </div>
+
+          <div class="codigo-pix">
+            <label>Copia e cola:</label>
+            <div class="codigo-box">
+              <input type="text" id="codigo-pix" readonly>
+              <button onclick="copiarCodigoPix()">📋 Copiar</button>
+            </div>
+          </div>
+
+          <div class="dados-pix">
+            <p><strong>Chave Pix:</strong> <span id="chave-pix-exibicao">sua-chave@exemplo.com</span></p>
+            <p><strong>Valor:</strong> R$ <span id="valor-pix">0,00</span></p>
+            <p><strong>Recebedor:</strong> Fênix Importes</p>
+          </div>
+
+          <div class="instrucoes">
+            <p>✅ Após o pagamento, envie o comprovante por WhatsApp:</p>
+            <a id="link-whatsapp" href="#" target="_blank" class="btn-whatsapp">📲 Enviar Comprovante</a>
+          </div>
+        </div>
+
+        <div class="modal-buttons">
+          <button class="btn-voltar" onclick="voltarParaDados()">← Voltar para dados</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARRINHO MODAL -->
+  <div class="modal-overlay oculto" id="modal-carrinho">
+    <div class="modal-container carrinho-modal">
+      <div class="modal-header">
+        <h2>Meu Carrinho</h2>
+        <button class="fechar-btn" onclick="fecharCarrinho()"><i class="fas fa-times"></i></button>
+      </div>
+      <div id="carrinho-itens" class="carrinho-itens"></div>
+      <div class="carrinho-total">
+        <strong>Subtotal: R$ <span id="carrinho-subtotal">0,00</span></strong>
+      </div>
+      <div class="frete-calc">
+        <input type="text" id="cep-frete" placeholder="Digite seu CEP" maxlength="9" onblur="calcularFreteCarrinho()">
+        <span id="frete-valor">Frete: —</span>
+      </div>
+      <div class="carrinho-total-final">
+        <strong>Total: R$ <span id="carrinho-total-valor">0,00</span></strong>
+      </div>
+      <button class="btn-finalizar" onclick="abrirFormulario()">Finalizar Compra →</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
