@@ -1,29 +1,259 @@
 // ==============================================
-// ⚙️ 👇 PREENCHA TUDO AQUI ABAIXO 👇
+// ⚙️ CONFIGURAÇÕES — PREENCHHA UMA SÓ VEZ!
 // ==============================================
 const CONFIG = {
-  chavePix: "junioqg2@gmail.com",      // ← EX: seuemail@gmail.com ou CPF ou telefone
-  nomeRecebedor: "Fênix Importes",             // ← Pode deixar assim
-  whatsapp: "+5521990422420",                   // ← Seu WhatsApp com DDD e código do país (sem espaços nem símbolos)
-  freteFixo: 12.50,                            // ← Valor do frete padrão (use PONTO, não vírgula)
-  fretePorEstado: {                            // ← Ajuste os valores como quiser
-    SP: 10.00, RJ: 12.50, MG: 13.00, DF: 15.00, OUTROS: 18.00
+  chavePix: "junioqg2@gmail.com",
+  nomeRecebedor: "Fênix Importes",
+  whatsapp: "5521990422420",
+  freteFixo: 25.00,
+  fretePorEstado: {
+    SP: 25.00, RJ: 25.00, MG: 25.00, DF: 25.00, OUTROS: 25.00
   }
 };
 
 // ==============================================
-// 📦 👇 SEUS PRODUTOS — EDITE COMO QUISER 👇
+// 🛒 LISTA DE PRODUTOS — TROQUE OS LINKS DAS FOTOS!
 // ==============================================
 const produtos = [
-  // EXEMPLO 1 — você pode apagar e colocar os seus
-  { id: 1, nome: "ACNECUR ISOTRETINOÍNA 20MG", preco: 195.00, categoria: "estetica-pele", imagem: "https://via.placeholder.com/300x250/ffffff/000000?text=ACNECUR", tag: "Sob encomenda" },
-  { id: 2, nome: "Alluvi GHK-CU 50mg", preco: 727.00, categoria: "hormonios", imagem: "https://via.placeholder.com/300x250/ffffff/000000?text=GHK-CU", tag: "Sob encomenda" },
-  { id: 3, nome: "ALLUVI GLOW GHK-CU 50MG", preco: 384.00, categoria: "hormonios", imagem: "https://via.placeholder.com/300x250/ffffff/000000?text=GLOW+GHK-CU", tag: "Sob encomenda" },
-  { id: 4, nome: "ALPHA Alphabol 10mg 50COMP", preco: 190.00, categoria: "performance", imagem: "https://via.placeholder.com/300x250/ffffff/000000?text=ALPHABOL", tag: "Sob encomenda" },
-  { id: 5, nome: "ALPHA HGH-FRAG 10mg", preco: 353.00, categoria: "hormonios", imagem: "https://via.placeholder.com/300x250/ffffff/000000?text=HGH-FRAG", tag: "Sob encomenda" },
-  { id: 6, nome: "Alpha Lab AOD 10mg", preco: 415.00, categoria: "perda-peso", imagem: "https://via.placeholder.com/300x250/ffffff/000000?text=AOD-9604", tag: "Sob encomenda" }
-  // ← ADICIONE MAIS PRODUTOS AQUI, SEGUINDO O MESMO MODELO:
-  // , { id: 7, nome: "NOME DO PRODUTO", preco: 99.99, categoria: "categoria", imagem: "LINK DA FOTO", tag: "Sob encomenda" }
+  // === WATER BARIOSTATIC ===
+  {
+    id: 1,
+    nome: "💦 WATER BARIOSTATIC VIAL 2ML",
+    preco: 40.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 2,
+    nome: "💦 WATER BARIOSTATIC VIAL 3ML",
+    preco: 60.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 3,
+    nome: "💦 WATER BARIOSTATIC VIAL 10ML",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+
+  // === TIRZEPATIDA ===
+  {
+    id: 4,
+    nome: "❤️ TIRZEDRAL 4X 15 MG",
+    preco: 700.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 5,
+    nome: "❤️ T36 MD 15MG",
+    preco: 700.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 6,
+    nome: "🟠 TG 15MG",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 7,
+    nome: "🟠 TG 5MG",
+    preco: 320.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 8,
+    nome: "🟡 TIRZEC MD 15MG",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 9,
+    nome: "🟡 TIRZEC 4x 15MG",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 10,
+    nome: "💜 LIPOLESS MD 15MG",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 11,
+    nome: "💜 LIPOLESS 4X 15MG",
+    preco: 700.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 12,
+    nome: "⚫ LIPOLAND MD 15MG",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 13,
+    nome: "⚫ LIPOLAND 4X 15MG",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 14,
+    nome: "💙 SLIMEX MD 15MG",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 15,
+    nome: "🟤 GLUCONEX 4X 15MG",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+
+  // === ZPHC ===
+  {
+    id: 16,
+    nome: "🌀 ZPHC AOD 12.5MG – 05 VIAL",
+    preco: 695.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 17,
+    nome: "🌀 ZPHC NAD+ 1000 MG – 01 VIAL",
+    preco: 610.00,
+    categoria: "longevidade",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 18,
+    nome: "🌀 ZPHC GLOW PRO MIX 60MG – 01 VIAL",
+    preco: 875.00,
+    categoria: "estetica-pele",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 19,
+    nome: "🌀 ZPHC IGF-1 L3 1MG – 05 VIAL",
+    preco: 770.00,
+    categoria: "performance",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 20,
+    nome: "🌀 ZPHC SUPER SLIM MIX 27,5 MG – 05 VIAL",
+    preco: 1250.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 21,
+    nome: "🌀 ZPHC GHK-CU 60MG – 01 VIAL",
+    preco: 562.00,
+    categoria: "hormonios",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 22,
+    nome: "🌀 ZPHC NAD+ 1000MG – 01 PEN",
+    preco: 590.00,
+    categoria: "longevidade",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 23,
+    nome: "🌀 ZPHC MEGA MASS MIX 50 MG – 05 VIAL",
+    preco: 975.00,
+    categoria: "performance",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 24,
+    nome: "🌀 ZPHC ULTRA REHAB MIX 50 MG – 05 VIAL",
+    preco: 847.00,
+    categoria: "performance",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 25,
+    nome: "🌀 ZPHC RETA 120MG (2 VIAL)",
+    preco: 2200.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 26,
+    nome: "🌀 ZPHC RETATRUTIDE 60MG PEN",
+    preco: 1461.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+
+  // === SYNEDICA LABS ===
+  {
+    id: 27,
+    nome: "🇬🇧 TIRZE 240MG (60MG/3ML) EM PÓ",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 28,
+    nome: "🇬🇧 RETA 120MG (7ML) EM PÓ 🆕",
+    preco: 1000.00,
+    categoria: "perda-peso",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  },
+  {
+    id: 29,
+    nome: "🇬🇧 PEN NAD+ B120",
+    preco: 1380.00,
+    categoria: "longevidade",
+    imagem: "COLOQUE_LINK_DA_FOTO_AQUI",
+    tag: "Disponível"
+  }
 ];
 
 // ==============================================
@@ -123,7 +353,6 @@ function calcularFreteCarrinho() {
 
 function abrirFormulario() {
   fecharCarrinho();
-  estadoSelecionado = document.getElementById("estado").value;
   calcularFretePorEstado();
   atualizarResumo();
   document.getElementById("modal-finalizar").classList.remove("oculto");
@@ -194,5 +423,5 @@ function copiarCodigoPix() {
 
 function atualizarLinkWhatsApp(valorTotal) {
   const texto = `🛒 PEDIDO - Fênix Importes\n\nProdutos:\n${carrinho.map(i => `- ${i.nome}: R$ ${i.preco.toFixed(2)}`).join("\n")}\n\nFrete: R$ ${valorFrete.toFixed(2)}\nTOTAL: R$ ${valorTotal.toFixed(2).replace('.', ',')}\n\nDados:\nNome: ${document.getElementById("nome").value}\nCPF: ${document.getElementById("cpf").value}\nEndereço: ${document.getElementById("endereco").value}, ${document.getElementById("numero").value} - ${document.getElementById("bairro").value}/${document.getElementById("cidade").value}-${document.getElementById("estado").value}\n\n✅ Paguei via Pix! Segue comprovante 👇`;
-  document.getElementById("link-whatsapp").href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(texto)}`;
+  document.getElementById("link-whatsapp").href = `https://wa.me/${CONFIG.whatsapp.replace("+", "")}?text=${encodeURIComponent(texto)}`;
 }
