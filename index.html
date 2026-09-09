@@ -122,7 +122,7 @@
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-cardBg p-6 rounded-3xl border border-zinc-800">
                 <div>
                     <h2 class="text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-gauge-high text-gold"></i> Painel de Administração</h2>
-                    <p class="text-xs text-zinc-400 mt-1">Gerencie os produtos, estoque e configurações da loja.</p>
+                    <p class="text-xs text-zinc-400 mt-1">Gerencie os produtos, promoções, estoque e configurações.</p>
                 </div>
                 <div class="flex gap-3 w-full md:w-auto">
                     <button onclick="openSettingsModal()" class="flex-1 md:flex-none bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm border border-zinc-700 transition flex items-center justify-center gap-2">
@@ -249,16 +249,23 @@
                     <label class="text-xs font-semibold text-zinc-400 block mb-1">Nome do Produto</label>
                     <input type="text" id="prod-name" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                
+                <!-- Ajuste: Agora são 3 colunas para acomodar o Preço Promocional -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                        <label class="text-xs font-semibold text-zinc-400 block mb-1">Preço (R$)</label>
-                        <input type="number" step="0.01" id="prod-price" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
+                        <label class="text-xs font-semibold text-zinc-400 block mb-1">Preço Normal</label>
+                        <input type="number" step="0.01" id="prod-price" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-white focus:border-gold">
                     </div>
                     <div>
-                        <label class="text-xs font-semibold text-zinc-400 block mb-1 text-gold">Quantidade em Estoque</label>
-                        <input type="number" id="prod-stock" required min="0" value="10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
+                        <label class="text-xs font-semibold text-zinc-400 block mb-1 text-green-400">Preço Promo</label>
+                        <input type="number" step="0.01" id="prod-promo-price" placeholder="Opcional" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-white focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="text-xs font-semibold text-zinc-400 block mb-1 text-gold">Estoque</label>
+                        <input type="number" id="prod-stock" required min="0" value="10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-white focus:border-gold">
                     </div>
                 </div>
+
                 <div>
                     <label class="text-xs font-semibold text-zinc-400 block mb-1">Categoria</label>
                     <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
@@ -293,7 +300,6 @@
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-zinc-400 block mb-1 text-gold"><i class="fa-solid fa-qrcode"></i> Link da Imagem do QR Code</label>
-                    <!-- Trocado para type="text" para evitar o erro de validação do navegador -->
                     <input type="text" id="set-qrcode" placeholder="https://i.ibb.co/..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                     <p class="text-[10px] text-zinc-500 mt-1">Cole o link direto da imagem do seu QR Code (ex: finalizado em .jpg ou .png)</p>
                 </div>
@@ -411,7 +417,6 @@
             document.getElementById('delivery-time-label').innerText = `Prazo: ${storeSettings.shippingDays}`;
             document.getElementById('btn-floating-support').href = `https://wa.me/${storeSettings.whatsappSupport}?text=${encodeURIComponent('Olá, preciso de suporte na Fênix Imports.')}`;
             
-            // Atualizar QR Code no Checkout
             const qrcodeContainer = document.getElementById('qrcode-container');
             if (storeSettings.qrCodeUrl) {
                 qrcodeContainer.innerHTML = `<img src="${storeSettings.qrCodeUrl}" alt="QR Code Pix" class="w-full h-full object-contain">`;
@@ -500,8 +505,27 @@
                 const stockCount = p.stock !== undefined ? Number(p.stock) : 10;
                 const isOutOfStock = stockCount <= 0;
 
+                // Lógica Visual de Promoção
+                const priceHTML = p.promoPrice 
+                    ? `
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-zinc-500 line-through decoration-red-500">De R$ ${Number(p.price).toFixed(2).replace('.', ',')}</span>
+                            <span class="text-lg font-extrabold text-green-400">R$ ${Number(p.promoPrice).toFixed(2).replace('.', ',')}</span>
+                        </div>
+                      `
+                    : `
+                        <div>
+                            <span class="text-[10px] text-zinc-500 block uppercase font-semibold">Preço</span>
+                            <span class="text-lg font-extrabold text-gold">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</span>
+                        </div>
+                      `;
+
+                // Adiciona uma TAG de oferta na imagem se houver promoção
+                const promoTagHTML = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg uppercase"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
+
                 grid.innerHTML += `
-                    <div class="bg-cardBg border border-zinc-800 rounded-3xl p-6 flex flex-col justify-between hover:border-gold/50 transition group">
+                    <div class="bg-cardBg border border-zinc-800 rounded-3xl p-6 flex flex-col justify-between hover:border-gold/50 transition group relative overflow-hidden">
+                        ${promoTagHTML}
                         <div>
                             ${imageHTML}
                             <div class="flex items-center justify-between mb-3">
@@ -514,10 +538,7 @@
                             <p class="text-zinc-400 text-xs leading-relaxed line-clamp-3">${p.description}</p>
                         </div>
                         <div class="pt-5 mt-5 border-t border-zinc-800/80 flex items-center justify-between">
-                            <div>
-                                <span class="text-[10px] text-zinc-500 block uppercase font-semibold">Preço</span>
-                                <span class="text-lg font-extrabold text-gold">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</span>
-                            </div>
+                            ${priceHTML}
                             <button onclick="addToCart('${p.id}')" ${isOutOfStock ? 'disabled' : ''} class="${isOutOfStock ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-xs font-bold px-4 py-2.5 rounded-xl border border-zinc-700 transition flex items-center gap-2">
                                 <i class="fa-solid fa-cart-plus"></i> ${isOutOfStock ? 'Indisponível' : 'Adicionar'}
                             </button>
@@ -546,10 +567,14 @@
                 return alert('Quantidade solicitada maior do que o estoque disponível.');
             }
 
+            // Pega o preço promocional se existir, senão usa o preço normal
+            const activePrice = product.promoPrice ? Number(product.promoPrice) : Number(product.price);
+
             if (existing) {
                 existing.qty += 1;
+                existing.activePrice = activePrice; // garante atualização de preço
             } else {
-                cart.push({ ...product, qty: 1 });
+                cart.push({ ...product, activePrice: activePrice, qty: 1 });
             }
             updateCartUI(); 
             toggleCartDrawer(true);
@@ -573,14 +598,14 @@
             let subtotal = 0;
             
             cart.forEach(item => {
-                subtotal += item.price * item.qty;
+                subtotal += item.activePrice * item.qty;
                 const imgThumb = item.imageUrl ? `<img src="${item.imageUrl}" class="w-10 h-10 rounded-lg object-cover border border-zinc-700">` : `<div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-600"><i class="fa-solid fa-image text-xs"></i></div>`;
                 container.innerHTML += `
                     <div class="py-4 flex items-center justify-between gap-3">
                         ${imgThumb}
                         <div class="flex-1 min-w-0">
                             <h4 class="text-sm font-bold text-white truncate">${item.name}</h4>
-                            <span class="text-xs text-gold font-semibold">R$ ${Number(item.price).toFixed(2).replace('.', ',')}</span>
+                            <span class="text-xs text-gold font-semibold">R$ ${Number(item.activePrice).toFixed(2).replace('.', ',')}</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="changeQty('${item.id}', -1)" class="w-7 h-7 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700">-</button>
@@ -623,11 +648,11 @@
             if(!name || !wpp || !addr) return alert('Preencha todos os campos para envio!');
             
             const shippingCost = Number(storeSettings.shippingCost);
-            let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0) + shippingCost;
+            let total = cart.reduce((sum, i) => sum + (i.activePrice * i.qty), 0) + shippingCost;
             let msg = `*NOVO PEDIDO - FÊNIX IMPORTS*\n\n👤 *Cliente:* ${name}\n📱 *WhatsApp:* ${wpp}\n📍 *Endereço:* ${addr}\n\n🛒 *Itens:*\n`;
             
             for (const item of cart) {
-                msg += `- ${item.qty}x ${item.name} (R$ ${(item.price * item.qty).toFixed(2)})\n`;
+                msg += `- ${item.qty}x ${item.name} (R$ ${(item.activePrice * item.qty).toFixed(2)})\n`;
                 const prodRef = products.find(p => p.id === item.id);
                 if (prodRef) {
                     const newStock = Math.max(0, Number(prodRef.stock) - item.qty);
@@ -662,12 +687,18 @@
             products.forEach(p => {
                 const stockVal = p.stock !== undefined ? p.stock : 10;
                 const imgThumb = p.imageUrl ? `<img src="${p.imageUrl}" class="w-12 h-12 object-cover rounded-lg border border-zinc-700">` : `<div class="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-600 text-xs"><i class="fa-solid fa-image"></i></div>`;
+                
+                // Mostrar os dois preços na tabela admin se houver promo
+                const priceTableHtml = p.promoPrice 
+                    ? `<span class="line-through text-zinc-500 text-[10px] block">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</span> <span class="text-green-400 font-bold">R$ ${Number(p.promoPrice).toFixed(2).replace('.', ',')}</span>`
+                    : `<span class="text-gold font-bold block mt-3">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</span>`;
+
                 tbody.innerHTML += `
                     <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40 transition">
                         <td class="p-4 w-16">${imgThumb}</td>
                         <td class="p-4 font-semibold text-white">${p.name}</td>
                         <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-zinc-800 text-gold">${stockVal} un.</span></td>
-                        <td class="p-4 text-gold font-bold">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</td>
+                        <td class="p-4">${priceTableHtml}</td>
                         <td class="p-4 text-right space-x-2">
                             <button onclick="openProductModal('${p.id}')" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-3 py-1.5 rounded-lg text-xs transition"><i class="fa-solid fa-pen"></i></button>
                             <button onclick="deleteProduct('${p.id}')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg text-xs transition"><i class="fa-solid fa-trash"></i></button>
@@ -692,11 +723,13 @@
                     document.getElementById('prod-name').value = product.name;
                     document.getElementById('prod-category').value = product.category;
                     document.getElementById('prod-price').value = product.price;
+                    document.getElementById('prod-promo-price').value = product.promoPrice || ''; // Novo Campo
                     document.getElementById('prod-stock').value = product.stock !== undefined ? product.stock : 10;
                     document.getElementById('prod-desc').value = product.description;
                 }
             } else {
                 title.innerHTML = `<i class="fa-solid fa-box text-gold"></i> Adicionar Produto`;
+                document.getElementById('prod-promo-price').value = ''; // Garante limpo ao criar novo
             }
             modal.classList.remove('hidden');
         }
@@ -712,12 +745,16 @@
             const stock = parseInt(document.getElementById('prod-stock').value);
             const description = document.getElementById('prod-desc').value;
             const imageUrl = document.getElementById('prod-imageUrl').value.trim();
+            
+            // Pega o valor do preço promocional se estiver preenchido
+            const promoPriceInput = document.getElementById('prod-promo-price').value;
+            const promoPrice = promoPriceInput ? parseFloat(promoPriceInput) : null;
 
             const btnSalvar = document.getElementById('btn-salvar-produto');
             btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
             btnSalvar.disabled = true;
 
-            const productData = { name, category, price, stock, description, imageUrl };
+            const productData = { name, category, price, promoPrice, stock, description, imageUrl };
 
             try {
                 if (id) {
