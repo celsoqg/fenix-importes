@@ -214,7 +214,6 @@
                 </div>
                 <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 text-center space-y-3">
                     <div id="qrcode-container" class="w-40 h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-md overflow-hidden">
-                        <!-- Aqui entra a imagem do QR Code cadastrada -->
                         <i class="fa-solid fa-qrcode text-8xl text-black" id="qrcode-fallback-icon"></i>
                     </div>
                     <div class="space-y-1">
@@ -244,7 +243,7 @@
                 <input type="hidden" id="prod-id">
                 <div>
                     <label class="text-xs font-semibold text-zinc-400 block mb-1">Link da Foto (URL)</label>
-                    <input type="url" id="prod-imageUrl" placeholder="https://i.ibb.co/exemplo.jpg" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
+                    <input type="text" id="prod-imageUrl" placeholder="https://i.ibb.co/exemplo.jpg" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-zinc-400 block mb-1">Nome do Produto</label>
@@ -293,9 +292,10 @@
                     <input type="text" id="set-pix" required placeholder="Sua chave pix..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                 </div>
                 <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1 text-gold"><i class="fa-solid fa-qrcode"></i> Link da Imagem do QR Code (URL)</label>
-                    <input type="url" id="set-qrcode" placeholder="https://i.ibb.co/seu-qrcode.jpg" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
-                    <p class="text-[10px] text-zinc-500 mt-1">Cole o link da imagem do seu QR Code gerado (ex: imgBB)</p>
+                    <label class="text-xs font-semibold text-zinc-400 block mb-1 text-gold"><i class="fa-solid fa-qrcode"></i> Link da Imagem do QR Code</label>
+                    <!-- Trocado para type="text" para evitar o erro de validação do navegador -->
+                    <input type="text" id="set-qrcode" placeholder="https://i.ibb.co/..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
+                    <p class="text-[10px] text-zinc-500 mt-1">Cole o link direto da imagem do seu QR Code (ex: finalizado em .jpg ou .png)</p>
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-zinc-400 block mb-1 text-green-400"><i class="fa-brands fa-whatsapp"></i> WhatsApp para Pedidos (Vendas)</label>
