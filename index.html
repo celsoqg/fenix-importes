@@ -177,16 +177,18 @@
                 <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-zinc-800/40"></div>
                 <div class="p-6 border-t border-zinc-800 bg-zinc-900/50 space-y-4">
                     <div class="space-y-2">
-                        <label class="text-xs font-semibold text-zinc-400 flex items-center gap-1.5"><i class="fa-solid fa-truck text-gold"></i> Calcular Frete</label>
-                        <div class="flex gap-2">
-                            <input type="text" id="cep-input" placeholder="Digite seu CEP" maxlength="9" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
-                            <button onclick="calculateShipping()" class="bg-zinc-800 hover:bg-zinc-700 text-gold text-xs font-bold px-4 py-2 rounded-xl border border-zinc-700 transition">Calcular</button>
+                        <label class="text-xs font-semibold text-zinc-400 flex items-center gap-1.5"><i class="fa-solid fa-truck text-gold"></i> Opção de Frete</label>
+                        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
+                            <div>
+                                <span class="text-white font-bold block">Sedex / Envio Expresso</span>
+                                <span id="delivery-time-label" class="text-zinc-400 text-[11px]">Prazo: Calculando...</span>
+                            </div>
+                            <span id="shipping-cost-label" class="text-gold font-extrabold">R$ 25,00</span>
                         </div>
-                        <div id="shipping-result" class="text-xs text-zinc-400 hidden pt-1"></div>
                     </div>
                     <div class="space-y-1.5 pt-2 border-t border-zinc-800">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 0,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 25,00</span></div>
                         <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total à Vista (Pix)</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
                     <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-yellow-500 via-gold to-yellow-400 text-black font-extrabold py-3.5 rounded-xl shadow-lg glow-yellow transition flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido via Pix</button>
@@ -215,7 +217,7 @@
                     <div class="space-y-1">
                         <span class="text-xs text-zinc-400 block">Chave Pix da Loja (Copia e Cola):</span>
                         <div class="flex items-center gap-2 bg-zinc-950 p-2 rounded-xl border border-zinc-800">
-                            <input type="text" readonly id="pix-key-input" value="Sua Chave Pix" class="bg-transparent text-xs font-mono text-gold w-full focus:outline-none overflow-hidden text-ellipsis whitespace-nowrap">
+                            <input type="text" readonly id="pix-key-input" value="" class="bg-transparent text-xs font-mono text-gold w-full focus:outline-none overflow-hidden text-ellipsis whitespace-nowrap">
                             <button onclick="copyPixKey()" class="bg-gold hover:bg-yellow-400 text-black font-bold text-xs px-3 py-1.5 rounded-lg transition shrink-0">Copiar</button>
                         </div>
                     </div>
@@ -251,8 +253,8 @@
                         <input type="number" step="0.01" id="prod-price" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                     </div>
                     <div>
-                        <label class="text-xs font-semibold text-zinc-400 block mb-1 text-gold">Estoque Inicial</label>
-                        <input type="number" id="prod-stock" required min="0" placeholder="Ex: 10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
+                        <label class="text-xs font-semibold text-zinc-400 block mb-1 text-gold">Quantidade em Estoque</label>
+                        <input type="number" id="prod-stock" required min="0" value="10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                     </div>
                 </div>
                 <div>
@@ -285,12 +287,11 @@
             <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-4">
                 <div>
                     <label class="text-xs font-semibold text-zinc-400 block mb-1">Sua Chave PIX (Para receber pagamentos)</label>
-                    <input type="text" id="set-pix" required placeholder="email, cpf, celular ou chave aleatória" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
+                    <input type="text" id="set-pix" required placeholder="Sua chave pix..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                 </div>
                 <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1 text-green-400"><i class="fa-brands fa-whatsapp"></i> WhatsApp para Receber Pedidos</label>
+                    <label class="text-xs font-semibold text-zinc-400 block mb-1 text-green-400"><i class="fa-brands fa-whatsapp"></i> WhatsApp para Pedidos (Vendas)</label>
                     <input type="text" id="set-wpp-sales" required placeholder="Ex: 5521999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
-                    <p class="text-[10px] text-zinc-500 mt-1">Coloque DDI+DDD+Número. Ex: 5511988887777</p>
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-zinc-400 block mb-1 text-green-400"><i class="fa-brands fa-whatsapp"></i> WhatsApp do Botão de Suporte</label>
@@ -302,13 +303,13 @@
                         <input type="number" step="0.01" id="set-ship-cost" required placeholder="25.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                     </div>
                     <div>
-                        <label class="text-xs font-semibold text-zinc-400 block mb-1">Dias de Entrega</label>
+                        <label class="text-xs font-semibold text-zinc-400 block mb-1">Prazo de Entrega (Dias)</label>
                         <input type="text" id="set-ship-days" required placeholder="Ex: 3 a 5 dias úteis" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                     </div>
                 </div>
                 <div class="pt-4 flex gap-3">
                     <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-3 rounded-xl transition text-sm">Cancelar</button>
-                    <button type="submit" id="btn-salvar-settings" class="flex-1 bg-gold text-black font-extrabold py-3 rounded-xl shadow-lg transition text-sm">Salvar</button>
+                    <button type="submit" id="btn-salvar-settings" class="flex-1 bg-gold text-black font-extrabold py-3 rounded-xl shadow-lg transition text-sm">Salvar Configurações</button>
                 </div>
             </form>
         </div>
@@ -344,30 +345,428 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(Que excelente notícia que a etapa anterior deu certo! O site na imagem `1000057539.jpg` (Fênix Imports) está com um visual moderno e muito profissional.
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-Como o objetivo é fazer o melhor projeto possível com soluções robustas, estruturei a forma ideal de implementarmos cada um desses quatro pontos no seu código. 
+        window.db = db;
+        window.auth = auth;
+        window.firebaseFns = {
+            collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc,
+            signInWithEmailAndPassword, signOut, onAuthStateChanged
+        };
 
-### 1. Controle de Estoque
-Precisamos garantir que você não venda produtos que já acabaram.
-*   **Como faremos:** Adicionaremos um campo `estoque` no seu banco de dados para cada produto. 
-*   **A inteligência por trás:** Quando uma compra for finalizada, o sistema subtrairá a quantidade comprada do total. Se o estoque chegar a zero, o botão "Adicionar" na vitrine mudará automaticamente para "Esgotado", bloqueando a compra.
+        initApp();
+    </script>
 
-### 2. Atualização da Chave PIX
-Isso é prioridade para garantir que os pagamentos caiam na conta certa.
-*   **Como faremos:** Vamos localizar o arquivo que gera o payload (código Copia e Cola) ou o QR Code do PIX e substituir a chave atual pela sua.
-*   **A melhoria:** O ideal é colocar sua chave PIX como uma variável no seu Painel ADM (que vi no menu superior) ou em um arquivo de configuração central. Assim, se você precisar alterar a chave no futuro, não precisará mexer no código-fonte novamente.
+    <!-- Main Application Logic -->
+    <script>
+        let products = [];
+        let cart = [];
+        let currentFilter = 'all';
+        let currentUser = null;
+        let storeSettings = {
+            pixKey: "Sua Chave Pix",
+            whatsappSales: "5521999999999",
+            whatsappSupport: "5521999999999",
+            shippingCost: 25.00,
+            shippingDays: "3 a 5 dias úteis"
+        };
 
-### 3. Integração com WhatsApp (Comprovantes e Suporte)
-Usaremos a API oficial de links do WhatsApp (`wa.me`) para facilitar o contato.
-*   **Envio de Comprovantes:** Na tela de sucesso após o pedido, adicionaremos um botão: *"Enviar comprovante por WhatsApp"*. Ao clicar, ele abrirá o WhatsApp do cliente direcionado ao seu número de vendas, já com uma mensagem pré-pronta (ex: *"Olá, fiz o pedido #123 e aqui está meu comprovante PIX..."*).
-*   **Suporte:** Criaremos um botão flutuante no canto da tela da loja para que o cliente possa tirar dúvidas rápidas com a sua equipe.
+        async function initApp() {
+            if (window.auth && window.firebaseFns) {
+                window.firebaseFns.onAuthStateChanged(window.auth, (user) => {
+                    currentUser = user;
+                    updateAuthUI();
+                });
+                await loadSettings();
+                await loadProductsFromFirebase();
+            }
+        }
 
-### 4. Controle Dinâmico do Frete e Prazos
-Para que você tenha autonomia e não dependa de alterar o código toda vez que houver atrasos ou mudanças logísticas.
-*   **Como faremos:** Criaremos um campo de "Prazo de Entrega (Dias)" no seu Painel ADM. 
-*   **A inteligência por trás:** O tempo exibido para o cliente no carrinho será puxado diretamente desse painel. Se os Correios ou transportadora mudarem os prazos, você altera no painel e o site inteiro é atualizado na mesma hora.
+        async function loadSettings() {
+            try {
+                const docRef = window.firebaseFns.doc(window.db, "settings", "config");
+                const docSnap = await window.firebaseFns.getDoc(docRef);
+                if (docSnap.exists()) {
+                    storeSettings = docSnap.data();
+                } else {
+                    await window.firebaseFns.setDoc(docRef, storeSettings);
+                }
+            } catch (e) { console.log(e); }
+            updateStoreUI();
+        }
 
----
+        function updateStoreUI() {
+            document.getElementById('pix-key-input').value = storeSettings.pixKey;
+            document.getElementById('shipping-cost-label').innerText = `R$ ${Number(storeSettings.shippingCost).toFixed(2).replace('.', ',')}`;
+            document.getElementById('delivery-time-label').innerText = `Prazo: ${storeSettings.shippingDays}`;
+            document.getElementById('btn-floating-support').href = `https://wa.me/${storeSettings.whatsappSupport}?text=${encodeURIComponent('Olá, preciso de suporte na Fênix Imports.')}`;
+            updateCartUI();
+        }
 
-Para que eu possa escrever os códigos exatos para você aplicar no projeto, **você poderia colar aqui o código dos arquivos de Checkout (onde o PIX é gerado) e o modelo do seu Banco de Dados (onde ficam os produtos)?**
+        async function loadProductsFromFirebase() {
+            try {
+                const querySnapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
+                products = [];
+                querySnapshot.forEach((docSnap) => {
+                    products.push({ id: docSnap.id, ...docSnap.data() });
+                });
+            } catch (e) { console.log(e); }
+            renderProducts();
+            renderAdminTable();
+        }
+
+        function updateAuthUI() {
+            const navLogin = document.getElementById('nav-login');
+            const navAdmin = document.getElementById('nav-admin');
+            const userStatus = document.getElementById('user-status-container');
+            const mobileNavLogin = document.getElementById('mobile-nav-login');
+            const mobileNavAdmin = document.getElementById('mobile-nav-admin');
+            const mobileUserStatus = document.getElementById('mobile-user-status');
+
+            if (currentUser) {
+                navLogin.classList.add('hidden'); mobileNavLogin.classList.add('hidden');
+                navAdmin.classList.remove('hidden'); navAdmin.classList.add('flex');
+                mobileNavAdmin.classList.remove('hidden');
+                userStatus.classList.remove('hidden'); userStatus.classList.add('flex');
+                mobileUserStatus.classList.remove('hidden'); mobileUserStatus.classList.add('flex');
+            } else {
+                navLogin.classList.remove('hidden'); mobileNavLogin.classList.remove('hidden');
+                navAdmin.classList.remove('flex'); navAdmin.classList.add('hidden');
+                mobileNavAdmin.classList.add('hidden');
+                userStatus.classList.remove('flex'); userStatus.classList.add('hidden');
+                mobileUserStatus.classList.remove('flex'); mobileUserStatus.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tab-catalog').classList.add('hidden');
+            document.getElementById('tab-admin').classList.add('hidden');
+            document.getElementById('nav-catalog').classList.remove('text-gold');
+            document.getElementById('nav-catalog').classList.add('text-zinc-400');
+
+            if (tab === 'catalog') {
+                document.getElementById('tab-catalog').classList.remove('hidden');
+                document.getElementById('nav-catalog').classList.add('text-gold');
+                document.getElementById('nav-catalog').classList.remove('text-zinc-400');
+            } else if (tab === 'admin') {
+                if (!currentUser) return openLoginModal();
+                document.getElementById('tab-admin').classList.remove('hidden');
+                renderAdminTable();
+            }
+        }
+
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            grid.innerHTML = '';
+
+            const filtered = products.filter(p => {
+                const matchesCat = currentFilter === 'all' || p.category === currentFilter;
+                const matchesSearch = p.name.toLowerCase().includes(searchVal) || p.description.toLowerCase().includes(searchVal);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500">Nenhum produto encontrado. Cadastre no Painel ADM.</div>`;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const imageHTML = p.imageUrl 
+                    ? `<img src="${p.imageUrl}" alt="${p.name}" class="w-full h-48 object-cover rounded-2xl mb-4 shadow-lg border border-zinc-700/50">` 
+                    : `<div class="w-full h-48 bg-zinc-900 rounded-2xl mb-4 border border-zinc-800 flex items-center justify-center text-zinc-600"><i class="fa-solid fa-image text-3xl"></i></div>`;
+
+                const stockCount = p.stock !== undefined ? Number(p.stock) : 10;
+                const isOutOfStock = stockCount <= 0;
+
+                grid.innerHTML += `
+                    <div class="bg-cardBg border border-zinc-800 rounded-3xl p-6 flex flex-col justify-between hover:border-gold/50 transition group">
+                        <div>
+                            ${imageHTML}
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase tracking-wider">${p.category}</span>
+                                <span class="text-[11px] font-bold ${isOutOfStock ? 'text-red-400 bg-red-500/10 border border-red-500/20' : 'text-green-400 bg-green-500/10 border border-green-500/20'} px-2.5 py-0.5 rounded-full">
+                                    ${isOutOfStock ? 'Esgotado' : `Estoque: ${stockCount}`}
+                                </span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white group-hover:text-gold transition mb-2">${p.name}</h3>
+                            <p class="text-zinc-400 text-xs leading-relaxed line-clamp-3">${p.description}</p>
+                        </div>
+                        <div class="pt-5 mt-5 border-t border-zinc-800/80 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] text-zinc-500 block uppercase font-semibold">Preço</span>
+                                <span class="text-lg font-extrabold text-gold">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</span>
+                            </div>
+                            <button onclick="addToCart('${p.id}')" ${isOutOfStock ? 'disabled' : ''} class="${isOutOfStock ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-xs font-bold px-4 py-2.5 rounded-xl border border-zinc-700 transition flex items-center gap-2">
+                                <i class="fa-solid fa-cart-plus"></i> ${isOutOfStock ? 'Indisponível' : 'Adicionar'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function setCategoryFilter(cat) {
+            currentFilter = cat;
+            document.querySelectorAll('[id^="filter-btn-"]').forEach(btn => btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition");
+            document.getElementById(`filter-btn-${cat}`).className = "px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition shadow-md";
+            renderProducts();
+        }
+
+        function filterProducts() { renderProducts(); }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            const stockMax = product.stock !== undefined ? Number(product.stock) : 10;
+            const existing = cart.find(item => item.id === id);
+            
+            const currentQtyInCart = existing ? existing.qty : 0;
+            if (currentQtyInCart + 1 > stockMax) {
+                return alert('Quantidade solicitada maior do que o estoque disponível.');
+            }
+
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            updateCartUI(); 
+            toggleCartDrawer(true);
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            document.getElementById('cart-counter').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
+            
+            const shippingCost = Number(storeSettings.shippingCost);
+            
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="py-12 text-center text-zinc-500 text-sm">Seu carrinho está vazio.</div>`;
+                document.getElementById('cart-subtotal').innerText = 'R$ 0,00'; 
+                document.getElementById('cart-shipping-cost').innerText = `R$ ${shippingCost.toFixed(2).replace('.', ',')}`;
+                document.getElementById('cart-total').innerText = `R$ ${shippingCost.toFixed(2).replace('.', ',')}`;
+                return;
+            }
+
+            container.innerHTML = ''; 
+            let subtotal = 0;
+            
+            cart.forEach(item => {
+                subtotal += item.price * item.qty;
+                const imgThumb = item.imageUrl ? `<img src="${item.imageUrl}" class="w-10 h-10 rounded-lg object-cover border border-zinc-700">` : `<div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-600"><i class="fa-solid fa-image text-xs"></i></div>`;
+                container.innerHTML += `
+                    <div class="py-4 flex items-center justify-between gap-3">
+                        ${imgThumb}
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-bold text-white truncate">${item.name}</h4>
+                            <span class="text-xs text-gold font-semibold">R$ ${Number(item.price).toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeQty('${item.id}', -1)" class="w-7 h-7 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700">-</button>
+                            <span class="text-xs font-bold w-5 text-center">${item.qty}</span>
+                            <button onclick="changeQty('${item.id}', 1)" class="w-7 h-7 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700">+</button>
+                            <button onclick="removeFromCart('${item.id}')" class="text-zinc-500 hover:text-red-400 p-1.5"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('cart-subtotal').innerText = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+            document.getElementById('cart-shipping-cost').innerText = `R$ ${shippingCost.toFixed(2).replace('.', ',')}`;
+            document.getElementById('cart-total').innerText = `R$ ${(subtotal + shippingCost).toFixed(2).replace('.', ',')}`;
+        }
+
+        function changeQty(id, delta) { 
+            const item = cart.find(i => i.id === id); 
+            if(item) { 
+                if (delta > 0) {
+                    const prodRef = products.find(p => p.id === id);
+                    if (prodRef && item.qty + 1 > Number(prodRef.stock)) {
+                        return alert('Estoque máximo atingido.');
+                    }
+                }
+                item.qty += delta; 
+                if(item.qty <= 0) cart = cart.filter(i => i.id !== id); 
+                updateCartUI(); 
+            } 
+        }
+
+        function removeFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
+        function toggleCartDrawer(open) { document.getElementById('cart-drawer').classList.toggle('hidden', !open); }
+        function proceedToCheckout() { if(cart.length === 0) return alert('Carrinho vazio.'); toggleCartDrawer(false); document.getElementById('checkout-modal').classList.remove('hidden'); }
+        function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
+        function copyPixKey() { const input = document.getElementById('pix-key-input'); input.select(); navigator.clipboard.writeText(input.value); alert('Chave Pix copiada com sucesso!'); }
+        
+        async function sendOrderToWhatsApp() {
+            const name = document.getElementById('cust-name').value.trim(); 
+            const wpp = document.getElementById('cust-whatsapp').value.trim(); 
+            const addr = document.getElementById('cust-address').value.trim();
+            if(!name || !wpp || !addr) return alert('Preencha todos os campos para envio!');
+            
+            const shippingCost = Number(storeSettings.shippingCost);
+            let total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0) + shippingCost;
+            let msg = `*NOVO PEDIDO - FÊNIX IMPORTS*\n\n👤 *Cliente:* ${name}\n📱 *WhatsApp:* ${wpp}\n📍 *Endereço:* ${addr}\n\n🛒 *Itens:*\n`;
+            
+            // Reduzir estoque no banco ao finalizar
+            for (const item of cart) {
+                msg += `- ${item.qty}x ${item.name} (R$ ${(item.price * item.qty).toFixed(2)})\n`;
+                const prodRef = products.find(p => p.id === item.id);
+                if (prodRef) {
+                    const newStock = Math.max(0, Number(prodRef.stock) - item.qty);
+                    prodRef.stock = newStock;
+                    try {
+                        await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", item.id), { stock: newStock });
+                    } catch(e) { console.log(e); }
+                }
+            }
+
+            msg += `\n📦 *Frete:* R$ ${shippingCost.toFixed(2)} (${storeSettings.shippingDays})\n💰 *Total:* R$ ${total.toFixed(2)}\n💳 *Pagamento:* PIX\n\n_Segue o meu comprovante de pagamento._`;
+            
+            cart = [];
+            updateCartUI();
+            renderProducts();
+            closeCheckoutModal();
+
+            window.open(`https://wa.me/${storeSettings.whatsappSales}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
+        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+        async function handleAdminLogin(event) {
+            event.preventDefault(); const email = document.getElementById('login-email').value; const pass = document.getElementById('login-password').value;
+            try { await window.firebaseFns.signInWithEmailAndPassword(window.auth, email, pass); closeLoginModal(); switchTab('admin'); } catch (error) { document.getElementById('login-error').innerText = 'Erro ao entrar. Senha inválida?'; document.getElementById('login-error').classList.remove('hidden'); }
+        }
+        async function logoutAdmin() { await window.firebaseFns.signOut(window.auth); switchTab('catalog'); }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-product-table');
+            tbody.innerHTML = '';
+            products.forEach(p => {
+                const stockVal = p.stock !== undefined ? p.stock : 10;
+                const imgThumb = p.imageUrl ? `<img src="${p.imageUrl}" class="w-12 h-12 object-cover rounded-lg border border-zinc-700">` : `<div class="w-12 h-12 bg-zinc-800 rounded-lg flex items-center justify-center text-zinc-600 text-xs"><i class="fa-solid fa-image"></i></div>`;
+                tbody.innerHTML += `
+                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40 transition">
+                        <td class="p-4 w-16">${imgThumb}</td>
+                        <td class="p-4 font-semibold text-white">${p.name}</td>
+                        <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-zinc-800 text-gold">${stockVal} un.</span></td>
+                        <td class="p-4 text-gold font-bold">R$ ${Number(p.price).toFixed(2).replace('.', ',')}</td>
+                        <td class="p-4 text-right space-x-2">
+                            <button onclick="openProductModal('${p.id}')" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 px-3 py-1.5 rounded-lg text-xs transition"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteProduct('${p.id}')" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg text-xs transition"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openProductModal(id = null) {
+            const modal = document.getElementById('product-modal');
+            const title = document.getElementById('product-modal-title');
+            document.getElementById('product-form').reset();
+            document.getElementById('prod-id').value = '';
+
+            if (id) {
+                title.innerHTML = `<i class="fa-solid fa-pen text-gold"></i> Editar Produto`;
+                const product = products.find(p => p.id === id);
+                if (product) {
+                    document.getElementById('prod-id').value = product.id;
+                    document.getElementById('prod-imageUrl').value = product.imageUrl || '';
+                    document.getElementById('prod-name').value = product.name;
+                    document.getElementById('prod-category').value = product.category;
+                    document.getElementById('prod-price').value = product.price;
+                    document.getElementById('prod-stock').value = product.stock !== undefined ? product.stock : 10;
+                    document.getElementById('prod-desc').value = product.description;
+                }
+            } else {
+                title.innerHTML = `<i class="fa-solid fa-box text-gold"></i> Adicionar Produto`;
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+
+        async function saveProduct(event) {
+            event.preventDefault();
+            const id = document.getElementById('prod-id').value;
+            const name = document.getElementById('prod-name').value;
+            const category = document.getElementById('prod-category').value;
+            const price = parseFloat(document.getElementById('prod-price').value);
+            const stock = parseInt(document.getElementById('prod-stock').value);
+            const description = document.getElementById('prod-desc').value;
+            const imageUrl = document.getElementById('prod-imageUrl').value.trim();
+
+            const btnSalvar = document.getElementById('btn-salvar-produto');
+            btnSalvar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+            btnSalvar.disabled = true;
+
+            const productData = { name, category, price, stock, description, imageUrl };
+
+            try {
+                if (id) {
+                    await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", id), productData);
+                    const index = products.findIndex(p => p.id === id);
+                    if (index !== -1) products[index] = { id, ...productData };
+                } else {
+                    const docRef = await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), productData);
+                    products.push({ id: docRef.id, ...productData });
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Erro ao salvar produto.");
+            }
+
+            btnSalvar.innerHTML = 'Salvar Produto';
+            btnSalvar.disabled = false;
+            closeProductModal();
+            renderProducts();
+            renderAdminTable();
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Deseja excluir este produto?')) return;
+            try {
+                await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, "products", id));
+            } catch (e) { console.log(e); }
+            products = products.filter(p => p.id !== id);
+            renderProducts(); renderAdminTable();
+        }
+
+        function openSettingsModal() {
+            document.getElementById('set-pix').value = storeSettings.pixKey;
+            document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales;
+            document.getElementById('set-wpp-support').value = storeSettings.whatsappSupport;
+            document.getElementById('set-ship-cost').value = storeSettings.shippingCost;
+            document.getElementById('set-ship-days').value = storeSettings.shippingDays;
+            document.getElementById('settings-modal').classList.remove('hidden');
+        }
+
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
+
+        async function saveSettings(event) {
+            event.preventDefault();
+            storeSettings.pixKey = document.getElementById('set-pix').value.trim();
+            storeSettings.whatsappSales = document.getElementById('set-wpp-sales').value.trim();
+            storeSettings.whatsappSupport = document.getElementById('set-wpp-support').value.trim();
+            storeSettings.shippingCost = parseFloat(document.getElementById('set-ship-cost').value);
+            storeSettings.shippingDays = document.getElementById('set-ship-days').value.trim();
+
+            const btn = document.getElementById('btn-salvar-settings');
+            btn.innerHTML = 'Salvando...';
+            btn.disabled = true;
+
+            try {
+                await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings);
+                alert('Configurações atualizadas com sucesso!');
+                closeSettingsModal();
+                updateStoreUI();
+            } catch(e) {
+                console.log(e);
+                alert('Erro ao salvar configurações.');
+            }
+            btn.innerHTML = 'Salvar Configurações';
+            btn.disabled = false;
+        }
+    </script>
+</body>
+</html>
