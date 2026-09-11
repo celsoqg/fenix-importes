@@ -6,7 +6,19 @@
     <title>Fênix Imports | Alta Performance & Exclusividade</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { darkBg: '#0b0b0f', cardBg: '#13131a', gold: '#d4a017', goldHover: '#e5b224', accentYellow: '#facc15' } } } }
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        darkBg: '#0b0b0f', 
+                        cardBg: '#13131a', 
+                        gold: '#d4a017', 
+                        goldHover: '#e5b224', 
+                        accentYellow: '#facc15' 
+                    } 
+                } 
+            } 
+        }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,9 +37,20 @@
         .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.4; }
         .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 4px; }
         .chat-bot { background: rgba(212, 160, 23, 0.1); border: 1px solid rgba(212, 160, 23, 0.2); color: #facc15; border-bottom-left-radius: 4px; }
+        
+        /* Toast Notification Styles */
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; color: white; display: flex; items-center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
+        .toast-success { background: #13131a; border-left: 4px solid #22c55e; color: #22c55e; }
+        .toast-error { background: #13131a; border-left: 4px solid #ef4444; color: #ef4444; }
+        .toast-info { background: #13131a; border-left: 4px solid #d4a017; color: #facc15; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative">
+
+    <!-- Container para Toasts -->
+    <div id="toast-container"></div>
 
     <!-- Top Banner -->
     <div class="bg-gradient-to-r from-yellow-600 via-gold to-yellow-500 text-black text-xs font-bold py-1.5 px-4 text-center tracking-wide uppercase flex items-center justify-center gap-2 shadow-md">
@@ -97,7 +120,6 @@
                 </div>
                 <div class="flex items-center gap-2 overflow-x-auto w-full pb-2 xl:pb-0 scroll-smooth">
                     <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition whitespace-nowrap">Todos</button>
-                    <!-- Categorias Dinâmicas -->
                     <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Peptídeos</button>
                     <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Insumos & Soluções</button>
                     <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética Avançada</button>
@@ -188,7 +210,7 @@
         </div>
     </div>
 
-    <!-- ================= MODALS (TRACKING, CART, CHECKOUT, PRODUCT, SETTINGS, LOGIN) ================= -->
+    <!-- ================= MODALS ================= -->
 
     <!-- Portal Rastreamento -->
     <div id="tracking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
@@ -287,7 +309,18 @@
                     <input type="number" step="0.01" id="prod-promo-price" placeholder="Promocional" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
                 </div>
                 <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
-                    <option value="Peptídeos">Peptídeos</option><option value="Insumos & Soluções">Insumos & Soluções</option><option value="Estética Avançada">Estética Avançada</option><option value="Estética e Pele">Estética e Pele</option><option value="CA E P">CA E P</option><option value="Hormônios">Hormônios</option><option value="Libido">Libido</option><option value="Longevidade">Longevidade</option><option value="Perda de Peso">Perda de Peso</option><option value="Performance">Performance</option><option value="Perfumes">Perfumes</option><option value="Outros">Outros</option>
+                    <option value="Peptídeos">Peptídeos</option>
+                    <option value="Insumos & Soluções">Insumos & Soluções</option>
+                    <option value="Estética Avançada">Estética Avançada</option>
+                    <option value="Estética e Pele">Estética e Pele</option>
+                    <option value="CA E P">CA E P</option>
+                    <option value="Hormônios">Hormônios</option>
+                    <option value="Libido">Libido</option>
+                    <option value="Longevidade">Longevidade</option>
+                    <option value="Perda de Peso">Perda de Peso</option>
+                    <option value="Performance">Performance</option>
+                    <option value="Perfumes">Perfumes</option>
+                    <option value="Outros">Outros</option>
                 </select>
                 <textarea id="prod-desc" rows="3" required placeholder="Descrição" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold"></textarea>
                 <div class="flex gap-2 pt-2">
@@ -298,7 +331,7 @@
         </div>
     </div>
 
-    <!-- Settings Modal (inclui IA) -->
+    <!-- Settings Modal -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
@@ -333,138 +366,323 @@
         </div>
     </div>
 
-    <!-- Firebase -->
+    <!-- Firebase Script (Module) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        const firebaseConfig = { apiKey: "AIzaSyBJS8BmQipFFG9qjgML4VTVJnIQVClXiNo", authDomain: "fenix-importes.firebaseapp.com", projectId: "fenix-importes", storageBucket: "fenix-importes.firebasestorage.app", messagingSenderId: "169461327461", appId: "1:169461327461:web:cf43022c8f04915666c88c" };
-        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
-        window.db = db; window.auth = auth; window.firebaseFns = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, signInWithEmailAndPassword, signOut, onAuthStateChanged };
-        initApp();
+        
+        const firebaseConfig = { 
+            apiKey: "AIzaSyBJS8BmQipFFG9qjgML4VTVJnIQVClXiNo", 
+            authDomain: "fenix-importes.firebaseapp.com", 
+            projectId: "fenix-importes", 
+            storageBucket: "fenix-importes.firebasestorage.app", 
+            messagingSenderId: "169461327461", 
+            appId: "1:169461327461:web:cf43022c8f04915666c88c" 
+        };
+        
+        const app = initializeApp(firebaseConfig); 
+        const auth = getAuth(app); 
+        const db = getFirestore(app);
+        
+        window.db = db; 
+        window.auth = auth; 
+        window.firebaseFns = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+
+        // Inicialização garantida após carregamento do DOM e Firebase
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => window.initApp());
+        } else {
+            window.initApp();
+        }
     </script>
 
+    <!-- App Main Script -->
     <script>
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
         let storeSettings = { pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingCost: 25.00, geminiKey: "" };
+        let chatHistory = [];
+
         const formatMoney = (val) => Number(val).toFixed(2).replace('.', ',');
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            const icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-xmark' : 'fa-circle-info';
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
 
         async function initApp() {
             if (window.auth && window.firebaseFns) {
-                window.firebaseFns.onAuthStateChanged(window.auth, (user) => { currentUser = user; updateAuthUI(); });
-                await loadSettings(); await loadProductsFromFirebase();
+                window.firebaseFns.onAuthStateChanged(window.auth, (user) => { 
+                    currentUser = user; 
+                    updateAuthUI(); 
+                });
+                await loadSettings(); 
+                await loadProductsFromFirebase();
             }
         }
+        window.initApp = initApp;
 
         async function loadSettings() {
-            try { const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
+            try { 
+                const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
                 if (docSnap.exists()) storeSettings = { ...storeSettings, ...docSnap.data() };
-            } catch (e) { console.log(e); }
-            document.getElementById('btn-floating-support').href = `https://wa.me/${storeSettings.whatsappSales}?text=Olá`;
+            } catch (e) { 
+                console.error("Erro ao carregar configurações:", e); 
+            }
+            document.getElementById('btn-floating-support').href = `https://wa.me/${storeSettings.whatsappSales}?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida.`;
         }
 
         async function loadProductsFromFirebase() {
             try {
                 const snapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
-                products = []; snapshot.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
-            } catch (e) {} renderProducts(); renderAdminTable();
+                products = []; 
+                snapshot.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
+            } catch (e) {
+                console.error("Erro ao carregar produtos:", e);
+            } 
+            renderProducts(); 
+            renderAdminTable();
         }
 
         function updateAuthUI() {
-            if (currentUser) { document.getElementById('nav-login').classList.add('hidden'); document.getElementById('nav-admin').classList.remove('hidden'); document.getElementById('nav-admin').classList.add('flex'); document.getElementById('user-status-container').classList.remove('hidden'); document.getElementById('user-status-container').classList.add('flex'); loadOrdersFromFirebase(); } 
-            else { document.getElementById('nav-login').classList.remove('hidden'); document.getElementById('nav-admin').classList.add('hidden'); document.getElementById('user-status-container').classList.add('hidden'); }
+            if (currentUser) { 
+                document.getElementById('nav-login').classList.add('hidden'); 
+                document.getElementById('nav-admin').classList.remove('hidden'); 
+                document.getElementById('nav-admin').classList.add('flex'); 
+                document.getElementById('user-status-container').classList.remove('hidden'); 
+                document.getElementById('user-status-container').classList.add('flex'); 
+                document.getElementById('logged-user-email').innerText = currentUser.email || 'admin';
+                loadOrdersFromFirebase(); 
+            } else { 
+                document.getElementById('nav-login').classList.remove('hidden'); 
+                document.getElementById('nav-admin').classList.add('hidden'); 
+                document.getElementById('user-status-container').classList.add('hidden'); 
+            }
         }
 
         function switchTab(tab) {
-            document.getElementById('tab-catalog').classList.add('hidden'); document.getElementById('tab-admin').classList.add('hidden');
+            document.getElementById('tab-catalog').classList.add('hidden'); 
+            document.getElementById('tab-admin').classList.add('hidden');
             if (tab === 'catalog') document.getElementById('tab-catalog').classList.remove('hidden');
-            if (tab === 'admin') { if(!currentUser) return openLoginModal(); document.getElementById('tab-admin').classList.remove('hidden'); renderAdminTable(); }
+            if (tab === 'admin') { 
+                if(!currentUser) return openLoginModal(); 
+                document.getElementById('tab-admin').classList.remove('hidden'); 
+                renderAdminTable(); 
+            }
         }
 
         function switchAdminSubTab(sub) {
-            document.getElementById('admin-subtab-products').classList.add('hidden'); document.getElementById('admin-subtab-orders').classList.add('hidden');
+            document.getElementById('admin-subtab-products').classList.add('hidden'); 
+            document.getElementById('admin-subtab-orders').classList.add('hidden');
             document.getElementById('subnav-products').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 transition";
             document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 transition";
+            
             document.getElementById(`admin-subtab-${sub}`).classList.remove('hidden');
             document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-white transition";
             if(sub === 'orders') loadOrdersFromFirebase();
         }
 
         function renderProducts() {
-            const grid = document.getElementById('product-grid'); const searchVal = document.getElementById('search-input').value.toLowerCase();
+            const grid = document.getElementById('product-grid'); 
+            const searchVal = document.getElementById('search-input').value.toLowerCase();
             grid.innerHTML = '';
+            
             const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal)));
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500">Nenhum produto encontrado.</div>`;
+                return;
+            }
+
             filtered.forEach(p => {
-                const st = p.stock !== undefined ? Number(p.stock) : 10; const out = st <= 0;
-                // FOMO GATILHO MENTAL
+                const st = p.stock !== undefined ? Number(p.stock) : 10; 
+                const out = st <= 0;
                 const scarcity = (st > 0 && st <= 3) ? `<div class="absolute top-3 right-3 bg-red-600/90 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg animate-pulse z-10"><i class="fa-solid fa-fire"></i> Restam ${st}!</div>` : '';
-                const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow uppercase"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
+                const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow uppercase z-10"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
                 const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-48 object-cover rounded-2xl mb-3 border border-zinc-700/50">` : `<div class="w-full h-48 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-600 text-3xl"></i></div>`;
+                
                 grid.innerHTML += `
                     <div class="bg-cardBg border border-zinc-800 rounded-3xl p-5 flex flex-col justify-between hover:border-gold/50 transition relative overflow-hidden group">
                         ${promo}${scarcity}
-                        <div>${img}
-                            <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase">${p.category}</span>
+                        <div>
+                            ${img}
+                            <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase">${p.category || 'Geral'}</span>
                             <h3 class="text-lg font-bold text-white mt-2 group-hover:text-gold transition line-clamp-1">${p.name}</h3>
                             <p class="text-zinc-400 text-xs leading-relaxed line-clamp-2 mt-1">${p.description}</p>
                         </div>
                         <div class="pt-4 mt-4 border-t border-zinc-800 flex items-center justify-between">
-                            <div><span class="text-lg font-extrabold ${p.promoPrice?'text-green-400':'text-gold'}">R$ ${formatMoney(p.promoPrice||p.price)}</span></div>
-                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-xs font-bold px-3 py-2 rounded-xl border border-zinc-700 transition">
-                                <i class="fa-solid fa-cart-plus"></i>
+                            <div><span class="text-lg font-extrabold ${p.promoPrice ? 'text-green-400' : 'text-gold'}">R$ ${formatMoney(p.promoPrice || p.price)}</span></div>
+                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-xs font-bold px-3 py-2 rounded-xl border border-zinc-700 transition">
+                                <i class="fa-solid fa-cart-plus"></i> ${out ? 'Esgotado' : 'Adicionar'}
                             </button>
                         </div>
                     </div>`;
             });
         }
 
-        function setCategoryFilter(cat) { currentFilter = cat; document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 whitespace-nowrap"); const activeBtn = cat==='all' ? document.getElementById('filter-btn-all') : document.querySelector(`.filter-btn[data-cat="${cat}"]`); if(activeBtn) activeBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black shadow whitespace-nowrap"; renderProducts(); }
+        function setCategoryFilter(cat) { 
+            currentFilter = cat; 
+            document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 whitespace-nowrap"); 
+            const activeBtn = cat === 'all' ? document.getElementById('filter-btn-all') : document.querySelector(`.filter-btn[data-cat="${cat}"]`); 
+            if(activeBtn) activeBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black shadow whitespace-nowrap"; 
+            renderProducts(); 
+        }
+
         function filterProducts() { renderProducts(); }
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
 
-        // ================= CART & VIA CEP & PIX DINÂMICO =================
+        // ================= CART MANAGEMENT =================
         function addToCart(id) {
-            const p = products.find(x => x.id === id); const ex = cart.find(i => i.id === id);
-            if (ex && ex.qty + 1 > p.stock) return alert('Estoque esgotado.');
-            if (ex) { ex.qty++; } else { cart.push({ ...p, activePrice: p.promoPrice ? Number(p.promoPrice) : Number(p.price), costPrice: Number(p.costPrice)||0, qty: 1 }); }
-            updateCartUI(); toggleCartDrawer(true);
+            const p = products.find(x => x.id === id); 
+            if (!p) return;
+            const ex = cart.find(i => i.id === id);
+            if (ex && ex.qty + 1 > p.stock) {
+                showToast('Quantidade limite do estoque atingida.', 'error');
+                return;
+            }
+            if (ex) { 
+                ex.qty++; 
+            } else { 
+                cart.push({ ...p, activePrice: p.promoPrice ? Number(p.promoPrice) : Number(p.price), costPrice: Number(p.costPrice) || 0, qty: 1 }); 
+            }
+            showToast(`${p.name} adicionado ao carrinho!`, 'success');
+            updateCartUI(); 
+            toggleCartDrawer(true);
         }
+
+        function increaseCartQty(id) {
+            const p = products.find(x => x.id === id);
+            const item = cart.find(x => x.id === id);
+            if (item && p && item.qty < p.stock) {
+                item.qty++;
+                updateCartUI();
+            } else {
+                showToast('Estoque máximo atingido.', 'error');
+            }
+        }
+
+        function decreaseCartQty(id) {
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                item.qty--;
+                if (item.qty <= 0) {
+                    cart = cart.filter(x => x.id !== id);
+                }
+                updateCartUI();
+            }
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(x => x.id !== id);
+            updateCartUI();
+        }
+
         function updateCartUI() {
-            const cont = document.getElementById('cart-items-container'); let sub = 0; document.getElementById('cart-counter').innerText = cart.reduce((s, i) => s + i.qty, 0);
-            if (cart.length === 0) { cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-sm">Vazio</div>`; document.getElementById('cart-total').innerText='R$ 0,00'; return; }
-            cont.innerHTML = ''; cart.forEach(i => { sub += i.activePrice * i.qty; cont.innerHTML += `<div class="py-3 flex items-center justify-between gap-3 border-b border-zinc-800/40 last:border-0"><div class="flex-1 min-w-0"><h4 class="text-xs font-bold text-white truncate">${i.name}</h4><span class="text-xs text-gold">R$ ${formatMoney(i.activePrice)}</span></div><div class="flex gap-2 items-center"><span class="text-xs w-4 text-center">${i.qty}</span><button onclick="cart.filter(x=>x.id!=='${i.id}'); cart=cart.filter(x=>x.id!=='${i.id}'); updateCartUI();" class="text-zinc-500 p-1"><i class="fa-solid fa-trash"></i></button></div></div>`; });
-            const sh = Number(storeSettings.shippingCost); document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(sub)}`; document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(sh)}`; document.getElementById('cart-total').innerText = `R$ ${formatMoney(sub+sh)}`;
+            const cont = document.getElementById('cart-items-container'); 
+            let sub = 0; 
+            document.getElementById('cart-counter').innerText = cart.reduce((s, i) => s + i.qty, 0);
+            
+            if (cart.length === 0) { 
+                cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-sm">Seu carrinho está vazio</div>`; 
+                document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
+                document.getElementById('cart-total').innerText = 'R$ 0,00'; 
+                return; 
+            }
+            
+            cont.innerHTML = ''; 
+            cart.forEach(i => { 
+                sub += i.activePrice * i.qty; 
+                cont.innerHTML += `
+                    <div class="py-3 flex items-center justify-between gap-3 border-b border-zinc-800/40 last:border-0">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-white truncate">${i.name}</h4>
+                            <span class="text-xs text-gold">R$ ${formatMoney(i.activePrice)}</span>
+                        </div>
+                        <div class="flex gap-2 items-center bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1">
+                            <button onclick="decreaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">-</button>
+                            <span class="text-xs w-4 text-center font-bold">${i.qty}</span>
+                            <button onclick="increaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">+</button>
+                        </div>
+                        <button onclick="removeFromCart('${i.id}')" class="text-zinc-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash"></i></button>
+                    </div>`; 
+            });
+            
+            const sh = Number(storeSettings.shippingCost); 
+            document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(sub)}`; 
+            document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(sh)}`; 
+            document.getElementById('cart-total').innerText = `R$ ${formatMoney(sub + sh)}`;
         }
+
         function toggleCartDrawer(op) { document.getElementById('cart-drawer').classList.toggle('hidden', !op); }
-        function proceedToCheckout() { if(cart.length===0) return; toggleCartDrawer(false); document.getElementById('checkout-step-1').classList.remove('hidden'); document.getElementById('checkout-step-2').classList.add('hidden'); document.getElementById('checkout-modal').classList.remove('hidden'); }
+        function proceedToCheckout() { 
+            if(cart.length === 0) return showToast('Adicione produtos antes de finalizar.', 'error'); 
+            toggleCartDrawer(false); 
+            document.getElementById('checkout-step-1').classList.remove('hidden'); 
+            document.getElementById('checkout-step-2').classList.add('hidden'); 
+            document.getElementById('checkout-modal').classList.remove('hidden'); 
+        }
         function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
         function backToStep1() { document.getElementById('checkout-step-2').classList.add('hidden'); document.getElementById('checkout-step-1').classList.remove('hidden'); }
 
         // VIA CEP
         async function buscarCEP() {
-            let cep = document.getElementById('cust-cep').value.replace(/\D/g, ''); if(cep.length !== 8) return;
+            let cep = document.getElementById('cust-cep').value.replace(/\D/g, ''); 
+            if(cep.length !== 8) return;
             try {
-                let res = await fetch(`https://viacep.com.br/ws/${cep}/json/`); let data = await res.json();
-                if(!data.erro) document.getElementById('cust-address').value = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
-            } catch(e) {}
+                let res = await fetch(`https://viacep.com.br/ws/${cep}/json/`); 
+                let data = await res.json();
+                if(!data.erro) {
+                    document.getElementById('cust-address').value = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+                } else {
+                    showToast('CEP não encontrado.', 'error');
+                }
+            } catch(e) {
+                console.error("Erro na busca de CEP:", e);
+            }
         }
 
-        // GERADOR PIX EMV CRC16 (A Mágica do Copia e Cola)
+        // GERADOR PIX EMV CRC16 CORRIGIDO
         let currentPixPayload = "";
         function generatePixEMV(key, amount, name, city, txid="FENIX") {
             const format = (id, val) => { const v = String(val); return id + v.length.toString().padStart(2,'0') + v; };
-            const p = [ format('00','01'), format('26', format('00','BR.GOV.BCB.PIX') + format('01',key)), format('52','0000'), format('53','986'), format('54', amount.toFixed(2)), format('58','BR'), format('59', name.substring(0,25)), format('60', city.substring(0,15)), format('62', format('05',txid)) ].join('');
-            const crcPayload = p + '6304'; let result = 0xFFFF;
+            const p = [ 
+                format('00','01'), 
+                format('26', format('00','BR.GOV.BCB.PIX') + format('01', key)), 
+                format('52','0000'), 
+                format('53','986'), 
+                format('54', amount.toFixed(2)), 
+                format('58','BR'), 
+                format('59', name.substring(0,25)), 
+                format('60', city.substring(0,15)), 
+                format('62', format('05', txid)) 
+            ].join('');
+            
+            const crcPayload = p + '6304'; 
+            let result = 0xFFFF;
             for (let i = 0; i < crcPayload.length; i++) {
                 result ^= crcPayload.charCodeAt(i) << 8;
-                for (let j = 0; j < 8; j++) { if ((result & 0x8000) !== 0) result = (result << 1) ^ 0x1021; else result <<= 1; }
+                for (let j = 0; j < 8; j++) { 
+                    if ((result & 0x8000) !== 0) {
+                        result = ((result << 1) ^ 0x1021) & 0xFFFF; 
+                    } else {
+                        result = (result << 1) & 0xFFFF; 
+                    }
+                }
             }
             return crcPayload + (result & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
         }
 
         function generateDynamicPix() {
-            const n = document.getElementById('cust-name').value; const w = document.getElementById('cust-whatsapp').value; const c = document.getElementById('cust-cep').value;
-            if(!n || !w || !c || !storeSettings.pixKey) return alert("Preencha Nome, WhatsApp, CEP e configure a Chave Pix no Admin.");
+            const n = document.getElementById('cust-name').value.trim(); 
+            const w = document.getElementById('cust-whatsapp').value.trim(); 
+            const c = document.getElementById('cust-cep').value.trim();
+            if(!n || !w || !c) return showToast("Preencha Nome, WhatsApp e CEP.", "error");
+            if(!storeSettings.pixKey) return showToast("Configure a Chave Pix no Admin primeiro.", "error");
             
             const total = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0) + Number(storeSettings.shippingCost);
             currentPixPayload = generatePixEMV(storeSettings.pixKey, total, storeSettings.pixName, storeSettings.pixCity);
@@ -475,51 +693,103 @@
             document.getElementById('dynamic-qrcode').innerHTML = '';
             new QRCode(document.getElementById('dynamic-qrcode'), { text: currentPixPayload, width: 140, height: 140, colorDark: "#000000", colorLight: "#ffffff" });
 
-            document.getElementById('checkout-step-1').classList.add('hidden'); document.getElementById('checkout-step-2').classList.remove('hidden');
+            document.getElementById('checkout-step-1').classList.add('hidden'); 
+            document.getElementById('checkout-step-2').classList.remove('hidden');
         }
-        function copyPixEMV() { const i = document.getElementById('pix-emv-input'); i.select(); navigator.clipboard.writeText(i.value); alert('Pix Copiado! Cole no aplicativo do seu banco.'); }
+
+        function copyPixEMV() { 
+            const i = document.getElementById('pix-emv-input'); 
+            i.select(); 
+            navigator.clipboard.writeText(i.value); 
+            showToast('Pix Copiado! Cole no app do seu banco.', 'success'); 
+        }
 
         async function processAndSendOrder() {
-            const n = document.getElementById('cust-name').value; const w = document.getElementById('cust-whatsapp').value; const ad = document.getElementById('cust-address').value + ", N: " + document.getElementById('cust-number').value;
-            const btn = document.getElementById('btn-finish-order'); btn.disabled = true; btn.innerHTML = 'Processando...';
+            const n = document.getElementById('cust-name').value; 
+            const w = document.getElementById('cust-whatsapp').value; 
+            const ad = document.getElementById('cust-address').value + ", N: " + document.getElementById('cust-number').value;
+            const btn = document.getElementById('btn-finish-order'); 
+            btn.disabled = true; 
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Processando...';
             
-            const sh = Number(storeSettings.shippingCost); let sub = 0; let cst = 0; let items = [];
-            for (const i of cart) { sub += i.activePrice * i.qty; cst += (i.costPrice||0) * i.qty; items.push({ id:i.id, name:i.name, qty:i.qty, price:i.activePrice });
-                const p = products.find(x=>x.id===i.id); if(p) { p.stock = Math.max(0, p.stock - i.qty); try{ await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db,"products",i.id), {stock:p.stock}); }catch(e){} }
+            const sh = Number(storeSettings.shippingCost); 
+            let sub = 0; 
+            let cst = 0; 
+            let items = [];
+            
+            for (const i of cart) { 
+                sub += i.activePrice * i.qty; 
+                cst += (i.costPrice || 0) * i.qty; 
+                items.push({ id: i.id, name: i.name, qty: i.qty, price: i.activePrice });
+                
+                const p = products.find(x => x.id === i.id); 
+                if(p) { 
+                    p.stock = Math.max(0, p.stock - i.qty); 
+                    try { 
+                        await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", i.id), { stock: p.stock }); 
+                    } catch(e) {
+                        console.error("Erro ao atualizar estoque:", e);
+                    } 
+                }
             }
-            const order = { client: { name:n, phone:w, address:ad }, items, financials: { subtotal:sub, shipping:sh, total:sub+sh, estimatedProfit: (sub-cst) }, status: 'aguardando', date: new Date().toISOString() };
+            
+            const order = { 
+                client: { name: n, phone: w, address: ad }, 
+                items, 
+                financials: { subtotal: sub, shipping: sh, total: sub + sh, estimatedProfit: (sub - cst) }, 
+                status: 'aguardando', 
+                date: new Date().toISOString() 
+            };
             
             try {
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
-                let msg = `*NOVO PEDIDO FÊNIX*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i=>`- ${i.qty}x ${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(sub+sh)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
+                let msg = `*NOVO PEDIDO FÊNIX*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(sub + sh)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
                 window.open(`https://wa.me/${storeSettings.whatsappSales}?text=${encodeURIComponent(msg)}`, '_blank');
-                cart = []; updateCartUI(); renderProducts(); closeCheckoutModal(); if(currentUser) loadOrdersFromFirebase();
-            } catch(e) {}
-            btn.innerHTML = 'Enviar Comprovante'; btn.disabled = false;
+                
+                cart = []; 
+                updateCartUI(); 
+                renderProducts(); 
+                closeCheckoutModal(); 
+                if(currentUser) loadOrdersFromFirebase();
+                showToast('Pedido registrado com sucesso!', 'success');
+            } catch(e) {
+                showToast('Erro ao registrar pedido.', 'error');
+            }
+            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> Já paguei! Enviar Comprovante'; 
+            btn.disabled = false;
         }
 
-        // ================= ADMIN RASTREIO E ORDENS =================
+        // ================= ADMIN & ORDERS =================
         async function loadOrdersFromFirebase() {
             if (!currentUser) return;
             try {
                 const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
-                orders = []; snap.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
+                orders = []; 
+                snap.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
                 orders.sort((a, b) => new Date(b.date) - new Date(a.date));
-            } catch(e) {}
+            } catch(e) {
+                console.error("Erro ao carregar pedidos:", e);
+            }
             renderOrdersTable();
         }
 
         function renderOrdersTable() {
-            const tb = document.getElementById('admin-orders-table'); tb.innerHTML = '';
+            const tb = document.getElementById('admin-orders-table'); 
+            tb.innerHTML = '';
             let rev = 0, prof = 0, count = 0;
+            
             orders.forEach(o => {
-                if(o.status!=='aguardando'){ rev += o.financials.subtotal||0; prof += o.financials.estimatedProfit||0; count++; }
-                const d = new Date(o.date); const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+                if(o.status !== 'aguardando'){ 
+                    rev += o.financials.subtotal || 0; 
+                    prof += o.financials.estimatedProfit || 0; 
+                    count++; 
+                }
+                const d = new Date(o.date); 
+                const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
                 
-                let st = o.status==='aguardando' ? '<span class="text-yellow-500 font-bold text-[10px] uppercase">Aguard.</span>' : (o.status==='pago'?'<span class="text-green-400 font-bold text-[10px] uppercase">Pago</span>':'<span class="text-blue-400 font-bold text-[10px] uppercase">Enviado</span>');
-                let act = o.status==='aguardando' ? `<button onclick="updateOrderStatus('${o.id}', 'pago')" class="text-green-400 hover:bg-zinc-800 p-2 rounded"><i class="fa-solid fa-check"></i></button>` : `<button onclick="updateOrderStatus('${o.id}', 'enviado')" class="text-blue-400 hover:bg-zinc-800 p-2 rounded"><i class="fa-solid fa-truck"></i></button>`;
+                let st = o.status === 'aguardando' ? '<span class="text-yellow-500 font-bold text-[10px] uppercase">Aguard.</span>' : (o.status === 'pago' ? '<span class="text-green-400 font-bold text-[10px] uppercase">Pago</span>' : '<span class="text-blue-400 font-bold text-[10px] uppercase">Enviado</span>');
+                let act = o.status === 'aguardando' ? `<button onclick="updateOrderStatus('${o.id}', 'pago')" class="text-green-400 hover:bg-zinc-800 p-2 rounded" title="Aprovar Pagamento"><i class="fa-solid fa-check"></i></button>` : `<button onclick="updateOrderStatus('${o.id}', 'enviado')" class="text-blue-400 hover:bg-zinc-800 p-2 rounded" title="Marcar Enviado"><i class="fa-solid fa-truck"></i></button>`;
                 
-                // CAMPO DE RASTREIO 1-CLICK
                 const trackCode = o.trackingCode || '';
                 const trackInput = o.status !== 'aguardando' ? `
                     <div class="flex gap-1 mt-1">
@@ -527,106 +797,261 @@
                         <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-2 py-1 rounded text-[10px]" title="Salvar e Enviar no WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
                     </div>` : '';
 
-                tb.innerHTML += `<tr class="border-b border-zinc-800 hover:bg-zinc-900/40"><td class="p-4 text-xs"><b>${o.client.name}</b><br><span class="text-[10px] text-zinc-500">${o.client.phone}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td><td class="p-4 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td><td class="p-4">${st}${trackInput}</td><td class="p-4 text-right">${act} <button onclick="window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db,'orders','${o.id}')); loadOrdersFromFirebase();" class="text-red-400 hover:bg-zinc-800 p-2 rounded"><i class="fa-solid fa-trash"></i></button></td></tr>`;
+                tb.innerHTML += `
+                    <tr class="border-b border-zinc-800 hover:bg-zinc-900/40">
+                        <td class="p-4 text-xs"><b>${o.client.name}</b><br><span class="text-[10px] text-zinc-500">${o.client.phone}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
+                        <td class="p-4 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td>
+                        <td class="p-4">${st}${trackInput}</td>
+                        <td class="p-4 text-right">${act} <button onclick="deleteOrder('${o.id}')" class="text-red-400 hover:bg-zinc-800 p-2 rounded"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>`;
             });
-            document.getElementById('dash-revenue').innerText = `R$ ${formatMoney(rev)}`; document.getElementById('dash-profit').innerText = `R$ ${formatMoney(prof)}`; document.getElementById('dash-sales-count').innerText = count; document.getElementById('dash-margin').innerText = `Margem: ${rev>0?((prof/rev)*100).toFixed(1):0}%`;
+            
+            document.getElementById('dash-revenue').innerText = `R$ ${formatMoney(rev)}`; 
+            document.getElementById('dash-profit').innerText = `R$ ${formatMoney(prof)}`; 
+            document.getElementById('dash-sales-count').innerText = count; 
+            document.getElementById('dash-margin').innerText = `Margem: ${rev > 0 ? ((prof / rev) * 100).toFixed(1) : 0}%`;
         }
 
-        async function updateOrderStatus(id, st) { await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { status: st }); loadOrdersFromFirebase(); }
+        async function updateOrderStatus(id, st) { 
+            await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { status: st }); 
+            showToast('Status atualizado!', 'success');
+            loadOrdersFromFirebase(); 
+        }
+
+        async function deleteOrder(id) {
+            if(confirm('Tem certeza que deseja excluir este pedido?')) {
+                await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'orders', id));
+                showToast('Pedido excluído.', 'info');
+                loadOrdersFromFirebase();
+            }
+        }
         
         async function saveAndSendTrack(id, phone, name) {
-            const code = document.getElementById(`track-${id}`).value; if(!code) return alert("Digite o código.");
+            const code = document.getElementById(`track-${id}`).value.trim(); 
+            if(!code) return showToast("Digite o código de rastreio.", "error");
             await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na Fênix Imports foi enviado! 🚚\n\nSeu código de rastreio: *${code}*\n\nAcompanhe no site dos Correios.`)}`, '_blank');
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na Fênix Imports foi enviado! 🚚\n\nSeu código de rastreio: *${code}*\n\nAcompanhe pelo nosso site.`)}`, '_blank');
+            showToast('Código enviado!', 'success');
             loadOrdersFromFirebase();
         }
 
-        // ================= PORTAL DO CLIENTE (RASTREIO) =================
+        // ================= CLIENT TRACKING PORTAL =================
         function openTrackingModal() { document.getElementById('tracking-modal').classList.remove('hidden'); document.getElementById('track-result').classList.add('hidden'); }
         function closeTrackingModal() { document.getElementById('tracking-modal').classList.add('hidden'); }
         async function trackOrder() {
-            const phone = document.getElementById('track-phone').value.trim(); if(!phone) return;
-            const res = document.getElementById('track-result'); res.innerHTML = 'Buscando...'; res.classList.remove('hidden');
+            const phone = document.getElementById('track-phone').value.trim(); 
+            if(!phone) return showToast('Digite seu número de WhatsApp com DDD.', 'error');
+            const res = document.getElementById('track-result'); 
+            res.innerHTML = '<span class="text-zinc-400"><i class="fa-solid fa-spinner animate-spin"></i> Buscando...</span>'; 
+            res.classList.remove('hidden');
+            
             try {
                 const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
-                let userOrders = []; snap.forEach(d => { if(d.data().client.phone.includes(phone)) userOrders.push(d.data()); });
-                if(userOrders.length === 0) { res.innerHTML = '<span class="text-red-400">Nenhum pedido encontrado.</span>'; return; }
-                const o = userOrders.sort((a,b)=>new Date(b.date)-new Date(a.date))[0]; // Pega o mais recente
+                let userOrders = []; 
+                snap.forEach(d => { if(d.data().client.phone.includes(phone)) userOrders.push(d.data()); });
                 
-                let icon = '<i class="fa-solid fa-clock text-yellow-500"></i>'; let statusStr = 'Aguardando Pagamento';
+                if(userOrders.length === 0) { 
+                    res.innerHTML = '<span class="text-red-400">Nenhum pedido localizado para este número.</span>'; 
+                    return; 
+                }
+                const o = userOrders.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+                
+                let icon = '<i class="fa-solid fa-clock text-yellow-500"></i>'; 
+                let statusStr = 'Aguardando Pagamento';
                 if(o.status === 'pago') { icon = '<i class="fa-solid fa-box text-blue-400"></i>'; statusStr = 'Pagamento Confirmado / Em Separação'; }
-                if(o.status === 'enviado') { icon = '<i class="fa-solid fa-truck-fast text-green-400"></i>'; statusStr = 'Enviado'; }
+                if(o.status === 'enviado') { icon = '<i class="fa-solid fa-truck-fast text-green-400"></i>'; statusStr = 'Enviado ao Destinatário'; }
                 
                 res.innerHTML = `
-                    <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl">
-                        <div class="flex items-center gap-3 mb-2">${icon} <span class="font-bold text-white">${statusStr}</span></div>
-                        <p class="text-xs text-zinc-400">Total: R$ ${formatMoney(o.financials.total)}</p>
-                        ${o.trackingCode ? `<div class="mt-3 bg-zinc-950 border border-zinc-800 p-2 rounded text-center"><span class="text-[10px] text-zinc-500 block">Código de Rastreio</span><span class="text-gold font-mono tracking-widest">${o.trackingCode}</span></div>` : ''}
-                    </div>
-                `;
-            } catch(e) { res.innerHTML = 'Erro na busca.'; }
+                    <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl space-y-2">
+                        <div class="flex items-center gap-3">${icon} <span class="font-bold text-white text-xs">${statusStr}</span></div>
+                        <p class="text-xs text-zinc-400">Total: <span class="text-gold font-bold">R$ ${formatMoney(o.financials.total)}</span></p>
+                        ${o.trackingCode ? `<div class="mt-2 bg-zinc-950 border border-zinc-800 p-2 rounded text-center"><span class="text-[10px] text-zinc-500 block">Código de Rastreio</span><span class="text-gold font-mono tracking-widest text-sm font-bold">${o.trackingCode}</span></div>` : ''}
+                    </div>`;
+            } catch(e) { 
+                res.innerHTML = '<span class="text-red-400">Erro na consulta. Tente novamente.</span>'; 
+            }
         }
 
-        // ================= IA ASSISTANT (FÊNIX BOT) =================
-        let chatHistory = [];
+        // ================= IA ASSISTANT (GEMINI CHATBOT) =================
         function toggleAIChat() { document.getElementById('ai-chat-window').classList.toggle('hidden'); }
         async function sendChatMessage() {
-            const input = document.getElementById('chat-input'); const msg = input.value.trim(); if(!msg) return;
-            if(!storeSettings.geminiKey) { alert("Configure a Chave da IA no painel Admin primeiro."); return; }
+            const input = document.getElementById('chat-input'); 
+            const msg = input.value.trim(); 
+            if(!msg) return;
+            if(!storeSettings.geminiKey) return showToast("Configure a Chave Gemini API no painel Admin.", "error");
             
             const chatBody = document.getElementById('chat-messages');
             chatBody.innerHTML += `<div class="chat-bubble chat-user">${msg}</div>`;
-            input.value = ''; chatBody.scrollTop = chatBody.scrollHeight;
+            input.value = ''; 
+            chatBody.scrollTop = chatBody.scrollHeight;
             
-            // Contexto simplificado com os produtos para a IA ler
-            const catalog = products.map(p => `${p.name} - ${p.category} - R$${p.price}`).join(' | ');
-            const prompt = `Você é o Fênix Bot, assistente de vendas da Fênix Imports (produtos de alta performance e estética). Responda de forma curta, luxuosa e direta. Catálogo atual: ${catalog}. Usuário perguntou: ${msg}`;
+            chatHistory.push({ role: "user", parts: [{ text: msg }] });
+            
+            const catalog = products.map(p => `${p.name} (${p.category}) - R$${p.price}`).join(', ');
+            const systemPrompt = `Você é o Fênix Bot, assistente virtual exclusivo da Fênix Imports. Seja extremamente cortês, conciso e persuasivo. Produtos disponíveis no catálogo: ${catalog}.`;
 
-            chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1">Fênix Bot digitando...</div>`;
+            chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Fênix Bot pensando...</div>`;
+            
             try {
+                const contentsPayload = [
+                    { role: "user", parts: [{ text: systemPrompt }] },
+                    ...chatHistory
+                ];
+
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${storeSettings.geminiKey}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: contentsPayload })
                 });
-                const data = await res.json(); const botReply = data.candidates[0].content.parts[0].text;
+                
+                const data = await res.json(); 
+                const botReply = data.candidates[0].content.parts[0].text;
+                
+                chatHistory.push({ role: "model", parts: [{ text: botReply }] });
+                
                 document.getElementById('bot-typing').remove();
                 chatBody.innerHTML += `<div class="chat-bubble chat-bot">${botReply.replace(/\*/g, '')}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
-            } catch(e) { document.getElementById('bot-typing').innerText = "Erro ao conectar com a IA."; }
+            } catch(e) { 
+                if(document.getElementById('bot-typing')) document.getElementById('bot-typing').remove();
+                chatBody.innerHTML += `<div class="chat-bubble chat-bot text-red-400">Desculpe, instabilidade temporária na conexão com a IA.</div>`;
+            }
         }
 
         // ================= ADMIN PRODUTOS E CONFIGS =================
-        function openProductModal(id=null) {
-            document.getElementById('product-form').reset(); document.getElementById('prod-id').value='';
-            if(id){ const p = products.find(x=>x.id===id); if(p){ document.getElementById('prod-id').value=p.id; document.getElementById('prod-imageUrl').value=p.imageUrl||''; document.getElementById('prod-name').value=p.name; document.getElementById('prod-cost-price').value=p.costPrice||''; document.getElementById('prod-stock').value=p.stock||10; document.getElementById('prod-price').value=p.price; document.getElementById('prod-promo-price').value=p.promoPrice||''; document.getElementById('prod-category').value=p.category; document.getElementById('prod-desc').value=p.description; } }
+        function openProductModal(id = null) {
+            document.getElementById('product-form').reset(); 
+            document.getElementById('prod-id').value = '';
+            if(id) { 
+                const p = products.find(x => x.id === id); 
+                if(p) { 
+                    document.getElementById('prod-id').value = p.id; 
+                    document.getElementById('prod-imageUrl').value = p.imageUrl || ''; 
+                    document.getElementById('prod-name').value = p.name; 
+                    document.getElementById('prod-cost-price').value = p.costPrice || ''; 
+                    document.getElementById('prod-stock').value = p.stock || 10; 
+                    document.getElementById('prod-price').value = p.price; 
+                    document.getElementById('prod-promo-price').value = p.promoPrice || ''; 
+                    document.getElementById('prod-category').value = p.category; 
+                    document.getElementById('prod-desc').value = p.description; 
+                } 
+            }
             document.getElementById('product-modal').classList.remove('hidden');
         }
+
         function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+
         async function saveProduct(e) {
-            e.preventDefault(); const id = document.getElementById('prod-id').value;
-            const data = { name: document.getElementById('prod-name').value, category: document.getElementById('prod-category').value, price: parseFloat(document.getElementById('prod-price').value), promoPrice: document.getElementById('prod-promo-price').value?parseFloat(document.getElementById('prod-promo-price').value):null, costPrice: parseFloat(document.getElementById('prod-cost-price').value), stock: parseInt(document.getElementById('prod-stock').value), description: document.getElementById('prod-desc').value, imageUrl: document.getElementById('prod-imageUrl').value };
-            document.getElementById('btn-salvar-produto').innerText = '...';
-            if(id) await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db,"products",id), data); else await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db,"products"), data);
-            closeProductModal(); loadProductsFromFirebase();
+            e.preventDefault(); 
+            const id = document.getElementById('prod-id').value;
+            const data = { 
+                name: document.getElementById('prod-name').value, 
+                category: document.getElementById('prod-category').value, 
+                price: parseFloat(document.getElementById('prod-price').value), 
+                promoPrice: document.getElementById('prod-promo-price').value ? parseFloat(document.getElementById('prod-promo-price').value) : null, 
+                costPrice: parseFloat(document.getElementById('prod-cost-price').value), 
+                stock: parseInt(document.getElementById('prod-stock').value), 
+                description: document.getElementById('prod-desc').value, 
+                imageUrl: document.getElementById('prod-imageUrl').value 
+            };
+
+            document.getElementById('btn-salvar-produto').innerText = 'Guardando...';
+            
+            try {
+                if(id) {
+                    await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", id), data); 
+                } else {
+                    await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), data);
+                }
+                showToast('Produto salvo com sucesso!', 'success');
+                closeProductModal(); 
+                loadProductsFromFirebase();
+            } catch(err) {
+                showToast('Erro ao salvar produto.', 'error');
+            }
+            document.getElementById('btn-salvar-produto').innerText = 'Salvar';
         }
+
         function renderAdminTable() {
-            const tb = document.getElementById('admin-product-table'); tb.innerHTML='';
-            products.forEach(p => tb.innerHTML+=`<tr class="border-b border-zinc-800"><td class="p-2">${p.imageUrl?`<img src="${p.imageUrl}" class="w-8 h-8 rounded">`:'-'}</td><td class="p-2 truncate max-w-[150px]">${p.name}</td><td class="p-2">${p.stock}</td><td class="p-2 text-red-400">R$${p.costPrice||0}</td><td class="p-2 text-green-400">R$${p.promoPrice||p.price}</td><td class="p-2 text-right"><button onclick="openProductModal('${p.id}')" class="text-gold mx-2"><i class="fa-solid fa-pen"></i></button><button onclick="window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db,'products','${p.id}')); loadProductsFromFirebase();" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td></tr>`);
+            const tb = document.getElementById('admin-product-table'); 
+            tb.innerHTML = '';
+            products.forEach(p => {
+                tb.innerHTML += `
+                    <tr class="border-b border-zinc-800">
+                        <td class="p-2">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-8 h-8 rounded object-cover">` : '-'}</td>
+                        <td class="p-2 truncate max-w-[150px] font-medium text-white">${p.name}</td>
+                        <td class="p-2">${p.stock}</td>
+                        <td class="p-2 text-red-400">R$ ${formatMoney(p.costPrice || 0)}</td>
+                        <td class="p-2 text-green-400">R$ ${formatMoney(p.promoPrice || p.price)}</td>
+                        <td class="p-2 text-right">
+                            <button onclick="openProductModal('${p.id}')" class="text-gold hover:text-yellow-300 mx-2"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteProduct('${p.id}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        async function deleteProduct(id) {
+            if(confirm('Remover este produto do estoque?')) {
+                await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', id));
+                showToast('Produto removido.', 'info');
+                loadProductsFromFirebase();
+            }
         }
 
         function openSettingsModal() {
-            document.getElementById('set-pix').value = storeSettings.pixKey||''; document.getElementById('set-pix-name').value = storeSettings.pixName||''; document.getElementById('set-pix-city').value = storeSettings.pixCity||''; document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales||''; document.getElementById('set-ship-cost').value = storeSettings.shippingCost||25; document.getElementById('set-gemini').value = storeSettings.geminiKey||''; document.getElementById('settings-modal').classList.remove('hidden');
+            document.getElementById('set-pix').value = storeSettings.pixKey || ''; 
+            document.getElementById('set-pix-name').value = storeSettings.pixName || ''; 
+            document.getElementById('set-pix-city').value = storeSettings.pixCity || ''; 
+            document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || ''; 
+            document.getElementById('set-ship-cost').value = storeSettings.shippingCost || 25; 
+            document.getElementById('set-gemini').value = storeSettings.geminiKey || ''; 
+            document.getElementById('settings-modal').classList.remove('hidden');
         }
+
         function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
+
         async function saveSettings(e) {
-            e.preventDefault(); storeSettings = { pixKey: document.getElementById('set-pix').value, pixName: document.getElementById('set-pix-name').value, pixCity: document.getElementById('set-pix-city').value, whatsappSales: document.getElementById('set-wpp-sales').value, shippingCost: parseFloat(document.getElementById('set-ship-cost').value), geminiKey: document.getElementById('set-gemini').value };
-            await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); closeSettingsModal();
+            e.preventDefault(); 
+            storeSettings = { 
+                pixKey: document.getElementById('set-pix').value, 
+                pixName: document.getElementById('set-pix-name').value, 
+                pixCity: document.getElementById('set-pix-city').value, 
+                whatsappSales: document.getElementById('set-wpp-sales').value, 
+                shippingCost: parseFloat(document.getElementById('set-ship-cost').value), 
+                geminiKey: document.getElementById('set-gemini').value 
+            };
+            
+            try {
+                await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); 
+                showToast('Configurações atualizadas!', 'success');
+                closeSettingsModal();
+                loadSettings();
+            } catch(err) {
+                showToast('Erro ao salvar configurações.', 'error');
+            }
         }
 
         function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
         function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
-        async function handleAdminLogin(e) { e.preventDefault(); try { await window.firebaseFns.signInWithEmailAndPassword(window.auth, document.getElementById('login-email').value, document.getElementById('login-password').value); closeLoginModal(); switchTab('admin'); } catch(err){ alert('Erro'); } }
-        async function logoutAdmin() { await window.firebaseFns.signOut(window.auth); switchTab('catalog'); }
+
+        async function handleAdminLogin(e) { 
+            e.preventDefault(); 
+            try { 
+                await window.firebaseFns.signInWithEmailAndPassword(window.auth, document.getElementById('login-email').value, document.getElementById('login-password').value); 
+                closeLoginModal(); 
+                switchTab('admin'); 
+                showToast('Autenticado com sucesso!', 'success');
+            } catch(err) { 
+                showToast('Credenciais inválidas.', 'error'); 
+            } 
+        }
+
+        async function logoutAdmin() { 
+            await window.firebaseFns.signOut(window.auth); 
+            switchTab('catalog'); 
+            showToast('Sessão encerrada.', 'info');
+        }
     </script>
 </body>
 </html>
