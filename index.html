@@ -4,27 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fênix Imports | Alta Performance & Exclusividade</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#0b0b0f',
-                        cardBg: '#13131a',
-                        gold: '#d4a017',
-                        goldHover: '#e5b224',
-                        accentYellow: '#facc15'
-                    }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { colors: { darkBg: '#0b0b0f', cardBg: '#13131a', gold: '#d4a017', goldHover: '#e5b224', accentYellow: '#facc15' } } } }
     </script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0b0f; color: #f3f4f6; }
         .glow-gold { box-shadow: 0 0 25px rgba(212, 160, 23, 0.25); }
@@ -35,16 +22,19 @@
         ::-webkit-scrollbar-track { background: #0b0b0f; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #d4a017; }
+        .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.4; }
+        .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 4px; }
+        .chat-bot { background: rgba(212, 160, 23, 0.1); border: 1px solid rgba(212, 160, 23, 0.2); color: #facc15; border-bottom-left-radius: 4px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative">
 
-    <!-- Top Notification Banner -->
+    <!-- Top Banner -->
     <div class="bg-gradient-to-r from-yellow-600 via-gold to-yellow-500 text-black text-xs font-bold py-1.5 px-4 text-center tracking-wide uppercase flex items-center justify-center gap-2 shadow-md">
         <i class="fa-solid fa-shield-halved"></i> Qualidade Certificada & Pronta Entrega para Todo o Brasil
     </div>
 
-    <!-- Header / Navbar -->
+    <!-- Header -->
     <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('catalog')">
@@ -59,7 +49,8 @@
 
             <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold font-semibold transition hover:text-yellow-400 flex items-center gap-2"><i class="fa-solid fa-store"></i> Catálogo</button>
-                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-user-lock"></i> Login Admin</button>
+                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-map-location-dot"></i> Rastrear Pedido</button>
+                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-user-lock"></i> Admin</button>
                 <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-2"><i class="fa-solid fa-gauge-high"></i> Gestão de Elite</button>
             </nav>
 
@@ -80,6 +71,7 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 py-4 space-y-3">
             <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-medium py-2 flex items-center gap-3"><i class="fa-solid fa-store"></i> Catálogo</button>
+            <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-medium py-2 flex items-center gap-3"><i class="fa-solid fa-map-location-dot"></i> Rastrear Pedido</button>
             <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-medium py-2 flex items-center gap-3"><i class="fa-solid fa-user-lock"></i> Login Admin</button>
             <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-medium py-2 flex items-center gap-3"><i class="fa-solid fa-gauge-high"></i> Gestão de Elite</button>
         </div>
@@ -92,22 +84,20 @@
             <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-zinc-900 via-cardBg to-zinc-900 border border-zinc-800 p-8 sm:p-12">
                 <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="relative z-10 max-w-2xl space-y-4">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/20"><i class="fa-solid fa-medal"></i> Padrão Internacional de Pureza</span>
-                    <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">Excelência e Pureza em <span class="text-gradient">Importados de Elite</span></h1>
-                    <p class="text-zinc-400 text-sm sm:text-base leading-relaxed">Soluções laboratoriais e insumos rigorosamente selecionados. Compre com segurança via Pix e atendimento exclusivo.</p>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/20"><i class="fa-solid fa-medal"></i> Padrão Internacional</span>
+                    <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">A Base da sua <span class="text-gradient">Evolução Máxima</span></h1>
                 </div>
             </div>
 
-            <!-- Filters & Search -->
+            <!-- Filters -->
             <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-cardBg p-4 rounded-2xl border border-zinc-800">
                 <div class="relative w-full xl:w-80 shrink-0">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar produtos..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-gold transition">
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar produtos..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:border-gold outline-none transition">
                 </div>
-                
-                <!-- Scrollable Category Filters -->
                 <div class="flex items-center gap-2 overflow-x-auto w-full pb-2 xl:pb-0 scroll-smooth">
-                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition shadow-md whitespace-nowrap">Todos</button>
+                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition whitespace-nowrap">Todos</button>
+                    <!-- Categorias Dinâmicas -->
                     <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Peptídeos</button>
                     <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Insumos & Soluções</button>
                     <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética Avançada</button>
@@ -126,283 +116,205 @@
             <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </div>
 
-        <!-- ================= ADMIN PANEL TAB ================= -->
+        <!-- ================= ADMIN TAB ================= -->
         <div id="tab-admin" class="hidden space-y-6">
-            
-            <!-- Admin Header & Main Nav -->
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-cardBg p-6 rounded-3xl border border-zinc-800">
-                <div>
-                    <h2 class="text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-microchip text-gold"></i> Gestão de Elite</h2>
-                    <p class="text-xs text-zinc-400 mt-1">Controle total da sua operação: Estoque, Vendas e Inteligência Financeira.</p>
-                </div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cardBg p-6 rounded-3xl border border-zinc-800">
+                <div><h2 class="text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-microchip text-gold"></i> Gestão de Elite</h2></div>
                 <div class="flex gap-2 w-full md:w-auto bg-zinc-900 p-1.5 rounded-xl border border-zinc-800">
                     <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-white transition">Estoque</button>
-                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 hover:text-white transition">Vendas & Caixa</button>
+                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 transition">Vendas & Caixa</button>
                 </div>
             </div>
 
-            <!-- SUB-TAB: PRODUCTS (ESTOQUE) -->
+            <!-- Produtos -->
             <div id="admin-subtab-products" class="space-y-4">
                 <div class="flex justify-between items-center">
                     <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos Cadastrados</h3>
                     <div class="flex gap-3">
-                        <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2 rounded-xl text-sm border border-zinc-700 transition flex items-center gap-2"><i class="fa-solid fa-gear"></i> Configs</button>
-                        <button onclick="openProductModal()" class="bg-gold hover:bg-yellow-400 text-black font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-2 shadow-lg transition"><i class="fa-solid fa-plus"></i> Novo</button>
+                        <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2 rounded-xl text-sm border border-zinc-700 flex items-center gap-2"><i class="fa-solid fa-gear"></i> Configs & IA</button>
+                        <button onclick="openProductModal()" class="bg-gold hover:bg-yellow-400 text-black font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-2 shadow-lg"><i class="fa-solid fa-plus"></i> Novo</button>
                     </div>
                 </div>
-                <div class="bg-cardBg rounded-3xl border border-zinc-800 overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-zinc-800 text-xs text-zinc-400 uppercase tracking-wider bg-zinc-900/50">
-                                    <th class="p-4">Foto</th>
-                                    <th class="p-4">Produto</th>
-                                    <th class="p-4">Estoque</th>
-                                    <th class="p-4">Custo</th>
-                                    <th class="p-4">Venda</th>
-                                    <th class="p-4 text-right">Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-product-table" class="divide-y divide-zinc-800/60 text-sm"></tbody>
-                        </table>
-                    </div>
+                <div class="bg-cardBg rounded-3xl border border-zinc-800 overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead><tr class="border-b border-zinc-800 text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-4">Foto</th><th class="p-4">Produto</th><th class="p-4">Estoque</th><th class="p-4">Custo</th><th class="p-4">Venda</th><th class="p-4 text-right">Ações</th></tr></thead>
+                        <tbody id="admin-product-table" class="divide-y divide-zinc-800/60"></tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- SUB-TAB: ORDERS & FINANCE (VENDAS & CAIXA) -->
+            <!-- Vendas -->
             <div id="admin-subtab-orders" class="hidden space-y-6">
-                <!-- Financial Dashboard Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl relative overflow-hidden group">
-                        <div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 transition duration-500"><i class="fa-solid fa-wallet text-8xl text-white"></i></div>
-                        <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Faturamento Confirmado</p>
-                        <h4 id="dash-revenue" class="text-3xl font-black text-white">R$ 0,00</h4>
-                        <p class="text-[10px] text-zinc-500 mt-2">Soma de pedidos Pagos/Enviados</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-green-900/40 to-zinc-900 border border-green-900/50 p-5 rounded-2xl relative overflow-hidden group glow-green">
-                        <div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 transition duration-500"><i class="fa-solid fa-chart-line text-8xl text-green-400"></i></div>
-                        <p class="text-xs font-bold text-green-400 uppercase tracking-wider mb-1">Lucro Estimado (Caixa)</p>
-                        <h4 id="dash-profit" class="text-3xl font-black text-green-400">R$ 0,00</h4>
-                        <p id="dash-margin" class="text-[10px] text-green-500/70 mt-2 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p>
-                    </div>
-                    <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl relative overflow-hidden group">
-                        <div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 transition duration-500"><i class="fa-solid fa-box-open text-8xl text-gold"></i></div>
-                        <p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Pedidos Concluídos</p>
-                        <h4 id="dash-sales-count" class="text-3xl font-black text-white">0</h4>
-                        <p class="text-[10px] text-zinc-500 mt-2">Vendas com sucesso</p>
-                    </div>
+                    <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl relative overflow-hidden group"><div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 transition"><i class="fa-solid fa-wallet text-8xl"></i></div><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Faturamento Conf.</p><h4 id="dash-revenue" class="text-3xl font-black text-white">R$ 0,00</h4></div>
+                    <div class="bg-gradient-to-br from-green-900/40 to-zinc-900 border border-green-900/50 p-5 rounded-2xl relative overflow-hidden group glow-green"><div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 transition"><i class="fa-solid fa-chart-line text-8xl text-green-400"></i></div><p class="text-xs font-bold text-green-400 uppercase tracking-wider mb-1">Lucro Estimado</p><h4 id="dash-profit" class="text-3xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-500/70 mt-2 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
+                    <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl relative overflow-hidden group"><div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 transition"><i class="fa-solid fa-box-open text-8xl text-gold"></i></div><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-3xl font-black text-white">0</h4></div>
                 </div>
-
-                <div class="bg-cardBg rounded-3xl border border-zinc-800 overflow-hidden">
-                    <div class="p-4 border-b border-zinc-800 bg-zinc-900/50 flex justify-between items-center">
-                        <h3 class="text-sm font-bold text-white"><i class="fa-solid fa-list-check text-gold"></i> Gestão de Pedidos</h3>
-                        <button onclick="loadOrdersFromFirebase()" class="text-xs text-zinc-400 hover:text-white flex items-center gap-1"><i class="fa-solid fa-rotate-right"></i> Atualizar</button>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b border-zinc-800 text-xs text-zinc-400 uppercase tracking-wider">
-                                    <th class="p-4">Data</th>
-                                    <th class="p-4">Cliente</th>
-                                    <th class="p-4">Total</th>
-                                    <th class="p-4">Status</th>
-                                    <th class="p-4 text-right">Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60 text-sm"></tbody>
-                        </table>
-                    </div>
+                <div class="bg-cardBg rounded-3xl border border-zinc-800 overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead><tr class="border-b border-zinc-800 text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-4">Cliente/Data</th><th class="p-4">Itens/Total</th><th class="p-4">Status & Rastreio</th><th class="p-4 text-right">Ação</th></tr></thead>
+                        <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Support WhatsApp Button -->
-    <a id="btn-floating-support" href="#" target="_blank" class="fixed bottom-6 right-6 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:bg-green-400 hover:scale-110 transition-all z-40">
-        <i class="fa-brands fa-whatsapp text-3xl"></i>
-    </a>
+    <!-- Chat IA e Suporte Flutuante -->
+    <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
+        <!-- Floating Chat Button -->
+        <button onclick="toggleAIChat()" class="bg-zinc-800 border border-gold/50 text-gold w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,160,23,0.3)] hover:scale-110 transition-all relative">
+            <i class="fa-solid fa-robot text-2xl"></i>
+            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-darkBg animate-pulse">IA</span>
+        </button>
+        <!-- Support Zap Button -->
+        <a id="btn-floating-support" href="#" target="_blank" class="bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-all">
+            <i class="fa-brands fa-whatsapp text-3xl"></i>
+        </a>
+    </div>
 
-    <!-- Footer -->
-    <footer class="bg-cardBg border-t border-zinc-800 mt-auto py-8">
-        <div class="max-w-7xl mx-auto px-4 text-center text-zinc-500 text-xs font-medium">
-            © 2026 Fênix Imports. Todos os direitos reservados.
+    <!-- AI Chat Window -->
+    <div id="ai-chat-window" class="fixed bottom-24 right-6 w-80 bg-cardBg border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-96">
+        <div class="bg-gradient-to-r from-zinc-900 to-zinc-800 p-3 border-b border-zinc-700 flex justify-between items-center">
+            <div class="flex items-center gap-2"><i class="fa-solid fa-robot text-gold text-lg"></i> <span class="font-bold text-sm text-white">Consultor Fênix IA</span></div>
+            <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
         </div>
-    </footer>
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
+            <div class="chat-bubble chat-bot">Olá! Sou a inteligência artificial da Fênix. O que você busca otimizar hoje no seu corpo ou mente? Posso te indicar o melhor produto.</div>
+        </div>
+        <div class="p-3 bg-zinc-900 border-t border-zinc-800 flex gap-2">
+            <input type="text" id="chat-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
+            <button onclick="sendChatMessage()" class="bg-gold text-black rounded-lg px-3 py-2 hover:bg-yellow-400 transition"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
 
-    <!-- ================= SHOPPING CART DRAWER ================= -->
+    <!-- ================= MODALS (TRACKING, CART, CHECKOUT, PRODUCT, SETTINGS, LOGIN) ================= -->
+
+    <!-- Portal Rastreamento -->
+    <div id="tracking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeTrackingModal()"></div>
+        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-sm w-full p-8 space-y-6 shadow-2xl z-10 text-center">
+            <i class="fa-solid fa-map-location-dot text-4xl text-gold mb-2"></i>
+            <h3 class="text-xl font-extrabold text-white">Rastrear Pedido</h3>
+            <p class="text-xs text-zinc-400">Digite seu WhatsApp com DDD para ver o status da sua compra.</p>
+            <input type="text" id="track-phone" placeholder="Ex: 21999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-center text-sm text-white focus:border-gold outline-none">
+            <button onclick="trackOrder()" class="w-full bg-zinc-800 text-white font-bold py-3 rounded-xl hover:bg-gold hover:text-black transition">Buscar</button>
+            <div id="track-result" class="mt-4 text-sm text-left space-y-3 hidden"></div>
+            <button onclick="closeTrackingModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+    </div>
+
+    <!-- Shopping Cart Drawer -->
     <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="toggleCartDrawer(false)"></div>
         <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
             <div class="w-screen max-w-md bg-cardBg border-l border-zinc-800 flex flex-col shadow-2xl">
-                <div class="p-6 border-b border-zinc-800 flex items-center justify-between bg-zinc-900/50">
-                    <h3 class="text-lg font-bold text-white flex items-center gap-2.5"><i class="fa-solid fa-bag-shopping text-gold"></i> Seu Carrinho</h3>
-                    <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <div class="p-6 border-b border-zinc-800 flex justify-between bg-zinc-900/50">
+                    <h3 class="text-lg font-bold text-white flex gap-2.5"><i class="fa-solid fa-bag-shopping text-gold"></i> Seu Carrinho</h3>
+                    <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
                 </div>
                 <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-zinc-800/40"></div>
                 <div class="p-6 border-t border-zinc-800 bg-zinc-900/50 space-y-4">
-                    <div class="space-y-2">
-                        <label class="text-xs font-semibold text-zinc-400 flex items-center gap-1.5"><i class="fa-solid fa-truck text-gold"></i> Opção de Frete</label>
-                        <div class="bg-zinc-900 p-3 rounded-xl border border-zinc-800 flex justify-between items-center text-xs">
-                            <div>
-                                <span class="text-white font-bold block">Sedex / Envio Expresso</span>
-                                <span id="delivery-time-label" class="text-zinc-400 text-[11px]">Prazo: Calculando...</span>
-                            </div>
-                            <span id="shipping-cost-label" class="text-gold font-extrabold">R$ 25,00</span>
-                        </div>
-                    </div>
-                    <div class="space-y-1.5 pt-2 border-t border-zinc-800">
+                    <div class="space-y-1.5 pt-2">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
                         <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 25,00</span></div>
-                        <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total à Vista (Pix)</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
+                        <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total via Pix</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
-                    <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-yellow-500 via-gold to-yellow-400 text-black font-extrabold py-3.5 rounded-xl shadow-lg glow-yellow transition flex items-center justify-center gap-2 text-sm"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido via Pix</button>
+                    <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-yellow-500 via-gold to-yellow-400 text-black font-extrabold py-3.5 rounded-xl shadow-lg glow-yellow transition flex justify-center gap-2 text-sm"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ================= CHECKOUT MODAL ================= -->
+    <!-- Checkout Modal com VIACEP e PIX Dinâmico -->
     <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-6 shadow-2xl z-10">
-            <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
-                <h3 class="text-lg font-extrabold text-white flex items-center gap-2.5"><i class="fa-solid fa-qrcode text-gold"></i> Pagamento via Pix</h3>
+        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[95vh]">
+            <div class="flex justify-between border-b border-zinc-800 pb-4 mb-4">
+                <h3 class="text-lg font-extrabold text-white flex gap-2.5"><i class="fa-solid fa-truck-fast text-gold"></i> Dados & Pagamento</h3>
                 <button onclick="closeCheckoutModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <div class="space-y-4">
-                <div class="space-y-3">
-                    <p class="text-xs font-semibold text-zinc-400">Informe seus dados para envio:</p>
-                    <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
-                    <input type="text" id="cust-whatsapp" placeholder="WhatsApp (com DDD)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
-                    <input type="text" id="cust-address" placeholder="Endereço Completo com CEP" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
+            
+            <!-- Etapa 1: Endereço (Integração ViaCEP) -->
+            <div id="checkout-step-1" class="space-y-4">
+                <p class="text-xs font-semibold text-zinc-400 border-l-2 border-gold pl-2">Informações de Envio</p>
+                <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
+                <input type="text" id="cust-whatsapp" placeholder="WhatsApp (com DDD)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="cust-cep" placeholder="CEP" onblur="buscarCEP()" maxlength="9" class="col-span-1 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
+                    <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
                 </div>
-                <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 text-center space-y-3">
-                    <div id="qrcode-container" class="w-40 h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-md overflow-hidden">
-                        <i class="fa-solid fa-qrcode text-8xl text-black"></i>
-                    </div>
+                <input type="text" id="cust-number" placeholder="Número e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
+                <button onclick="generateDynamicPix()" class="w-full bg-gold hover:bg-yellow-400 text-black font-extrabold py-3.5 rounded-xl transition text-sm mt-2">Avançar para Pagamento <i class="fa-solid fa-arrow-right ml-1"></i></button>
+            </div>
+
+            <!-- Etapa 2: PIX "Copia e Cola" -->
+            <div id="checkout-step-2" class="space-y-4 hidden mt-4">
+                <p class="text-xs font-semibold text-zinc-400 text-center">Escaneie ou copie o código (Valor Exato: <span id="pix-exact-value" class="text-white font-bold"></span>)</p>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 text-center space-y-4">
+                    <div id="dynamic-qrcode" class="w-40 h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-md"></div>
                     <div class="space-y-1">
-                        <span class="text-xs text-zinc-400 block">Chave Pix da Loja:</span>
+                        <span class="text-xs text-zinc-400 block">Pix Copia e Cola (Automático)</span>
                         <div class="flex items-center gap-2 bg-zinc-950 p-2 rounded-xl border border-zinc-800">
-                            <input type="text" readonly id="pix-key-input" class="bg-transparent text-xs font-mono text-gold w-full focus:outline-none overflow-hidden text-ellipsis whitespace-nowrap">
-                            <button onclick="copyPixKey()" class="bg-gold hover:bg-yellow-400 text-black font-bold text-xs px-3 py-1.5 rounded-lg transition shrink-0">Copiar</button>
+                            <input type="text" readonly id="pix-emv-input" class="bg-transparent text-xs font-mono text-green-400 w-full focus:outline-none text-ellipsis whitespace-nowrap">
+                            <button onclick="copyPixEMV()" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition shrink-0"><i class="fa-regular fa-copy"></i></button>
                         </div>
                     </div>
                 </div>
                 <button onclick="processAndSendOrder()" id="btn-finish-order" class="w-full bg-green-600 hover:bg-green-500 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2.5 text-sm">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> Enviar Pedido e Comprovante
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Já paguei! Enviar Comprovante
                 </button>
+                <button onclick="backToStep1()" class="w-full text-zinc-500 hover:text-white text-xs underline text-center">Voltar</button>
             </div>
         </div>
     </div>
 
-    <!-- ================= ADD / EDIT PRODUCT MODAL ================= -->
+    <!-- Product Modal -->
     <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeProductModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
-            <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
-                <h3 id="product-modal-title" class="text-lg font-extrabold text-white flex items-center gap-2.5"><i class="fa-solid fa-box text-gold"></i> Produto</h3>
-                <button onclick="closeProductModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
+        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-lg font-extrabold text-white mb-4">Adicionar/Editar</h3>
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-3">
                 <input type="hidden" id="prod-id">
-                <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1">Link da Foto (URL)</label>
-                    <input type="text" id="prod-imageUrl" placeholder="https://..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
+                <input type="text" id="prod-imageUrl" placeholder="Link da Foto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
+                <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" class="w-full bg-zinc-950 border border-red-900/50 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-red-500">
+                    <input type="number" id="prod-stock" required value="10" placeholder="Estoque" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
                 </div>
-                <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1">Nome do Produto</label>
-                    <input type="text" id="prod-name" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" step="0.01" id="prod-price" required placeholder="Preço Normal" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
+                    <input type="number" step="0.01" id="prod-promo-price" placeholder="Promocional" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
                 </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs font-semibold text-red-400 block mb-1">Custo (Secreto) R$</label>
-                        <input type="number" step="0.01" id="prod-cost-price" required title="Usado para calcular lucro" class="w-full bg-zinc-950 border border-red-900/50 rounded-xl px-4 py-2 text-sm text-white focus:border-red-500">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-zinc-400 block mb-1 text-gold">Estoque Físico</label>
-                        <input type="number" id="prod-stock" required min="0" value="10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-white focus:border-gold">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs font-semibold text-zinc-400 block mb-1">Preço Venda (Normal)</label>
-                        <input type="number" step="0.01" id="prod-price" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-white focus:border-gold">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-green-400 block mb-1">Preço Promocional</label>
-                        <input type="number" step="0.01" id="prod-promo-price" placeholder="Opcional" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2 text-sm text-white focus:border-gold">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1">Categoria</label>
-                    <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
-                        <option value="Peptídeos">Peptídeos</option>
-                        <option value="Insumos & Soluções">Insumos & Soluções</option>
-                        <option value="Estética Avançada">Estética Avançada</option>
-                        <option value="Estética e Pele">Estética e Pele</option>
-                        <option value="CA E P">CA E P</option>
-                        <option value="Hormônios">Hormônios</option>
-                        <option value="Libido">Libido</option>
-                        <option value="Longevidade">Longevidade</option>
-                        <option value="Perda de Peso">Perda de Peso</option>
-                        <option value="Performance">Performance</option>
-                        <option value="Perfumes">Perfumes</option>
-                        <option value="Outros">Outros</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1">Descrição</label>
-                    <textarea id="prod-desc" rows="3" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold"></textarea>
-                </div>
-                <div class="pt-2 flex gap-3">
-                    <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 rounded-xl transition text-sm">Cancelar</button>
-                    <button type="submit" id="btn-salvar-produto" class="flex-1 bg-gold hover:bg-yellow-400 text-black font-extrabold py-3 rounded-xl shadow-lg transition text-sm">Salvar Produto</button>
+                <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
+                    <option value="Peptídeos">Peptídeos</option><option value="Insumos & Soluções">Insumos & Soluções</option><option value="Estética Avançada">Estética Avançada</option><option value="Estética e Pele">Estética e Pele</option><option value="CA E P">CA E P</option><option value="Hormônios">Hormônios</option><option value="Libido">Libido</option><option value="Longevidade">Longevidade</option><option value="Perda de Peso">Perda de Peso</option><option value="Performance">Performance</option><option value="Perfumes">Perfumes</option><option value="Outros">Outros</option>
+                </select>
+                <textarea id="prod-desc" rows="3" required placeholder="Descrição" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold"></textarea>
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-sm">Cancelar</button>
+                    <button type="submit" id="btn-salvar-produto" class="flex-1 bg-gold text-black font-extrabold py-2.5 rounded-xl text-sm">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- ================= SETTINGS MODAL ================= -->
+    <!-- Settings Modal (inclui IA) -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
-            <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
-                <h3 class="text-lg font-extrabold text-white flex items-center gap-2.5"><i class="fa-solid fa-gear text-gold"></i> Configurações</h3>
-                <button onclick="closeSettingsModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-4">
-                <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1">Sua Chave PIX</label>
-                    <input type="text" id="set-pix" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white">
+        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-lg font-extrabold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-gear text-gold"></i> Configurações Base</h3>
+            <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-3 text-sm">
+                <input type="text" id="set-pix" required placeholder="Chave PIX (E-mail, CPF, Cel)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                <input type="text" id="set-pix-name" required placeholder="Nome Titular do Pix (Ex: Fenix Imports)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                <input type="text" id="set-pix-city" required placeholder="Cidade do Pix (Ex: Rio de Janeiro)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                <input type="text" id="set-wpp-sales" required placeholder="Zap Vendas (Ex: 55219...)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" step="0.01" id="set-ship-cost" required placeholder="Frete Fixo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                    <input type="text" id="set-gemini" placeholder="Gemini API Key (Opcional)" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300 placeholder-blue-800/50" title="Chave do Google AI Studio para ativar o Chatbot Flutuante">
                 </div>
-                <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1">Link QR Code Imagem</label>
-                    <input type="text" id="set-qrcode" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                </div>
-                <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1">WhatsApp Pedidos</label>
-                    <input type="text" id="set-wpp-sales" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                </div>
-                <div>
-                    <label class="text-xs font-semibold text-zinc-400 block mb-1">WhatsApp Suporte</label>
-                    <input type="text" id="set-wpp-support" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs font-semibold text-zinc-400 block mb-1">Custo Frete Fixo</label>
-                        <input type="number" step="0.01" id="set-ship-cost" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-zinc-400 block mb-1">Prazo (Dias)</label>
-                        <input type="text" id="set-ship-days" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                    </div>
-                </div>
-                <div class="pt-4 flex gap-3">
-                    <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-3 rounded-xl transition text-sm">Cancelar</button>
-                    <button type="submit" id="btn-salvar-settings" class="flex-1 bg-gold text-black font-extrabold py-3 rounded-xl shadow-lg transition text-sm">Salvar</button>
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-gold text-black font-extrabold py-2.5 rounded-xl">Salvar</button>
                 </div>
             </form>
         </div>
@@ -410,527 +322,310 @@
 
     <!-- Login Modal -->
     <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeLoginModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-sm w-full p-6 sm:p-8 space-y-6 shadow-2xl z-10">
-            <h3 class="text-lg font-extrabold text-white flex items-center gap-2.5"><i class="fa-solid fa-user-lock text-gold"></i> Login Admin</h3>
-            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
-                <input type="email" id="login-email" required placeholder="admin@fenix.com" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white">
-                <div id="login-error" class="text-xs text-red-400 hidden"></div>
-                <button type="submit" class="w-full bg-gold text-black font-extrabold py-3 rounded-xl shadow-lg text-sm">Entrar</button>
+        <div class="absolute inset-0 bg-black/80" onclick="closeLoginModal()"></div>
+        <div class="relative bg-cardBg border border-zinc-800 rounded-2xl w-full max-w-xs p-6 shadow-2xl z-10">
+            <h3 class="text-lg font-bold text-white mb-4">Acesso Admin</h3>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-3">
+                <input type="email" id="login-email" required placeholder="E-mail" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white">
+                <input type="password" id="login-password" required placeholder="Senha" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white">
+                <button type="submit" class="w-full bg-gold text-black font-bold py-2.5 rounded-lg text-sm">Entrar</button>
             </form>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBJS8BmQipFFG9qjgML4VTVJnIQVClXiNo",
-            authDomain: "fenix-importes.firebaseapp.com",
-            projectId: "fenix-importes",
-            storageBucket: "fenix-importes.firebasestorage.app",
-            messagingSenderId: "169461327461",
-            appId: "1:169461327461:web:cf43022c8f04915666c88c"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        window.db = db;
-        window.auth = auth;
-        window.firebaseFns = {
-            collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, query, orderBy,
-            signInWithEmailAndPassword, signOut, onAuthStateChanged
-        };
-
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        const firebaseConfig = { apiKey: "AIzaSyBJS8BmQipFFG9qjgML4VTVJnIQVClXiNo", authDomain: "fenix-importes.firebaseapp.com", projectId: "fenix-importes", storageBucket: "fenix-importes.firebasestorage.app", messagingSenderId: "169461327461", appId: "1:169461327461:web:cf43022c8f04915666c88c" };
+        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
+        window.db = db; window.auth = auth; window.firebaseFns = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, signInWithEmailAndPassword, signOut, onAuthStateChanged };
         initApp();
     </script>
 
-    <!-- Main Application Logic -->
     <script>
-        let products = [];
-        let orders = [];
-        let cart = [];
-        let currentFilter = 'all';
-        let currentUser = null;
-        let storeSettings = {
-            pixKey: "Sua Chave Pix", qrCodeUrl: "", whatsappSales: "5521999999999", whatsappSupport: "5521999999999", shippingCost: 25.00, shippingDays: "3 a 5 dias úteis"
-        };
-
+        let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
+        let storeSettings = { pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingCost: 25.00, geminiKey: "" };
         const formatMoney = (val) => Number(val).toFixed(2).replace('.', ',');
 
         async function initApp() {
             if (window.auth && window.firebaseFns) {
-                window.firebaseFns.onAuthStateChanged(window.auth, (user) => {
-                    currentUser = user; updateAuthUI();
-                });
-                await loadSettings();
-                await loadProductsFromFirebase();
+                window.firebaseFns.onAuthStateChanged(window.auth, (user) => { currentUser = user; updateAuthUI(); });
+                await loadSettings(); await loadProductsFromFirebase();
             }
         }
 
         async function loadSettings() {
-            try {
-                const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
+            try { const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
                 if (docSnap.exists()) storeSettings = { ...storeSettings, ...docSnap.data() };
             } catch (e) { console.log(e); }
-            updateStoreUI();
-        }
-
-        function updateStoreUI() {
-            document.getElementById('pix-key-input').value = storeSettings.pixKey || '';
-            document.getElementById('shipping-cost-label').innerText = `R$ ${formatMoney(storeSettings.shippingCost)}`;
-            document.getElementById('delivery-time-label').innerText = `Prazo: ${storeSettings.shippingDays}`;
-            document.getElementById('btn-floating-support').href = `https://wa.me/${storeSettings.whatsappSupport}?text=Olá`;
-            const qrcodeContainer = document.getElementById('qrcode-container');
-            qrcodeContainer.innerHTML = storeSettings.qrCodeUrl ? `<img src="${storeSettings.qrCodeUrl}" class="w-full h-full object-contain">` : `<i class="fa-solid fa-qrcode text-8xl text-black"></i>`;
-            updateCartUI();
+            document.getElementById('btn-floating-support').href = `https://wa.me/${storeSettings.whatsappSales}?text=Olá`;
         }
 
         async function loadProductsFromFirebase() {
             try {
-                const querySnapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
-                products = [];
-                querySnapshot.forEach((docSnap) => products.push({ id: docSnap.id, ...docSnap.data() }));
-            } catch (e) { console.log(e); }
-            renderProducts();
-            renderAdminTable();
-        }
-
-        async function loadOrdersFromFirebase() {
-            if (!currentUser) return;
-            try {
-                const querySnapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
-                orders = [];
-                querySnapshot.forEach((docSnap) => orders.push({ id: docSnap.id, ...docSnap.data() }));
-                orders.sort((a, b) => new Date(b.date) - new Date(a.date));
-            } catch (e) { console.log(e); }
-            renderOrdersTableAndDashboard();
+                const snapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
+                products = []; snapshot.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
+            } catch (e) {} renderProducts(); renderAdminTable();
         }
 
         function updateAuthUI() {
-            const navLogin = document.getElementById('nav-login');
-            const navAdmin = document.getElementById('nav-admin');
-            const userStatus = document.getElementById('user-status-container');
-            if (currentUser) {
-                navLogin.classList.add('hidden'); navAdmin.classList.remove('hidden'); navAdmin.classList.add('flex');
-                userStatus.classList.remove('hidden'); userStatus.classList.add('flex');
-                loadOrdersFromFirebase();
-            } else {
-                navLogin.classList.remove('hidden'); navAdmin.classList.remove('flex'); navAdmin.classList.add('hidden');
-                userStatus.classList.remove('flex'); userStatus.classList.add('hidden');
-            }
+            if (currentUser) { document.getElementById('nav-login').classList.add('hidden'); document.getElementById('nav-admin').classList.remove('hidden'); document.getElementById('nav-admin').classList.add('flex'); document.getElementById('user-status-container').classList.remove('hidden'); document.getElementById('user-status-container').classList.add('flex'); loadOrdersFromFirebase(); } 
+            else { document.getElementById('nav-login').classList.remove('hidden'); document.getElementById('nav-admin').classList.add('hidden'); document.getElementById('user-status-container').classList.add('hidden'); }
         }
 
         function switchTab(tab) {
-            document.getElementById('tab-catalog').classList.add('hidden');
-            document.getElementById('tab-admin').classList.add('hidden');
-            document.getElementById('nav-catalog').classList.remove('text-gold'); document.getElementById('nav-catalog').classList.add('text-zinc-400');
-            if (tab === 'catalog') {
-                document.getElementById('tab-catalog').classList.remove('hidden');
-                document.getElementById('nav-catalog').classList.add('text-gold'); document.getElementById('nav-catalog').classList.remove('text-zinc-400');
-            } else if (tab === 'admin') {
-                if (!currentUser) return openLoginModal();
-                document.getElementById('tab-admin').classList.remove('hidden');
-                renderAdminTable();
-                switchAdminSubTab('products');
-            }
+            document.getElementById('tab-catalog').classList.add('hidden'); document.getElementById('tab-admin').classList.add('hidden');
+            if (tab === 'catalog') document.getElementById('tab-catalog').classList.remove('hidden');
+            if (tab === 'admin') { if(!currentUser) return openLoginModal(); document.getElementById('tab-admin').classList.remove('hidden'); renderAdminTable(); }
         }
 
         function switchAdminSubTab(sub) {
-            document.getElementById('admin-subtab-products').classList.add('hidden');
-            document.getElementById('admin-subtab-orders').classList.add('hidden');
-            document.getElementById('subnav-products').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 hover:text-white transition";
-            document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 hover:text-white transition";
-
-            if (sub === 'products') {
-                document.getElementById('admin-subtab-products').classList.remove('hidden');
-                document.getElementById('subnav-products').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-white transition shadow";
-            } else if (sub === 'orders') {
-                document.getElementById('admin-subtab-orders').classList.remove('hidden');
-                document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-white transition shadow";
-                loadOrdersFromFirebase();
-            }
+            document.getElementById('admin-subtab-products').classList.add('hidden'); document.getElementById('admin-subtab-orders').classList.add('hidden');
+            document.getElementById('subnav-products').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 transition";
+            document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 transition";
+            document.getElementById(`admin-subtab-${sub}`).classList.remove('hidden');
+            document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-white transition";
+            if(sub === 'orders') loadOrdersFromFirebase();
         }
 
-        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
-
         function renderProducts() {
-            const grid = document.getElementById('product-grid');
-            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            const grid = document.getElementById('product-grid'); const searchVal = document.getElementById('search-input').value.toLowerCase();
             grid.innerHTML = '';
-            const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal) || p.description.toLowerCase().includes(searchVal)));
-            
-            if (filtered.length === 0) { grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500">Nenhum produto encontrado nesta categoria.</div>`; return; }
-
+            const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal)));
             filtered.forEach(p => {
-                const stockCount = p.stock !== undefined ? Number(p.stock) : 10;
-                const isOutOfStock = stockCount <= 0;
-                const priceHTML = p.promoPrice ? `<div class="flex flex-col"><span class="text-[10px] text-zinc-500 line-through">De R$ ${formatMoney(p.price)}</span><span class="text-lg font-extrabold text-green-400">R$ ${formatMoney(p.promoPrice)}</span></div>` : `<div><span class="text-[10px] text-zinc-500 block uppercase font-semibold">Preço</span><span class="text-lg font-extrabold text-gold">R$ ${formatMoney(p.price)}</span></div>`;
-                const promoTag = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg uppercase"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
-                const imgHTML = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-48 object-cover rounded-2xl mb-4 shadow-lg border border-zinc-700/50">` : `<div class="w-full h-48 bg-zinc-900 rounded-2xl mb-4 flex items-center justify-center text-zinc-600"><i class="fa-solid fa-image text-3xl"></i></div>`;
-
+                const st = p.stock !== undefined ? Number(p.stock) : 10; const out = st <= 0;
+                // FOMO GATILHO MENTAL
+                const scarcity = (st > 0 && st <= 3) ? `<div class="absolute top-3 right-3 bg-red-600/90 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg animate-pulse z-10"><i class="fa-solid fa-fire"></i> Restam ${st}!</div>` : '';
+                const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow uppercase"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
+                const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-48 object-cover rounded-2xl mb-3 border border-zinc-700/50">` : `<div class="w-full h-48 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-600 text-3xl"></i></div>`;
                 grid.innerHTML += `
-                    <div class="bg-cardBg border border-zinc-800 rounded-3xl p-6 flex flex-col justify-between hover:border-gold/50 transition group relative overflow-hidden">
-                        ${promoTag}
-                        <div>${imgHTML}
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase truncate max-w-[60%]">${p.category}</span>
-                                <span class="text-[11px] font-bold ${isOutOfStock ? 'text-red-400 bg-red-500/10 border-red-500/20' : 'text-green-400 bg-green-500/10 border-green-500/20'} px-2.5 py-0.5 rounded-full border">
-                                    ${isOutOfStock ? 'Esgotado' : `Estoque: ${stockCount}`}
-                                </span>
-                            </div>
-                            <h3 class="text-lg font-bold text-white group-hover:text-gold transition mb-2">${p.name}</h3>
-                            <p class="text-zinc-400 text-xs leading-relaxed line-clamp-3">${p.description}</p>
+                    <div class="bg-cardBg border border-zinc-800 rounded-3xl p-5 flex flex-col justify-between hover:border-gold/50 transition relative overflow-hidden group">
+                        ${promo}${scarcity}
+                        <div>${img}
+                            <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase">${p.category}</span>
+                            <h3 class="text-lg font-bold text-white mt-2 group-hover:text-gold transition line-clamp-1">${p.name}</h3>
+                            <p class="text-zinc-400 text-xs leading-relaxed line-clamp-2 mt-1">${p.description}</p>
                         </div>
-                        <div class="pt-5 mt-5 border-t border-zinc-800/80 flex items-center justify-between">
-                            ${priceHTML}
-                            <button onclick="addToCart('${p.id}')" ${isOutOfStock ? 'disabled' : ''} class="${isOutOfStock ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-xs font-bold px-4 py-2.5 rounded-xl border border-zinc-700 transition flex items-center gap-2">
-                                <i class="fa-solid fa-cart-plus"></i> ${isOutOfStock ? 'Indisp.' : 'Adicionar'}
+                        <div class="pt-4 mt-4 border-t border-zinc-800 flex items-center justify-between">
+                            <div><span class="text-lg font-extrabold ${p.promoPrice?'text-green-400':'text-gold'}">R$ ${formatMoney(p.promoPrice||p.price)}</span></div>
+                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-xs font-bold px-3 py-2 rounded-xl border border-zinc-700 transition">
+                                <i class="fa-solid fa-cart-plus"></i>
                             </button>
                         </div>
                     </div>`;
             });
         }
 
-        // ================= GESTÃO INTELIGENTE DE CATEGORIAS =================
-        function setCategoryFilter(cat) {
-            currentFilter = cat;
-            
-            // Reseta todos os botões de filtro
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap";
-            });
-            
-            // Ativa apenas o botão selecionado
-            if (cat === 'all') {
-                document.getElementById('filter-btn-all').className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition shadow-md whitespace-nowrap";
-            } else {
-                const activeBtn = document.querySelector(`.filter-btn[data-cat="${cat}"]`);
-                if(activeBtn) activeBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition shadow-md whitespace-nowrap";
-            }
-            renderProducts();
-        }
-
+        function setCategoryFilter(cat) { currentFilter = cat; document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 whitespace-nowrap"); const activeBtn = cat==='all' ? document.getElementById('filter-btn-all') : document.querySelector(`.filter-btn[data-cat="${cat}"]`); if(activeBtn) activeBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black shadow whitespace-nowrap"; renderProducts(); }
         function filterProducts() { renderProducts(); }
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
 
+        // ================= CART & VIA CEP & PIX DINÂMICO =================
         function addToCart(id) {
-            const product = products.find(p => p.id === id);
-            const stockMax = product.stock !== undefined ? Number(product.stock) : 10;
-            const existing = cart.find(item => item.id === id);
-            if (existing && existing.qty + 1 > stockMax) return alert('Quantidade maior do que o estoque.');
-            
-            const activePrice = product.promoPrice ? Number(product.promoPrice) : Number(product.price);
-            const costPrice = product.costPrice ? Number(product.costPrice) : 0;
-
-            if (existing) { existing.qty += 1; existing.activePrice = activePrice; } 
-            else { cart.push({ ...product, activePrice, costPrice, qty: 1 }); }
-            
+            const p = products.find(x => x.id === id); const ex = cart.find(i => i.id === id);
+            if (ex && ex.qty + 1 > p.stock) return alert('Estoque esgotado.');
+            if (ex) { ex.qty++; } else { cart.push({ ...p, activePrice: p.promoPrice ? Number(p.promoPrice) : Number(p.price), costPrice: Number(p.costPrice)||0, qty: 1 }); }
             updateCartUI(); toggleCartDrawer(true);
         }
-
         function updateCartUI() {
-            const container = document.getElementById('cart-items-container');
-            document.getElementById('cart-counter').innerText = cart.reduce((sum, i) => sum + i.qty, 0);
-            const ship = Number(storeSettings.shippingCost);
-            
-            if (cart.length === 0) {
-                container.innerHTML = `<div class="py-12 text-center text-zinc-500 text-sm">Seu carrinho está vazio.</div>`;
-                document.getElementById('cart-subtotal').innerText = 'R$ 0,00'; 
-                document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(ship)}`;
-                document.getElementById('cart-total').innerText = `R$ ${formatMoney(ship)}`;
-                return;
-            }
-
-            container.innerHTML = ''; let subtotal = 0;
-            cart.forEach(item => {
-                subtotal += item.activePrice * item.qty;
-                const img = item.imageUrl ? `<img src="${item.imageUrl}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-600"><i class="fa-solid fa-image"></i></div>`;
-                container.innerHTML += `
-                    <div class="py-4 flex items-center justify-between gap-3">
-                        ${img}
-                        <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-bold text-white truncate">${item.name}</h4>
-                            <span class="text-xs text-gold font-semibold">R$ ${formatMoney(item.activePrice)}</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeQty('${item.id}', -1)" class="w-7 h-7 bg-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-700">-</button>
-                            <span class="text-xs font-bold w-5 text-center">${item.qty}</span>
-                            <button onclick="changeQty('${item.id}', 1)" class="w-7 h-7 bg-zinc-800 text-zinc-300 rounded-lg hover:bg-zinc-700">+</button>
-                            <button onclick="removeFromCart('${item.id}')" class="text-zinc-500 hover:text-red-400 p-1.5"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>`;
-            });
-            document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(subtotal)}`;
-            document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(ship)}`;
-            document.getElementById('cart-total').innerText = `R$ ${formatMoney(subtotal + ship)}`;
+            const cont = document.getElementById('cart-items-container'); let sub = 0; document.getElementById('cart-counter').innerText = cart.reduce((s, i) => s + i.qty, 0);
+            if (cart.length === 0) { cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-sm">Vazio</div>`; document.getElementById('cart-total').innerText='R$ 0,00'; return; }
+            cont.innerHTML = ''; cart.forEach(i => { sub += i.activePrice * i.qty; cont.innerHTML += `<div class="py-3 flex items-center justify-between gap-3 border-b border-zinc-800/40 last:border-0"><div class="flex-1 min-w-0"><h4 class="text-xs font-bold text-white truncate">${i.name}</h4><span class="text-xs text-gold">R$ ${formatMoney(i.activePrice)}</span></div><div class="flex gap-2 items-center"><span class="text-xs w-4 text-center">${i.qty}</span><button onclick="cart.filter(x=>x.id!=='${i.id}'); cart=cart.filter(x=>x.id!=='${i.id}'); updateCartUI();" class="text-zinc-500 p-1"><i class="fa-solid fa-trash"></i></button></div></div>`; });
+            const sh = Number(storeSettings.shippingCost); document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(sub)}`; document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(sh)}`; document.getElementById('cart-total').innerText = `R$ ${formatMoney(sub+sh)}`;
         }
-
-        function changeQty(id, delta) { 
-            const item = cart.find(i => i.id === id); 
-            if(item) { 
-                if (delta > 0) { const p = products.find(p => p.id === id); if (p && item.qty + 1 > Number(p.stock)) return alert('Estoque máximo atingido.'); }
-                item.qty += delta; if(item.qty <= 0) cart = cart.filter(i => i.id !== id); 
-                updateCartUI(); 
-            } 
-        }
-
-        function removeFromCart(id) { cart = cart.filter(i => i.id !== id); updateCartUI(); }
-        function toggleCartDrawer(open) { document.getElementById('cart-drawer').classList.toggle('hidden', !open); }
-        function proceedToCheckout() { if(cart.length === 0) return alert('Carrinho vazio.'); toggleCartDrawer(false); document.getElementById('checkout-modal').classList.remove('hidden'); }
+        function toggleCartDrawer(op) { document.getElementById('cart-drawer').classList.toggle('hidden', !op); }
+        function proceedToCheckout() { if(cart.length===0) return; toggleCartDrawer(false); document.getElementById('checkout-step-1').classList.remove('hidden'); document.getElementById('checkout-step-2').classList.add('hidden'); document.getElementById('checkout-modal').classList.remove('hidden'); }
         function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
-        function copyPixKey() { const input = document.getElementById('pix-key-input'); input.select(); navigator.clipboard.writeText(input.value); alert('Chave Copiada!'); }
-        
+        function backToStep1() { document.getElementById('checkout-step-2').classList.add('hidden'); document.getElementById('checkout-step-1').classList.remove('hidden'); }
+
+        // VIA CEP
+        async function buscarCEP() {
+            let cep = document.getElementById('cust-cep').value.replace(/\D/g, ''); if(cep.length !== 8) return;
+            try {
+                let res = await fetch(`https://viacep.com.br/ws/${cep}/json/`); let data = await res.json();
+                if(!data.erro) document.getElementById('cust-address').value = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
+            } catch(e) {}
+        }
+
+        // GERADOR PIX EMV CRC16 (A Mágica do Copia e Cola)
+        let currentPixPayload = "";
+        function generatePixEMV(key, amount, name, city, txid="FENIX") {
+            const format = (id, val) => { const v = String(val); return id + v.length.toString().padStart(2,'0') + v; };
+            const p = [ format('00','01'), format('26', format('00','BR.GOV.BCB.PIX') + format('01',key)), format('52','0000'), format('53','986'), format('54', amount.toFixed(2)), format('58','BR'), format('59', name.substring(0,25)), format('60', city.substring(0,15)), format('62', format('05',txid)) ].join('');
+            const crcPayload = p + '6304'; let result = 0xFFFF;
+            for (let i = 0; i < crcPayload.length; i++) {
+                result ^= crcPayload.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) { if ((result & 0x8000) !== 0) result = (result << 1) ^ 0x1021; else result <<= 1; }
+            }
+            return crcPayload + (result & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        function generateDynamicPix() {
+            const n = document.getElementById('cust-name').value; const w = document.getElementById('cust-whatsapp').value; const c = document.getElementById('cust-cep').value;
+            if(!n || !w || !c || !storeSettings.pixKey) return alert("Preencha Nome, WhatsApp, CEP e configure a Chave Pix no Admin.");
+            
+            const total = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0) + Number(storeSettings.shippingCost);
+            currentPixPayload = generatePixEMV(storeSettings.pixKey, total, storeSettings.pixName, storeSettings.pixCity);
+            
+            document.getElementById('pix-exact-value').innerText = `R$ ${formatMoney(total)}`;
+            document.getElementById('pix-emv-input').value = currentPixPayload;
+            
+            document.getElementById('dynamic-qrcode').innerHTML = '';
+            new QRCode(document.getElementById('dynamic-qrcode'), { text: currentPixPayload, width: 140, height: 140, colorDark: "#000000", colorLight: "#ffffff" });
+
+            document.getElementById('checkout-step-1').classList.add('hidden'); document.getElementById('checkout-step-2').classList.remove('hidden');
+        }
+        function copyPixEMV() { const i = document.getElementById('pix-emv-input'); i.select(); navigator.clipboard.writeText(i.value); alert('Pix Copiado! Cole no aplicativo do seu banco.'); }
+
         async function processAndSendOrder() {
-            const name = document.getElementById('cust-name').value.trim(); 
-            const wpp = document.getElementById('cust-whatsapp').value.trim(); 
-            const addr = document.getElementById('cust-address').value.trim();
-            if(!name || !wpp || !addr) return alert('Preencha todos os campos para envio!');
+            const n = document.getElementById('cust-name').value; const w = document.getElementById('cust-whatsapp').value; const ad = document.getElementById('cust-address').value + ", N: " + document.getElementById('cust-number').value;
+            const btn = document.getElementById('btn-finish-order'); btn.disabled = true; btn.innerHTML = 'Processando...';
             
-            const btn = document.getElementById('btn-finish-order');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processando...';
-            btn.disabled = true;
-
-            const shipCost = Number(storeSettings.shippingCost);
-            let subtotal = 0;
-            let totalCost = 0;
-            let orderItems = [];
-
-            for (const item of cart) {
-                const itemTotal = item.activePrice * item.qty;
-                const itemCostTotal = (item.costPrice || 0) * item.qty;
-                subtotal += itemTotal;
-                totalCost += itemCostTotal;
-                
-                orderItems.push({
-                    id: item.id, name: item.name, qty: item.qty, price: item.activePrice, cost: item.costPrice || 0
-                });
-
-                const prodRef = products.find(p => p.id === item.id);
-                if (prodRef) {
-                    const newStock = Math.max(0, Number(prodRef.stock) - item.qty);
-                    prodRef.stock = newStock;
-                    try { await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", item.id), { stock: newStock }); } catch(e){}
-                }
+            const sh = Number(storeSettings.shippingCost); let sub = 0; let cst = 0; let items = [];
+            for (const i of cart) { sub += i.activePrice * i.qty; cst += (i.costPrice||0) * i.qty; items.push({ id:i.id, name:i.name, qty:i.qty, price:i.activePrice });
+                const p = products.find(x=>x.id===i.id); if(p) { p.stock = Math.max(0, p.stock - i.qty); try{ await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db,"products",i.id), {stock:p.stock}); }catch(e){} }
             }
-
-            const finalTotal = subtotal + shipCost;
-
-            const orderData = {
-                client: { name, phone: wpp, address: addr },
-                items: orderItems,
-                financials: { subtotal, shipping: shipCost, total: finalTotal, totalCost: totalCost, estimatedProfit: (subtotal - totalCost) },
-                status: 'aguardando',
-                date: new Date().toISOString()
-            };
-
+            const order = { client: { name:n, phone:w, address:ad }, items, financials: { subtotal:sub, shipping:sh, total:sub+sh, estimatedProfit: (sub-cst) }, status: 'aguardando', date: new Date().toISOString() };
+            
             try {
-                await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), orderData);
-                
-                let msg = `*NOVO PEDIDO - FÊNIX IMPORTS*\n\n👤 *Cliente:* ${name}\n📱 *WhatsApp:* ${wpp}\n📍 *Endereço:* ${addr}\n\n🛒 *Itens:*\n`;
-                orderItems.forEach(i => msg += `- ${i.qty}x ${i.name} (R$ ${formatMoney(i.price * i.qty)})\n`);
-                msg += `\n📦 *Frete:* R$ ${formatMoney(shipCost)}\n💰 *Total:* R$ ${formatMoney(finalTotal)}\n💳 *Pagamento:* PIX\n\n_Segue o meu comprovante de pagamento._`;
-                
+                await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
+                let msg = `*NOVO PEDIDO FÊNIX*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i=>`- ${i.qty}x ${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(sub+sh)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
                 window.open(`https://wa.me/${storeSettings.whatsappSales}?text=${encodeURIComponent(msg)}`, '_blank');
-                
-                cart = []; updateCartUI(); renderProducts(); closeCheckoutModal();
-                if(currentUser) loadOrdersFromFirebase();
-            } catch(e) {
-                console.error(e); alert("Erro ao processar pedido.");
-            }
-
-            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> Enviar Pedido e Comprovante';
-            btn.disabled = false;
+                cart = []; updateCartUI(); renderProducts(); closeCheckoutModal(); if(currentUser) loadOrdersFromFirebase();
+            } catch(e) {}
+            btn.innerHTML = 'Enviar Comprovante'; btn.disabled = false;
         }
 
-        // ================= ADMIN FUNCTIONS =================
-
-        function renderAdminTable() {
-            const tbody = document.getElementById('admin-product-table');
-            tbody.innerHTML = '';
-            products.forEach(p => {
-                const stock = p.stock !== undefined ? p.stock : 0;
-                const costHtml = p.costPrice ? `<span class="text-red-400 font-semibold">R$ ${formatMoney(p.costPrice)}</span>` : `<span class="text-zinc-500">N/A</span>`;
-                const priceHtml = p.promoPrice 
-                    ? `<span class="line-through text-zinc-500 text-[10px] block">R$ ${formatMoney(p.price)}</span> <span class="text-green-400 font-bold">R$ ${formatMoney(p.promoPrice)}</span>`
-                    : `<span class="text-gold font-bold mt-2">R$ ${formatMoney(p.price)}</span>`;
-
-                tbody.innerHTML += `
-                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
-                        <td class="p-4 w-12">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-10 h-10 object-cover rounded-md">` : `<div class="w-10 h-10 bg-zinc-800 rounded-md"></div>`}</td>
-                        <td class="p-4 font-semibold text-white max-w-[200px] truncate">${p.name}</td>
-                        <td class="p-4"><span class="px-2 py-1 rounded bg-zinc-800 text-gold text-xs">${stock} un.</span></td>
-                        <td class="p-4 text-xs">${costHtml}</td>
-                        <td class="p-4">${priceHtml}</td>
-                        <td class="p-4 text-right space-x-1">
-                            <button onclick="openProductModal('${p.id}')" class="bg-zinc-800 text-zinc-300 px-2.5 py-1.5 rounded text-xs hover:bg-zinc-700"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteProduct('${p.id}')" class="bg-red-900/20 text-red-400 px-2.5 py-1.5 rounded text-xs hover:bg-red-900/40"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>`;
-            });
+        // ================= ADMIN RASTREIO E ORDENS =================
+        async function loadOrdersFromFirebase() {
+            if (!currentUser) return;
+            try {
+                const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
+                orders = []; snap.forEach(doc => orders.push({ id: doc.id, ...doc.data() }));
+                orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+            } catch(e) {}
+            renderOrdersTable();
         }
 
-        function renderOrdersTableAndDashboard() {
-            const tbody = document.getElementById('admin-orders-table');
-            tbody.innerHTML = '';
-            
-            let totalRev = 0;
-            let totalProfit = 0;
-            let salesCount = 0;
-
+        function renderOrdersTable() {
+            const tb = document.getElementById('admin-orders-table'); tb.innerHTML = '';
+            let rev = 0, prof = 0, count = 0;
             orders.forEach(o => {
-                if (o.status === 'pago' || o.status === 'enviado') {
-                    totalRev += (o.financials.subtotal || 0);
-                    totalProfit += (o.financials.estimatedProfit || 0);
-                    salesCount++;
-                }
-
-                const d = new Date(o.date);
-                const dateStr = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+                if(o.status!=='aguardando'){ rev += o.financials.subtotal||0; prof += o.financials.estimatedProfit||0; count++; }
+                const d = new Date(o.date); const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
                 
-                let statusBadge = '';
-                let actionBtns = '';
+                let st = o.status==='aguardando' ? '<span class="text-yellow-500 font-bold text-[10px] uppercase">Aguard.</span>' : (o.status==='pago'?'<span class="text-green-400 font-bold text-[10px] uppercase">Pago</span>':'<span class="text-blue-400 font-bold text-[10px] uppercase">Enviado</span>');
+                let act = o.status==='aguardando' ? `<button onclick="updateOrderStatus('${o.id}', 'pago')" class="text-green-400 hover:bg-zinc-800 p-2 rounded"><i class="fa-solid fa-check"></i></button>` : `<button onclick="updateOrderStatus('${o.id}', 'enviado')" class="text-blue-400 hover:bg-zinc-800 p-2 rounded"><i class="fa-solid fa-truck"></i></button>`;
+                
+                // CAMPO DE RASTREIO 1-CLICK
+                const trackCode = o.trackingCode || '';
+                const trackInput = o.status !== 'aguardando' ? `
+                    <div class="flex gap-1 mt-1">
+                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="BR123456789BR" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-1 rounded w-24 outline-none text-white focus:border-gold">
+                        <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-2 py-1 rounded text-[10px]" title="Salvar e Enviar no WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+                    </div>` : '';
 
-                if (o.status === 'aguardando') {
-                    statusBadge = `<span class="bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-2 py-1 rounded text-[10px] font-bold uppercase">Aguard. Pix</span>`;
-                    actionBtns = `<button onclick="updateOrderStatus('${o.id}', 'pago')" class="bg-green-600/20 text-green-400 hover:bg-green-600/40 px-2 py-1.5 rounded text-xs" title="Confirmar Pagamento"><i class="fa-solid fa-check"></i></button>`;
-                } else if (o.status === 'pago') {
-                    statusBadge = `<span class="bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-1 rounded text-[10px] font-bold uppercase">Pago</span>`;
-                    actionBtns = `<button onclick="updateOrderStatus('${o.id}', 'enviado')" class="bg-blue-600/20 text-blue-400 hover:bg-blue-600/40 px-2 py-1.5 rounded text-xs" title="Marcar como Enviado"><i class="fa-solid fa-truck-fast"></i></button>`;
-                } else if (o.status === 'enviado') {
-                    statusBadge = `<span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-1 rounded text-[10px] font-bold uppercase">Enviado</span>`;
-                    actionBtns = `<button disabled class="bg-zinc-800 text-zinc-600 px-2 py-1.5 rounded text-xs cursor-not-allowed"><i class="fa-solid fa-check-double"></i></button>`;
-                }
-
-                tbody.innerHTML += `
-                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40 transition">
-                        <td class="p-4 text-xs text-zinc-400 whitespace-nowrap">${dateStr}</td>
-                        <td class="p-4">
-                            <span class="block font-bold text-white text-xs">${o.client.name}</span>
-                            <span class="block text-[10px] text-zinc-500">${o.client.phone}</span>
-                        </td>
-                        <td class="p-4 font-bold text-gold text-xs">R$ ${formatMoney(o.financials.total)}</td>
-                        <td class="p-4">${statusBadge}</td>
-                        <td class="p-4 text-right">${actionBtns} <button onclick="deleteOrder('${o.id}')" class="bg-red-500/10 text-red-400 hover:bg-red-500/20 px-2 py-1.5 rounded text-xs ml-1"><i class="fa-solid fa-trash"></i></button></td>
-                    </tr>
-                `;
+                tb.innerHTML += `<tr class="border-b border-zinc-800 hover:bg-zinc-900/40"><td class="p-4 text-xs"><b>${o.client.name}</b><br><span class="text-[10px] text-zinc-500">${o.client.phone}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td><td class="p-4 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td><td class="p-4">${st}${trackInput}</td><td class="p-4 text-right">${act} <button onclick="window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db,'orders','${o.id}')); loadOrdersFromFirebase();" class="text-red-400 hover:bg-zinc-800 p-2 rounded"><i class="fa-solid fa-trash"></i></button></td></tr>`;
             });
+            document.getElementById('dash-revenue').innerText = `R$ ${formatMoney(rev)}`; document.getElementById('dash-profit').innerText = `R$ ${formatMoney(prof)}`; document.getElementById('dash-sales-count').innerText = count; document.getElementById('dash-margin').innerText = `Margem: ${rev>0?((prof/rev)*100).toFixed(1):0}%`;
+        }
 
-            document.getElementById('dash-revenue').innerText = `R$ ${formatMoney(totalRev)}`;
-            document.getElementById('dash-profit').innerText = `R$ ${formatMoney(totalProfit)}`;
-            document.getElementById('dash-sales-count').innerText = salesCount;
+        async function updateOrderStatus(id, st) { await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { status: st }); loadOrdersFromFirebase(); }
+        
+        async function saveAndSendTrack(id, phone, name) {
+            const code = document.getElementById(`track-${id}`).value; if(!code) return alert("Digite o código.");
+            await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na Fênix Imports foi enviado! 🚚\n\nSeu código de rastreio: *${code}*\n\nAcompanhe no site dos Correios.`)}`, '_blank');
+            loadOrdersFromFirebase();
+        }
+
+        // ================= PORTAL DO CLIENTE (RASTREIO) =================
+        function openTrackingModal() { document.getElementById('tracking-modal').classList.remove('hidden'); document.getElementById('track-result').classList.add('hidden'); }
+        function closeTrackingModal() { document.getElementById('tracking-modal').classList.add('hidden'); }
+        async function trackOrder() {
+            const phone = document.getElementById('track-phone').value.trim(); if(!phone) return;
+            const res = document.getElementById('track-result'); res.innerHTML = 'Buscando...'; res.classList.remove('hidden');
+            try {
+                const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
+                let userOrders = []; snap.forEach(d => { if(d.data().client.phone.includes(phone)) userOrders.push(d.data()); });
+                if(userOrders.length === 0) { res.innerHTML = '<span class="text-red-400">Nenhum pedido encontrado.</span>'; return; }
+                const o = userOrders.sort((a,b)=>new Date(b.date)-new Date(a.date))[0]; // Pega o mais recente
+                
+                let icon = '<i class="fa-solid fa-clock text-yellow-500"></i>'; let statusStr = 'Aguardando Pagamento';
+                if(o.status === 'pago') { icon = '<i class="fa-solid fa-box text-blue-400"></i>'; statusStr = 'Pagamento Confirmado / Em Separação'; }
+                if(o.status === 'enviado') { icon = '<i class="fa-solid fa-truck-fast text-green-400"></i>'; statusStr = 'Enviado'; }
+                
+                res.innerHTML = `
+                    <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl">
+                        <div class="flex items-center gap-3 mb-2">${icon} <span class="font-bold text-white">${statusStr}</span></div>
+                        <p class="text-xs text-zinc-400">Total: R$ ${formatMoney(o.financials.total)}</p>
+                        ${o.trackingCode ? `<div class="mt-3 bg-zinc-950 border border-zinc-800 p-2 rounded text-center"><span class="text-[10px] text-zinc-500 block">Código de Rastreio</span><span class="text-gold font-mono tracking-widest">${o.trackingCode}</span></div>` : ''}
+                    </div>
+                `;
+            } catch(e) { res.innerHTML = 'Erro na busca.'; }
+        }
+
+        // ================= IA ASSISTANT (FÊNIX BOT) =================
+        let chatHistory = [];
+        function toggleAIChat() { document.getElementById('ai-chat-window').classList.toggle('hidden'); }
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input'); const msg = input.value.trim(); if(!msg) return;
+            if(!storeSettings.geminiKey) { alert("Configure a Chave da IA no painel Admin primeiro."); return; }
             
-            const margin = totalRev > 0 ? ((totalProfit / totalRev) * 100).toFixed(1) : 0;
-            document.getElementById('dash-margin').innerText = `Margem: ${margin}%`;
-        }
+            const chatBody = document.getElementById('chat-messages');
+            chatBody.innerHTML += `<div class="chat-bubble chat-user">${msg}</div>`;
+            input.value = ''; chatBody.scrollTop = chatBody.scrollHeight;
+            
+            // Contexto simplificado com os produtos para a IA ler
+            const catalog = products.map(p => `${p.name} - ${p.category} - R$${p.price}`).join(' | ');
+            const prompt = `Você é o Fênix Bot, assistente de vendas da Fênix Imports (produtos de alta performance e estética). Responda de forma curta, luxuosa e direta. Catálogo atual: ${catalog}. Usuário perguntou: ${msg}`;
 
-        async function updateOrderStatus(id, newStatus) {
+            chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1">Fênix Bot digitando...</div>`;
             try {
-                await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { status: newStatus });
-                const order = orders.find(o => o.id === id);
-                if (order) order.status = newStatus;
-                renderOrdersTableAndDashboard();
-            } catch(e) { console.error(e); alert("Erro ao atualizar status."); }
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${storeSettings.geminiKey}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                const data = await res.json(); const botReply = data.candidates[0].content.parts[0].text;
+                document.getElementById('bot-typing').remove();
+                chatBody.innerHTML += `<div class="chat-bubble chat-bot">${botReply.replace(/\*/g, '')}</div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            } catch(e) { document.getElementById('bot-typing').innerText = "Erro ao conectar com a IA."; }
         }
 
-        async function deleteOrder(id) {
-            if(!confirm("Apagar este pedido permanentemente? (Isso não devolve o estoque)")) return;
-            try {
-                await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, "orders", id));
-                orders = orders.filter(o => o.id !== id);
-                renderOrdersTableAndDashboard();
-            } catch(e) { console.error(e); }
+        // ================= ADMIN PRODUTOS E CONFIGS =================
+        function openProductModal(id=null) {
+            document.getElementById('product-form').reset(); document.getElementById('prod-id').value='';
+            if(id){ const p = products.find(x=>x.id===id); if(p){ document.getElementById('prod-id').value=p.id; document.getElementById('prod-imageUrl').value=p.imageUrl||''; document.getElementById('prod-name').value=p.name; document.getElementById('prod-cost-price').value=p.costPrice||''; document.getElementById('prod-stock').value=p.stock||10; document.getElementById('prod-price').value=p.price; document.getElementById('prod-promo-price').value=p.promoPrice||''; document.getElementById('prod-category').value=p.category; document.getElementById('prod-desc').value=p.description; } }
+            document.getElementById('product-modal').classList.remove('hidden');
         }
-
-        function openProductModal(id = null) {
-            const m = document.getElementById('product-modal'); const t = document.getElementById('product-modal-title');
-            document.getElementById('product-form').reset(); document.getElementById('prod-id').value = '';
-            if (id) {
-                t.innerHTML = `<i class="fa-solid fa-pen text-gold"></i> Editar Produto`;
-                const p = products.find(x => x.id === id);
-                if (p) {
-                    document.getElementById('prod-id').value = p.id;
-                    document.getElementById('prod-imageUrl').value = p.imageUrl || '';
-                    document.getElementById('prod-name').value = p.name;
-                    document.getElementById('prod-category').value = p.category;
-                    document.getElementById('prod-price').value = p.price;
-                    document.getElementById('prod-promo-price').value = p.promoPrice || ''; 
-                    document.getElementById('prod-cost-price').value = p.costPrice || ''; 
-                    document.getElementById('prod-stock').value = p.stock !== undefined ? p.stock : 10;
-                    document.getElementById('prod-desc').value = p.description;
-                }
-            } else {
-                t.innerHTML = `<i class="fa-solid fa-box text-gold"></i> Adicionar Produto`;
-            }
-            m.classList.remove('hidden');
-        }
-
         function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
-
         async function saveProduct(e) {
-            e.preventDefault();
-            const id = document.getElementById('prod-id').value;
-            const data = {
-                name: document.getElementById('prod-name').value,
-                category: document.getElementById('prod-category').value,
-                price: parseFloat(document.getElementById('prod-price').value),
-                promoPrice: document.getElementById('prod-promo-price').value ? parseFloat(document.getElementById('prod-promo-price').value) : null,
-                costPrice: parseFloat(document.getElementById('prod-cost-price').value), 
-                stock: parseInt(document.getElementById('prod-stock').value),
-                description: document.getElementById('prod-desc').value,
-                imageUrl: document.getElementById('prod-imageUrl').value.trim()
-            };
-
-            const btn = document.getElementById('btn-salvar-produto'); btn.disabled = true; btn.innerHTML = 'Salvando...';
-            try {
-                if (id) {
-                    await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", id), data);
-                    const idx = products.findIndex(p => p.id === id); if (idx !== -1) products[idx] = { id, ...data };
-                } else {
-                    const r = await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), data);
-                    products.push({ id: r.id, ...data });
-                }
-            } catch (err) { alert("Erro ao salvar."); }
-            btn.disabled = false; btn.innerHTML = 'Salvar Produto';
-            closeProductModal(); renderProducts(); renderAdminTable();
+            e.preventDefault(); const id = document.getElementById('prod-id').value;
+            const data = { name: document.getElementById('prod-name').value, category: document.getElementById('prod-category').value, price: parseFloat(document.getElementById('prod-price').value), promoPrice: document.getElementById('prod-promo-price').value?parseFloat(document.getElementById('prod-promo-price').value):null, costPrice: parseFloat(document.getElementById('prod-cost-price').value), stock: parseInt(document.getElementById('prod-stock').value), description: document.getElementById('prod-desc').value, imageUrl: document.getElementById('prod-imageUrl').value };
+            document.getElementById('btn-salvar-produto').innerText = '...';
+            if(id) await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db,"products",id), data); else await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db,"products"), data);
+            closeProductModal(); loadProductsFromFirebase();
         }
-
-        async function deleteProduct(id) {
-            if (!confirm('Deseja excluir este produto?')) return;
-            try { await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, "products", id)); } catch (e) {}
-            products = products.filter(p => p.id !== id); renderProducts(); renderAdminTable();
+        function renderAdminTable() {
+            const tb = document.getElementById('admin-product-table'); tb.innerHTML='';
+            products.forEach(p => tb.innerHTML+=`<tr class="border-b border-zinc-800"><td class="p-2">${p.imageUrl?`<img src="${p.imageUrl}" class="w-8 h-8 rounded">`:'-'}</td><td class="p-2 truncate max-w-[150px]">${p.name}</td><td class="p-2">${p.stock}</td><td class="p-2 text-red-400">R$${p.costPrice||0}</td><td class="p-2 text-green-400">R$${p.promoPrice||p.price}</td><td class="p-2 text-right"><button onclick="openProductModal('${p.id}')" class="text-gold mx-2"><i class="fa-solid fa-pen"></i></button><button onclick="window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db,'products','${p.id}')); loadProductsFromFirebase();" class="text-red-400"><i class="fa-solid fa-trash"></i></button></td></tr>`);
         }
 
         function openSettingsModal() {
-            document.getElementById('set-pix').value = storeSettings.pixKey || ''; document.getElementById('set-qrcode').value = storeSettings.qrCodeUrl || '';
-            document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || ''; document.getElementById('set-wpp-support').value = storeSettings.whatsappSupport || '';
-            document.getElementById('set-ship-cost').value = storeSettings.shippingCost || 25; document.getElementById('set-ship-days').value = storeSettings.shippingDays || '';
-            document.getElementById('settings-modal').classList.remove('hidden');
+            document.getElementById('set-pix').value = storeSettings.pixKey||''; document.getElementById('set-pix-name').value = storeSettings.pixName||''; document.getElementById('set-pix-city').value = storeSettings.pixCity||''; document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales||''; document.getElementById('set-ship-cost').value = storeSettings.shippingCost||25; document.getElementById('set-gemini').value = storeSettings.geminiKey||''; document.getElementById('settings-modal').classList.remove('hidden');
         }
         function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
-        
         async function saveSettings(e) {
-            e.preventDefault();
-            storeSettings = {
-                pixKey: document.getElementById('set-pix').value.trim(), qrCodeUrl: document.getElementById('set-qrcode').value.trim(),
-                whatsappSales: document.getElementById('set-wpp-sales').value.trim(), whatsappSupport: document.getElementById('set-wpp-support').value.trim(),
-                shippingCost: parseFloat(document.getElementById('set-ship-cost').value), shippingDays: document.getElementById('set-ship-days').value.trim()
-            };
-            try { await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); closeSettingsModal(); updateStoreUI(); } catch(err){}
+            e.preventDefault(); storeSettings = { pixKey: document.getElementById('set-pix').value, pixName: document.getElementById('set-pix-name').value, pixCity: document.getElementById('set-pix-city').value, whatsappSales: document.getElementById('set-wpp-sales').value, shippingCost: parseFloat(document.getElementById('set-ship-cost').value), geminiKey: document.getElementById('set-gemini').value };
+            await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); closeSettingsModal();
         }
 
         function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
         function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
-        async function handleAdminLogin(e) {
-            e.preventDefault(); 
-            try { await window.firebaseFns.signInWithEmailAndPassword(window.auth, document.getElementById('login-email').value, document.getElementById('login-password').value); closeLoginModal(); switchTab('admin'); } 
-            catch (err) { document.getElementById('login-error').innerText = 'Credenciais inválidas'; document.getElementById('login-error').classList.remove('hidden'); }
-        }
+        async function handleAdminLogin(e) { e.preventDefault(); try { await window.firebaseFns.signInWithEmailAndPassword(window.auth, document.getElementById('login-email').value, document.getElementById('login-password').value); closeLoginModal(); switchTab('admin'); } catch(err){ alert('Erro'); } }
         async function logoutAdmin() { await window.firebaseFns.signOut(window.auth); switchTab('catalog'); }
     </script>
 </body>
