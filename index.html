@@ -31,7 +31,7 @@
         .glow-yellow { box-shadow: 0 0 20px rgba(250, 204, 21, 0.35); }
         .glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.25); }
         .text-gradient { background: linear-gradient(135deg, #facc15 0%, #d4a017 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #0b0b0f; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #d4a017; }
@@ -99,19 +99,31 @@
             </div>
 
             <!-- Filters & Search -->
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-cardBg p-4 rounded-2xl border border-zinc-800">
-                <div class="relative w-full sm:w-80">
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-cardBg p-4 rounded-2xl border border-zinc-800">
+                <div class="relative w-full xl:w-80 shrink-0">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
                     <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar produtos..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-gold transition">
                 </div>
-                <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
-                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition shadow-md">Todos</button>
-                    <button onclick="setCategoryFilter('Peptídeos')" id="filter-btn-Peptídeos" class="px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition">Peptídeos</button>
-                    <button onclick="setCategoryFilter('Insumos & Soluções')" id="filter-btn-Insumos & Soluções" class="px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition">Insumos & Soluções</button>
+                
+                <!-- Scrollable Category Filters -->
+                <div class="flex items-center gap-2 overflow-x-auto w-full pb-2 xl:pb-0 scroll-smooth">
+                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition shadow-md whitespace-nowrap">Todos</button>
+                    <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Peptídeos</button>
+                    <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Insumos & Soluções</button>
+                    <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética Avançada</button>
+                    <button onclick="setCategoryFilter('Estética e Pele')" data-cat="Estética e Pele" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética e Pele</button>
+                    <button onclick="setCategoryFilter('CA E P')" data-cat="CA E P" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">CA E P</button>
+                    <button onclick="setCategoryFilter('Hormônios')" data-cat="Hormônios" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Hormônios</button>
+                    <button onclick="setCategoryFilter('Libido')" data-cat="Libido" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Libido</button>
+                    <button onclick="setCategoryFilter('Longevidade')" data-cat="Longevidade" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Longevidade</button>
+                    <button onclick="setCategoryFilter('Perda de Peso')" data-cat="Perda de Peso" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Perda de Peso</button>
+                    <button onclick="setCategoryFilter('Performance')" data-cat="Performance" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Performance</button>
+                    <button onclick="setCategoryFilter('Perfumes')" data-cat="Perfumes" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Perfumes</button>
+                    <button onclick="setCategoryFilter('Outros')" data-cat="Outros" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Outros</button>
                 </div>
             </div>
 
-            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </div>
 
         <!-- ================= ADMIN PANEL TAB ================= -->
@@ -262,7 +274,6 @@
                     <p class="text-xs font-semibold text-zinc-400">Informe seus dados para envio:</p>
                     <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                     <input type="text" id="cust-whatsapp" placeholder="WhatsApp (com DDD)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
-                    <!-- Placeholder for future Auto-CEP -->
                     <input type="text" id="cust-address" placeholder="Endereço Completo com CEP" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                 </div>
                 <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-5 text-center space-y-3">
@@ -330,6 +341,16 @@
                     <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold">
                         <option value="Peptídeos">Peptídeos</option>
                         <option value="Insumos & Soluções">Insumos & Soluções</option>
+                        <option value="Estética Avançada">Estética Avançada</option>
+                        <option value="Estética e Pele">Estética e Pele</option>
+                        <option value="CA E P">CA E P</option>
+                        <option value="Hormônios">Hormônios</option>
+                        <option value="Libido">Libido</option>
+                        <option value="Longevidade">Longevidade</option>
+                        <option value="Perda de Peso">Perda de Peso</option>
+                        <option value="Performance">Performance</option>
+                        <option value="Perfumes">Perfumes</option>
+                        <option value="Outros">Outros</option>
                     </select>
                 </div>
                 <div>
@@ -348,7 +369,6 @@
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
-            <!-- (Configurações seguem iguais: Pix, QR Code, WhatsApp, Frete) -->
             <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
                 <h3 class="text-lg font-extrabold text-white flex items-center gap-2.5"><i class="fa-solid fa-gear text-gold"></i> Configurações</h3>
                 <button onclick="closeSettingsModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -485,12 +505,9 @@
         async function loadOrdersFromFirebase() {
             if (!currentUser) return;
             try {
-                // Fetch orders ordered by date descending (assuming we save date as ISO string)
                 const querySnapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
                 orders = [];
                 querySnapshot.forEach((docSnap) => orders.push({ id: docSnap.id, ...docSnap.data() }));
-                
-                // Sort array manually by date descending
                 orders.sort((a, b) => new Date(b.date) - new Date(a.date));
             } catch (e) { console.log(e); }
             renderOrdersTableAndDashboard();
@@ -503,7 +520,7 @@
             if (currentUser) {
                 navLogin.classList.add('hidden'); navAdmin.classList.remove('hidden'); navAdmin.classList.add('flex');
                 userStatus.classList.remove('hidden'); userStatus.classList.add('flex');
-                loadOrdersFromFirebase(); // Load orders when logged in
+                loadOrdersFromFirebase();
             } else {
                 navLogin.classList.remove('hidden'); navAdmin.classList.remove('flex'); navAdmin.classList.add('hidden');
                 userStatus.classList.remove('flex'); userStatus.classList.add('hidden');
@@ -521,7 +538,7 @@
                 if (!currentUser) return openLoginModal();
                 document.getElementById('tab-admin').classList.remove('hidden');
                 renderAdminTable();
-                switchAdminSubTab('products'); // Default to products tab
+                switchAdminSubTab('products');
             }
         }
 
@@ -537,7 +554,7 @@
             } else if (sub === 'orders') {
                 document.getElementById('admin-subtab-orders').classList.remove('hidden');
                 document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-white transition shadow";
-                loadOrdersFromFirebase(); // Refresh data
+                loadOrdersFromFirebase();
             }
         }
 
@@ -549,7 +566,7 @@
             grid.innerHTML = '';
             const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal) || p.description.toLowerCase().includes(searchVal)));
             
-            if (filtered.length === 0) { grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500">Nenhum produto.</div>`; return; }
+            if (filtered.length === 0) { grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500">Nenhum produto encontrado nesta categoria.</div>`; return; }
 
             filtered.forEach(p => {
                 const stockCount = p.stock !== undefined ? Number(p.stock) : 10;
@@ -563,7 +580,7 @@
                         ${promoTag}
                         <div>${imgHTML}
                             <div class="flex items-center justify-between mb-3">
-                                <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase">${p.category}</span>
+                                <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase truncate max-w-[60%]">${p.category}</span>
                                 <span class="text-[11px] font-bold ${isOutOfStock ? 'text-red-400 bg-red-500/10 border-red-500/20' : 'text-green-400 bg-green-500/10 border-green-500/20'} px-2.5 py-0.5 rounded-full border">
                                     ${isOutOfStock ? 'Esgotado' : `Estoque: ${stockCount}`}
                                 </span>
@@ -581,10 +598,22 @@
             });
         }
 
+        // ================= GESTÃO INTELIGENTE DE CATEGORIAS =================
         function setCategoryFilter(cat) {
             currentFilter = cat;
-            document.querySelectorAll('[id^="filter-btn-"]').forEach(btn => btn.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition");
-            document.getElementById(`filter-btn-${cat}`).className = "px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition shadow-md";
+            
+            // Reseta todos os botões de filtro
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap";
+            });
+            
+            // Ativa apenas o botão selecionado
+            if (cat === 'all') {
+                document.getElementById('filter-btn-all').className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition shadow-md whitespace-nowrap";
+            } else {
+                const activeBtn = document.querySelector(`.filter-btn[data-cat="${cat}"]`);
+                if(activeBtn) activeBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition shadow-md whitespace-nowrap";
+            }
             renderProducts();
         }
 
@@ -597,7 +626,7 @@
             if (existing && existing.qty + 1 > stockMax) return alert('Quantidade maior do que o estoque.');
             
             const activePrice = product.promoPrice ? Number(product.promoPrice) : Number(product.price);
-            const costPrice = product.costPrice ? Number(product.costPrice) : 0; // Captura custo
+            const costPrice = product.costPrice ? Number(product.costPrice) : 0;
 
             if (existing) { existing.qty += 1; existing.activePrice = activePrice; } 
             else { cart.push({ ...product, activePrice, costPrice, qty: 1 }); }
@@ -657,7 +686,6 @@
         function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
         function copyPixKey() { const input = document.getElementById('pix-key-input'); input.select(); navigator.clipboard.writeText(input.value); alert('Chave Copiada!'); }
         
-        // INTEGRAÇÃO: Salvar Pedido no DB e enviar WhatsApp
         async function processAndSendOrder() {
             const name = document.getElementById('cust-name').value.trim(); 
             const wpp = document.getElementById('cust-whatsapp').value.trim(); 
@@ -670,7 +698,7 @@
 
             const shipCost = Number(storeSettings.shippingCost);
             let subtotal = 0;
-            let totalCost = 0; // Custo total para calcular lucro depois
+            let totalCost = 0;
             let orderItems = [];
 
             for (const item of cart) {
@@ -683,7 +711,6 @@
                     id: item.id, name: item.name, qty: item.qty, price: item.activePrice, cost: item.costPrice || 0
                 });
 
-                // Abater estoque no Firebase
                 const prodRef = products.find(p => p.id === item.id);
                 if (prodRef) {
                     const newStock = Math.max(0, Number(prodRef.stock) - item.qty);
@@ -694,29 +721,25 @@
 
             const finalTotal = subtotal + shipCost;
 
-            // Criar objeto do pedido
             const orderData = {
                 client: { name, phone: wpp, address: addr },
                 items: orderItems,
                 financials: { subtotal, shipping: shipCost, total: finalTotal, totalCost: totalCost, estimatedProfit: (subtotal - totalCost) },
-                status: 'aguardando', // aguardando, pago, enviado
+                status: 'aguardando',
                 date: new Date().toISOString()
             };
 
             try {
-                // Salva o pedido no banco
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), orderData);
                 
-                // Monta mensagem do WhatsApp
                 let msg = `*NOVO PEDIDO - FÊNIX IMPORTS*\n\n👤 *Cliente:* ${name}\n📱 *WhatsApp:* ${wpp}\n📍 *Endereço:* ${addr}\n\n🛒 *Itens:*\n`;
                 orderItems.forEach(i => msg += `- ${i.qty}x ${i.name} (R$ ${formatMoney(i.price * i.qty)})\n`);
                 msg += `\n📦 *Frete:* R$ ${formatMoney(shipCost)}\n💰 *Total:* R$ ${formatMoney(finalTotal)}\n💳 *Pagamento:* PIX\n\n_Segue o meu comprovante de pagamento._`;
                 
-                // Redireciona
                 window.open(`https://wa.me/${storeSettings.whatsappSales}?text=${encodeURIComponent(msg)}`, '_blank');
                 
                 cart = []; updateCartUI(); renderProducts(); closeCheckoutModal();
-                if(currentUser) loadOrdersFromFirebase(); // Atualiza painel se o admin fez pedido de teste
+                if(currentUser) loadOrdersFromFirebase();
             } catch(e) {
                 console.error(e); alert("Erro ao processar pedido.");
             }
@@ -761,7 +784,6 @@
             let salesCount = 0;
 
             orders.forEach(o => {
-                // Cálculo de Inteligência Financeira apenas para Pagos ou Enviados
                 if (o.status === 'pago' || o.status === 'enviado') {
                     totalRev += (o.financials.subtotal || 0);
                     totalProfit += (o.financials.estimatedProfit || 0);
@@ -799,7 +821,6 @@
                 `;
             });
 
-            // Atualiza Dashboard
             document.getElementById('dash-revenue').innerText = `R$ ${formatMoney(totalRev)}`;
             document.getElementById('dash-profit').innerText = `R$ ${formatMoney(totalProfit)}`;
             document.getElementById('dash-sales-count').innerText = salesCount;
@@ -839,7 +860,7 @@
                     document.getElementById('prod-category').value = p.category;
                     document.getElementById('prod-price').value = p.price;
                     document.getElementById('prod-promo-price').value = p.promoPrice || ''; 
-                    document.getElementById('prod-cost-price').value = p.costPrice || ''; // Carrega custo
+                    document.getElementById('prod-cost-price').value = p.costPrice || ''; 
                     document.getElementById('prod-stock').value = p.stock !== undefined ? p.stock : 10;
                     document.getElementById('prod-desc').value = p.description;
                 }
@@ -859,7 +880,7 @@
                 category: document.getElementById('prod-category').value,
                 price: parseFloat(document.getElementById('prod-price').value),
                 promoPrice: document.getElementById('prod-promo-price').value ? parseFloat(document.getElementById('prod-promo-price').value) : null,
-                costPrice: parseFloat(document.getElementById('prod-cost-price').value), // Salva custo
+                costPrice: parseFloat(document.getElementById('prod-cost-price').value), 
                 stock: parseInt(document.getElementById('prod-stock').value),
                 description: document.getElementById('prod-desc').value,
                 imageUrl: document.getElementById('prod-imageUrl').value.trim()
