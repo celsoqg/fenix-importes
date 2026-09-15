@@ -30,17 +30,17 @@
         .glow-yellow { box-shadow: 0 0 20px rgba(250, 204, 21, 0.35); }
         .glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.25); }
         .text-gradient { background: linear-gradient(135deg, #facc15 0%, #d4a017 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: #0b0b0f; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #d4a017; }
-        .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.4; }
+        .chat-bubble { max-width: 85%; padding: 8px 12px; border-radius: 14px; margin-bottom: 8px; font-size: 12px; line-height: 1.4; }
         .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 4px; }
         .chat-bot { background: rgba(212, 160, 23, 0.1); border: 1px solid rgba(212, 160, 23, 0.2); color: #facc15; border-bottom-left-radius: 4px; }
         
         /* Toast Notification Styles */
-        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
+        #toast-container { position: fixed; top: 15px; right: 15px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+        .toast { padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; color: white; display: flex; items-center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
         .toast-success { background: #13131a; border-left: 4px solid #22c55e; color: #22c55e; }
         .toast-error { background: #13131a; border-left: 4px solid #ef4444; color: #ef4444; }
         .toast-info { background: #13131a; border-left: 4px solid #d4a017; color: #facc15; }
@@ -52,20 +52,20 @@
     <div id="toast-container"></div>
 
     <!-- Top Banner -->
-    <div class="bg-gradient-to-r from-yellow-600 via-gold to-yellow-500 text-black text-xs font-bold py-1.5 px-4 text-center tracking-wide uppercase flex items-center justify-center gap-2 shadow-md">
-        <i class="fa-solid fa-shield-halved"></i> Qualidade Certificada & Pronta Entrega para Todo o Brasil
+    <div class="bg-gradient-to-r from-yellow-600 via-gold to-yellow-500 text-black text-[10px] sm:text-xs font-bold py-1 px-2 sm:px-4 text-center tracking-wide uppercase flex items-center justify-center gap-1.5 shadow-md">
+        <i class="fa-solid fa-shield-halved"></i> <span>Qualidade Certificada & Pronta Entrega Brasil</span>
     </div>
 
     <!-- Header -->
-    <header class="sticky top-0 z-50 bg-darkBg/90 backdrop-blur-md border-b border-zinc-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('catalog')">
-                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center glow-gold text-black text-xl font-black">
+    <header class="sticky top-0 z-50 bg-darkBg/95 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+            <div class="flex items-center gap-2 sm:gap-3 cursor-pointer" onclick="switchTab('catalog')">
+                <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center glow-gold text-black text-lg sm:text-xl font-black">
                     <i class="fa-solid fa-fire-flame-curved"></i>
                 </div>
                 <div>
-                    <span class="text-xl font-extrabold tracking-wider text-white block leading-tight">FÊNIX IMPORTS</span>
-                    <span class="text-[10px] text-gold font-semibold tracking-widest uppercase">Alta Performance & Exclusividade</span>
+                    <span class="text-base sm:text-xl font-extrabold tracking-wider text-white block leading-tight">FÊNIX IMPORTS</span>
+                    <span class="text-[8px] sm:text-[10px] text-gold font-semibold tracking-widest uppercase">Evolução Máxima</span>
                 </div>
             </div>
 
@@ -76,89 +76,90 @@
                 <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-2"><i class="fa-solid fa-gauge-high"></i> Gestão de Elite</button>
             </nav>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 sm:gap-4">
                 <div id="user-status-container" class="hidden text-xs text-zinc-400 md:flex items-center gap-2 bg-zinc-900 px-3 py-1.5 rounded-full border border-zinc-800">
                     <i class="fa-solid fa-user-shield text-gold"></i><span id="logged-user-email">admin</span>
                     <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300 ml-2" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
-                <button onclick="toggleCartDrawer(true)" class="relative bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white px-4 py-2.5 rounded-xl flex items-center gap-2.5 transition group">
-                    <i class="fa-solid fa-cart-shopping text-gold group-hover:scale-110 transition"></i>
+                <button onclick="toggleCartDrawer(true)" class="relative bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl flex items-center gap-2 transition group">
+                    <i class="fa-solid fa-cart-shopping text-gold group-hover:scale-110 transition text-sm sm:text-base"></i>
                     <span class="hidden sm:inline text-sm font-medium">Carrinho</span>
-                    <span id="cart-counter" class="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center glow-yellow shadow-lg">0</span>
+                    <span id="cart-counter" class="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 bg-yellow-500 text-black text-[10px] sm:text-xs font-bold w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center glow-yellow shadow-lg">0</span>
                 </button>
-                <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-400 hover:text-white p-2"><i class="fa-solid fa-bars text-xl"></i></button>
+                <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-400 hover:text-white p-1.5"><i class="fa-solid fa-bars text-lg"></i></button>
             </div>
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 py-4 space-y-3">
-            <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-medium py-2 flex items-center gap-3"><i class="fa-solid fa-store"></i> Catálogo</button>
-            <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-medium py-2 flex items-center gap-3"><i class="fa-solid fa-map-location-dot"></i> Rastrear Pedido</button>
-            <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-medium py-2 flex items-center gap-3"><i class="fa-solid fa-user-lock"></i> Login Admin</button>
-            <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-medium py-2 flex items-center gap-3"><i class="fa-solid fa-gauge-high"></i> Gestão de Elite</button>
+        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 py-3 space-y-2">
+            <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-store"></i> Catálogo</button>
+            <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-map-location-dot"></i> Rastrear Pedido</button>
+            <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-user-lock"></i> Login Admin</button>
+            <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-gauge-high"></i> Gestão de Elite</button>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <main class="flex-grow max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-4 sm:py-8 w-full">
 
         <!-- CATALOG TAB -->
-        <div id="tab-catalog" class="space-y-8">
-            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-zinc-900 via-cardBg to-zinc-900 border border-zinc-800 p-8 sm:p-12">
-                <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 max-w-2xl space-y-4">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/20"><i class="fa-solid fa-medal"></i> Padrão Internacional</span>
-                    <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">A Base da sua <span class="text-gradient">Evolução Máxima</span></h1>
+        <div id="tab-catalog" class="space-y-4 sm:space-y-8">
+            <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-zinc-900 via-cardBg to-zinc-900 border border-zinc-800 p-4 sm:p-12">
+                <div class="absolute -right-10 -bottom-10 w-48 h-48 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl space-y-2 sm:space-y-4">
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-gold/10 text-gold border border-gold/20"><i class="fa-solid fa-medal"></i> Padrão Internacional</span>
+                    <h1 class="text-xl sm:text-5xl font-black tracking-tight leading-tight">A Base da sua <span class="text-gradient">Evolução Máxima</span></h1>
                 </div>
             </div>
 
             <!-- Filters -->
-            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-cardBg p-4 rounded-2xl border border-zinc-800">
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 bg-cardBg p-3 sm:p-4 rounded-2xl border border-zinc-800">
                 <div class="relative w-full xl:w-80 shrink-0">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar produtos..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:border-gold outline-none transition">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs sm:text-sm"></i>
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar produtos..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none transition">
                 </div>
-                <div class="flex items-center gap-2 overflow-x-auto w-full pb-2 xl:pb-0 scroll-smooth">
-                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black transition whitespace-nowrap">Todos</button>
-                    <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Peptídeos</button>
-                    <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Insumos & Soluções</button>
-                    <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética Avançada</button>
-                    <button onclick="setCategoryFilter('Estética e Pele')" data-cat="Estética e Pele" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética e Pele</button>
-                    <button onclick="setCategoryFilter('CA E P')" data-cat="CA E P" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">CA E P</button>
-                    <button onclick="setCategoryFilter('Hormônios')" data-cat="Hormônios" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Hormônios</button>
-                    <button onclick="setCategoryFilter('Libido')" data-cat="Libido" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Libido</button>
-                    <button onclick="setCategoryFilter('Longevidade')" data-cat="Longevidade" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Longevidade</button>
-                    <button onclick="setCategoryFilter('Perda de Peso')" data-cat="Perda de Peso" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Perda de Peso</button>
-                    <button onclick="setCategoryFilter('Performance')" data-cat="Performance" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Performance</button>
-                    <button onclick="setCategoryFilter('Perfumes')" data-cat="Perfumes" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Perfumes</button>
-                    <button onclick="setCategoryFilter('Outros')" data-cat="Outros" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Outros</button>
+                <div class="flex items-center gap-1.5 overflow-x-auto w-full pb-1 xl:pb-0 scroll-smooth">
+                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold bg-gold text-black transition whitespace-nowrap">Todos</button>
+                    <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Peptídeos</button>
+                    <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Insumos & Soluções</button>
+                    <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética Avançada</button>
+                    <button onclick="setCategoryFilter('Estética e Pele')" data-cat="Estética e Pele" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética e Pele</button>
+                    <button onclick="setCategoryFilter('CA E P')" data-cat="CA E P" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">CA E P</button>
+                    <button onclick="setCategoryFilter('Hormônios')" data-cat="Hormônios" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Hormônios</button>
+                    <button onclick="setCategoryFilter('Libido')" data-cat="Libido" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Libido</button>
+                    <button onclick="setCategoryFilter('Longevidade')" data-cat="Longevidade" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Longevidade</button>
+                    <button onclick="setCategoryFilter('Perda de Peso')" data-cat="Perda de Peso" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Perda de Peso</button>
+                    <button onclick="setCategoryFilter('Performance')" data-cat="Performance" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Performance</button>
+                    <button onclick="setCategoryFilter('Perfumes')" data-cat="Perfumes" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Perfumes</button>
+                    <button onclick="setCategoryFilter('Outros')" data-cat="Outros" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Outros</button>
                 </div>
             </div>
 
-            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+            <!-- PRODUCT GRID (2 COLUNAS NO MOBILE) -->
+            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-6"></div>
         </div>
 
         <!-- ADMIN TAB -->
         <div id="tab-admin" class="hidden space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cardBg p-6 rounded-3xl border border-zinc-800">
-                <div><h2 class="text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-microchip text-gold"></i> Gestão de Elite</h2></div>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cardBg p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-zinc-800">
+                <div><h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-microchip text-gold"></i> Gestão de Elite</h2></div>
                 <div class="flex gap-2 w-full md:w-auto bg-zinc-900 p-1.5 rounded-xl border border-zinc-800">
-                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-white transition">Estoque</button>
-                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 transition">Vendas & Caixa</button>
+                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-zinc-800 text-white transition">Estoque</button>
+                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-zinc-400 transition">Vendas & Caixa</button>
                 </div>
             </div>
 
             <!-- Produtos -->
             <div id="admin-subtab-products" class="space-y-4">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos Cadastrados</h3>
-                    <div class="flex gap-3">
-                        <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2 rounded-xl text-sm border border-zinc-700 flex items-center gap-2"><i class="fa-solid fa-gear"></i> Configs & IA</button>
-                        <button onclick="openProductModal()" class="bg-gold hover:bg-yellow-400 text-black font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-2 shadow-lg"><i class="fa-solid fa-plus"></i> Novo</button>
+                    <h3 class="text-base sm:text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos Cadastrados</h3>
+                    <div class="flex gap-2">
+                        <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-3 py-2 rounded-xl text-xs sm:text-sm border border-zinc-700 flex items-center gap-1.5"><i class="fa-solid fa-gear"></i> Configs</button>
+                        <button onclick="openProductModal()" class="bg-gold hover:bg-yellow-400 text-black font-bold px-3 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-1.5 shadow-lg"><i class="fa-solid fa-plus"></i> Novo</button>
                     </div>
                 </div>
-                <div class="bg-cardBg rounded-3xl border border-zinc-800 overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead><tr class="border-b border-zinc-800 text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-4">Foto</th><th class="p-4">Produto</th><th class="p-4">Estoque</th><th class="p-4">Custo</th><th class="p-4">Venda</th><th class="p-4 text-right">Ações</th></tr></thead>
+                <div class="bg-cardBg rounded-2xl sm:rounded-3xl border border-zinc-800 overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-3 sm:p-4">Foto</th><th class="p-3 sm:p-4">Produto</th><th class="p-3 sm:p-4">Estoque</th><th class="p-3 sm:p-4">Custo</th><th class="p-3 sm:p-4">Venda</th><th class="p-3 sm:p-4 text-right">Ações</th></tr></thead>
                         <tbody id="admin-product-table" class="divide-y divide-zinc-800/60"></tbody>
                     </table>
                 </div>
@@ -166,14 +167,14 @@
 
             <!-- Vendas -->
             <div id="admin-subtab-orders" class="hidden space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl relative overflow-hidden group"><div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 transition"><i class="fa-solid fa-wallet text-8xl"></i></div><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Faturamento Conf.</p><h4 id="dash-revenue" class="text-3xl font-black text-white">R$ 0,00</h4></div>
-                    <div class="bg-gradient-to-br from-green-900/40 to-zinc-900 border border-green-900/50 p-5 rounded-2xl relative overflow-hidden group glow-green"><div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 transition"><i class="fa-solid fa-chart-line text-8xl text-green-400"></i></div><p class="text-xs font-bold text-green-400 uppercase tracking-wider mb-1">Lucro Estimado</p><h4 id="dash-profit" class="text-3xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-500/70 mt-2 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
-                    <div class="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl relative overflow-hidden group"><div class="absolute right-[-10%] top-[-10%] opacity-10 group-hover:scale-110 transition"><i class="fa-solid fa-box-open text-8xl text-gold"></i></div><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-3xl font-black text-white">0</h4></div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <div class="bg-zinc-900 border border-zinc-800 p-4 sm:p-5 rounded-2xl relative overflow-hidden group"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Faturamento Conf.</p><h4 id="dash-revenue" class="text-2xl sm:text-3xl font-black text-white">R$ 0,00</h4></div>
+                    <div class="bg-gradient-to-br from-green-900/40 to-zinc-900 border border-green-900/50 p-4 sm:p-5 rounded-2xl relative overflow-hidden group glow-green"><p class="text-xs font-bold text-green-400 uppercase tracking-wider mb-1">Lucro Estimado</p><h4 id="dash-profit" class="text-2xl sm:text-3xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-500/70 mt-2 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
+                    <div class="bg-zinc-900 border border-zinc-800 p-4 sm:p-5 rounded-2xl relative overflow-hidden group"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-2xl sm:text-3xl font-black text-white">0</h4></div>
                 </div>
-                <div class="bg-cardBg rounded-3xl border border-zinc-800 overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-sm">
-                        <thead><tr class="border-b border-zinc-800 text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-4">Cliente/Data</th><th class="p-4">Itens/Total</th><th class="p-4">Status & Rastreio</th><th class="p-4 text-right">Ação</th></tr></thead>
+                <div class="bg-cardBg rounded-2xl sm:rounded-3xl border border-zinc-800 overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                        <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-3 sm:p-4">Cliente/Data</th><th class="p-3 sm:p-4">Itens/Total</th><th class="p-3 sm:p-4">Status & Rastreio</th><th class="p-3 sm:p-4 text-right">Ação</th></tr></thead>
                         <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60"></tbody>
                     </table>
                 </div>
@@ -182,154 +183,150 @@
     </main>
 
     <!-- Chat IA e Suporte Flutuante -->
-    <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
-        <button onclick="toggleAIChat()" class="bg-zinc-800 border border-gold/50 text-gold w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,160,23,0.3)] hover:scale-110 transition-all relative">
-            <i class="fa-solid fa-robot text-2xl"></i>
-            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-darkBg animate-pulse">IA</span>
+    <div class="fixed bottom-4 right-4 flex flex-col gap-2.5 z-40">
+        <button onclick="toggleAIChat()" class="bg-zinc-800 border border-gold/50 text-gold w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,160,23,0.3)] hover:scale-110 transition-all relative">
+            <i class="fa-solid fa-robot text-lg sm:text-2xl"></i>
+            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-darkBg animate-pulse">IA</span>
         </button>
-        <a id="btn-floating-support" href="#" target="_blank" class="bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-all">
-            <i class="fa-brands fa-whatsapp text-3xl"></i>
+        <a id="btn-floating-support" href="#" target="_blank" class="bg-green-500 text-white w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-all">
+            <i class="fa-brands fa-whatsapp text-2xl sm:text-3xl"></i>
         </a>
     </div>
 
     <!-- AI Chat Window -->
-    <div id="ai-chat-window" class="fixed bottom-24 right-6 w-80 bg-cardBg border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-96">
+    <div id="ai-chat-window" class="fixed bottom-20 right-4 w-[88vw] sm:w-80 bg-cardBg border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-80 sm:h-96">
         <div class="bg-gradient-to-r from-zinc-900 to-zinc-800 p-3 border-b border-zinc-700 flex justify-between items-center">
-            <div class="flex items-center gap-2"><i class="fa-solid fa-robot text-gold text-lg"></i> <span class="font-bold text-sm text-white">Consultor Fênix IA</span></div>
+            <div class="flex items-center gap-2"><i class="fa-solid fa-robot text-gold text-base"></i> <span class="font-bold text-xs sm:text-sm text-white">Consultor Fênix IA</span></div>
             <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2">
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
             <div class="chat-bubble chat-bot">Olá! Sou a inteligência artificial da Fênix. O que você busca otimizar hoje no seu corpo ou mente? Posso te indicar o melhor produto.</div>
         </div>
-        <div class="p-3 bg-zinc-900 border-t border-zinc-800 flex gap-2">
-            <input type="text" id="chat-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
-            <button onclick="sendChatMessage()" class="bg-gold text-black rounded-lg px-3 py-2 hover:bg-yellow-400 transition"><i class="fa-solid fa-paper-plane"></i></button>
+        <div class="p-2.5 bg-zinc-900 border-t border-zinc-800 flex gap-2">
+            <input type="text" id="chat-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-gold">
+            <button onclick="sendChatMessage()" class="bg-gold text-black rounded-lg px-3 py-1.5 hover:bg-yellow-400 transition text-xs"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
     <!-- Portal Rastreamento -->
     <div id="tracking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeTrackingModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-sm w-full p-8 space-y-6 shadow-2xl z-10 text-center">
-            <i class="fa-solid fa-map-location-dot text-4xl text-gold mb-2"></i>
-            <h3 class="text-xl font-extrabold text-white">Rastrear Pedido</h3>
+        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-sm w-full p-6 sm:p-8 space-y-5 shadow-2xl z-10 text-center">
+            <i class="fa-solid fa-map-location-dot text-3xl sm:text-4xl text-gold mb-1"></i>
+            <h3 class="text-lg sm:text-xl font-extrabold text-white">Rastrear Pedido</h3>
             <p class="text-xs text-zinc-400">Digite seu WhatsApp com DDD para ver o status da sua compra.</p>
-            <input type="text" id="track-phone" placeholder="Ex: 21999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-center text-sm text-white focus:border-gold outline-none">
-            <button onclick="trackOrder()" class="w-full bg-zinc-800 text-white font-bold py-3 rounded-xl hover:bg-gold hover:text-black transition">Buscar</button>
-            <div id="track-result" class="mt-4 text-sm text-left space-y-3 hidden"></div>
-            <button onclick="closeTrackingModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <input type="text" id="track-phone" placeholder="Ex: 21999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-center text-sm text-white focus:border-gold outline-none">
+            <button onclick="trackOrder()" class="w-full bg-zinc-800 text-white font-bold py-2.5 rounded-xl hover:bg-gold hover:text-black transition text-xs sm:text-sm">Buscar</button>
+            <div id="track-result" class="mt-3 text-xs sm:text-sm text-left space-y-2 hidden"></div>
+            <button onclick="closeTrackingModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
     </div>
 
     <!-- Shopping Cart Drawer -->
     <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="toggleCartDrawer(false)"></div>
-        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-8">
             <div class="w-screen max-w-md bg-cardBg border-l border-zinc-800 flex flex-col shadow-2xl">
-                <div class="p-6 border-b border-zinc-800 flex justify-between bg-zinc-900/50">
-                    <h3 class="text-lg font-bold text-white flex gap-2.5"><i class="fa-solid fa-bag-shopping text-gold"></i> Seu Carrinho</h3>
-                    <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <div class="p-4 sm:p-6 border-b border-zinc-800 flex justify-between bg-zinc-900/50">
+                    <h3 class="text-base sm:text-lg font-bold text-white flex gap-2"><i class="fa-solid fa-bag-shopping text-gold"></i> Seu Carrinho</h3>
+                    <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
-                <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-zinc-800/40"></div>
-                <div class="p-6 border-t border-zinc-800 bg-zinc-900/50 space-y-4">
-                    <div class="space-y-1.5 pt-2">
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 divide-y divide-zinc-800/40"></div>
+                <div class="p-4 sm:p-6 border-t border-zinc-800 bg-zinc-900/50 space-y-3">
+                    <div class="space-y-1 pt-1">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal Produtos</span><span id="cart-subtotal">R$ 0,00</span></div>
                         <div class="flex justify-between text-xs text-zinc-400"><span>Seguro da Mercadoria</span><span id="cart-insurance-cost" class="text-gold">R$ 0,00</span></div>
                         <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 25,00</span></div>
-                        <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total Estimado</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
+                        <div class="flex justify-between text-sm sm:text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total Estimado</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
-                    <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-yellow-500 via-gold to-yellow-400 text-black font-extrabold py-3.5 rounded-xl shadow-lg glow-yellow transition flex justify-center gap-2 text-sm"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido</button>
+                    <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-yellow-500 via-gold to-yellow-400 text-black font-extrabold py-3 rounded-xl shadow-lg glow-yellow transition flex justify-center gap-2 text-xs sm:text-sm"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Checkout Modal com Seleção de Seguro, VIACEP e PIX Dinâmico -->
-    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[95vh]">
-            <div class="flex justify-between border-b border-zinc-800 pb-4 mb-4">
-                <h3 class="text-lg font-extrabold text-white flex gap-2.5"><i class="fa-solid fa-truck-fast text-gold"></i> Dados & Pagamento</h3>
-                <button onclick="closeCheckoutModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[95vh]">
+            <div class="flex justify-between border-b border-zinc-800 pb-3 mb-3">
+                <h3 class="text-base sm:text-lg font-extrabold text-white flex gap-2"><i class="fa-solid fa-truck-fast text-gold"></i> Dados & Pagamento</h3>
+                <button onclick="closeCheckoutModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
             
-            <!-- Etapa 1: Endereço & Seleção de Seguro -->
-            <div id="checkout-step-1" class="space-y-4">
-                <p class="text-xs font-semibold text-zinc-400 border-l-2 border-gold pl-2">Informações de Envio</p>
-                <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
-                <input type="text" id="cust-whatsapp" placeholder="WhatsApp (com DDD)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
+            <div id="checkout-step-1" class="space-y-3">
+                <p class="text-[11px] sm:text-xs font-semibold text-zinc-400 border-l-2 border-gold pl-2">Informações de Envio</p>
+                <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                <input type="text" id="cust-whatsapp" placeholder="WhatsApp (com DDD)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
                 <div class="grid grid-cols-3 gap-2">
-                    <input type="text" id="cust-cep" placeholder="CEP" onblur="buscarCEP()" maxlength="9" class="col-span-1 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
-                    <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
+                    <input type="text" id="cust-cep" placeholder="CEP" onblur="buscarCEP()" maxlength="9" class="col-span-1 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                    <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
                 </div>
-                <input type="text" id="cust-number" placeholder="Número e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
+                <input type="text" id="cust-number" placeholder="Número e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
 
-                <!-- Resumo dos Valores -->
-                <div class="bg-zinc-950 p-3.5 rounded-xl border border-zinc-800/60 space-y-2 text-xs">
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60 space-y-1.5 text-xs">
                     <div class="flex justify-between text-zinc-400"><span>Subtotal Produtos:</span><span id="summary-subtotal">R$ 0,00</span></div>
                     <div class="flex justify-between text-zinc-400"><span>Seguro da Mercadoria:</span><span id="summary-insurance" class="text-gold font-bold">R$ 0,00</span></div>
                     <div class="flex justify-between text-zinc-400"><span>Frete:</span><span id="summary-shipping">R$ 0,00</span></div>
-                    <div class="flex justify-between font-bold text-white pt-2 border-t border-zinc-800 text-sm"><span>Total Final:</span><span id="summary-total" class="text-gold">R$ 0,00</span></div>
+                    <div class="flex justify-between font-bold text-white pt-1.5 border-t border-zinc-800 text-xs sm:text-sm"><span>Total Final:</span><span id="summary-total" class="text-gold">R$ 0,00</span></div>
                 </div>
 
-                <button onclick="generateDynamicPix()" class="w-full bg-gold hover:bg-yellow-400 text-black font-extrabold py-3.5 rounded-xl transition text-sm mt-2">Avançar para Pagamento <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                <button onclick="generateDynamicPix()" class="w-full bg-gold hover:bg-yellow-400 text-black font-extrabold py-3 rounded-xl transition text-xs sm:text-sm mt-1">Avançar para Pagamento <i class="fa-solid fa-arrow-right ml-1"></i></button>
             </div>
 
-            <!-- Etapa 2: PIX Copia e Cola -->
-            <div id="checkout-step-2" class="space-y-4 hidden mt-4">
-                <p class="text-xs font-semibold text-zinc-400 text-center">Escaneie ou copie o código (Valor Exato com Frete/Seguro: <span id="pix-exact-value" class="text-white font-bold"></span>)</p>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 text-center space-y-4">
-                    <div id="dynamic-qrcode" class="w-40 h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-md"></div>
+            <div id="checkout-step-2" class="space-y-3 hidden mt-2">
+                <p class="text-[11px] sm:text-xs font-semibold text-zinc-400 text-center">Escaneie ou copie o código (Valor: <span id="pix-exact-value" class="text-white font-bold"></span>)</p>
+                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center space-y-3">
+                    <div id="dynamic-qrcode" class="w-32 h-32 sm:w-40 sm:h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-md"></div>
                     <div class="space-y-1">
-                        <span class="text-xs text-zinc-400 block">Pix Copia e Cola (Automático)</span>
+                        <span class="text-[10px] sm:text-xs text-zinc-400 block">Pix Copia e Cola (Automático)</span>
                         <div class="flex items-center gap-2 bg-zinc-950 p-2 rounded-xl border border-zinc-800">
                             <input type="text" readonly id="pix-emv-input" class="bg-transparent text-xs font-mono text-green-400 w-full focus:outline-none text-ellipsis whitespace-nowrap">
-                            <button onclick="copyPixEMV()" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition shrink-0"><i class="fa-regular fa-copy"></i></button>
+                            <button onclick="copyPixEMV()" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs px-2.5 py-1 rounded-lg transition shrink-0"><i class="fa-regular fa-copy"></i></button>
                         </div>
                     </div>
                 </div>
-                <button onclick="processAndSendOrder()" id="btn-finish-order" class="w-full bg-green-600 hover:bg-green-500 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition flex items-center justify-center gap-2.5 text-sm">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> Já paguei! Enviar Comprovante
+                <button onclick="processAndSendOrder()" id="btn-finish-order" class="w-full bg-green-600 hover:bg-green-500 text-white font-extrabold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-xs sm:text-sm">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Já paguei! Enviar Comprovante
                 </button>
                 <button onclick="backToStep1()" class="w-full text-zinc-500 hover:text-white text-xs underline text-center">Voltar</button>
             </div>
         </div>
     </div>
 
-    <!-- Product Modal com Opção de Seguro da Mercadoria -->
-    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+    <!-- Product Modal -->
+    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeProductModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
-            <h3 class="text-lg font-extrabold text-white mb-4">Adicionar/Editar Produto</h3>
-            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-3">
+        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-base sm:text-lg font-extrabold text-white mb-3">Adicionar/Editar Produto</h3>
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-2.5">
                 <input type="hidden" id="prod-id">
-                <input type="text" id="prod-imageUrl" placeholder="Link da Foto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
-                <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
+                <input type="text" id="prod-imageUrl" placeholder="Link da Foto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" class="w-full bg-zinc-950 border border-red-900/50 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-red-500">
-                    <input type="number" id="prod-stock" required value="10" placeholder="Estoque" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
+                    <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" class="w-full bg-zinc-950 border border-red-900/50 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-red-500">
+                    <input type="number" id="prod-stock" required value="10" placeholder="Estoque" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="number" step="0.01" id="prod-price" required placeholder="Preço Normal" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
-                    <input type="number" step="0.01" id="prod-promo-price" placeholder="Promocional" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
+                    <input type="number" step="0.01" id="prod-price" required placeholder="Preço Normal" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    <input type="number" step="0.01" id="prod-promo-price" placeholder="Promocional" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 </div>
 
-                <!-- Campos de Configuração do Seguro por Produto -->
-                <div class="grid grid-cols-2 gap-2 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800">
+                <div class="grid grid-cols-2 gap-2 bg-zinc-950 p-2 rounded-xl border border-zinc-800">
                     <div>
-                        <label class="text-[10px] text-zinc-400 block mb-1">Oferecer Seguro?</label>
-                        <select id="prod-has-insurance" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-gold">
+                        <label class="text-[9px] sm:text-[10px] text-zinc-400 block mb-1">Oferecer Seguro?</label>
+                        <select id="prod-has-insurance" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-gold">
                             <option value="sim">Sim (Ativado)</option>
                             <option value="nao">Não (Desativado)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] text-zinc-400 block mb-1">Valor Seguro R$</label>
-                        <input type="number" step="0.01" id="prod-insurance-price" placeholder="Ex: 15.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-gold">
+                        <label class="text-[9px] sm:text-[10px] text-zinc-400 block mb-1">Valor Seguro R$</label>
+                        <input type="number" step="0.01" id="prod-insurance-price" placeholder="Ex: 15.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-gold">
                     </div>
                 </div>
 
-                <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
+                <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                     <option value="Peptídeos">Peptídeos</option>
                     <option value="Insumos & Soluções">Insumos & Soluções</option>
                     <option value="Estética Avançada">Estética Avançada</option>
@@ -343,30 +340,30 @@
                     <option value="Perfumes">Perfumes</option>
                     <option value="Outros">Outros</option>
                 </select>
-                <textarea id="prod-desc" rows="3" required placeholder="Descrição" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold"></textarea>
-                <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-sm">Cancelar</button>
-                    <button type="submit" id="btn-salvar-produto" class="flex-1 bg-gold text-black font-extrabold py-2.5 rounded-xl text-sm">Salvar</button>
+                <textarea id="prod-desc" rows="2" required placeholder="Descrição" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold"></textarea>
+                <div class="flex gap-2 pt-1">
+                    <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2 rounded-xl text-xs sm:text-sm">Cancelar</button>
+                    <button type="submit" id="btn-salvar-produto" class="flex-1 bg-gold text-black font-extrabold py-2 rounded-xl text-xs sm:text-sm">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Settings Modal (Sem Porcentagem de Seguro Geral) -->
-    <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
-            <h3 class="text-lg font-extrabold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-gear text-gold"></i> Configurações Base</h3>
-            <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-3 text-sm">
+        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-base sm:text-lg font-extrabold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-gear text-gold"></i> Configurações Base</h3>
+            <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-2.5 text-xs sm:text-sm">
                 <input type="text" id="set-pix" required placeholder="Chave PIX (E-mail, CPF, Cel)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-pix-name" required placeholder="Nome Titular do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-pix-city" required placeholder="Cidade do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-wpp-sales" required placeholder="Zap Vendas (Ex: 55219...)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="number" step="0.01" id="set-ship-cost" required placeholder="Frete Fixo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-gemini" placeholder="Gemini API Key (Opcional)" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300 placeholder-blue-800/50">
-                <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-gold text-black font-extrabold py-2.5 rounded-xl">Salvar</button>
+                <div class="flex gap-2 pt-1">
+                    <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2 rounded-xl">Cancelar</button>
+                    <button type="submit" class="flex-1 bg-gold text-black font-extrabold py-2 rounded-xl">Salvar</button>
                 </div>
             </form>
         </div>
@@ -375,12 +372,12 @@
     <!-- Login Modal -->
     <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80" onclick="closeLoginModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-2xl w-full max-w-xs p-6 shadow-2xl z-10">
-            <h3 class="text-lg font-bold text-white mb-4">Acesso Admin</h3>
-            <form onsubmit="handleAdminLogin(event)" class="space-y-3">
-                <input type="email" id="login-email" required placeholder="E-mail" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white">
-                <input type="password" id="login-password" required placeholder="Senha" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white">
-                <button type="submit" class="w-full bg-gold text-black font-bold py-2.5 rounded-lg text-sm">Entrar</button>
+        <div class="relative bg-cardBg border border-zinc-800 rounded-2xl w-full max-w-xs p-5 shadow-2xl z-10">
+            <h3 class="text-base font-bold text-white mb-3">Acesso Admin</h3>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-2.5">
+                <input type="email" id="login-email" required placeholder="E-mail" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
+                <input type="password" id="login-password" required placeholder="Senha" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
+                <button type="submit" class="w-full bg-gold text-black font-bold py-2 rounded-lg text-xs sm:text-sm">Entrar</button>
             </form>
         </div>
     </div>
@@ -497,11 +494,11 @@
         function switchAdminSubTab(sub) {
             document.getElementById('admin-subtab-products').classList.add('hidden'); 
             document.getElementById('admin-subtab-orders').classList.add('hidden');
-            document.getElementById('subnav-products').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 transition";
-            document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold text-zinc-400 transition";
+            document.getElementById('subnav-products').className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-zinc-400 transition";
+            document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-zinc-400 transition";
             
             document.getElementById(`admin-subtab-${sub}`).classList.remove('hidden');
-            document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-5 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-white transition";
+            document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-zinc-800 text-white transition";
             if(sub === 'orders') loadOrdersFromFirebase();
         }
 
@@ -513,7 +510,7 @@
             const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal)));
             
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500">Nenhum produto encontrado.</div>`;
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500 text-xs sm:text-sm">Nenhum produto encontrado.</div>`;
                 return;
             }
 
@@ -522,40 +519,39 @@
                 const out = st <= 0;
                 const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
                 
-                // Valor do seguro diretamente configurado no produto
                 const hasIns = p.hasInsurance !== 'nao';
                 const insCost = p.insurancePrice ? Number(p.insurancePrice) : 0;
                 
-                const scarcity = (st > 0 && st <= 3) ? `<div class="absolute top-3 right-3 bg-red-600/90 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg animate-pulse z-10"><i class="fa-solid fa-fire"></i> Restam ${st}!</div>` : '';
-                const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow uppercase z-10"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
-                const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-48 object-cover rounded-2xl mb-3 border border-zinc-700/50">` : `<div class="w-full h-48 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-600 text-3xl"></i></div>`;
+                const scarcity = (st > 0 && st <= 3) ? `<div class="absolute top-2 right-2 bg-red-600/90 text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded shadow-lg animate-pulse z-10"><i class="fa-solid fa-fire"></i> Restam ${st}!</div>` : '';
+                const promo = p.promoPrice ? `<div class="absolute top-2 left-2 bg-red-600 text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded shadow uppercase z-10"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
+                const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-28 sm:h-48 object-cover rounded-xl mb-2 sm:mb-3 border border-zinc-700/50">` : `<div class="w-full h-28 sm:h-48 bg-zinc-900 rounded-xl mb-2 sm:mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-600 text-2xl sm:text-3xl"></i></div>`;
                 
                 const insuranceOption = hasIns ? `
-                    <div class="mt-3 bg-zinc-950 border border-zinc-800 rounded-xl p-2.5 flex items-center justify-between cursor-pointer hover:border-gold/40 transition" onclick="toggleCardInsurance('${p.id}')">
-                        <div class="flex items-center gap-2">
-                            <input type="checkbox" id="card-ins-${p.id}" class="w-4 h-4 accent-gold rounded cursor-pointer pointer-events-auto" checked onclick="event.stopPropagation()">
-                            <label for="card-ins-${p.id}" class="text-[11px] font-semibold text-zinc-200 cursor-pointer flex items-center gap-1">
-                                <i class="fa-solid fa-shield-halved text-gold"></i> Seguro da Mercadoria
+                    <div class="mt-2 bg-zinc-950 border border-zinc-800/80 rounded-lg p-1.5 sm:p-2.5 flex items-center justify-between cursor-pointer hover:border-gold/40 transition" onclick="toggleCardInsurance('${p.id}')">
+                        <div class="flex items-center gap-1.5">
+                            <input type="checkbox" id="card-ins-${p.id}" class="w-3.5 h-3.5 accent-gold rounded cursor-pointer pointer-events-auto" checked onclick="event.stopPropagation()">
+                            <label for="card-ins-${p.id}" class="text-[9px] sm:text-[11px] font-semibold text-zinc-200 cursor-pointer flex items-center gap-1 truncate">
+                                <i class="fa-solid fa-shield-halved text-gold text-[10px]"></i> <span class="hidden sm:inline">Seguro</span>
                             </label>
                         </div>
-                        <span class="text-[11px] font-bold text-gold">+ R$ ${formatMoney(insCost)}</span>
+                        <span class="text-[9px] sm:text-[11px] font-bold text-gold">+ R$ ${formatMoney(insCost)}</span>
                     </div>
                 ` : '';
 
                 grid.innerHTML += `
-                    <div class="bg-cardBg border border-zinc-800 rounded-3xl p-5 flex flex-col justify-between hover:border-gold/50 transition relative overflow-hidden group">
+                    <div class="bg-cardBg border border-zinc-800 rounded-2xl sm:rounded-3xl p-2.5 sm:p-5 flex flex-col justify-between hover:border-gold/50 transition relative overflow-hidden group">
                         ${promo}${scarcity}
                         <div>
                             ${img}
-                            <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase">${p.category || 'Geral'}</span>
-                            <h3 class="text-lg font-bold text-white mt-2 group-hover:text-gold transition line-clamp-1">${p.name}</h3>
-                            <p class="text-zinc-400 text-xs leading-relaxed line-clamp-2 mt-1">${p.description}</p>
+                            <span class="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[8px] sm:text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase inline-block truncate max-w-full">${p.category || 'Geral'}</span>
+                            <h3 class="text-xs sm:text-lg font-bold text-white mt-1 sm:mt-2 group-hover:text-gold transition line-clamp-1">${p.name}</h3>
+                            <p class="text-zinc-400 text-[10px] sm:text-xs leading-tight sm:leading-relaxed line-clamp-2 mt-0.5 sm:mt-1">${p.description}</p>
                             ${insuranceOption}
                         </div>
-                        <div class="pt-4 mt-4 border-t border-zinc-800 flex items-center justify-between">
-                            <div><span class="text-lg font-extrabold ${p.promoPrice ? 'text-green-400' : 'text-gold'}">R$ ${formatMoney(price)}</span></div>
-                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-xs font-bold px-3 py-2 rounded-xl border border-zinc-700 transition">
-                                <i class="fa-solid fa-cart-plus"></i> ${out ? 'Esgotado' : 'Adicionar'}
+                        <div class="pt-2 sm:pt-4 mt-2 sm:mt-4 border-t border-zinc-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5 sm:gap-0">
+                            <div><span class="text-sm sm:text-lg font-extrabold ${p.promoPrice ? 'text-green-400' : 'text-gold'}">R$ ${formatMoney(price)}</span></div>
+                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-[10px] sm:text-xs font-bold px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-zinc-700 transition flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-cart-plus"></i> <span>${out ? 'Esgotado' : 'Adicionar'}</span>
                             </button>
                         </div>
                     </div>`;
@@ -569,9 +565,9 @@
 
         function setCategoryFilter(cat) { 
             currentFilter = cat; 
-            document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 whitespace-nowrap"); 
+            document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 whitespace-nowrap"); 
             const activeBtn = cat === 'all' ? document.getElementById('filter-btn-all') : document.querySelector(`.filter-btn[data-cat="${cat}"]`); 
-            if(activeBtn) activeBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-gold text-black shadow whitespace-nowrap"; 
+            if(activeBtn) activeBtn.className = "filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold bg-gold text-black shadow whitespace-nowrap"; 
             renderProducts(); 
         }
 
@@ -661,7 +657,7 @@
             document.getElementById('cart-counter').innerText = cart.reduce((s, i) => s + i.qty, 0);
             
             if (cart.length === 0) { 
-                cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-sm">Seu carrinho está vazio</div>`; 
+                cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-xs sm:text-sm">Seu carrinho está vazio</div>`; 
                 document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
                 document.getElementById('cart-insurance-cost').innerText = 'R$ 0,00';
                 document.getElementById('cart-total').innerText = 'R$ 0,00'; 
@@ -671,24 +667,24 @@
             cont.innerHTML = ''; 
             cart.forEach(i => { 
                 cont.innerHTML += `
-                    <div class="py-3.5 space-y-2 border-b border-zinc-800/40 last:border-0">
-                        <div class="flex items-center justify-between gap-3">
+                    <div class="py-3 space-y-2 border-b border-zinc-800/40 last:border-0">
+                        <div class="flex items-center justify-between gap-2">
                             <div class="flex-1 min-w-0">
                                 <h4 class="text-xs font-bold text-white truncate">${i.name}</h4>
                                 <span class="text-xs text-gold font-bold">R$ ${formatMoney(i.activePrice)}</span>
                             </div>
-                            <div class="flex gap-2 items-center bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1">
+                            <div class="flex gap-1.5 items-center bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1">
                                 <button onclick="decreaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">-</button>
-                                <span class="text-xs w-4 text-center font-bold">${i.qty}</span>
+                                <span class="text-xs w-3 text-center font-bold">${i.qty}</span>
                                 <button onclick="increaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">+</button>
                             </div>
-                            <button onclick="removeFromCart('${i.id}')" class="text-zinc-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="removeFromCart('${i.id}')" class="text-zinc-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash text-xs"></i></button>
                         </div>
                         
-                        <div class="flex items-center justify-between bg-zinc-950 px-2.5 py-1.5 rounded-lg border border-zinc-800/80 text-[11px] cursor-pointer" onclick="toggleCartItemInsurance('${i.id}')">
-                            <span class="text-zinc-300 flex items-center gap-1.5">
-                                <input type="checkbox" ${i.withInsurance ? 'checked' : ''} onclick="event.stopPropagation(); toggleCartItemInsurance('${i.id}')" class="w-3.5 h-3.5 accent-gold rounded">
-                                <i class="fa-solid fa-shield-halved text-gold"></i> Seguro da Mercadoria
+                        <div class="flex items-center justify-between bg-zinc-950 px-2 py-1 rounded-lg border border-zinc-800/80 text-[10px] cursor-pointer" onclick="toggleCartItemInsurance('${i.id}')">
+                            <span class="text-zinc-300 flex items-center gap-1">
+                                <input type="checkbox" ${i.withInsurance ? 'checked' : ''} onclick="event.stopPropagation(); toggleCartItemInsurance('${i.id}')" class="w-3 h-3 accent-gold rounded">
+                                <i class="fa-solid fa-shield-halved text-gold"></i> Seguro Mercadoria
                             </span>
                             <span class="text-gold font-bold">${i.withInsurance ? '+ R$ ' + formatMoney(i.insuranceUnitCost * i.qty) : 'Não incluso'}</span>
                         </div>
@@ -785,7 +781,7 @@
             document.getElementById('pix-emv-input').value = currentPixPayload;
             
             document.getElementById('dynamic-qrcode').innerHTML = '';
-            new QRCode(document.getElementById('dynamic-qrcode'), { text: currentPixPayload, width: 140, height: 140, colorDark: "#000000", colorLight: "#ffffff" });
+            new QRCode(document.getElementById('dynamic-qrcode'), { text: currentPixPayload, width: 130, height: 130, colorDark: "#000000", colorLight: "#ffffff" });
 
             document.getElementById('checkout-step-1').classList.add('hidden'); 
             document.getElementById('checkout-step-2').classList.remove('hidden');
@@ -862,7 +858,7 @@
             } catch(e) {
                 showToast('Erro ao registrar pedido.', 'error');
             }
-            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> Já paguei! Enviar Comprovante'; 
+            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-base"></i> Já paguei! Enviar Comprovante'; 
             btn.disabled = false;
         }
 
@@ -895,24 +891,24 @@
                 const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
                 
                 let st = o.status === 'aguardando' ? '<span class="text-yellow-500 font-bold text-[10px] uppercase">Aguard.</span>' : (o.status === 'pago' ? '<span class="text-green-400 font-bold text-[10px] uppercase">Pago</span>' : '<span class="text-blue-400 font-bold text-[10px] uppercase">Enviado</span>');
-                let act = o.status === 'aguardando' ? `<button onclick="updateOrderStatus('${o.id}', 'pago')" class="text-green-400 hover:bg-zinc-800 p-2 rounded" title="Aprovar Pagamento"><i class="fa-solid fa-check"></i></button>` : `<button onclick="updateOrderStatus('${o.id}', 'enviado')" class="text-blue-400 hover:bg-zinc-800 p-2 rounded" title="Marcar Enviado"><i class="fa-solid fa-truck"></i></button>`;
+                let act = o.status === 'aguardando' ? `<button onclick="updateOrderStatus('${o.id}', 'pago')" class="text-green-400 hover:bg-zinc-800 p-1.5 rounded" title="Aprovar Pagamento"><i class="fa-solid fa-check"></i></button>` : `<button onclick="updateOrderStatus('${o.id}', 'enviado')" class="text-blue-400 hover:bg-zinc-800 p-1.5 rounded" title="Marcar Enviado"><i class="fa-solid fa-truck"></i></button>`;
                 
                 const trackCode = o.trackingCode || '';
                 const trackInput = o.status !== 'aguardando' ? `
                     <div class="flex gap-1 mt-1">
-                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="BR123456789BR" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-1 rounded w-24 outline-none text-white focus:border-gold">
-                        <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-2 py-1 rounded text-[10px]" title="Salvar e Enviar no WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="BR123456789BR" class="bg-zinc-950 border border-zinc-700 text-[10px] px-1.5 py-0.5 rounded w-20 outline-none text-white focus:border-gold">
+                        <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-1.5 py-0.5 rounded text-[10px]" title="Salvar e Enviar no WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
                     </div>` : '';
 
                 const hasInsuranceOrder = o.financials.insuranceTotal > 0;
-                const seguroBadge = hasInsuranceOrder ? '<span class="text-[9px] bg-gold/10 text-gold border border-gold/20 px-1.5 py-0.5 rounded ml-1 font-bold">C/ Seguro Mercadoria</span>' : '';
+                const seguroBadge = hasInsuranceOrder ? '<span class="text-[8px] bg-gold/10 text-gold border border-gold/20 px-1 py-0.5 rounded ml-1 font-bold">C/ Seguro</span>' : '';
 
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800 hover:bg-zinc-900/40">
-                        <td class="p-4 text-xs"><b>${o.client.name}</b>${seguroBadge}<br><span class="text-[10px] text-zinc-500">${o.client.phone}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
-                        <td class="p-4 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td>
-                        <td class="p-4">${st}${trackInput}</td>
-                        <td class="p-4 text-right">${act} <button onclick="deleteOrder('${o.id}')" class="text-red-400 hover:bg-zinc-800 p-2 rounded"><i class="fa-solid fa-trash"></i></button></td>
+                        <td class="p-3 text-xs"><b>${o.client.name}</b>${seguroBadge}<br><span class="text-[10px] text-zinc-500">${o.client.phone}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
+                        <td class="p-3 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td>
+                        <td class="p-3">${st}${trackInput}</td>
+                        <td class="p-3 text-right">${act} <button onclick="deleteOrder('${o.id}')" class="text-red-400 hover:bg-zinc-800 p-1.5 rounded"><i class="fa-solid fa-trash"></i></button></td>
                     </tr>`;
             });
             
@@ -972,10 +968,10 @@
                 if(o.status === 'enviado') { icon = '<i class="fa-solid fa-truck-fast text-green-400"></i>'; statusStr = 'Enviado ao Destinatário'; }
                 
                 res.innerHTML = `
-                    <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl space-y-2">
-                        <div class="flex items-center gap-3">${icon} <span class="font-bold text-white text-xs">${statusStr}</span></div>
+                    <div class="bg-zinc-900 border border-zinc-800 p-3 rounded-xl space-y-1.5">
+                        <div class="flex items-center gap-2">${icon} <span class="font-bold text-white text-xs">${statusStr}</span></div>
                         <p class="text-xs text-zinc-400">Total: <span class="text-gold font-bold">R$ ${formatMoney(o.financials.total)}</span></p>
-                        ${o.trackingCode ? `<div class="mt-2 bg-zinc-950 border border-zinc-800 p-2 rounded text-center"><span class="text-[10px] text-zinc-500 block">Código de Rastreio</span><span class="text-gold font-mono tracking-widest text-sm font-bold">${o.trackingCode}</span></div>` : ''}
+                        ${o.trackingCode ? `<div class="mt-2 bg-zinc-950 border border-zinc-800 p-2 rounded text-center"><span class="text-[10px] text-zinc-500 block">Código de Rastreio</span><span class="text-gold font-mono tracking-widest text-xs sm:text-sm font-bold">${o.trackingCode}</span></div>` : ''}
                     </div>`;
             } catch(e) { 
                 res.innerHTML = '<span class="text-red-400">Erro na consulta. Tente novamente.</span>'; 
@@ -1095,13 +1091,13 @@
             products.forEach(p => {
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800">
-                        <td class="p-2">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-8 h-8 rounded object-cover">` : '-'}</td>
-                        <td class="p-2 truncate max-w-[150px] font-medium text-white">${p.name}</td>
+                        <td class="p-2">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-7 h-7 sm:w-8 sm:h-8 rounded object-cover">` : '-'}</td>
+                        <td class="p-2 truncate max-w-[120px] sm:max-w-[150px] font-medium text-white">${p.name}</td>
                         <td class="p-2">${p.stock}</td>
                         <td class="p-2 text-red-400">R$ ${formatMoney(p.costPrice || 0)}</td>
                         <td class="p-2 text-green-400">R$ ${formatMoney(p.promoPrice || p.price)}</td>
                         <td class="p-2 text-right">
-                            <button onclick="openProductModal('${p.id}')" class="text-gold hover:text-yellow-300 mx-2"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="openProductModal('${p.id}')" class="text-gold hover:text-yellow-300 mx-1 sm:mx-2"><i class="fa-solid fa-pen"></i></button>
                             <button onclick="deleteProduct('${p.id}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>`;
