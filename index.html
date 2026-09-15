@@ -49,7 +49,6 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative">
 
-    <!-- Container para Toasts -->
     <div id="toast-container"></div>
 
     <!-- Top Banner -->
@@ -102,7 +101,7 @@
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
 
-        <!-- ================= CATALOG TAB ================= -->
+        <!-- CATALOG TAB -->
         <div id="tab-catalog" class="space-y-8">
             <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-zinc-900 via-cardBg to-zinc-900 border border-zinc-800 p-8 sm:p-12">
                 <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -138,7 +137,7 @@
             <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </div>
 
-        <!-- ================= ADMIN TAB ================= -->
+        <!-- ADMIN TAB -->
         <div id="tab-admin" class="hidden space-y-6">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cardBg p-6 rounded-3xl border border-zinc-800">
                 <div><h2 class="text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-microchip text-gold"></i> Gestão de Elite</h2></div>
@@ -184,12 +183,10 @@
 
     <!-- Chat IA e Suporte Flutuante -->
     <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
-        <!-- Floating Chat Button -->
         <button onclick="toggleAIChat()" class="bg-zinc-800 border border-gold/50 text-gold w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,160,23,0.3)] hover:scale-110 transition-all relative">
             <i class="fa-solid fa-robot text-2xl"></i>
             <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-darkBg animate-pulse">IA</span>
         </button>
-        <!-- Support Zap Button -->
         <a id="btn-floating-support" href="#" target="_blank" class="bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-all">
             <i class="fa-brands fa-whatsapp text-3xl"></i>
         </a>
@@ -209,8 +206,6 @@
             <button onclick="sendChatMessage()" class="bg-gold text-black rounded-lg px-3 py-2 hover:bg-yellow-400 transition"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
-
-    <!-- ================= MODALS ================= -->
 
     <!-- Portal Rastreamento -->
     <div id="tracking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
@@ -240,7 +235,7 @@
                     <div class="space-y-1.5 pt-2">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
                         <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 25,00</span></div>
-                        <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total via Pix</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
+                        <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total Estimado</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
                     <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-yellow-500 via-gold to-yellow-400 text-black font-extrabold py-3.5 rounded-xl shadow-lg glow-yellow transition flex justify-center gap-2 text-sm"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido</button>
                 </div>
@@ -248,7 +243,7 @@
         </div>
     </div>
 
-    <!-- Checkout Modal com VIACEP e PIX Dinâmico -->
+    <!-- Checkout Modal com Seleção de Seguro, VIACEP e PIX Dinâmico -->
     <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[95vh]">
@@ -257,7 +252,7 @@
                 <button onclick="closeCheckoutModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
-            <!-- Etapa 1: Endereço (Integração ViaCEP) -->
+            <!-- Etapa 1: Endereço & Seleção de Seguro -->
             <div id="checkout-step-1" class="space-y-4">
                 <p class="text-xs font-semibold text-zinc-400 border-l-2 border-gold pl-2">Informações de Envio</p>
                 <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
@@ -267,12 +262,33 @@
                     <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
                 </div>
                 <input type="text" id="cust-number" placeholder="Número e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
+                
+                <!-- Caixa de Opção de Seguro de Envio -->
+                <div class="bg-zinc-900 border border-zinc-800 p-3.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-gold/40 transition" onclick="toggleInsuranceCheck()">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" id="chk-insurance" onchange="updateCheckoutSummary()" class="w-4 h-4 accent-gold rounded cursor-pointer pointer-events-auto">
+                        <div>
+                            <p class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-gold"></i> Adicionar Frete Seguro (+<span id="display-insurance-percent">5</span>%)</p>
+                            <p class="text-[10px] text-zinc-400">Proteção contra roubo, extravio ou quebra no transporte.</p>
+                        </div>
+                    </div>
+                    <span id="display-insurance-val" class="text-xs font-bold text-gold shrink-0 ml-2">+ R$ 0,00</span>
+                </div>
+
+                <!-- Resumo dos Valores -->
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60 space-y-1.5 text-xs">
+                    <div class="flex justify-between text-zinc-400"><span>Subtotal Produtos:</span><span id="summary-subtotal">R$ 0,00</span></div>
+                    <div class="flex justify-between text-zinc-400"><span>Frete:</span><span id="summary-shipping">R$ 0,00</span></div>
+                    <div class="flex justify-between text-zinc-400" id="summary-insurance-row"><span>Seguro de Envio:</span><span id="summary-insurance" class="text-gold">R$ 0,00</span></div>
+                    <div class="flex justify-between font-bold text-white pt-1 border-t border-zinc-800 text-sm"><span>Total Final:</span><span id="summary-total" class="text-gold">R$ 0,00</span></div>
+                </div>
+
                 <button onclick="generateDynamicPix()" class="w-full bg-gold hover:bg-yellow-400 text-black font-extrabold py-3.5 rounded-xl transition text-sm mt-2">Avançar para Pagamento <i class="fa-solid fa-arrow-right ml-1"></i></button>
             </div>
 
-            <!-- Etapa 2: PIX "Copia e Cola" -->
+            <!-- Etapa 2: PIX Copia e Cola -->
             <div id="checkout-step-2" class="space-y-4 hidden mt-4">
-                <p class="text-xs font-semibold text-zinc-400 text-center">Escaneie ou copie o código (Valor Exato: <span id="pix-exact-value" class="text-white font-bold"></span>)</p>
+                <p class="text-xs font-semibold text-zinc-400 text-center">Escaneie ou copie o código (Valor Exato com Frete/Seguro: <span id="pix-exact-value" class="text-white font-bold"></span>)</p>
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 text-center space-y-4">
                     <div id="dynamic-qrcode" class="w-40 h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-md"></div>
                     <div class="space-y-1">
@@ -331,20 +347,21 @@
         </div>
     </div>
 
-    <!-- Settings Modal -->
+    <!-- Settings Modal (Com Porcentagem de Seguro) -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
             <h3 class="text-lg font-extrabold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-gear text-gold"></i> Configurações Base</h3>
             <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-3 text-sm">
                 <input type="text" id="set-pix" required placeholder="Chave PIX (E-mail, CPF, Cel)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                <input type="text" id="set-pix-name" required placeholder="Nome Titular do Pix (Ex: Fenix Imports)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                <input type="text" id="set-pix-city" required placeholder="Cidade do Pix (Ex: Rio de Janeiro)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                <input type="text" id="set-pix-name" required placeholder="Nome Titular do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                <input type="text" id="set-pix-city" required placeholder="Cidade do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-wpp-sales" required placeholder="Zap Vendas (Ex: 55219...)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <div class="grid grid-cols-2 gap-2">
                     <input type="number" step="0.01" id="set-ship-cost" required placeholder="Frete Fixo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                    <input type="text" id="set-gemini" placeholder="Gemini API Key (Opcional)" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300 placeholder-blue-800/50" title="Chave do Google AI Studio para ativar o Chatbot Flutuante">
+                    <input type="number" step="0.1" id="set-insurance-percent" required placeholder="Seguro (%) Ex: 5" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white" title="Porcentagem cobrada no Frete Seguro">
                 </div>
+                <input type="text" id="set-gemini" placeholder="Gemini API Key (Opcional)" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300 placeholder-blue-800/50">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl">Cancelar</button>
                     <button type="submit" class="flex-1 bg-gold text-black font-extrabold py-2.5 rounded-xl">Salvar</button>
@@ -366,7 +383,7 @@
         </div>
     </div>
 
-    <!-- Firebase Script (Module) -->
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -389,7 +406,6 @@
         window.auth = auth; 
         window.firebaseFns = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, signInWithEmailAndPassword, signOut, onAuthStateChanged };
 
-        // Inicialização garantida após carregamento do DOM e Firebase
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => window.initApp());
         } else {
@@ -400,7 +416,7 @@
     <!-- App Main Script -->
     <script>
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
-        let storeSettings = { pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingCost: 25.00, geminiKey: "" };
+        let storeSettings = { pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingCost: 25.00, insurancePercent: 5.0, geminiKey: "" };
         let chatHistory = [];
 
         const formatMoney = (val) => Number(val).toFixed(2).replace('.', ',');
@@ -536,7 +552,7 @@
         function filterProducts() { renderProducts(); }
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
 
-        // ================= CART MANAGEMENT =================
+        // ================= CART & TOTAL CALCULATIONS =================
         function addToCart(id) {
             const p = products.find(x => x.id === id); 
             if (!p) return;
@@ -582,9 +598,20 @@
             updateCartUI();
         }
 
+        // Função Central de Cálculo dos Valores do Pedido
+        function calculateOrderTotals() {
+            const subtotal = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0);
+            const shipping = Number(storeSettings.shippingCost || 0);
+            const isInsured = document.getElementById('chk-insurance') ? document.getElementById('chk-insurance').checked : false;
+            const insPercent = Number(storeSettings.insurancePercent || 0);
+            const insuranceCost = isInsured ? (subtotal * (insPercent / 100)) : 0;
+            const total = subtotal + shipping + insuranceCost;
+            return { subtotal, shipping, insuranceCost, total, isInsured, insPercent };
+        }
+
         function updateCartUI() {
             const cont = document.getElementById('cart-items-container'); 
-            let sub = 0; 
+            const totals = calculateOrderTotals();
             document.getElementById('cart-counter').innerText = cart.reduce((s, i) => s + i.qty, 0);
             
             if (cart.length === 0) { 
@@ -596,7 +623,6 @@
             
             cont.innerHTML = ''; 
             cart.forEach(i => { 
-                sub += i.activePrice * i.qty; 
                 cont.innerHTML += `
                     <div class="py-3 flex items-center justify-between gap-3 border-b border-zinc-800/40 last:border-0">
                         <div class="flex-1 min-w-0">
@@ -612,22 +638,43 @@
                     </div>`; 
             });
             
-            const sh = Number(storeSettings.shippingCost); 
-            document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(sub)}`; 
-            document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(sh)}`; 
-            document.getElementById('cart-total').innerText = `R$ ${formatMoney(sub + sh)}`;
+            document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`; 
+            document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(totals.shipping)}`; 
+            document.getElementById('cart-total').innerText = `R$ ${formatMoney(totals.subtotal + totals.shipping)}`;
         }
 
         function toggleCartDrawer(op) { document.getElementById('cart-drawer').classList.toggle('hidden', !op); }
+        
         function proceedToCheckout() { 
             if(cart.length === 0) return showToast('Adicione produtos antes de finalizar.', 'error'); 
             toggleCartDrawer(false); 
             document.getElementById('checkout-step-1').classList.remove('hidden'); 
             document.getElementById('checkout-step-2').classList.add('hidden'); 
             document.getElementById('checkout-modal').classList.remove('hidden'); 
+            updateCheckoutSummary();
         }
+
         function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
         function backToStep1() { document.getElementById('checkout-step-2').classList.add('hidden'); document.getElementById('checkout-step-1').classList.remove('hidden'); }
+
+        function toggleInsuranceCheck() {
+            const chk = document.getElementById('chk-insurance');
+            if (event.target !== chk) {
+                chk.checked = !chk.checked;
+            }
+            updateCheckoutSummary();
+        }
+
+        function updateCheckoutSummary() {
+            const totals = calculateOrderTotals();
+            document.getElementById('display-insurance-percent').innerText = totals.insPercent;
+            document.getElementById('display-insurance-val').innerText = `+ R$ ${formatMoney((totals.subtotal * (totals.insPercent / 100)))}`;
+            
+            document.getElementById('summary-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`;
+            document.getElementById('summary-shipping').innerText = `R$ ${formatMoney(totals.shipping)}`;
+            document.getElementById('summary-insurance').innerText = `R$ ${formatMoney(totals.insuranceCost)}`;
+            document.getElementById('summary-total').innerText = `R$ ${formatMoney(totals.total)}`;
+        }
 
         // VIA CEP
         async function buscarCEP() {
@@ -646,7 +693,7 @@
             }
         }
 
-        // GERADOR PIX EMV CRC16 CORRIGIDO
+        // GERADOR PIX EMV CRC16
         let currentPixPayload = "";
         function generatePixEMV(key, amount, name, city, txid="FENIX") {
             const format = (id, val) => { const v = String(val); return id + v.length.toString().padStart(2,'0') + v; };
@@ -684,10 +731,10 @@
             if(!n || !w || !c) return showToast("Preencha Nome, WhatsApp e CEP.", "error");
             if(!storeSettings.pixKey) return showToast("Configure a Chave Pix no Admin primeiro.", "error");
             
-            const total = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0) + Number(storeSettings.shippingCost);
-            currentPixPayload = generatePixEMV(storeSettings.pixKey, total, storeSettings.pixName, storeSettings.pixCity);
+            const totals = calculateOrderTotals();
+            currentPixPayload = generatePixEMV(storeSettings.pixKey, totals.total, storeSettings.pixName, storeSettings.pixCity);
             
-            document.getElementById('pix-exact-value').innerText = `R$ ${formatMoney(total)}`;
+            document.getElementById('pix-exact-value').innerText = `R$ ${formatMoney(totals.total)}`;
             document.getElementById('pix-emv-input').value = currentPixPayload;
             
             document.getElementById('dynamic-qrcode').innerHTML = '';
@@ -712,13 +759,11 @@
             btn.disabled = true; 
             btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Processando...';
             
-            const sh = Number(storeSettings.shippingCost); 
-            let sub = 0; 
+            const totals = calculateOrderTotals();
             let cst = 0; 
             let items = [];
             
             for (const i of cart) { 
-                sub += i.activePrice * i.qty; 
                 cst += (i.costPrice || 0) * i.qty; 
                 items.push({ id: i.id, name: i.name, qty: i.qty, price: i.activePrice });
                 
@@ -736,14 +781,23 @@
             const order = { 
                 client: { name: n, phone: w, address: ad }, 
                 items, 
-                financials: { subtotal: sub, shipping: sh, total: sub + sh, estimatedProfit: (sub - cst) }, 
+                financials: { 
+                    subtotal: totals.subtotal, 
+                    shipping: totals.shipping, 
+                    insurance: totals.insuranceCost, 
+                    isInsured: totals.isInsured,
+                    total: totals.total, 
+                    estimatedProfit: (totals.subtotal - cst) 
+                }, 
                 status: 'aguardando', 
                 date: new Date().toISOString() 
             };
             
             try {
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
-                let msg = `*NOVO PEDIDO FÊNIX*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(sub + sh)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
+                let seguroTxt = totals.isInsured ? `\n🛡️ *Seguro de Envio (${totals.insPercent}%):* R$ ${formatMoney(totals.insuranceCost)}` : '\n🛡️ *Seguro:* Não contratado';
+                let msg = `*NOVO PEDIDO FÊNIX*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}`).join('\n')}\n📦 *Frete:* R$ ${formatMoney(totals.shipping)}${seguroTxt}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
+                
                 window.open(`https://wa.me/${storeSettings.whatsappSales}?text=${encodeURIComponent(msg)}`, '_blank');
                 
                 cart = []; 
@@ -797,9 +851,11 @@
                         <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-2 py-1 rounded text-[10px]" title="Salvar e Enviar no WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
                     </div>` : '';
 
+                const seguroBadge = o.financials.isInsured ? '<span class="text-[9px] bg-gold/10 text-gold border border-gold/20 px-1.5 py-0.5 rounded ml-1 font-bold">C/ Seguro</span>' : '';
+
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800 hover:bg-zinc-900/40">
-                        <td class="p-4 text-xs"><b>${o.client.name}</b><br><span class="text-[10px] text-zinc-500">${o.client.phone}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
+                        <td class="p-4 text-xs"><b>${o.client.name}</b>${seguroBadge}<br><span class="text-[10px] text-zinc-500">${o.client.phone}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
                         <td class="p-4 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td>
                         <td class="p-4">${st}${trackInput}</td>
                         <td class="p-4 text-right">${act} <button onclick="deleteOrder('${o.id}')" class="text-red-400 hover:bg-zinc-800 p-2 rounded"><i class="fa-solid fa-trash"></i></button></td>
@@ -1005,6 +1061,7 @@
             document.getElementById('set-pix-city').value = storeSettings.pixCity || ''; 
             document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || ''; 
             document.getElementById('set-ship-cost').value = storeSettings.shippingCost || 25; 
+            document.getElementById('set-insurance-percent').value = storeSettings.insurancePercent || 5; 
             document.getElementById('set-gemini').value = storeSettings.geminiKey || ''; 
             document.getElementById('settings-modal').classList.remove('hidden');
         }
@@ -1019,6 +1076,7 @@
                 pixCity: document.getElementById('set-pix-city').value, 
                 whatsappSales: document.getElementById('set-wpp-sales').value, 
                 shippingCost: parseFloat(document.getElementById('set-ship-cost').value), 
+                insurancePercent: parseFloat(document.getElementById('set-insurance-percent').value) || 0,
                 geminiKey: document.getElementById('set-gemini').value 
             };
             
