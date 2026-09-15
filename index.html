@@ -314,7 +314,7 @@
                     <input type="number" step="0.01" id="prod-promo-price" placeholder="Promocional" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
                 </div>
 
-                <!-- Novos Campos de Configuração do Seguro por Produto -->
+                <!-- Campos de Configuração do Seguro por Produto -->
                 <div class="grid grid-cols-2 gap-2 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800">
                     <div>
                         <label class="text-[10px] text-zinc-400 block mb-1">Oferecer Seguro?</label>
@@ -324,8 +324,8 @@
                         </select>
                     </div>
                     <div>
-                        <label class="text-[10px] text-zinc-400 block mb-1">Valor Seguro R$ (Opcional)</label>
-                        <input type="number" step="0.01" id="prod-insurance-price" placeholder="Ex: 15.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-gold" title="Se ficar em branco, calcula com a % padrão da loja">
+                        <label class="text-[10px] text-zinc-400 block mb-1">Valor Seguro R$</label>
+                        <input type="number" step="0.01" id="prod-insurance-price" placeholder="Ex: 15.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-gold">
                     </div>
                 </div>
 
@@ -352,7 +352,7 @@
         </div>
     </div>
 
-    <!-- Settings Modal (Com Porcentagem de Seguro Padrão) -->
+    <!-- Settings Modal (Sem Porcentagem de Seguro Geral) -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
@@ -362,10 +362,7 @@
                 <input type="text" id="set-pix-name" required placeholder="Nome Titular do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-pix-city" required placeholder="Cidade do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-wpp-sales" required placeholder="Zap Vendas (Ex: 55219...)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="number" step="0.01" id="set-ship-cost" required placeholder="Frete Fixo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                    <input type="number" step="0.1" id="set-insurance-percent" required placeholder="Seguro (%) Ex: 5" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white" title="Porcentagem padrão cobrada no Seguro da Mercadoria">
-                </div>
+                <input type="number" step="0.01" id="set-ship-cost" required placeholder="Frete Fixo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-gemini" placeholder="Gemini API Key (Opcional)" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300 placeholder-blue-800/50">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl">Cancelar</button>
@@ -421,7 +418,7 @@
     <!-- App Main Script -->
     <script>
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
-        let storeSettings = { pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingCost: 25.00, insurancePercent: 5.0, geminiKey: "" };
+        let storeSettings = { pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingCost: 25.00, geminiKey: "" };
         let chatHistory = [];
 
         const formatMoney = (val) => Number(val).toFixed(2).replace('.', ',');
@@ -525,15 +522,14 @@
                 const out = st <= 0;
                 const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
                 
-                // Cálculo do Seguro do Produto Especificado
+                // Valor do seguro diretamente configurado no produto
                 const hasIns = p.hasInsurance !== 'nao';
-                const insCost = p.insurancePrice ? Number(p.insurancePrice) : (price * ((storeSettings.insurancePercent || 5) / 100));
+                const insCost = p.insurancePrice ? Number(p.insurancePrice) : 0;
                 
                 const scarcity = (st > 0 && st <= 3) ? `<div class="absolute top-3 right-3 bg-red-600/90 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg animate-pulse z-10"><i class="fa-solid fa-fire"></i> Restam ${st}!</div>` : '';
                 const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow uppercase z-10"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
                 const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-48 object-cover rounded-2xl mb-3 border border-zinc-700/50">` : `<div class="w-full h-48 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-600 text-3xl"></i></div>`;
                 
-                // Opção Selecionável de Seguro Direto no Card do Produto
                 const insuranceOption = hasIns ? `
                     <div class="mt-3 bg-zinc-950 border border-zinc-800 rounded-xl p-2.5 flex items-center justify-between cursor-pointer hover:border-gold/40 transition" onclick="toggleCardInsurance('${p.id}')">
                         <div class="flex items-center gap-2">
@@ -593,11 +589,10 @@
                 return;
             }
 
-            // Ler se a opção de seguro do card estava marcada
             const chkCard = document.getElementById(`card-ins-${id}`);
             const withInsurance = chkCard ? chkCard.checked : (p.hasInsurance !== 'nao');
             const basePrice = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
-            const insuranceUnitCost = p.insurancePrice ? Number(p.insurancePrice) : (basePrice * ((storeSettings.insurancePercent || 5) / 100));
+            const insuranceUnitCost = p.insurancePrice ? Number(p.insurancePrice) : 0;
 
             if (ex) { 
                 ex.qty++; 
@@ -652,7 +647,6 @@
             updateCartUI();
         }
 
-        // Função Central de Cálculo dos Valores do Pedido
         function calculateOrderTotals() {
             const subtotal = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0);
             const insuranceTotal = cart.reduce((s, i) => s + (i.withInsurance ? (i.insuranceUnitCost * i.qty) : 0), 0);
@@ -691,7 +685,6 @@
                             <button onclick="removeFromCart('${i.id}')" class="text-zinc-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash"></i></button>
                         </div>
                         
-                        <!-- Toggle do Seguro Dentro do Carrinho -->
                         <div class="flex items-center justify-between bg-zinc-950 px-2.5 py-1.5 rounded-lg border border-zinc-800/80 text-[11px] cursor-pointer" onclick="toggleCartItemInsurance('${i.id}')">
                             <span class="text-zinc-300 flex items-center gap-1.5">
                                 <input type="checkbox" ${i.withInsurance ? 'checked' : ''} onclick="event.stopPropagation(); toggleCartItemInsurance('${i.id}')" class="w-3.5 h-3.5 accent-gold rounded">
@@ -1129,7 +1122,6 @@
             document.getElementById('set-pix-city').value = storeSettings.pixCity || '';
             document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || '';
             document.getElementById('set-ship-cost').value = storeSettings.shippingCost || 25.00;
-            document.getElementById('set-insurance-percent').value = storeSettings.insurancePercent || 5.0;
             document.getElementById('set-gemini').value = storeSettings.geminiKey || '';
             document.getElementById('settings-modal').classList.remove('hidden');
         }
@@ -1146,7 +1138,6 @@
                 pixCity: document.getElementById('set-pix-city').value.trim(),
                 whatsappSales: document.getElementById('set-wpp-sales').value.trim(),
                 shippingCost: parseFloat(document.getElementById('set-ship-cost').value) || 0,
-                insurancePercent: parseFloat(document.getElementById('set-insurance-percent').value) || 0,
                 geminiKey: document.getElementById('set-gemini').value.trim()
             };
 
