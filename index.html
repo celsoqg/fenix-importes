@@ -40,7 +40,7 @@
         
         /* Toast Notification Styles */
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; color: white; display: flex; items-center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
+        .toast { padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
         .toast-success { background: #13131a; border-left: 4px solid #22c55e; color: #22c55e; }
         .toast-error { background: #13131a; border-left: 4px solid #ef4444; color: #ef4444; }
         .toast-info { background: #13131a; border-left: 4px solid #d4a017; color: #facc15; }
@@ -264,7 +264,7 @@
                 <input type="text" id="cust-number" placeholder="Número e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
                 
                 <!-- Caixa de Opção de Seguro de Envio -->
-                <div class="bg-zinc-900 border border-zinc-800 p-3.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-gold/40 transition" onclick="toggleInsuranceCheck()">
+                <div class="bg-zinc-900 border border-zinc-800 p-3.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-gold/40 transition" onclick="toggleInsuranceCheck(event)">
                     <div class="flex items-center gap-3">
                         <input type="checkbox" id="chk-insurance" onchange="updateCheckoutSummary()" class="w-4 h-4 accent-gold rounded cursor-pointer pointer-events-auto">
                         <div>
@@ -657,7 +657,7 @@
         function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
         function backToStep1() { document.getElementById('checkout-step-2').classList.add('hidden'); document.getElementById('checkout-step-1').classList.remove('hidden'); }
 
-        function toggleInsuranceCheck() {
+        function toggleInsuranceCheck(event) {
             const chk = document.getElementById('chk-insurance');
             if (event.target !== chk) {
                 chk.checked = !chk.checked;
@@ -1056,33 +1056,35 @@
         }
 
         function openSettingsModal() {
-            document.getElementById('set-pix').value = storeSettings.pixKey || ''; 
-            document.getElementById('set-pix-name').value = storeSettings.pixName || ''; 
-            document.getElementById('set-pix-city').value = storeSettings.pixCity || ''; 
-            document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || ''; 
-            document.getElementById('set-ship-cost').value = storeSettings.shippingCost || 25; 
-            document.getElementById('set-insurance-percent').value = storeSettings.insurancePercent || 5; 
-            document.getElementById('set-gemini').value = storeSettings.geminiKey || ''; 
+            document.getElementById('set-pix').value = storeSettings.pixKey || '';
+            document.getElementById('set-pix-name').value = storeSettings.pixName || '';
+            document.getElementById('set-pix-city').value = storeSettings.pixCity || '';
+            document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || '';
+            document.getElementById('set-ship-cost').value = storeSettings.shippingCost || 25.00;
+            document.getElementById('set-insurance-percent').value = storeSettings.insurancePercent || 5.0;
+            document.getElementById('set-gemini').value = storeSettings.geminiKey || '';
             document.getElementById('settings-modal').classList.remove('hidden');
         }
 
-        function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
+        function closeSettingsModal() {
+            document.getElementById('settings-modal').classList.add('hidden');
+        }
 
         async function saveSettings(e) {
-            e.preventDefault(); 
-            storeSettings = { 
-                pixKey: document.getElementById('set-pix').value, 
-                pixName: document.getElementById('set-pix-name').value, 
-                pixCity: document.getElementById('set-pix-city').value, 
-                whatsappSales: document.getElementById('set-wpp-sales').value, 
-                shippingCost: parseFloat(document.getElementById('set-ship-cost').value), 
+            e.preventDefault();
+            storeSettings = {
+                pixKey: document.getElementById('set-pix').value.trim(),
+                pixName: document.getElementById('set-pix-name').value.trim(),
+                pixCity: document.getElementById('set-pix-city').value.trim(),
+                whatsappSales: document.getElementById('set-wpp-sales').value.trim(),
+                shippingCost: parseFloat(document.getElementById('set-ship-cost').value) || 0,
                 insurancePercent: parseFloat(document.getElementById('set-insurance-percent').value) || 0,
-                geminiKey: document.getElementById('set-gemini').value 
+                geminiKey: document.getElementById('set-gemini').value.trim()
             };
-            
+
             try {
-                await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); 
-                showToast('Configurações atualizadas!', 'success');
+                await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings);
+                showToast('Configurações salvas com sucesso!', 'success');
                 closeSettingsModal();
                 loadSettings();
             } catch(err) {
@@ -1090,25 +1092,37 @@
             }
         }
 
-        function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
-        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
-
-        async function handleAdminLogin(e) { 
-            e.preventDefault(); 
-            try { 
-                await window.firebaseFns.signInWithEmailAndPassword(window.auth, document.getElementById('login-email').value, document.getElementById('login-password').value); 
-                closeLoginModal(); 
-                switchTab('admin'); 
-                showToast('Autenticado com sucesso!', 'success');
-            } catch(err) { 
-                showToast('Credenciais inválidas.', 'error'); 
-            } 
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
         }
 
-        async function logoutAdmin() { 
-            await window.firebaseFns.signOut(window.auth); 
-            switchTab('catalog'); 
-            showToast('Sessão encerrada.', 'info');
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value;
+
+            try {
+                await window.firebaseFns.signInWithEmailAndPassword(window.auth, email, pass);
+                showToast('Login realizado com sucesso!', 'success');
+                closeLoginModal();
+                switchTab('admin');
+            } catch(err) {
+                showToast('E-mail ou senha inválidos.', 'error');
+            }
+        }
+
+        async function logoutAdmin() {
+            try {
+                await window.firebaseFns.signOut(window.auth);
+                showToast('Sessão encerrada.', 'info');
+                switchTab('catalog');
+            } catch(err) {
+                showToast('Erro ao encerrar sessão.', 'error');
+            }
         }
     </script>
 </body>
