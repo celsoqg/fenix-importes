@@ -233,7 +233,8 @@
                 <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-zinc-800/40"></div>
                 <div class="p-6 border-t border-zinc-800 bg-zinc-900/50 space-y-4">
                     <div class="space-y-1.5 pt-2">
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal Produtos</span><span id="cart-subtotal">R$ 0,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Seguro da Mercadoria</span><span id="cart-insurance-cost" class="text-gold">R$ 0,00</span></div>
                         <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 25,00</span></div>
                         <div class="flex justify-between text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total Estimado</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
@@ -262,25 +263,13 @@
                     <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
                 </div>
                 <input type="text" id="cust-number" placeholder="Número e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-gold outline-none">
-                
-                <!-- Caixa de Opção de Seguro de Envio -->
-                <div class="bg-zinc-900 border border-zinc-800 p-3.5 rounded-xl flex items-center justify-between cursor-pointer hover:border-gold/40 transition" onclick="toggleInsuranceCheck(event)">
-                    <div class="flex items-center gap-3">
-                        <input type="checkbox" id="chk-insurance" onchange="updateCheckoutSummary()" class="w-4 h-4 accent-gold rounded cursor-pointer pointer-events-auto">
-                        <div>
-                            <p class="text-xs font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-gold"></i> Adicionar Frete Seguro (+<span id="display-insurance-percent">5</span>%)</p>
-                            <p class="text-[10px] text-zinc-400">Proteção contra roubo, extravio ou quebra no transporte.</p>
-                        </div>
-                    </div>
-                    <span id="display-insurance-val" class="text-xs font-bold text-gold shrink-0 ml-2">+ R$ 0,00</span>
-                </div>
 
                 <!-- Resumo dos Valores -->
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60 space-y-1.5 text-xs">
+                <div class="bg-zinc-950 p-3.5 rounded-xl border border-zinc-800/60 space-y-2 text-xs">
                     <div class="flex justify-between text-zinc-400"><span>Subtotal Produtos:</span><span id="summary-subtotal">R$ 0,00</span></div>
+                    <div class="flex justify-between text-zinc-400"><span>Seguro da Mercadoria:</span><span id="summary-insurance" class="text-gold font-bold">R$ 0,00</span></div>
                     <div class="flex justify-between text-zinc-400"><span>Frete:</span><span id="summary-shipping">R$ 0,00</span></div>
-                    <div class="flex justify-between text-zinc-400" id="summary-insurance-row"><span>Seguro de Envio:</span><span id="summary-insurance" class="text-gold">R$ 0,00</span></div>
-                    <div class="flex justify-between font-bold text-white pt-1 border-t border-zinc-800 text-sm"><span>Total Final:</span><span id="summary-total" class="text-gold">R$ 0,00</span></div>
+                    <div class="flex justify-between font-bold text-white pt-2 border-t border-zinc-800 text-sm"><span>Total Final:</span><span id="summary-total" class="text-gold">R$ 0,00</span></div>
                 </div>
 
                 <button onclick="generateDynamicPix()" class="w-full bg-gold hover:bg-yellow-400 text-black font-extrabold py-3.5 rounded-xl transition text-sm mt-2">Avançar para Pagamento <i class="fa-solid fa-arrow-right ml-1"></i></button>
@@ -307,11 +296,11 @@
         </div>
     </div>
 
-    <!-- Product Modal -->
+    <!-- Product Modal com Opção de Seguro da Mercadoria -->
     <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeProductModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
-            <h3 class="text-lg font-extrabold text-white mb-4">Adicionar/Editar</h3>
+            <h3 class="text-lg font-extrabold text-white mb-4">Adicionar/Editar Produto</h3>
             <form id="product-form" onsubmit="saveProduct(event)" class="space-y-3">
                 <input type="hidden" id="prod-id">
                 <input type="text" id="prod-imageUrl" placeholder="Link da Foto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
@@ -324,6 +313,22 @@
                     <input type="number" step="0.01" id="prod-price" required placeholder="Preço Normal" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
                     <input type="number" step="0.01" id="prod-promo-price" placeholder="Promocional" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
                 </div>
+
+                <!-- Novos Campos de Configuração do Seguro por Produto -->
+                <div class="grid grid-cols-2 gap-2 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800">
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-1">Oferecer Seguro?</label>
+                        <select id="prod-has-insurance" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-gold">
+                            <option value="sim">Sim (Ativado)</option>
+                            <option value="nao">Não (Desativado)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-1">Valor Seguro R$ (Opcional)</label>
+                        <input type="number" step="0.01" id="prod-insurance-price" placeholder="Ex: 15.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-gold" title="Se ficar em branco, calcula com a % padrão da loja">
+                    </div>
+                </div>
+
                 <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white outline-none focus:border-gold">
                     <option value="Peptídeos">Peptídeos</option>
                     <option value="Insumos & Soluções">Insumos & Soluções</option>
@@ -347,7 +352,7 @@
         </div>
     </div>
 
-    <!-- Settings Modal (Com Porcentagem de Seguro) -->
+    <!-- Settings Modal (Com Porcentagem de Seguro Padrão) -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
@@ -359,7 +364,7 @@
                 <input type="text" id="set-wpp-sales" required placeholder="Zap Vendas (Ex: 55219...)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <div class="grid grid-cols-2 gap-2">
                     <input type="number" step="0.01" id="set-ship-cost" required placeholder="Frete Fixo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                    <input type="number" step="0.1" id="set-insurance-percent" required placeholder="Seguro (%) Ex: 5" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white" title="Porcentagem cobrada no Frete Seguro">
+                    <input type="number" step="0.1" id="set-insurance-percent" required placeholder="Seguro (%) Ex: 5" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white" title="Porcentagem padrão cobrada no Seguro da Mercadoria">
                 </div>
                 <input type="text" id="set-gemini" placeholder="Gemini API Key (Opcional)" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300 placeholder-blue-800/50">
                 <div class="flex gap-2 pt-2">
@@ -518,10 +523,29 @@
             filtered.forEach(p => {
                 const st = p.stock !== undefined ? Number(p.stock) : 10; 
                 const out = st <= 0;
+                const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+                
+                // Cálculo do Seguro do Produto Especificado
+                const hasIns = p.hasInsurance !== 'nao';
+                const insCost = p.insurancePrice ? Number(p.insurancePrice) : (price * ((storeSettings.insurancePercent || 5) / 100));
+                
                 const scarcity = (st > 0 && st <= 3) ? `<div class="absolute top-3 right-3 bg-red-600/90 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg animate-pulse z-10"><i class="fa-solid fa-fire"></i> Restam ${st}!</div>` : '';
                 const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow uppercase z-10"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
                 const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-48 object-cover rounded-2xl mb-3 border border-zinc-700/50">` : `<div class="w-full h-48 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-600 text-3xl"></i></div>`;
                 
+                // Opção Selecionável de Seguro Direto no Card do Produto
+                const insuranceOption = hasIns ? `
+                    <div class="mt-3 bg-zinc-950 border border-zinc-800 rounded-xl p-2.5 flex items-center justify-between cursor-pointer hover:border-gold/40 transition" onclick="toggleCardInsurance('${p.id}')">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="card-ins-${p.id}" class="w-4 h-4 accent-gold rounded cursor-pointer pointer-events-auto" checked onclick="event.stopPropagation()">
+                            <label for="card-ins-${p.id}" class="text-[11px] font-semibold text-zinc-200 cursor-pointer flex items-center gap-1">
+                                <i class="fa-solid fa-shield-halved text-gold"></i> Seguro da Mercadoria
+                            </label>
+                        </div>
+                        <span class="text-[11px] font-bold text-gold">+ R$ ${formatMoney(insCost)}</span>
+                    </div>
+                ` : '';
+
                 grid.innerHTML += `
                     <div class="bg-cardBg border border-zinc-800 rounded-3xl p-5 flex flex-col justify-between hover:border-gold/50 transition relative overflow-hidden group">
                         ${promo}${scarcity}
@@ -530,15 +554,21 @@
                             <span class="px-3 py-1 rounded-full text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase">${p.category || 'Geral'}</span>
                             <h3 class="text-lg font-bold text-white mt-2 group-hover:text-gold transition line-clamp-1">${p.name}</h3>
                             <p class="text-zinc-400 text-xs leading-relaxed line-clamp-2 mt-1">${p.description}</p>
+                            ${insuranceOption}
                         </div>
                         <div class="pt-4 mt-4 border-t border-zinc-800 flex items-center justify-between">
-                            <div><span class="text-lg font-extrabold ${p.promoPrice ? 'text-green-400' : 'text-gold'}">R$ ${formatMoney(p.promoPrice || p.price)}</span></div>
+                            <div><span class="text-lg font-extrabold ${p.promoPrice ? 'text-green-400' : 'text-gold'}">R$ ${formatMoney(price)}</span></div>
                             <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-xs font-bold px-3 py-2 rounded-xl border border-zinc-700 transition">
                                 <i class="fa-solid fa-cart-plus"></i> ${out ? 'Esgotado' : 'Adicionar'}
                             </button>
                         </div>
                     </div>`;
             });
+        }
+
+        function toggleCardInsurance(id) {
+            const chk = document.getElementById(`card-ins-${id}`);
+            if (chk) chk.checked = !chk.checked;
         }
 
         function setCategoryFilter(cat) { 
@@ -556,19 +586,43 @@
         function addToCart(id) {
             const p = products.find(x => x.id === id); 
             if (!p) return;
+            
             const ex = cart.find(i => i.id === id);
             if (ex && ex.qty + 1 > p.stock) {
                 showToast('Quantidade limite do estoque atingida.', 'error');
                 return;
             }
+
+            // Ler se a opção de seguro do card estava marcada
+            const chkCard = document.getElementById(`card-ins-${id}`);
+            const withInsurance = chkCard ? chkCard.checked : (p.hasInsurance !== 'nao');
+            const basePrice = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+            const insuranceUnitCost = p.insurancePrice ? Number(p.insurancePrice) : (basePrice * ((storeSettings.insurancePercent || 5) / 100));
+
             if (ex) { 
                 ex.qty++; 
+                ex.withInsurance = withInsurance;
             } else { 
-                cart.push({ ...p, activePrice: p.promoPrice ? Number(p.promoPrice) : Number(p.price), costPrice: Number(p.costPrice) || 0, qty: 1 }); 
+                cart.push({ 
+                    ...p, 
+                    activePrice: basePrice, 
+                    costPrice: Number(p.costPrice) || 0, 
+                    qty: 1,
+                    withInsurance: withInsurance,
+                    insuranceUnitCost: insuranceUnitCost
+                }); 
             }
             showToast(`${p.name} adicionado ao carrinho!`, 'success');
             updateCartUI(); 
             toggleCartDrawer(true);
+        }
+
+        function toggleCartItemInsurance(id) {
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                item.withInsurance = !item.withInsurance;
+                updateCartUI();
+            }
         }
 
         function increaseCartQty(id) {
@@ -601,12 +655,10 @@
         // Função Central de Cálculo dos Valores do Pedido
         function calculateOrderTotals() {
             const subtotal = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0);
+            const insuranceTotal = cart.reduce((s, i) => s + (i.withInsurance ? (i.insuranceUnitCost * i.qty) : 0), 0);
             const shipping = Number(storeSettings.shippingCost || 0);
-            const isInsured = document.getElementById('chk-insurance') ? document.getElementById('chk-insurance').checked : false;
-            const insPercent = Number(storeSettings.insurancePercent || 0);
-            const insuranceCost = isInsured ? (subtotal * (insPercent / 100)) : 0;
-            const total = subtotal + shipping + insuranceCost;
-            return { subtotal, shipping, insuranceCost, total, isInsured, insPercent };
+            const total = subtotal + insuranceTotal + shipping;
+            return { subtotal, insuranceTotal, shipping, total };
         }
 
         function updateCartUI() {
@@ -617,6 +669,7 @@
             if (cart.length === 0) { 
                 cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-sm">Seu carrinho está vazio</div>`; 
                 document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
+                document.getElementById('cart-insurance-cost').innerText = 'R$ 0,00';
                 document.getElementById('cart-total').innerText = 'R$ 0,00'; 
                 return; 
             }
@@ -624,23 +677,35 @@
             cont.innerHTML = ''; 
             cart.forEach(i => { 
                 cont.innerHTML += `
-                    <div class="py-3 flex items-center justify-between gap-3 border-b border-zinc-800/40 last:border-0">
-                        <div class="flex-1 min-w-0">
-                            <h4 class="text-xs font-bold text-white truncate">${i.name}</h4>
-                            <span class="text-xs text-gold">R$ ${formatMoney(i.activePrice)}</span>
+                    <div class="py-3.5 space-y-2 border-b border-zinc-800/40 last:border-0">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex-1 min-w-0">
+                                <h4 class="text-xs font-bold text-white truncate">${i.name}</h4>
+                                <span class="text-xs text-gold font-bold">R$ ${formatMoney(i.activePrice)}</span>
+                            </div>
+                            <div class="flex gap-2 items-center bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1">
+                                <button onclick="decreaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">-</button>
+                                <span class="text-xs w-4 text-center font-bold">${i.qty}</span>
+                                <button onclick="increaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">+</button>
+                            </div>
+                            <button onclick="removeFromCart('${i.id}')" class="text-zinc-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash"></i></button>
                         </div>
-                        <div class="flex gap-2 items-center bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1">
-                            <button onclick="decreaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">-</button>
-                            <span class="text-xs w-4 text-center font-bold">${i.qty}</span>
-                            <button onclick="increaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">+</button>
+                        
+                        <!-- Toggle do Seguro Dentro do Carrinho -->
+                        <div class="flex items-center justify-between bg-zinc-950 px-2.5 py-1.5 rounded-lg border border-zinc-800/80 text-[11px] cursor-pointer" onclick="toggleCartItemInsurance('${i.id}')">
+                            <span class="text-zinc-300 flex items-center gap-1.5">
+                                <input type="checkbox" ${i.withInsurance ? 'checked' : ''} onclick="event.stopPropagation(); toggleCartItemInsurance('${i.id}')" class="w-3.5 h-3.5 accent-gold rounded">
+                                <i class="fa-solid fa-shield-halved text-gold"></i> Seguro da Mercadoria
+                            </span>
+                            <span class="text-gold font-bold">${i.withInsurance ? '+ R$ ' + formatMoney(i.insuranceUnitCost * i.qty) : 'Não incluso'}</span>
                         </div>
-                        <button onclick="removeFromCart('${i.id}')" class="text-zinc-500 hover:text-red-400 p-1"><i class="fa-solid fa-trash"></i></button>
                     </div>`; 
             });
             
             document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`; 
+            document.getElementById('cart-insurance-cost').innerText = `R$ ${formatMoney(totals.insuranceTotal)}`; 
             document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(totals.shipping)}`; 
-            document.getElementById('cart-total').innerText = `R$ ${formatMoney(totals.subtotal + totals.shipping)}`;
+            document.getElementById('cart-total').innerText = `R$ ${formatMoney(totals.total)}`;
         }
 
         function toggleCartDrawer(op) { document.getElementById('cart-drawer').classList.toggle('hidden', !op); }
@@ -657,22 +722,11 @@
         function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
         function backToStep1() { document.getElementById('checkout-step-2').classList.add('hidden'); document.getElementById('checkout-step-1').classList.remove('hidden'); }
 
-        function toggleInsuranceCheck(event) {
-            const chk = document.getElementById('chk-insurance');
-            if (event.target !== chk) {
-                chk.checked = !chk.checked;
-            }
-            updateCheckoutSummary();
-        }
-
         function updateCheckoutSummary() {
             const totals = calculateOrderTotals();
-            document.getElementById('display-insurance-percent').innerText = totals.insPercent;
-            document.getElementById('display-insurance-val').innerText = `+ R$ ${formatMoney((totals.subtotal * (totals.insPercent / 100)))}`;
-            
             document.getElementById('summary-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`;
+            document.getElementById('summary-insurance').innerText = `R$ ${formatMoney(totals.insuranceTotal)}`;
             document.getElementById('summary-shipping').innerText = `R$ ${formatMoney(totals.shipping)}`;
-            document.getElementById('summary-insurance').innerText = `R$ ${formatMoney(totals.insuranceCost)}`;
             document.getElementById('summary-total').innerText = `R$ ${formatMoney(totals.total)}`;
         }
 
@@ -765,7 +819,14 @@
             
             for (const i of cart) { 
                 cst += (i.costPrice || 0) * i.qty; 
-                items.push({ id: i.id, name: i.name, qty: i.qty, price: i.activePrice });
+                items.push({ 
+                    id: i.id, 
+                    name: i.name, 
+                    qty: i.qty, 
+                    price: i.activePrice, 
+                    withInsurance: i.withInsurance,
+                    insuranceUnitCost: i.insuranceUnitCost
+                });
                 
                 const p = products.find(x => x.id === i.id); 
                 if(p) { 
@@ -783,9 +844,8 @@
                 items, 
                 financials: { 
                     subtotal: totals.subtotal, 
+                    insuranceTotal: totals.insuranceTotal,
                     shipping: totals.shipping, 
-                    insurance: totals.insuranceCost, 
-                    isInsured: totals.isInsured,
                     total: totals.total, 
                     estimatedProfit: (totals.subtotal - cst) 
                 }, 
@@ -795,8 +855,8 @@
             
             try {
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
-                let seguroTxt = totals.isInsured ? `\n🛡️ *Seguro de Envio (${totals.insPercent}%):* R$ ${formatMoney(totals.insuranceCost)}` : '\n🛡️ *Seguro:* Não contratado';
-                let msg = `*NOVO PEDIDO FÊNIX*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}`).join('\n')}\n📦 *Frete:* R$ ${formatMoney(totals.shipping)}${seguroTxt}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
+                let seguroMsg = totals.insuranceTotal > 0 ? `\n🛡️ *Seguro da Mercadoria:* R$ ${formatMoney(totals.insuranceTotal)}` : '\n🛡️ *Seguro da Mercadoria:* Não contratado';
+                let msg = `*NOVO PEDIDO FÊNIX*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name} ${i.withInsurance ? '(c/ Seguro Mercadoria)' : ''}`).join('\n')}\n📦 *Frete:* R$ ${formatMoney(totals.shipping)}${seguroMsg}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
                 
                 window.open(`https://wa.me/${storeSettings.whatsappSales}?text=${encodeURIComponent(msg)}`, '_blank');
                 
@@ -851,7 +911,8 @@
                         <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-2 py-1 rounded text-[10px]" title="Salvar e Enviar no WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
                     </div>` : '';
 
-                const seguroBadge = o.financials.isInsured ? '<span class="text-[9px] bg-gold/10 text-gold border border-gold/20 px-1.5 py-0.5 rounded ml-1 font-bold">C/ Seguro</span>' : '';
+                const hasInsuranceOrder = o.financials.insuranceTotal > 0;
+                const seguroBadge = hasInsuranceOrder ? '<span class="text-[9px] bg-gold/10 text-gold border border-gold/20 px-1.5 py-0.5 rounded ml-1 font-bold">C/ Seguro Mercadoria</span>' : '';
 
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800 hover:bg-zinc-900/40">
@@ -978,6 +1039,9 @@
         function openProductModal(id = null) {
             document.getElementById('product-form').reset(); 
             document.getElementById('prod-id').value = '';
+            document.getElementById('prod-has-insurance').value = 'sim';
+            document.getElementById('prod-insurance-price').value = '';
+
             if(id) { 
                 const p = products.find(x => x.id === id); 
                 if(p) { 
@@ -988,6 +1052,8 @@
                     document.getElementById('prod-stock').value = p.stock || 10; 
                     document.getElementById('prod-price').value = p.price; 
                     document.getElementById('prod-promo-price').value = p.promoPrice || ''; 
+                    document.getElementById('prod-has-insurance').value = p.hasInsurance || 'sim';
+                    document.getElementById('prod-insurance-price').value = p.insurancePrice || '';
                     document.getElementById('prod-category').value = p.category; 
                     document.getElementById('prod-desc').value = p.description; 
                 } 
@@ -1007,6 +1073,8 @@
                 promoPrice: document.getElementById('prod-promo-price').value ? parseFloat(document.getElementById('prod-promo-price').value) : null, 
                 costPrice: parseFloat(document.getElementById('prod-cost-price').value), 
                 stock: parseInt(document.getElementById('prod-stock').value), 
+                hasInsurance: document.getElementById('prod-has-insurance').value,
+                insurancePrice: document.getElementById('prod-insurance-price').value ? parseFloat(document.getElementById('prod-insurance-price').value) : null,
                 description: document.getElementById('prod-desc').value, 
                 imageUrl: document.getElementById('prod-imageUrl').value 
             };
