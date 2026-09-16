@@ -236,7 +236,7 @@
                     <div class="space-y-1 pt-1">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal Produtos</span><span id="cart-subtotal">R$ 0,00</span></div>
                         <div class="flex justify-between text-xs text-zinc-400"><span>Seguro da Mercadoria</span><span id="cart-insurance-cost" class="text-gold">R$ 0,00</span></div>
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 25,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 0,00</span></div>
                         <div class="flex justify-between text-sm sm:text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total Estimado</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
                     <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-yellow-500 via-gold to-yellow-400 text-black font-extrabold py-3 rounded-xl shadow-lg glow-yellow transition flex justify-center gap-2 text-xs sm:text-sm"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido</button>
@@ -257,7 +257,7 @@
             <div id="checkout-step-1" class="space-y-3">
                 <p class="text-[11px] sm:text-xs font-semibold text-zinc-400 border-l-2 border-gold pl-2">Informações de Envio</p>
                 <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
-                <input type="text" id="cust-whatsapp" placeholder="WhatsApp (com DDD)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                <input type="text" id="cust-whatsapp" placeholder="WhatsApp (Ex: 21999999999)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
                 <div class="grid grid-cols-3 gap-2">
                     <input type="text" id="cust-cep" placeholder="CEP" onblur="buscarCEP()" maxlength="9" class="col-span-1 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
                     <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
@@ -358,7 +358,7 @@
                 <input type="text" id="set-pix" required placeholder="Chave PIX (E-mail, CPF, Cel)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-pix-name" required placeholder="Nome Titular do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-pix-city" required placeholder="Cidade do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                <input type="text" id="set-wpp-sales" required placeholder="Zap Vendas (Ex: 55219...)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                <input type="text" id="set-wpp-sales" required placeholder="Zap Vendas (Ex: 21999999999)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="number" step="0.01" id="set-ship-cost" required placeholder="Frete Fixo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 <input type="text" id="set-gemini" placeholder="Gemini API Key (Opcional)" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300 placeholder-blue-800/50">
                 <div class="flex gap-2 pt-1">
@@ -415,10 +415,20 @@
     <!-- App Main Script -->
     <script>
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
-        let storeSettings = { pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingCost: 25.00, geminiKey: "" };
+        let storeSettings = { pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingCost: 0, geminiKey: "" };
         let chatHistory = [];
 
         const formatMoney = (val) => Number(val).toFixed(2).replace('.', ',');
+
+        // Função para formatar automaticamente números de WhatsApp com o DDI do Brasil (+55)
+        function formatWhatsappNumber(phone) {
+            if (!phone) return '';
+            let cleaned = String(phone).replace(/\D/g, '');
+            if (cleaned.length === 10 || cleaned.length === 11) {
+                cleaned = '55' + cleaned;
+            }
+            return cleaned;
+        }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
@@ -445,11 +455,15 @@
         async function loadSettings() {
             try { 
                 const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
-                if (docSnap.exists()) storeSettings = { ...storeSettings, ...docSnap.data() };
+                if (docSnap.exists()) {
+                    storeSettings = { ...storeSettings, ...docSnap.data() };
+                }
             } catch (e) { 
                 console.error("Erro ao carregar configurações:", e); 
             }
-            document.getElementById('btn-floating-support').href = `https://wa.me/${storeSettings.whatsappSales}?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida.`;
+            const cleanSalesWpp = formatWhatsappNumber(storeSettings.whatsappSales);
+            document.getElementById('btn-floating-support').href = `https://wa.me/${cleanSalesWpp}?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida.`;
+            updateCartUI();
         }
 
         async function loadProductsFromFirebase() {
@@ -646,7 +660,7 @@
         function calculateOrderTotals() {
             const subtotal = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0);
             const insuranceTotal = cart.reduce((s, i) => s + (i.withInsurance ? (i.insuranceUnitCost * i.qty) : 0), 0);
-            const shipping = Number(storeSettings.shippingCost || 0);
+            const shipping = (storeSettings.shippingCost !== undefined && storeSettings.shippingCost !== null) ? Number(storeSettings.shippingCost) : 0;
             const total = subtotal + insuranceTotal + shipping;
             return { subtotal, insuranceTotal, shipping, total };
         }
@@ -660,6 +674,7 @@
                 cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-xs sm:text-sm">Seu carrinho está vazio</div>`; 
                 document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
                 document.getElementById('cart-insurance-cost').innerText = 'R$ 0,00';
+                document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(totals.shipping)}`;
                 document.getElementById('cart-total').innerText = 'R$ 0,00'; 
                 return; 
             }
@@ -769,9 +784,9 @@
 
         function generateDynamicPix() {
             const n = document.getElementById('cust-name').value.trim(); 
-            const w = document.getElementById('cust-whatsapp').value.trim(); 
+            const rawW = document.getElementById('cust-whatsapp').value.trim(); 
             const c = document.getElementById('cust-cep').value.trim();
-            if(!n || !w || !c) return showToast("Preencha Nome, WhatsApp e CEP.", "error");
+            if(!n || !rawW || !c) return showToast("Preencha Nome, WhatsApp e CEP.", "error");
             if(!storeSettings.pixKey) return showToast("Configure a Chave Pix no Admin primeiro.", "error");
             
             const totals = calculateOrderTotals();
@@ -796,7 +811,8 @@
 
         async function processAndSendOrder() {
             const n = document.getElementById('cust-name').value; 
-            const w = document.getElementById('cust-whatsapp').value; 
+            const rawW = document.getElementById('cust-whatsapp').value; 
+            const w = formatWhatsappNumber(rawW);
             const ad = document.getElementById('cust-address').value + ", N: " + document.getElementById('cust-number').value;
             const btn = document.getElementById('btn-finish-order'); 
             btn.disabled = true; 
@@ -847,7 +863,8 @@
                 let seguroMsg = totals.insuranceTotal > 0 ? `\n🛡️ *Seguro da Mercadoria:* R$ ${formatMoney(totals.insuranceTotal)}` : '\n🛡️ *Seguro da Mercadoria:* Não contratado';
                 let msg = `*NOVO PEDIDO FÊNIX*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name} ${i.withInsurance ? '(c/ Seguro Mercadoria)' : ''}`).join('\n')}\n📦 *Frete:* R$ ${formatMoney(totals.shipping)}${seguroMsg}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
                 
-                window.open(`https://wa.me/${storeSettings.whatsappSales}?text=${encodeURIComponent(msg)}`, '_blank');
+                const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
+                window.open(`https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(msg)}`, '_blank');
                 
                 cart = []; 
                 updateCartUI(); 
@@ -936,7 +953,8 @@
             const code = document.getElementById(`track-${id}`).value.trim(); 
             if(!code) return showToast("Digite o código de rastreio.", "error");
             await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
-            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na Fênix Imports foi enviado! 🚚\n\nSeu código de rastreio: *${code}*\n\nAcompanhe pelo nosso site.`)}`, '_blank');
+            const cleanPhone = formatWhatsappNumber(phone);
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na Fênix Imports foi enviado! 🚚\n\nSeu código de rastreio: *${code}*\n\nAcompanhe pelo nosso site.`)}`, '_blank');
             showToast('Código enviado!', 'success');
             loadOrdersFromFirebase();
         }
@@ -945,8 +963,9 @@
         function openTrackingModal() { document.getElementById('tracking-modal').classList.remove('hidden'); document.getElementById('track-result').classList.add('hidden'); }
         function closeTrackingModal() { document.getElementById('tracking-modal').classList.add('hidden'); }
         async function trackOrder() {
-            const phone = document.getElementById('track-phone').value.trim(); 
-            if(!phone) return showToast('Digite seu número de WhatsApp com DDD.', 'error');
+            const rawPhone = document.getElementById('track-phone').value.trim(); 
+            if(!rawPhone) return showToast('Digite seu número de WhatsApp com DDD.', 'error');
+            const phone = formatWhatsappNumber(rawPhone);
             const res = document.getElementById('track-result'); 
             res.innerHTML = '<span class="text-zinc-400"><i class="fa-solid fa-spinner animate-spin"></i> Buscando...</span>'; 
             res.classList.remove('hidden');
@@ -954,7 +973,10 @@
             try {
                 const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
                 let userOrders = []; 
-                snap.forEach(d => { if(d.data().client.phone.includes(phone)) userOrders.push(d.data()); });
+                snap.forEach(d => { 
+                    const orderPhone = formatWhatsappNumber(d.data().client.phone);
+                    if(orderPhone.includes(phone) || phone.includes(orderPhone)) userOrders.push(d.data()); 
+                });
                 
                 if(userOrders.length === 0) { 
                     res.innerHTML = '<span class="text-red-400">Nenhum pedido localizado para este número.</span>'; 
@@ -1117,7 +1139,7 @@
             document.getElementById('set-pix-name').value = storeSettings.pixName || '';
             document.getElementById('set-pix-city').value = storeSettings.pixCity || '';
             document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || '';
-            document.getElementById('set-ship-cost').value = storeSettings.shippingCost || 25.00;
+            document.getElementById('set-ship-cost').value = (storeSettings.shippingCost !== undefined && storeSettings.shippingCost !== null) ? storeSettings.shippingCost : 0;
             document.getElementById('set-gemini').value = storeSettings.geminiKey || '';
             document.getElementById('settings-modal').classList.remove('hidden');
         }
@@ -1128,12 +1150,13 @@
 
         async function saveSettings(e) {
             e.preventDefault();
+            const shipVal = parseFloat(document.getElementById('set-ship-cost').value);
             storeSettings = {
                 pixKey: document.getElementById('set-pix').value.trim(),
                 pixName: document.getElementById('set-pix-name').value.trim(),
                 pixCity: document.getElementById('set-pix-city').value.trim(),
-                whatsappSales: document.getElementById('set-wpp-sales').value.trim(),
-                shippingCost: parseFloat(document.getElementById('set-ship-cost').value) || 0,
+                whatsappSales: formatWhatsappNumber(document.getElementById('set-wpp-sales').value.trim()),
+                shippingCost: isNaN(shipVal) ? 0 : shipVal,
                 geminiKey: document.getElementById('set-gemini').value.trim()
             };
 
