@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fênix Imports | Alta Performance & Exclusividade</title>
+    <title id="page-title">Fênix Imports | Alta Performance & Exclusividade</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { 
@@ -12,9 +12,9 @@
                     colors: { 
                         darkBg: '#0b0b0f', 
                         cardBg: '#13131a', 
-                        gold: '#d4a017', 
-                        goldHover: '#e5b224', 
-                        accentYellow: '#facc15' 
+                        gold: 'var(--theme-gold, #d4a017)', 
+                        goldHover: 'var(--theme-gold-hover, #e5b224)', 
+                        accentYellow: 'var(--theme-gold-light, #facc15)' 
                     } 
                 } 
             } 
@@ -24,26 +24,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- QR Code Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <style>
+    <style id="dynamic-theme-style">
+        :root {
+            --theme-gold: #d4a017;
+            --theme-gold-hover: #e5b224;
+            --theme-gold-light: #facc15;
+        }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0b0f; color: #f3f4f6; }
-        .glow-gold { box-shadow: 0 0 25px rgba(212, 160, 23, 0.25); }
-        .glow-yellow { box-shadow: 0 0 20px rgba(250, 204, 21, 0.35); }
+        
+        .bg-gold { background-color: var(--theme-gold) !important; }
+        .text-gold { color: var(--theme-gold) !important; }
+        .border-gold { border-color: var(--theme-gold) !important; }
+        .glow-gold { box-shadow: 0 0 25px var(--theme-gold) !important; }
+        .glow-yellow { box-shadow: 0 0 20px var(--theme-gold-light) !important; }
         .glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.25); }
-        .text-gradient { background: linear-gradient(135deg, #facc15 0%, #d4a017 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient { background: linear-gradient(135deg, var(--theme-gold-light) 0%, var(--theme-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
         ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: #0b0b0f; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #d4a017; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--theme-gold); }
         .chat-bubble { max-width: 85%; padding: 8px 12px; border-radius: 14px; margin-bottom: 8px; font-size: 12px; line-height: 1.4; }
         .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 4px; }
-        .chat-bot { background: rgba(212, 160, 23, 0.1); border: 1px solid rgba(212, 160, 23, 0.2); color: #facc15; border-bottom-left-radius: 4px; }
+        .chat-bot { background: rgba(212, 160, 23, 0.1); border: 1px solid var(--theme-gold); color: var(--theme-gold-light); border-bottom-left-radius: 4px; }
         
         /* Toast Notification Styles */
         #toast-container { position: fixed; top: 15px; right: 15px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
-        .toast { padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; color: white; display: flex; items-center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
+        .toast { padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
         .toast-success { background: #13131a; border-left: 4px solid #22c55e; color: #22c55e; }
         .toast-error { background: #13131a; border-left: 4px solid #ef4444; color: #ef4444; }
-        .toast-info { background: #13131a; border-left: 4px solid #d4a017; color: #facc15; }
+        .toast-info { background: #13131a; border-left: 4px solid var(--theme-gold); color: var(--theme-gold-light); }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
@@ -64,7 +74,7 @@
                     <i class="fa-solid fa-fire-flame-curved"></i>
                 </div>
                 <div>
-                    <span class="text-base sm:text-xl font-extrabold tracking-wider text-white block leading-tight">FÊNIX IMPORTS</span>
+                    <span id="header-store-name" class="text-base sm:text-xl font-extrabold tracking-wider text-white block leading-tight">FÊNIX IMPORTS</span>
                     <span class="text-[8px] sm:text-[10px] text-gold font-semibold tracking-widest uppercase">Evolução Máxima</span>
                 </div>
             </div>
@@ -153,7 +163,7 @@
                 <div class="flex justify-between items-center">
                     <h3 class="text-base sm:text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos Cadastrados</h3>
                     <div class="flex gap-2">
-                        <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-3 py-2 rounded-xl text-xs sm:text-sm border border-zinc-700 flex items-center gap-1.5"><i class="fa-solid fa-gear"></i> Configs</button>
+                        <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-3 py-2 rounded-xl text-xs sm:text-sm border border-zinc-700 flex items-center gap-1.5"><i class="fa-solid fa-gear"></i> Configs & Marca</button>
                         <button onclick="openProductModal()" class="bg-gold hover:bg-yellow-400 text-black font-bold px-3 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-1.5 shadow-lg"><i class="fa-solid fa-plus"></i> Novo</button>
                     </div>
                 </div>
@@ -196,11 +206,11 @@
     <!-- AI Chat Window -->
     <div id="ai-chat-window" class="fixed bottom-20 right-4 w-[88vw] sm:w-80 bg-cardBg border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-80 sm:h-96">
         <div class="bg-gradient-to-r from-zinc-900 to-zinc-800 p-3 border-b border-zinc-700 flex justify-between items-center">
-            <div class="flex items-center gap-2"><i class="fa-solid fa-robot text-gold text-base"></i> <span class="font-bold text-xs sm:text-sm text-white">Consultor Fênix IA</span></div>
+            <div class="flex items-center gap-2"><i class="fa-solid fa-robot text-gold text-base"></i> <span id="ai-bot-title" class="font-bold text-xs sm:text-sm text-white">Consultor Fênix IA</span></div>
             <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div id="chat-messages" class="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
-            <div class="chat-bubble chat-bot">Olá! Sou a inteligência artificial da Fênix. O que você busca otimizar hoje no seu corpo ou mente? Posso te indicar o melhor produto.</div>
+            <div class="chat-bubble chat-bot">Olá! Sou o assistente de inteligência artificial. O que você busca otimizar hoje no seu corpo ou mente? Posso te indicar o melhor produto.</div>
         </div>
         <div class="p-2.5 bg-zinc-900 border-t border-zinc-800 flex gap-2">
             <input type="text" id="chat-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-gold">
@@ -349,21 +359,60 @@
         </div>
     </div>
 
-    <!-- Settings Modal -->
+    <!-- Settings Modal (White Label & Configurações da Loja) -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
-            <h3 class="text-base sm:text-lg font-extrabold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-gear text-gold"></i> Configurações Base</h3>
+            <h3 class="text-base sm:text-lg font-extrabold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-sliders text-gold"></i> Personalizar Marca & Configs</h3>
             <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-2.5 text-xs sm:text-sm">
-                <input type="text" id="set-pix" required placeholder="Chave PIX (E-mail, CPF, Cel)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                <input type="text" id="set-pix-name" required placeholder="Nome Titular do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                <input type="text" id="set-pix-city" required placeholder="Cidade do Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                <input type="text" id="set-wpp-sales" required placeholder="Zap Vendas (Ex: 21999999999)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                <input type="number" step="0.01" id="set-ship-cost" required placeholder="Frete Fixo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                <input type="text" id="set-gemini" placeholder="Gemini API Key (Opcional)" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300 placeholder-blue-800/50">
+                
+                <!-- Sessão Marca White Label -->
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
+                    <label class="text-[10px] text-gold font-bold uppercase tracking-wider block">🎨 Personalização White Label</label>
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">Nome da Sua Loja</label>
+                        <input type="text" id="set-store-name" required placeholder="Ex: FÊNIX IMPORTS" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">Cor Destaque do Tema</label>
+                        <div class="flex gap-2 items-center">
+                            <input type="color" id="set-theme-color" value="#d4a017" class="w-10 h-8 bg-zinc-900 border border-zinc-800 rounded cursor-pointer">
+                            <span class="text-xs text-zinc-400">Escolha a cor principal do site</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[10px] text-zinc-400 block mb-0.5">Chave PIX Recebedora</label>
+                    <input type="text" id="set-pix" required placeholder="Chave PIX (E-mail, CPF, Celular)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">Nome Titular Pix</label>
+                        <input type="text" id="set-pix-name" required placeholder="Nome Titular" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">Cidade Titular Pix</label>
+                        <input type="text" id="set-pix-city" required placeholder="Cidade" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">WhatsApp Vendas</label>
+                        <input type="text" id="set-wpp-sales" required placeholder="Ex: 21999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">Frete Fixo R$</label>
+                        <input type="number" step="0.01" id="set-ship-cost" required placeholder="0.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[10px] text-zinc-400 block mb-0.5">Gemini IA API Key (Opcional)</label>
+                    <input type="text" id="set-gemini" placeholder="Cole sua chave da IA aqui" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300 placeholder-blue-800/50">
+                </div>
                 <div class="flex gap-2 pt-1">
                     <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2 rounded-xl">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-gold text-black font-extrabold py-2 rounded-xl">Salvar</button>
+                    <button type="submit" class="flex-1 bg-gold text-black font-extrabold py-2 rounded-xl">Salvar Alterações</button>
                 </div>
             </form>
         </div>
@@ -373,11 +422,11 @@
     <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80" onclick="closeLoginModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-2xl w-full max-w-xs p-5 shadow-2xl z-10">
-            <h3 class="text-base font-bold text-white mb-3">Acesso Admin</h3>
+            <h3 class="text-base font-bold text-white mb-3">Acesso Admin Protegido</h3>
             <form onsubmit="handleAdminLogin(event)" class="space-y-2.5">
-                <input type="email" id="login-email" required placeholder="E-mail" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
-                <input type="password" id="login-password" required placeholder="Senha" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
-                <button type="submit" class="w-full bg-gold text-black font-bold py-2 rounded-lg text-xs sm:text-sm">Entrar</button>
+                <input type="email" id="login-email" required placeholder="E-mail Admin" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
+                <input type="password" id="login-password" required placeholder="Senha Secreta" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
+                <button type="submit" class="w-full bg-gold text-black font-bold py-2 rounded-lg text-xs sm:text-sm">Entrar e Destravar</button>
             </form>
         </div>
     </div>
@@ -415,12 +464,20 @@
     <!-- App Main Script -->
     <script>
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
-        let storeSettings = { pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingCost: 0, geminiKey: "" };
+        let storeSettings = { 
+            storeName: "FÊNIX IMPORTS", 
+            themeColor: "#d4a017", 
+            pixKey: "", 
+            pixName: "Fenix Imports", 
+            pixCity: "Rio de Janeiro", 
+            whatsappSales: "5521999999999", 
+            shippingCost: 0, 
+            geminiKey: "" 
+        };
         let chatHistory = [];
 
         const formatMoney = (val) => Number(val).toFixed(2).replace('.', ',');
 
-        // Função para formatar automaticamente números de WhatsApp com o DDI do Brasil (+55)
         function formatWhatsappNumber(phone) {
             if (!phone) return '';
             let cleaned = String(phone).replace(/\D/g, '');
@@ -428,6 +485,31 @@
                 cleaned = '55' + cleaned;
             }
             return cleaned;
+        }
+
+        function adjustColorBrightness(hex, percent) {
+            let num = parseInt(hex.replace('#',''), 16),
+            amt = Math.round(2.55 * percent),
+            R = (num >> 16) + amt,
+            B = (num >> 8 & 0x00FF) + amt,
+            G = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+        }
+
+        function applyStoreBranding() {
+            const name = storeSettings.storeName || "FÊNIX IMPORTS";
+            const color = storeSettings.themeColor || "#d4a017";
+            
+            document.getElementById('header-store-name').innerText = name.toUpperCase();
+            document.getElementById('page-title').innerText = `${name} | Alta Performance & Exclusividade`;
+            document.getElementById('ai-bot-title').innerText = `Consultor ${name} IA`;
+
+            const lightColor = adjustColorBrightness(color, 25);
+            const hoverColor = adjustColorBrightness(color, -15);
+
+            document.documentElement.style.setProperty('--theme-gold', color);
+            document.documentElement.style.setProperty('--theme-gold-light', lightColor);
+            document.documentElement.style.setProperty('--theme-gold-hover', hoverColor);
         }
 
         function showToast(message, type = 'info') {
@@ -461,6 +543,7 @@
             } catch (e) { 
                 console.error("Erro ao carregar configurações:", e); 
             }
+            applyStoreBranding();
             const cleanSalesWpp = formatWhatsappNumber(storeSettings.whatsappSales);
             document.getElementById('btn-floating-support').href = `https://wa.me/${cleanSalesWpp}?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida.`;
             updateCartUI();
@@ -753,7 +836,7 @@
 
         // GERADOR PIX EMV CRC16
         let currentPixPayload = "";
-        function generatePixEMV(key, amount, name, city, txid="FENIX") {
+        function generatePixEMV(key, amount, name, city, txid="PEDIDO") {
             const format = (id, val) => { const v = String(val); return id + v.length.toString().padStart(2,'0') + v; };
             const p = [ 
                 format('00','01'), 
@@ -844,6 +927,7 @@
                 }
             }
             
+            const storeTitle = storeSettings.storeName || 'LOJA';
             const order = { 
                 client: { name: n, phone: w, address: ad }, 
                 items, 
@@ -861,7 +945,7 @@
             try {
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
                 let seguroMsg = totals.insuranceTotal > 0 ? `\n🛡️ *Seguro da Mercadoria:* R$ ${formatMoney(totals.insuranceTotal)}` : '\n🛡️ *Seguro da Mercadoria:* Não contratado';
-                let msg = `*NOVO PEDIDO FÊNIX*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name} ${i.withInsurance ? '(c/ Seguro Mercadoria)' : ''}`).join('\n')}\n📦 *Frete:* R$ ${formatMoney(totals.shipping)}${seguroMsg}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
+                let msg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name} ${i.withInsurance ? '(c/ Seguro Mercadoria)' : ''}`).join('\n')}\n📦 *Frete:* R$ ${formatMoney(totals.shipping)}${seguroMsg}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Copia e Cola Concluído. Segue comprovante:_`;
                 
                 const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
                 window.open(`https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -954,7 +1038,8 @@
             if(!code) return showToast("Digite o código de rastreio.", "error");
             await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
             const cleanPhone = formatWhatsappNumber(phone);
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na Fênix Imports foi enviado! 🚚\n\nSeu código de rastreio: *${code}*\n\nAcompanhe pelo nosso site.`)}`, '_blank');
+            const storeTitle = storeSettings.storeName || 'Loja';
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na ${storeTitle} foi enviado! 🚚\n\nSeu código de rastreio: *${code}*\n\nAcompanhe pelo nosso site.`)}`, '_blank');
             showToast('Código enviado!', 'success');
             loadOrdersFromFirebase();
         }
@@ -1015,10 +1100,11 @@
             
             chatHistory.push({ role: "user", parts: [{ text: msg }] });
             
+            const storeTitle = storeSettings.storeName || 'Loja';
             const catalog = products.map(p => `${p.name} (${p.category}) - R$${p.price}`).join(', ');
-            const systemPrompt = `Você é o Fênix Bot, assistente virtual exclusivo da Fênix Imports. Seja extremamente cortês, conciso e persuasivo. Produtos disponíveis no catálogo: ${catalog}.`;
+            const systemPrompt = `Você é o assistente virtual exclusivo da loja ${storeTitle}. Seja extremamente cortês, conciso e persuasivo. Produtos disponíveis no catálogo: ${catalog}.`;
 
-            chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Fênix Bot pensando...</div>`;
+            chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Pensando...</div>`;
             
             try {
                 const contentsPayload = [
@@ -1135,6 +1221,8 @@
         }
 
         function openSettingsModal() {
+            document.getElementById('set-store-name').value = storeSettings.storeName || 'FÊNIX IMPORTS';
+            document.getElementById('set-theme-color').value = storeSettings.themeColor || '#d4a017';
             document.getElementById('set-pix').value = storeSettings.pixKey || '';
             document.getElementById('set-pix-name').value = storeSettings.pixName || '';
             document.getElementById('set-pix-city').value = storeSettings.pixCity || '';
@@ -1152,6 +1240,8 @@
             e.preventDefault();
             const shipVal = parseFloat(document.getElementById('set-ship-cost').value);
             storeSettings = {
+                storeName: document.getElementById('set-store-name').value.trim(),
+                themeColor: document.getElementById('set-theme-color').value,
                 pixKey: document.getElementById('set-pix').value.trim(),
                 pixName: document.getElementById('set-pix-name').value.trim(),
                 pixCity: document.getElementById('set-pix-city').value.trim(),
@@ -1163,6 +1253,7 @@
             try {
                 await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings);
                 showToast('Configurações salvas com sucesso!', 'success');
+                applyStoreBranding();
                 closeSettingsModal();
                 loadSettings();
             } catch(err) {
