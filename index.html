@@ -70,8 +70,9 @@
     <header class="sticky top-0 z-50 bg-darkBg/95 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
             <div class="flex items-center gap-2 sm:gap-3 cursor-pointer" onclick="switchTab('catalog')">
-                <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center glow-gold text-black text-lg sm:text-xl font-black">
-                    <i class="fa-solid fa-fire-flame-curved"></i>
+                <div id="header-logo-container" class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center glow-gold text-black text-lg sm:text-xl font-black overflow-hidden shrink-0">
+                    <i id="header-logo-icon" class="fa-solid fa-fire-flame-curved"></i>
+                    <img id="header-logo-img" src="" class="w-full h-full object-cover hidden" alt="Logo">
                 </div>
                 <div>
                     <span id="header-store-name" class="text-base sm:text-xl font-extrabold tracking-wider text-white block leading-tight">FÊNIX IMPORTS</span>
@@ -374,6 +375,10 @@
                         <input type="text" id="set-store-name" required placeholder="Ex: FÊNIX IMPORTS" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
                     </div>
                     <div>
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">Link da Logo (URL da Imagem)</label>
+                        <input type="text" id="set-store-logo" placeholder="https://exemplo.com/sua-logo.png" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
+                    </div>
+                    <div>
                         <label class="text-[10px] text-zinc-400 block mb-0.5">Cor Destaque do Tema</label>
                         <div class="flex gap-2 items-center">
                             <input type="color" id="set-theme-color" value="#d4a017" class="w-10 h-8 bg-zinc-900 border border-zinc-800 rounded cursor-pointer">
@@ -466,6 +471,7 @@
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
         let storeSettings = { 
             storeName: "FÊNIX IMPORTS", 
+            logoUrl: "",
             themeColor: "#d4a017", 
             pixKey: "", 
             pixName: "Fenix Imports", 
@@ -499,10 +505,22 @@
         function applyStoreBranding() {
             const name = storeSettings.storeName || "FÊNIX IMPORTS";
             const color = storeSettings.themeColor || "#d4a017";
+            const logo = storeSettings.logoUrl || "";
             
             document.getElementById('header-store-name').innerText = name.toUpperCase();
             document.getElementById('page-title').innerText = `${name} | Alta Performance & Exclusividade`;
             document.getElementById('ai-bot-title').innerText = `Consultor ${name} IA`;
+
+            const logoImg = document.getElementById('header-logo-img');
+            const logoIcon = document.getElementById('header-logo-icon');
+            if (logo) {
+                logoImg.src = logo;
+                logoImg.classList.remove('hidden');
+                logoIcon.classList.add('hidden');
+            } else {
+                logoImg.classList.add('hidden');
+                logoIcon.classList.remove('hidden');
+            }
 
             const lightColor = adjustColorBrightness(color, 25);
             const hoverColor = adjustColorBrightness(color, -15);
@@ -1222,6 +1240,7 @@
 
         function openSettingsModal() {
             document.getElementById('set-store-name').value = storeSettings.storeName || 'FÊNIX IMPORTS';
+            document.getElementById('set-store-logo').value = storeSettings.logoUrl || '';
             document.getElementById('set-theme-color').value = storeSettings.themeColor || '#d4a017';
             document.getElementById('set-pix').value = storeSettings.pixKey || '';
             document.getElementById('set-pix-name').value = storeSettings.pixName || '';
@@ -1241,6 +1260,7 @@
             const shipVal = parseFloat(document.getElementById('set-ship-cost').value);
             storeSettings = {
                 storeName: document.getElementById('set-store-name').value.trim(),
+                logoUrl: document.getElementById('set-store-logo').value.trim(),
                 themeColor: document.getElementById('set-theme-color').value,
                 pixKey: document.getElementById('set-pix').value.trim(),
                 pixName: document.getElementById('set-pix-name').value.trim(),
