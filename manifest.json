@@ -1,0 +1,21 @@
+{
+  "name": "Fênix Imports",
+  "short_name": "Fênix",
+  "description": "Fênix Imports | Alta Performance & Exclusividade",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0b0f",
+  "theme_color": "#d4a017",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/785/785116.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/785/785116.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
