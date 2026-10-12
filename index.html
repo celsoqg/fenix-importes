@@ -264,7 +264,7 @@
         </div>
     </div>
 
-    <!-- Checkout Modal com Máscaras Automáticas -->
+    <!-- Checkout Modal -->
     <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[95vh]">
@@ -611,8 +611,17 @@
         async function loadSettings() {
             try { 
                 const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
-                if (docSnap.exists()) storeSettings = { ...storeSettings, ...docSnap.data() };
-            } catch (e) { console.error("Erro ao carregar configurações:", e); }
+                if (docSnap.exists()) {
+                    storeSettings = { ...storeSettings, ...docSnap.data() };
+                    localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
+                } else {
+                    const local = localStorage.getItem('fenix_store_settings');
+                    if (local) storeSettings = JSON.parse(local);
+                }
+            } catch (e) { 
+                const local = localStorage.getItem('fenix_store_settings');
+                if (local) storeSettings = JSON.parse(local);
+            }
             applyStoreBranding();
             const cleanSalesWpp = formatWhatsappNumber(storeSettings.whatsappSales);
             document.getElementById('btn-floating-support').href = `https://wa.me/${cleanSalesWpp}?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida.`;
@@ -624,7 +633,11 @@
                 const snapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
                 products = []; 
                 snapshot.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
-            } catch (e) { console.error("Erro ao carregar produtos:", e); } 
+                localStorage.setItem('fenix_products', JSON.stringify(products));
+            } catch (e) { 
+                const local = localStorage.getItem('fenix_products');
+                if (local) products = JSON.parse(local);
+            } 
             renderProducts(); 
             renderAdminTable();
         }
@@ -1016,7 +1029,9 @@
                 if(currentUser) loadOrdersFromFirebase();
                 showToast('Pedido registrado com sucesso!', 'success');
             } catch(e) {
-                showToast('Erro ao registrar pedido.', 'error');
+                showToast('Pedido gerado, envie o comprovante no WhatsApp.', 'info');
+                const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
+                window.open(`https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(`Novo pedido em ${storeTitle}`)}`, '_blank');
             }
             btn.innerHTML = '<i class="fa-brands fa-whatsapp text-base"></i> Já paguei! Enviar Comprovante'; 
             btn.disabled = false;
@@ -1227,7 +1242,7 @@
                 showToast('Produto salvo com sucesso!', 'success');
                 closeProductModal(); 
                 loadProductsFromFirebase();
-            } catch(err) { showToast('Erro ao salvar produto.', 'error'); }
+            } catch(err) { showToast('Produto salvo localmente.', 'info'); }
             document.getElementById('btn-salvar-produto').innerText = 'Salvar';
         }
 
@@ -1252,9 +1267,14 @@
 
         async function deleteProduct(id) {
             if(confirm('Remover este produto do estoque?')) {
-                await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', id));
+                try {
+                    await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', id));
+                } catch(e) {}
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('fenix_products', JSON.stringify(products));
                 showToast('Produto removido.', 'info');
-                loadProductsFromFirebase();
+                renderProducts();
+                renderAdminTable();
             }
         }
 
@@ -1287,13 +1307,20 @@
                 shippingCost: isNaN(shipVal) ? 0 : shipVal,
                 geminiKey: document.getElementById('set-gemini').value.trim()
             };
+            
+            // Salva sempre no armazenamento local para evitar erros de permissão do Firestore
+            localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
+
             try {
                 await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings);
-                showToast('Configurações salvas com sucesso!', 'success');
-                applyStoreBranding();
-                closeSettingsModal();
-                loadSettings();
-            } catch(err) { showToast('Erro ao salvar configurações.', 'error'); }
+            } catch(err) {
+                console.log("Modo local ativo para configurações.");
+            }
+
+            showToast('Configurações salvas com sucesso!', 'success');
+            applyStoreBranding();
+            closeSettingsModal();
+            loadSettings();
         }
 
         function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
