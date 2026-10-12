@@ -1,20 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Fênix Imports | Alta Performance & Exclusividade</title>
     
-    <!-- PWA / App Manifest -->
-    <link rel="manifest" href='data:application/manifest+json,{
-      "name": "Fênix Imports",
-      "short_name": "Fênix",
-      "start_url": "/",
-      "display": "standalone",
-      "background_color": "#0b0b0f",
-      "theme_color": "#d4a017",
-      "icons": [{"src": "https://images.unsplash.com/photo-1579722821273-0f6c7d44362f?w=192", "sizes": "192x192", "type": "image/png"}]
-    }'>
+    <!-- Link para o Manifest do PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#d4a017">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -58,7 +51,7 @@
         .chat-bot { background: rgba(212, 160, 23, 0.1); border: 1px solid var(--theme-gold); color: var(--theme-gold-light); border-bottom-left-radius: 4px; }
         
         #toast-container { position: fixed; top: 15px; right: 15px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
-        .toast { padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
+        .toast { padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; color: white; display: flex; items-center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
         .toast-success { background: #13131a; border-left: 4px solid #22c55e; color: #22c55e; }
         .toast-error { background: #13131a; border-left: 4px solid #ef4444; color: #ef4444; }
         .toast-info { background: #13131a; border-left: 4px solid var(--theme-gold); color: var(--theme-gold-light); }
@@ -72,18 +65,18 @@
 
     <div id="toast-container"></div>
 
-    <!-- Top Banner -->
+    <!-- Banner Topo -->
     <div class="bg-gradient-to-r from-yellow-600 via-gold to-yellow-500 text-black text-[10px] sm:text-xs font-bold py-1 px-2 text-center tracking-wide uppercase flex items-center justify-center gap-1.5 shadow-md">
         <i class="fa-solid fa-shield-halved"></i> <span>Qualidade Certificada & Pronta Entrega Brasil</span>
     </div>
 
-    <!-- Header Otimizado para Telemóveis -->
+    <!-- Header Otimizado -->
     <header class="sticky top-0 z-50 bg-darkBg/95 backdrop-blur-md border-b border-zinc-800">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
             <div class="flex items-center gap-2 sm:gap-3 cursor-pointer min-w-0" onclick="switchTab('catalog')">
                 <div id="header-logo-container" class="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center glow-gold text-black text-base sm:text-xl font-black overflow-hidden shrink-0">
                     <i id="header-logo-icon" class="fa-solid fa-fire-flame-curved"></i>
-                    <img id="header-logo-img" src="" class="w-full h-full object-cover hidden" alt="Logótipo">
+                    <img id="header-logo-img" src="" class="w-full h-full object-cover hidden" alt="Logo">
                 </div>
                 <div class="min-w-0">
                     <span id="header-store-name" class="text-sm sm:text-xl font-extrabold tracking-wider text-white block leading-tight truncate">FÊNIX IMPORTS</span>
@@ -101,10 +94,10 @@
             <div class="flex items-center gap-2">
                 <div id="user-status-container" class="hidden text-xs text-zinc-400 lg:flex items-center gap-1.5 bg-zinc-900 px-2.5 py-1 rounded-full border border-zinc-800 shrink-0">
                     <i class="fa-solid fa-user-shield text-gold"></i><span id="logged-user-email" class="max-w-[90px] truncate">admin</span>
-                    <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300 ml-1" title="Terminar Sessão"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300 ml-1" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
-                <button onclick="installAppPrompt()" id="btn-install-app" class="hidden bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-gold px-2.5 py-2 rounded-xl text-xs font-bold items-center gap-1.5 transition shrink-0" title="Instalar App">
-                    <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">Instalar App</span>
+                <button onclick="installAppPrompt()" id="btn-install-app" class="hidden bg-gold hover:bg-yellow-400 text-black px-2.5 py-2 rounded-xl text-xs font-extrabold items-center gap-1.5 transition shrink-0 shadow-md">
+                    <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">Baixar App</span>
                 </button>
                 <button onclick="toggleCartDrawer(true)" class="relative bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-xl flex items-center gap-2 transition group shrink-0">
                     <i class="fa-solid fa-cart-shopping text-gold group-hover:scale-110 transition text-sm sm:text-base"></i>
@@ -119,8 +112,8 @@
         <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 py-3 space-y-2">
             <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-store"></i> Catálogo</button>
             <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-map-location-dot"></i> Rastrear Pedido</button>
-            <button onclick="installAppPrompt(); toggleMobileMenu();" id="mobile-btn-install" class="hidden w-full text-left text-gold font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-download"></i> Instalar Aplicação no Telemóvel</button>
-            <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-user-lock"></i> Iniciar Sessão Admin</button>
+            <button onclick="installAppPrompt(); toggleMobileMenu();" id="mobile-btn-install" class="hidden w-full text-left text-gold font-bold py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-download"></i> Baixar App no Celular</button>
+            <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-user-lock"></i> Login Admin</button>
             <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-gauge-high"></i> Gestão de Elite</button>
         </div>
     </header>
@@ -137,11 +130,11 @@
                 </div>
             </div>
 
-            <!-- Filtros e Busca -->
+            <!-- Filtros -->
             <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 bg-cardBg p-3 sm:p-4 rounded-2xl border border-zinc-800">
                 <div class="relative w-full xl:w-80 shrink-0">
                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs sm:text-sm"></i>
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Pesquisar produtos..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none transition">
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar produtos..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none transition">
                 </div>
                 <div class="flex items-center gap-1.5 overflow-x-auto w-full pb-1 xl:pb-0 scroll-smooth">
                     <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold bg-gold text-black transition whitespace-nowrap">Todos</button>
@@ -159,9 +152,8 @@
                 </div>
             </div>
 
-            <!-- Grelha de Produtos com Skeleton Loader Inicial -->
+            <!-- Grelha de Produtos -->
             <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-6">
-                <!-- Skeletons para carregamento fluido -->
                 <div class="bg-cardBg border border-zinc-800 rounded-2xl p-3 space-y-3"><div class="skeleton w-full h-32 rounded-xl"></div><div class="skeleton w-3/4 h-4 rounded"></div><div class="skeleton w-1/2 h-4 rounded"></div></div>
                 <div class="bg-cardBg border border-zinc-800 rounded-2xl p-3 space-y-3"><div class="skeleton w-full h-32 rounded-xl"></div><div class="skeleton w-3/4 h-4 rounded"></div><div class="skeleton w-1/2 h-4 rounded"></div></div>
             </div>
@@ -172,7 +164,7 @@
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cardBg p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-zinc-800">
                 <div><h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-microchip text-gold"></i> Gestão de Elite</h2></div>
                 <div class="flex gap-2 w-full md:w-auto bg-zinc-900 p-1.5 rounded-xl border border-zinc-800">
-                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-zinc-800 text-white transition">Stock</button>
+                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-zinc-800 text-white transition">Estoque</button>
                     <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-zinc-400 transition">Vendas & Caixa</button>
                 </div>
             </div>
@@ -187,7 +179,7 @@
                 </div>
                 <div class="bg-cardBg rounded-2xl sm:rounded-3xl border border-zinc-800 overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                        <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-3 sm:p-4">Foto</th><th class="p-3 sm:p-4">Produto</th><th class="p-3 sm:p-4">Stock</th><th class="p-3 sm:p-4">Custo</th><th class="p-3 sm:p-4">Venda</th><th class="p-3 sm:p-4 text-right">Ações</th></tr></thead>
+                        <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-3 sm:p-4">Foto</th><th class="p-3 sm:p-4">Produto</th><th class="p-3 sm:p-4">Estoque</th><th class="p-3 sm:p-4">Custo</th><th class="p-3 sm:p-4">Venda</th><th class="p-3 sm:p-4 text-right">Ações</th></tr></thead>
                         <tbody id="admin-product-table" class="divide-y divide-zinc-800/60"></tbody>
                     </table>
                 </div>
@@ -195,13 +187,13 @@
 
             <div id="admin-subtab-orders" class="hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                    <div class="bg-zinc-900 border border-zinc-800 p-4 sm:p-5 rounded-2xl relative overflow-hidden group"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Faturação Conf.</p><h4 id="dash-revenue" class="text-2xl sm:text-3xl font-black text-white">R$ 0,00</h4></div>
+                    <div class="bg-zinc-900 border border-zinc-800 p-4 sm:p-5 rounded-2xl relative overflow-hidden group"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Faturamento Conf.</p><h4 id="dash-revenue" class="text-2xl sm:text-3xl font-black text-white">R$ 0,00</h4></div>
                     <div class="bg-gradient-to-br from-green-900/40 to-zinc-900 border border-green-900/50 p-4 sm:p-5 rounded-2xl relative overflow-hidden group glow-green"><p class="text-xs font-bold text-green-400 uppercase tracking-wider mb-1">Lucro Estimado</p><h4 id="dash-profit" class="text-2xl sm:text-3xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-500/70 mt-2 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
                     <div class="bg-zinc-900 border border-zinc-800 p-4 sm:p-5 rounded-2xl relative overflow-hidden group"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-2xl sm:text-3xl font-black text-white">0</h4></div>
                 </div>
                 <div class="bg-cardBg rounded-2xl sm:rounded-3xl border border-zinc-800 overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                        <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-3 sm:p-4">Cliente/Data</th><th class="p-3 sm:p-4">Itens/Total</th><th class="p-3 sm:p-4">Estado & Rastreio</th><th class="p-3 sm:p-4 text-right">Ação</th></tr></thead>
+                        <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-3 sm:p-4">Cliente/Data</th><th class="p-3 sm:p-4">Itens/Total</th><th class="p-3 sm:p-4">Status & Rastreio</th><th class="p-3 sm:p-4 text-right">Ação</th></tr></thead>
                         <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60"></tbody>
                     </table>
                 </div>
@@ -209,7 +201,7 @@
         </div>
     </main>
 
-    <!-- Botões Flutuantes (IA & WhatsApp) -->
+    <!-- Flutuantes -->
     <div class="fixed bottom-4 right-4 flex flex-col gap-2.5 z-40">
         <button onclick="toggleAIChat()" class="bg-zinc-800 border border-gold/50 text-gold w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,160,23,0.3)] hover:scale-110 transition-all relative">
             <i class="fa-solid fa-robot text-lg sm:text-2xl"></i>
@@ -220,50 +212,50 @@
         </a>
     </div>
 
-    <!-- Janela Chat IA -->
+    <!-- IA Chat -->
     <div id="ai-chat-window" class="fixed bottom-20 right-4 w-[88vw] sm:w-80 bg-cardBg border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-80 sm:h-96">
         <div class="bg-gradient-to-r from-zinc-900 to-zinc-800 p-3 border-b border-zinc-700 flex justify-between items-center">
             <div class="flex items-center gap-2"><i class="fa-solid fa-robot text-gold text-base"></i> <span id="ai-bot-title" class="font-bold text-xs sm:text-sm text-white">Consultor Fênix IA</span></div>
             <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div id="chat-messages" class="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
-            <div class="chat-bubble chat-bot">Olá! Sou o assistente inteligente. Em que posso ajudar a otimizar o seu desempenho hoje?</div>
+            <div class="chat-bubble chat-bot">Olá! Sou o assistente de inteligência artificial. O que você busca otimizar hoje no seu corpo ou mente?</div>
         </div>
         <div class="p-2.5 bg-zinc-900 border-t border-zinc-800 flex gap-2">
-            <input type="text" id="chat-input" placeholder="Escreva a sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-gold">
+            <input type="text" id="chat-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-gold">
             <button onclick="sendChatMessage()" class="bg-gold text-black rounded-lg px-3 py-1.5 hover:bg-yellow-400 transition text-xs"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <!-- Portal Rastreamento -->
+    <!-- Rastreio -->
     <div id="tracking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeTrackingModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-sm w-full p-6 sm:p-8 space-y-5 shadow-2xl z-10 text-center">
             <i class="fa-solid fa-map-location-dot text-3xl sm:text-4xl text-gold mb-1"></i>
             <h3 class="text-lg sm:text-xl font-extrabold text-white">Rastrear Pedido</h3>
-            <p class="text-xs text-zinc-400">Insira o seu WhatsApp com indicativo para consultar o estado da compra.</p>
+            <p class="text-xs text-zinc-400">Digite seu WhatsApp com DDD para ver o status da sua compra.</p>
             <input type="text" id="track-phone" placeholder="Ex: 21999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-center text-sm text-white focus:border-gold outline-none">
-            <button onclick="trackOrder()" class="w-full bg-zinc-800 text-white font-bold py-2.5 rounded-xl hover:bg-gold hover:text-black transition text-xs sm:text-sm">Pesquisar</button>
+            <button onclick="trackOrder()" class="w-full bg-zinc-800 text-white font-bold py-2.5 rounded-xl hover:bg-gold hover:text-black transition text-xs sm:text-sm">Buscar</button>
             <div id="track-result" class="mt-3 text-xs sm:text-sm text-left space-y-2 hidden"></div>
             <button onclick="closeTrackingModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
     </div>
 
-    <!-- Gaveta do Carrinho -->
+    <!-- Carrinho Drawer -->
     <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
         <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="toggleCartDrawer(false)"></div>
         <div class="absolute inset-y-0 right-0 max-w-full flex pl-8">
             <div class="w-screen max-w-md bg-cardBg border-l border-zinc-800 flex flex-col shadow-2xl">
                 <div class="p-4 sm:p-6 border-b border-zinc-800 flex justify-between bg-zinc-900/50">
-                    <h3 class="text-base sm:text-lg font-bold text-white flex gap-2"><i class="fa-solid fa-bag-shopping text-gold"></i> O seu Carrinho</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-white flex gap-2"><i class="fa-solid fa-bag-shopping text-gold"></i> Seu Carrinho</h3>
                     <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
                 <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 divide-y divide-zinc-800/40"></div>
                 <div class="p-4 sm:p-6 border-t border-zinc-800 bg-zinc-900/50 space-y-3">
                     <div class="space-y-1 pt-1">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal Produtos</span><span id="cart-subtotal">R$ 0,00</span></div>
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Seguro de Mercadoria</span><span id="cart-insurance-cost" class="text-gold">R$ 0,00</span></div>
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Portes / Frete</span><span id="cart-shipping-cost">R$ 0,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Seguro da Mercadoria</span><span id="cart-insurance-cost" class="text-gold">R$ 0,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 0,00</span></div>
                         <div class="flex justify-between text-sm sm:text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total Estimado</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
                     <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-yellow-500 via-gold to-yellow-400 text-black font-extrabold py-3 rounded-xl shadow-lg glow-yellow transition flex justify-center gap-2 text-xs sm:text-sm"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido</button>
@@ -272,7 +264,7 @@
         </div>
     </div>
 
-    <!-- Modal Checkout com Máscaras Automáticas -->
+    <!-- Checkout Modal com Máscaras Automáticas -->
     <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[95vh]">
@@ -293,8 +285,8 @@
 
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60 space-y-1.5 text-xs">
                     <div class="flex justify-between text-zinc-400"><span>Subtotal Produtos:</span><span id="summary-subtotal">R$ 0,00</span></div>
-                    <div class="flex justify-between text-zinc-400"><span>Seguro Mercadoria:</span><span id="summary-insurance" class="text-gold font-bold">R$ 0,00</span></div>
-                    <div class="flex justify-between text-zinc-400"><span>Portes:</span><span id="summary-shipping">R$ 0,00</span></div>
+                    <div class="flex justify-between text-zinc-400"><span>Seguro da Mercadoria:</span><span id="summary-insurance" class="text-gold font-bold">R$ 0,00</span></div>
+                    <div class="flex justify-between text-zinc-400"><span>Frete:</span><span id="summary-shipping">R$ 0,00</span></div>
                     <div class="flex justify-between font-bold text-white pt-1.5 border-t border-zinc-800 text-xs sm:text-sm"><span>Total Final:</span><span id="summary-total" class="text-gold">R$ 0,00</span></div>
                 </div>
 
@@ -302,7 +294,7 @@
             </div>
 
             <div id="checkout-step-2" class="space-y-3 hidden mt-2">
-                <p class="text-[11px] sm:text-xs font-semibold text-zinc-400 text-center">Escaneie ou copie o código Pix (Valor: <span id="pix-exact-value" class="text-white font-bold"></span>)</p>
+                <p class="text-[11px] sm:text-xs font-semibold text-zinc-400 text-center">Escaneie ou copie o código (Valor: <span id="pix-exact-value" class="text-white font-bold"></span>)</p>
                 <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center space-y-3">
                     <div id="dynamic-qrcode" class="w-32 h-32 sm:w-40 sm:h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-md"></div>
                     <div class="space-y-1">
@@ -314,14 +306,14 @@
                     </div>
                 </div>
                 <button onclick="processAndSendOrder()" id="btn-finish-order" class="w-full bg-green-600 hover:bg-green-500 text-white font-extrabold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-xs sm:text-sm">
-                    <i class="fa-brands fa-whatsapp text-base"></i> Já paguei! Enviar Comprovativo
+                    <i class="fa-brands fa-whatsapp text-base"></i> Já paguei! Enviar Comprovante
                 </button>
                 <button onclick="backToStep1()" class="w-full text-zinc-500 hover:text-white text-xs underline text-center">Voltar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Produto -->
+    <!-- Product Modal -->
     <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeProductModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
@@ -332,7 +324,7 @@
                 <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 <div class="grid grid-cols-2 gap-2">
                     <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" class="w-full bg-zinc-950 border border-red-900/50 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-red-500">
-                    <input type="number" id="prod-stock" required value="10" placeholder="Stock" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    <input type="number" id="prod-stock" required value="10" placeholder="Estoque" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <input type="number" step="0.01" id="prod-price" required placeholder="Preço Normal" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
@@ -375,7 +367,7 @@
         </div>
     </div>
 
-    <!-- Modal Configurações & White Label -->
+    <!-- Configs Modal -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
@@ -384,12 +376,12 @@
                 <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
                     <label class="text-[10px] text-gold font-bold uppercase tracking-wider block">🎨 Personalização White Label</label>
                     <div>
-                        <label class="text-[10px] text-zinc-400 block mb-0.5">Nome da Loja</label>
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">Nome da Sua Loja</label>
                         <input type="text" id="set-store-name" required placeholder="Ex: FÊNIX IMPORTS" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
                     </div>
                     <div>
-                        <label class="text-[10px] text-zinc-400 block mb-0.5">Link do Logótipo (URL)</label>
-                        <input type="text" id="set-store-logo" placeholder="https://exemplo.com/logo.png" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">Link da Logo (URL da Imagem)</label>
+                        <input type="text" id="set-store-logo" placeholder="https://exemplo.com/sua-logo.png" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
                     </div>
                     <div>
                         <label class="text-[10px] text-zinc-400 block mb-0.5">Cor Destaque do Tema</label>
@@ -401,8 +393,8 @@
                 </div>
 
                 <div>
-                    <label class="text-[10px] text-zinc-400 block mb-0.5">Chave PIX</label>
-                    <input type="text" id="set-pix" required placeholder="Chave PIX (E-mail, CPF, Telemóvel)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
+                    <label class="text-[10px] text-zinc-400 block mb-0.5">Chave PIX Recebedora</label>
+                    <input type="text" id="set-pix" required placeholder="Chave PIX (E-mail, CPF, Celular)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -420,7 +412,7 @@
                         <input type="text" id="set-wpp-sales" required placeholder="Ex: 21999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                     </div>
                     <div>
-                        <label class="text-[10px] text-zinc-400 block mb-0.5">Portes Fixos R$</label>
+                        <label class="text-[10px] text-zinc-400 block mb-0.5">Frete Fixo R$</label>
                         <input type="number" step="0.01" id="set-ship-cost" required placeholder="0.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
                     </div>
                 </div>
@@ -436,20 +428,20 @@
         </div>
     </div>
 
-    <!-- Modal Login Admin com Mensagens Amigáveis -->
+    <!-- Login Modal -->
     <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80" onclick="closeLoginModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-2xl w-full max-w-xs p-5 shadow-2xl z-10">
             <h3 class="text-base font-bold text-white mb-3">Acesso Admin Protegido</h3>
             <form onsubmit="handleAdminLogin(event)" class="space-y-2.5">
                 <input type="email" id="login-email" required placeholder="E-mail Admin" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
-                <input type="password" id="login-password" required placeholder="Palavra-passe Secreta" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
-                <button type="submit" class="w-full bg-gold text-black font-bold py-2 rounded-lg text-xs sm:text-sm">Iniciar Sessão</button>
+                <input type="password" id="login-password" required placeholder="Senha Secreta" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
+                <button type="submit" class="w-full bg-gold text-black font-bold py-2 rounded-lg text-xs sm:text-sm">Entrar e Destravar</button>
             </form>
         </div>
     </div>
 
-    <!-- Módulo Firebase -->
+    <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -472,6 +464,10 @@
         window.auth = auth; 
         window.firebaseFns = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, signInWithEmailAndPassword, signOut, onAuthStateChanged };
 
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW Reg Error: ", err));
+        }
+
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => window.initApp());
         } else {
@@ -479,7 +475,7 @@
         }
     </script>
 
-    <!-- Script Principal -->
+    <!-- App Main Script -->
     <script>
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
         let storeSettings = { 
@@ -496,13 +492,16 @@
         let chatHistory = [];
         let deferredPrompt = null;
 
-        // PWA Install Prompt Listener
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('btn-install-app').classList.remove('hidden');
-            document.getElementById('btn-install-app').classList.add('flex');
-            document.getElementById('mobile-btn-install').classList.remove('hidden');
+            const btnApp = document.getElementById('btn-install-app');
+            if (btnApp) {
+                btnApp.classList.remove('hidden');
+                btnApp.classList.add('flex');
+            }
+            const mobBtn = document.getElementById('mobile-btn-install');
+            if (mobBtn) mobBtn.classList.remove('hidden');
         });
 
         function installAppPrompt() {
@@ -510,16 +509,15 @@
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
-                        showToast('Aplicação instalada com sucesso!', 'success');
+                        showToast('Aplicativo instalado com sucesso!', 'success');
                     }
                     deferredPrompt = null;
                 });
             } else {
-                showToast('Para instalar, abra o menu do seu navegador e escolha "Adicionar ao Ecrã Principal".', 'info');
+                showToast('Acesse pelo Chrome no celular e clique em "Adicionar à Tela Inicial".', 'info');
             }
         }
 
-        // Máscaras de Input (Telemóvel e CEP)
         function maskPhone(input) {
             let v = input.value.replace(/\D/g,"");
             if (v.length > 11) v = v.slice(0, 11);
@@ -740,7 +738,6 @@
         function filterProducts() { renderProducts(); }
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
 
-        // Validação Estrita de Stock no Carrinho
         function addToCart(id) {
             const p = products.find(x => x.id === id); 
             if (!p) return;
@@ -750,7 +747,7 @@
             const currentQtyInCart = ex ? ex.qty : 0;
 
             if (currentQtyInCart + 1 > maxStock) {
-                showToast(`Quantidade máxima em stock atingida (${maxStock} un).`, 'error');
+                showToast(`Quantidade máxima em estoque atingida (${maxStock} un).`, 'error');
                 return;
             }
 
@@ -794,7 +791,7 @@
                 item.qty++;
                 updateCartUI();
             } else {
-                showToast('Limite de stock atingido.', 'error');
+                showToast('Limite de estoque atingido.', 'error');
             }
         }
 
@@ -826,7 +823,7 @@
             document.getElementById('cart-counter').innerText = cart.reduce((s, i) => s + i.qty, 0);
             
             if (cart.length === 0) { 
-                cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-xs sm:text-sm">O seu carrinho está vazio</div>`; 
+                cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-xs sm:text-sm">Seu carrinho está vazio</div>`; 
                 document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
                 document.getElementById('cart-insurance-cost').innerText = 'R$ 0,00';
                 document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(totals.shipping)}`;
@@ -855,7 +852,7 @@
                                 <input type="checkbox" ${i.withInsurance ? 'checked' : ''} onclick="event.stopPropagation(); toggleCartItemInsurance('${i.id}')" class="w-3 h-3 accent-gold rounded">
                                 <i class="fa-solid fa-shield-halved text-gold"></i> Seguro Mercadoria
                             </span>
-                            <span class="text-gold font-bold">${i.withInsurance ? '+ R$ ' + formatMoney(i.insuranceUnitCost * i.qty) : 'Não incluído'}</span>
+                            <span class="text-gold font-bold">${i.withInsurance ? '+ R$ ' + formatMoney(i.insuranceUnitCost * i.qty) : 'Não incluso'}</span>
                         </div>
                     </div>`; 
             });
@@ -934,7 +931,7 @@
             const rawW = document.getElementById('cust-whatsapp').value.trim(); 
             const c = document.getElementById('cust-cep').value.trim();
             if(!n || !rawW || !c) return showToast("Preencha Nome, WhatsApp e CEP.", "error");
-            if(!storeSettings.pixKey) return showToast("Configure a Chave Pix no painel Admin primeiro.", "error");
+            if(!storeSettings.pixKey) return showToast("Configure a Chave Pix no Admin primeiro.", "error");
             
             const totals = calculateOrderTotals();
             currentPixPayload = generatePixEMV(storeSettings.pixKey, totals.total, storeSettings.pixName, storeSettings.pixCity);
@@ -963,7 +960,7 @@
             const ad = document.getElementById('cust-address').value + ", N: " + document.getElementById('cust-number').value;
             const btn = document.getElementById('btn-finish-order'); 
             btn.disabled = true; 
-            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> A processar...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Processando...';
             
             const totals = calculateOrderTotals();
             let cst = 0; 
@@ -985,7 +982,7 @@
                     p.stock = Math.max(0, p.stock - i.qty); 
                     try { 
                         await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", i.id), { stock: p.stock }); 
-                    } catch(e) { console.error("Erro ao atualizar stock:", e); } 
+                    } catch(e) { console.error("Erro ao atualizar estoque:", e); } 
                 }
             }
             
@@ -1007,7 +1004,7 @@
             try {
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
                 let seguroMsg = totals.insuranceTotal > 0 ? `\n🛡️ *Seguro Mercadoria:* R$ ${formatMoney(totals.insuranceTotal)}` : '\n🛡️ *Seguro Mercadoria:* Não contratado';
-                let msg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}${i.withInsurance ? '(c/ Seguro)' : ''}`).join('\n')}\n📦 *Portes:* R$ ${formatMoney(totals.shipping)}${seguroMsg}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Concluído. Segue comprovativo:_`;
+                let msg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}${i.withInsurance ? '(c/ Seguro)' : ''}`).join('\n')}\n📦 *Frete:* R$ ${formatMoney(totals.shipping)}${seguroMsg}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Concluído. Segue comprovante:_`;
                 
                 const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
                 window.open(`https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -1017,11 +1014,11 @@
                 renderProducts(); 
                 closeCheckoutModal(); 
                 if(currentUser) loadOrdersFromFirebase();
-                showToast('Pedido registado com sucesso!', 'success');
+                showToast('Pedido registrado com sucesso!', 'success');
             } catch(e) {
-                showToast('Erro ao registar pedido.', 'error');
+                showToast('Erro ao registrar pedido.', 'error');
             }
-            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-base"></i> Já paguei! Enviar Comprovativo'; 
+            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-base"></i> Já paguei! Enviar Comprovante'; 
             btn.disabled = false;
         }
 
@@ -1080,25 +1077,25 @@
 
         async function updateOrderStatus(id, st) { 
             await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { status: st }); 
-            showToast('Estado atualizado!', 'success');
+            showToast('Status atualizado!', 'success');
             loadOrdersFromFirebase(); 
         }
 
         async function deleteOrder(id) {
-            if(confirm('Tem a certeza de que deseja eliminar este pedido?')) {
+            if(confirm('Tem certeza que deseja excluir este pedido?')) {
                 await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'orders', id));
-                showToast('Pedido eliminado.', 'info');
+                showToast('Pedido excluído.', 'info');
                 loadOrdersFromFirebase();
             }
         }
         
         async function saveAndSendTrack(id, phone, name) {
             const code = document.getElementById(`track-${id}`).value.trim(); 
-            if(!code) return showToast("Insira o código de rastreio.", "error");
+            if(!code) return showToast("Digite o código de rastreio.", "error");
             await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
             const cleanPhone = formatWhatsappNumber(phone);
             const storeTitle = storeSettings.storeName || 'Loja';
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Olá ${name}, o seu pedido na${storeTitle} foi enviado! 🚚\n\nCódigo de rastreio: *${code}*\n\nAcompanhe no nosso portal.`)}`, '_blank');
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na${storeTitle} foi enviado! 🚚\n\nCódigo de rastreio: *${code}*\n\nAcompanhe pelo nosso site.`)}`, '_blank');
             showToast('Código enviado!', 'success');
             loadOrdersFromFirebase();
         }
@@ -1108,10 +1105,10 @@
         
         async function trackOrder() {
             const rawPhone = document.getElementById('track-phone').value.trim(); 
-            if(!rawPhone) return showToast('Insira o seu número de telemóvel.', 'error');
+            if(!rawPhone) return showToast('Digite seu número com DDD.', 'error');
             const phone = formatWhatsappNumber(rawPhone);
             const res = document.getElementById('track-result'); 
-            res.innerHTML = '<span class="text-zinc-400"><i class="fa-solid fa-spinner animate-spin"></i> A procurar...</span>'; 
+            res.innerHTML = '<span class="text-zinc-400"><i class="fa-solid fa-spinner animate-spin"></i> Buscando...</span>'; 
             res.classList.remove('hidden');
             
             try {
@@ -1123,7 +1120,7 @@
                 });
                 
                 if(userOrders.length === 0) { 
-                    res.innerHTML = '<span class="text-red-400">Nenhum pedido encontrado para este número.</span>'; 
+                    res.innerHTML = '<span class="text-red-400">Nenhum pedido localizado para este número.</span>'; 
                     return; 
                 }
                 const o = userOrders.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
@@ -1158,9 +1155,9 @@
             
             const storeTitle = storeSettings.storeName || 'Loja';
             const catalog = products.map(p => `${p.name} (${p.category}) - R$${p.price}`).join(', ');
-            const systemPrompt = `És o assistente virtual da loja ${storeTitle}. Sê cortês, conciso e profissional. Produtos disponíveis: ${catalog}.`;
+            const systemPrompt = `Você é o assistente virtual exclusivo da loja ${storeTitle}. Seja extremamente cortês, conciso e persuasivo. Produtos disponíveis no catálogo: ${catalog}.`;
 
-            chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> A pensar...</div>`;
+            chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Pensando...</div>`;
             
             try {
                 const contentsPayload = [{ role: "user", parts: [{ text: systemPrompt }] }, ...chatHistory];
@@ -1176,7 +1173,7 @@
                 chatBody.scrollTop = chatBody.scrollHeight;
             } catch(e) { 
                 if(document.getElementById('bot-typing')) document.getElementById('bot-typing').remove();
-                chatBody.innerHTML += `<div class="chat-bubble chat-bot text-red-400">Instabilidade temporária na ligação com a IA.</div>`;
+                chatBody.innerHTML += `<div class="chat-bubble chat-bot text-red-400">Desculpe, instabilidade temporária na conexão com a IA.</div>`;
             }
         }
 
@@ -1223,14 +1220,14 @@
                 imageUrl: document.getElementById('prod-imageUrl').value 
             };
 
-            document.getElementById('btn-salvar-produto').innerText = 'A guardar...';
+            document.getElementById('btn-salvar-produto').innerText = 'Salvando...';
             try {
                 if(id) await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", id), data); 
                 else await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), data);
-                showToast('Produto guardado com sucesso!', 'success');
+                showToast('Produto salvo com sucesso!', 'success');
                 closeProductModal(); 
                 loadProductsFromFirebase();
-            } catch(err) { showToast('Erro ao guardar produto.', 'error'); }
+            } catch(err) { showToast('Erro ao salvar produto.', 'error'); }
             document.getElementById('btn-salvar-produto').innerText = 'Salvar';
         }
 
@@ -1254,7 +1251,7 @@
         }
 
         async function deleteProduct(id) {
-            if(confirm('Remover este produto do stock?')) {
+            if(confirm('Remover este produto do estoque?')) {
                 await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', id));
                 showToast('Produto removido.', 'info');
                 loadProductsFromFirebase();
@@ -1292,17 +1289,16 @@
             };
             try {
                 await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings);
-                showToast('Configurações guardadas com sucesso!', 'success');
+                showToast('Configurações salvas com sucesso!', 'success');
                 applyStoreBranding();
                 closeSettingsModal();
                 loadSettings();
-            } catch(err) { showToast('Erro ao guardar configurações.', 'error'); }
+            } catch(err) { showToast('Erro ao salvar configurações.', 'error'); }
         }
 
         function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
         function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
 
-        // Mensagens de Erro de Login Traduzidas
         async function handleAdminLogin(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
@@ -1310,13 +1306,13 @@
 
             try {
                 await window.firebaseFns.signInWithEmailAndPassword(window.auth, email, pass);
-                showToast('Sessão iniciada com sucesso!', 'success');
+                showToast('Login realizado com sucesso!', 'success');
                 closeLoginModal();
                 switchTab('admin');
             } catch(err) {
-                let errorMsg = "E-mail ou palavra-passe inválidos.";
-                if (err.code === 'auth/user-not-found') errorMsg = "Utilizador não encontrado.";
-                else if (err.code === 'auth/wrong-password') errorMsg = "Palavra-passe incorreta.";
+                let errorMsg = "E-mail ou senha inválidos.";
+                if (err.code === 'auth/user-not-found') errorMsg = "Usuário não encontrado.";
+                else if (err.code === 'auth/wrong-password') errorMsg = "Senha incorreta.";
                 else if (err.code === 'auth/invalid-email') errorMsg = "E-mail inválido.";
                 else if (err.code === 'auth/too-many-requests') errorMsg = "Muitas tentativas sem sucesso. Tente mais tarde.";
                 showToast(errorMsg, 'error');
