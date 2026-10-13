@@ -1248,7 +1248,7 @@
             }
         }
 
-        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA (SUPORTA TOKENS AQ. e Chaves AIzaSy) ---
+        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA (COMPATÍVEL COM CHAVES AQ. E AIza) ---
         function renderStockAlertsTable() {
             const tb = document.getElementById('admin-stock-alerts-table');
             if(!tb) return;
@@ -1283,20 +1283,18 @@
 
             try {
                 let apiKey = storeSettings.geminiKey.trim();
-                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
-                let headers = { 'Content-Type': 'application/json' };
-
-                if (apiKey.startsWith('AIzaSy')) {
-                    url += `?key=${apiKey}`;
-                } else {
-                    headers['Authorization'] = `Bearer ${apiKey}`;
-                }
+                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+                let headers = { 
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': apiKey
+                };
 
                 let summary = products.map(p => `${p.name} (${p.category}): Estoque ${p.stock}, Preço R$ ${p.price}`).join('; ');
                 let prompt = `Aja como um analista financeiro de e-commerce sênior. Analise estes produtos do nosso estoque: ${summary}. Dê 3 recomendações diretas e objetivas em tópicos sobre quais categorias focar e sugestões de kits ou promoções para otimizar o fluxo de caixa. Responda em português.`;
 
                 const res = await fetch(url, {
-                    method: 'POST', headers: headers,
+                    method: 'POST', 
+                    headers: headers,
                     body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] })
                 });
                 const data = await res.json();
@@ -1443,18 +1441,16 @@
             
             try {
                 let apiKey = storeSettings.geminiKey.trim();
-                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
-                let headers = { 'Content-Type': 'application/json' };
-
-                if (apiKey.startsWith('AIzaSy')) {
-                    url += `?key=${apiKey}`;
-                } else {
-                    headers['Authorization'] = `Bearer ${apiKey}`;
-                }
+                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+                let headers = { 
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': apiKey
+                };
 
                 const contentsPayload = [{ role: "user", parts: [{ text: systemPrompt }] }, ...chatHistory];
                 const res = await fetch(url, {
-                    method: 'POST', headers: headers,
+                    method: 'POST', 
+                    headers: headers,
                     body: JSON.stringify({ contents: contentsPayload })
                 });
                 const data = await res.json(); 
