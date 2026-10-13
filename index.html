@@ -1176,7 +1176,7 @@
             
             try {
                 const contentsPayload = [{ role: "user", parts: [{ text: systemPrompt }] }, ...chatHistory];
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${storeSettings.geminiKey}`, {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${storeSettings.geminiKey}`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ contents: contentsPayload })
                 });
@@ -1308,7 +1308,6 @@
                 geminiKey: document.getElementById('set-gemini').value.trim()
             };
             
-            // Salva sempre no armazenamento local para evitar erros de permissão do Firestore
             localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
 
             try {
