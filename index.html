@@ -1248,7 +1248,7 @@
             }
         }
 
-        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA (UTILIZANDO MODELO GEMINI 2.0 FLASH) ---
+        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA MULTI-FALLBACK ---
         function renderStockAlertsTable() {
             const tb = document.getElementById('admin-stock-alerts-table');
             if(!tb) return;
@@ -1271,6 +1271,36 @@
             });
         }
 
+        async function fetchGeminiAPI(apiKey, promptText) {
+            const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-1.5-flash'];
+            let lastError = null;
+
+            for (const model of models) {
+                try {
+                    let url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+                    let headers = { 
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': apiKey
+                    };
+
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: promptText }] }] })
+                    });
+                    
+                    const data = await res.json();
+                    if (!data.error && data.candidates && data.candidates[0]) {
+                        return data.candidates[0].content.parts[0].text;
+                    }
+                    if (data.error) lastError = data.error.message;
+                } catch(err) {
+                    lastError = err.message;
+                }
+            }
+            throw new Error(lastError || 'Não foi possível conectar a nenhum modelo ativo do Gemini.');
+        }
+
         async function runAiStockAudit() {
             const resBox = document.getElementById('ai-audit-result');
             resBox.classList.remove('hidden');
@@ -1283,23 +1313,10 @@
 
             try {
                 let apiKey = storeSettings.geminiKey.trim();
-                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                let headers = { 
-                    'Content-Type': 'application/json',
-                    'x-goog-api-key': apiKey
-                };
-
                 let summary = products.map(p => `${p.name} (${p.category}): Estoque ${p.stock}, Preço R$ ${p.price}`).join('; ');
                 let prompt = `Aja como um analista financeiro de e-commerce sênior. Analise estes produtos do nosso estoque: ${summary}. Dê 3 recomendações diretas e objetivas em tópicos sobre quais categorias focar e sugestões de kits ou promoções para otimizar o fluxo de caixa. Responda em português.`;
 
-                const res = await fetch(url, {
-                    method: 'POST', 
-                    headers: headers,
-                    body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] })
-                });
-                const data = await res.json();
-                if(data.error) throw new Error(data.error.message || 'Erro na API');
-                let reply = data.candidates[0].content.parts[0].text;
+                let reply = await fetchGeminiAPI(apiKey, prompt);
                 resBox.innerHTML = `<div class="space-y-2"><b class="text-gold block">Relatório de IA:</b><p>${reply.replace(/\n/g, '<br>').replace(/\*/g, '')}</p></div>`;
             } catch(e) {
                 resBox.innerHTML = `<span class="text-red-400">Erro ao consultar Gemini IA: ${e.message}</span>`;
@@ -1435,29 +1452,16 @@
             
             const storeTitle = storeSettings.storeName || 'Loja';
             const catalog = products.map(p => `${p.name} (${p.category}) - R$${p.price}`).join(', ');
-            const systemPrompt = `Você é o assistente virtual exclusivo da loja ${storeTitle}. Nossos envios são expressos para todo o Brasil. Catálogo de produtos: ${catalog}.`;
+            const systemPrompt = `Você é o assistente virtual exclusivo da loja ${storeTitle}. Nossos envios são expressos para todo o Brasil. Catálogo de produtos: ${catalog}. Pergunta do cliente: ${msg}`;
 
             chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Pensando...</div>`;
             
             try {
                 let apiKey = storeSettings.geminiKey.trim();
-                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-                let headers = { 
-                    'Content-Type': 'application/json',
-                    'x-goog-api-key': apiKey
-                };
+                const botReply = await fetchGeminiAPI(apiKey, systemPrompt);
 
-                const contentsPayload = [{ role: "user", parts: [{ text: systemPrompt }] }, ...chatHistory];
-                const res = await fetch(url, {
-                    method: 'POST', 
-                    headers: headers,
-                    body: JSON.stringify({ contents: contentsPayload })
-                });
-                const data = await res.json(); 
-                if (data.error) throw new Error(data.error.message || 'Erro na API');
-                const botReply = data.candidates[0].content.parts[0].text;
                 chatHistory.push({ role: "model", parts: [{ text: botReply }] });
-                document.getElementById('bot-typing').remove();
+                if (document.getElementById('bot-typing')) document.getElementById('bot-typing').remove();
                 chatBody.innerHTML += `<div class="chat-bubble chat-bot">${botReply.replace(/\*/g, '')}</div>`;
                 chatBody.scrollTop = chatBody.scrollHeight;
             } catch(e) { 
