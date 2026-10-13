@@ -1248,7 +1248,7 @@
             }
         }
 
-        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA (ENDPOINT ATUALIZADO 2026) ---
+        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA (NOVO ENDPOINT COM FALLBACK) ---
         function renderStockAlertsTable() {
             const tb = document.getElementById('admin-stock-alerts-table');
             if(!tb) return;
@@ -1272,16 +1272,12 @@
         }
 
         async function fetchGeminiAPI(apiKey, promptText) {
-            // Endpoints padrão atualizados para as versões mais recentes e funcionais do Gemini
-            const urls = [
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent?key=${apiKey}`,
-                `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`
-            ];
-
+            // Tenta sucessivamente os endpoints mais recentes suportados pelo Google
+            const modelsToTry = ['gemini-2.5-flash', 'gemini-flash', 'gemini-1.5-flash'];
             let lastErrorMessage = '';
 
-            for (const url of urls) {
+            for (const model of modelsToTry) {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
                 try {
                     const res = await fetch(url, {
                         method: 'POST',
@@ -1302,14 +1298,14 @@
                     }
 
                     if (data.error) {
-                        lastErrorMessage = data.error.message || 'Erro desconhecido na API do Gemini';
+                        lastErrorMessage = data.error.message;
                     }
                 } catch (err) {
                     lastErrorMessage = err.message;
                 }
             }
 
-            throw new Error(lastErrorMessage || 'Não foi possível conectar à IA Gemini. Verifique se a sua Chave API está correta e ativa nas Configurações.');
+            throw new Error(lastErrorMessage || 'Erro ao conectar à IA Gemini. Verifique sua chave API.');
         }
 
         async function runAiStockAudit() {
