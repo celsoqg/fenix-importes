@@ -119,7 +119,7 @@
     <!-- Banner Topo -->
     <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
         <i class="fa-solid fa-truck-fast text-sm"></i> 
-        <span>ENVIOS EXPRESSOS E SEGUROS PARA TODO O BRASIL</span>
+        <span>ENVIOS EXPRESSOS PARA TODO O BRASIL</span>
     </div>
 
     <!-- Header Glassmorphism -->
@@ -191,7 +191,7 @@
                 <div class="relative z-10 max-w-2xl space-y-4">
                     <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-check"></i> Produtos Originais & Certificados</span>
                     <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
-                    <p class="text-xs sm:text-sm text-zinc-400 font-medium leading-relaxed">Entregas ultra-rápidas, discretas e seguras para todo o Brasil.</p>
+                    <p class="text-xs sm:text-sm text-zinc-400 font-medium leading-relaxed">Entregas ultra-rápidas e discretas para todo o Brasil.</p>
                 </div>
             </div>
 
@@ -327,7 +327,6 @@
                     <div class="space-y-1.5 pt-2">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
                         <div id="cart-discount-row" class="flex justify-between text-xs text-green-400 hidden"><span>Desconto Cupom</span><span id="cart-discount">- R$ 0,00</span></div>
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Seguro Mercadoria</span><span id="cart-insurance-cost" class="text-gold">R$ 0,00</span></div>
                         <div class="flex justify-between text-xs text-zinc-400"><span>Frete Estimado</span><span id="cart-shipping-cost">R$ 0,00</span></div>
                         <div class="flex justify-between text-base font-black text-white pt-2 border-t border-zinc-800"><span>Total</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
@@ -365,7 +364,6 @@
 
                 <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-1.5 text-xs">
                     <div class="flex justify-between text-zinc-400"><span>Produtos:</span><span id="summary-subtotal">R$ 0,00</span></div>
-                    <div class="flex justify-between text-zinc-400"><span>Seguro:</span><span id="summary-insurance" class="text-gold font-bold">R$ 0,00</span></div>
                     <div class="flex justify-between text-zinc-400"><span>Frete:</span><span id="summary-shipping">R$ 0,00</span></div>
                     <div class="flex justify-between font-bold text-white pt-2 border-t border-zinc-800 text-sm"><span>Total Final:</span><span id="summary-total" class="text-gold">R$ 0,00</span></div>
                 </div>
@@ -747,9 +745,7 @@
                     ...p, 
                     activePrice: basePrice, 
                     costPrice: Number(p.costPrice) || 0, 
-                    qty: 1,
-                    withInsurance: true,
-                    insuranceUnitCost: p.insurancePrice ? Number(p.insurancePrice) : 0
+                    qty: 1
                 }); 
             }
             showToast(`${p.name} adicionado ao carrinho!`, 'success');
@@ -774,9 +770,8 @@
         function calculateOrderTotals() {
             const subtotal = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0);
             const discountVal = subtotal * activeDiscount;
-            const insuranceTotal = cart.reduce((s, i) => s + (i.withInsurance ? (i.insuranceUnitCost * i.qty) : 0), 0);
-            const total = (subtotal - discountVal) + insuranceTotal + calculatedShippingCost;
-            return { subtotal, discountVal, insuranceTotal, shipping: calculatedShippingCost, total };
+            const total = (subtotal - discountVal) + calculatedShippingCost;
+            return { subtotal, discountVal, shipping: calculatedShippingCost, total };
         }
 
         function updateCartUI() {
@@ -787,7 +782,6 @@
             if (cart.length === 0) { 
                 cont.innerHTML = `<div class="py-16 text-center text-zinc-500 text-xs sm:text-sm">Seu carrinho está vazio</div>`; 
                 document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
-                document.getElementById('cart-insurance-cost').innerText = 'R$ 0,00';
                 document.getElementById('cart-shipping-cost').innerText = 'R$ 0,00';
                 document.getElementById('cart-total').innerText = 'R$ 0,00'; 
                 return; 
@@ -816,7 +810,6 @@
             } else {
                 document.getElementById('cart-discount-row').classList.add('hidden');
             }
-            document.getElementById('cart-insurance-cost').innerText = `R$ ${formatMoney(totals.insuranceTotal)}`; 
             document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(totals.shipping)}`; 
             document.getElementById('cart-total').innerText = `R$ ${formatMoney(totals.total)}`;
         }
@@ -852,7 +845,6 @@
         function updateCheckoutSummary() {
             const totals = calculateOrderTotals();
             document.getElementById('summary-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`;
-            document.getElementById('summary-insurance').innerText = `R$ ${formatMoney(totals.insuranceTotal)}`;
             document.getElementById('summary-shipping').innerText = `R$ ${formatMoney(totals.shipping)}`;
             document.getElementById('summary-total').innerText = `R$ ${formatMoney(totals.total)}`;
         }
@@ -1154,7 +1146,7 @@
             
             const storeTitle = storeSettings.storeName || 'Loja';
             const catalog = products.map(p => `${p.name} (${p.category}) - R$${p.price}`).join(', ');
-            const systemPrompt = `Você é o assistente virtual exclusivo da loja ${storeTitle}. Nossos envios são expressos e seguros para todo o Brasil. Catálogo de produtos: ${catalog}.`;
+            const systemPrompt = `Você é o assistente virtual exclusivo da loja ${storeTitle}. Nossos envios são expressos para todo o Brasil. Catálogo de produtos: ${catalog}.`;
 
             chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Pensando...</div>`;
             
