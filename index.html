@@ -320,14 +320,21 @@
         </div>
     </div>
 
-    <!-- Product Modal -->
+    <!-- Product Modal com Upload de Galeria -->
     <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeProductModal()"></div>
         <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
             <h3 class="text-base sm:text-lg font-extrabold text-white mb-3">Adicionar/Editar Produto</h3>
             <form id="product-form" onsubmit="saveProduct(event)" class="space-y-2.5">
                 <input type="hidden" id="prod-id">
-                <input type="text" id="prod-imageUrl" placeholder="Link da Foto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                
+                <div>
+                    <label class="text-[10px] text-zinc-400 block mb-1">Foto do Produto (Escolher da Galeria ou Link)</label>
+                    <input type="text" id="prod-imageUrl" placeholder="Link da foto ou selecione abaixo" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    <input type="file" id="prod-file-input" accept="image/*" onchange="uploadImageToGallery(event)" class="mt-1.5 w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-300 file:mr-3 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-gold file:text-black hover:file:bg-yellow-400 cursor-pointer">
+                    <div id="upload-status" class="text-[10px] text-gold mt-1 hidden">Enviando imagem para a nuvem...</div>
+                </div>
+
                 <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 <div class="grid grid-cols-2 gap-2">
                     <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" class="w-full bg-zinc-950 border border-red-900/50 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-red-500">
@@ -336,20 +343,6 @@
                 <div class="grid grid-cols-2 gap-2">
                     <input type="number" step="0.01" id="prod-price" required placeholder="Preço Normal" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                     <input type="number" step="0.01" id="prod-promo-price" placeholder="Promocional" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 bg-zinc-950 p-2 rounded-xl border border-zinc-800">
-                    <div>
-                        <label class="text-[9px] sm:text-[10px] text-zinc-400 block mb-1">Oferecer Seguro?</label>
-                        <select id="prod-has-insurance" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-gold">
-                            <option value="sim">Sim (Ativado)</option>
-                            <option value="nao">Não (Desativado)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[9px] sm:text-[10px] text-zinc-400 block mb-1">Valor Seguro R$</label>
-                        <input type="number" step="0.01" id="prod-insurance-price" placeholder="Ex: 15.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-xs text-white outline-none focus:border-gold">
-                    </div>
                 </div>
 
                 <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
@@ -658,8 +651,6 @@
                 const st = p.stock !== undefined ? Number(p.stock) : 10; 
                 const out = st <= 0;
                 const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
-                const hasIns = p.hasInsurance !== 'nao';
-                const insCost = p.insurancePrice ? Number(p.insurancePrice) : 0;
                 
                 const promo = p.promoPrice ? `<div class="absolute top-2 left-2 bg-red-600 text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded shadow uppercase z-10"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
                 const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-32 sm:h-48 object-cover rounded-xl mb-2 sm:mb-3 border border-zinc-700/50">` : `<div class="w-full h-32 sm:h-48 bg-zinc-900 rounded-xl mb-2 sm:mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-600 text-2xl sm:text-3xl"></i></div>`;
@@ -826,7 +817,6 @@
                 if(!data.erro) {
                     document.getElementById('cust-address').value = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
                     
-                    // Lógica de cálculo automática de envio
                     if (data.uf === 'RJ') {
                         shippingType = 'Motoboy RJ';
                         calculatedShippingCost = Number(storeSettings.shippingMotoboy || 20);
@@ -1078,6 +1068,37 @@
             } catch(e) { res.innerHTML = '<span class="text-red-400">Erro na consulta. Tente novamente.</span>'; }
         }
 
+        async function uploadImageToGallery(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const statusEl = document.getElementById('upload-status');
+            statusEl.classList.remove('hidden');
+            statusEl.innerText = 'Enviando imagem para a nuvem...';
+
+            const formData = new FormData();
+            formData.append('reqtype', 'upload-file');
+            formData.append('fileToUpload', file);
+
+            try {
+                const response = await fetch('https://catbox.moe/user/api.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const resultUrl = await response.text();
+                if (resultUrl && resultUrl.startsWith('http')) {
+                    document.getElementById('prod-imageUrl').value = resultUrl.trim();
+                    statusEl.innerText = 'Upload concluído com sucesso!';
+                    statusEl.className = 'text-[10px] text-green-400 mt-1';
+                } else {
+                    throw new Error('Falha no upload');
+                }
+            } catch (err) {
+                statusEl.innerText = 'Erro ao enviar. Tente novamente ou cole o link.';
+                statusEl.className = 'text-[10px] text-red-400 mt-1';
+            }
+        }
+
         function toggleAIChat() { document.getElementById('ai-chat-window').classList.toggle('hidden'); }
         async function sendChatMessage() {
             const input = document.getElementById('chat-input'); 
@@ -1119,6 +1140,9 @@
         function openProductModal(id = null) {
             document.getElementById('product-form').reset(); 
             document.getElementById('prod-id').value = '';
+            const statusEl = document.getElementById('upload-status');
+            if(statusEl) statusEl.classList.add('hidden');
+
             if(id) { 
                 const p = products.find(x => x.id === id); 
                 if(p) { 
