@@ -238,11 +238,14 @@
             <!-- Subtab Estoque & Automação Fornecedor -->
             <div id="admin-subtab-products" class="space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                    <h3 class="text-base sm:text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos & Automação</h3>
+                    <div class="flex items-center gap-3">
+                        <h3 class="text-base sm:text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos & Automação</h3>
+                        <button onclick="deleteSelectedProducts()" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5"><i class="fa-solid fa-trash-can"></i> Excluir Selecionados</button>
+                    </div>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="importSupplierAutomated()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-bolt"></i> Sincronizar com Fornecedor</button>
-                        <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-file-code"></i> Importar JSON</button>
-                        <button onclick="openMassPriceModal()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-percent"></i> Ajustar Preços</button>
+                        <button onclick="importSupplierAutomated()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-bolt"></i> Sincronizar</button>
+                        <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-file-code"></i> JSON</button>
+                        <button onclick="openMassPriceModal()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-percent"></i> Preços</button>
                         <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Configs</button>
                         <button onclick="openProductModal()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-plus"></i> Novo</button>
                     </div>
@@ -250,7 +253,17 @@
                 <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Foto</th><th class="p-4">Produto</th><th class="p-4">Estoque</th><th class="p-4">Custo</th><th class="p-4">Venda</th><th class="p-4 text-right">Ações</th></tr></thead>
+                            <thead>
+                                <tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60">
+                                    <th class="p-4 w-10 text-center"><input type="checkbox" id="select-all-checkbox" onchange="toggleSelectAllProducts(this)" class="rounded bg-zinc-900 border-zinc-700 cursor-pointer accent-amber-500"></th>
+                                    <th class="p-4">Foto</th>
+                                    <th class="p-4">Produto</th>
+                                    <th class="p-4">Estoque</th>
+                                    <th class="p-4">Custo</th>
+                                    <th class="p-4">Venda</th>
+                                    <th class="p-4 text-right">Ações</th>
+                                </tr>
+                            </thead>
                             <tbody id="admin-product-table" class="divide-y divide-zinc-800/60"></tbody>
                         </table>
                     </div>
@@ -1572,12 +1585,20 @@
             document.getElementById('btn-salvar-produto').innerText = 'Salvar Produto';
         }
 
+        function toggleSelectAllProducts(source) {
+            const checkboxes = document.querySelectorAll('.product-checkbox');
+            checkboxes.forEach(cb => cb.checked = source.checked);
+        }
+
         function renderAdminTable() {
             const tb = document.getElementById('admin-product-table'); 
             tb.innerHTML = '';
+            document.getElementById('select-all-checkbox').checked = false;
+
             products.forEach(p => {
                 tb.innerHTML += `
-                    <tr class="border-b border-zinc-800/60">
+                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
+                        <td class="p-4 text-center"><input type="checkbox" value="${p.id}" class="product-checkbox rounded bg-zinc-900 border-zinc-700 cursor-pointer accent-amber-500"></td>
                         <td class="p-3">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-8 h-8 rounded-lg object-cover">` : '-'}</td>
                         <td class="p-3 truncate max-w-[150px] font-bold text-white">${p.name}</td>
                         <td class="p-3">${p.stock}</td>
@@ -1589,6 +1610,30 @@
                         </td>
                     </tr>`;
             });
+        }
+
+        async function deleteSelectedProducts() {
+            const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
+            if (selectedCheckboxes.length === 0) {
+                return showToast('Selecione pelo menos um produto para excluir.', 'error');
+            }
+
+            if (!confirm(`Confirma a exclusão de ${selectedCheckboxes.length} produto(s) selecionado(s)?`)) return;
+
+            showToast('Excluindo produtos selecionados...', 'info');
+            try {
+                for (const cb of selectedCheckboxes) {
+                    const id = cb.value;
+                    await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', id));
+                    products = products.filter(p => p.id !== id);
+                }
+                localStorage.setItem('fenix_products', JSON.stringify(products));
+                showToast('Produtos excluídos com sucesso!', 'success');
+                renderProducts();
+                renderAdminTable();
+            } catch (e) {
+                showToast('Erro ao excluir alguns produtos.', 'error');
+            }
         }
 
         async function deleteProduct(id) {
