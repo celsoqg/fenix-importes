@@ -39,8 +39,9 @@
             --theme-gold-hover: #f1c40f;
             --theme-gold-light: #fef08a;
         }
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
+
+        /* Estilos Tema Escuro (Padrão) */
+        html.dark body { 
             background-color: #050508; 
             color: #f3f4f6; 
             background-image: 
@@ -48,28 +49,77 @@
                 radial-gradient(at 100% 100%, rgba(212, 160, 23, 0.05) 0px, transparent 50%);
             background-attachment: fixed;
         }
+
+        /* Estilos Tema Claro */
+        html:not(.dark) body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 160, 23, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 160, 23, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
         
-        .glass-card {
-            background: rgba(15, 15, 23, 0.7);
+        /* Glass Card - Escuro */
+        html.dark .glass-card {
+            background: rgba(15, 15, 23, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        
-        .glass-card:hover {
+
+        /* Glass Card - Claro */
+        html:not(.dark) .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        }
+
+        html.dark .glass-card:hover {
             border-color: rgba(212, 160, 23, 0.4);
             box-shadow: 0 10px 30px -10px rgba(212, 160, 23, 0.25);
             transform: translateY(-3px);
         }
 
-        .glass-nav {
+        html:not(.dark) .glass-card:hover {
+            border-color: rgba(212, 160, 23, 0.5);
+            box-shadow: 0 15px 35px -10px rgba(212, 160, 23, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Nav Glass - Escuro */
+        html.dark .glass-nav {
             background: rgba(5, 5, 8, 0.85);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        /* Nav Glass - Claro */
+        html:not(.dark) .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        /* Ajuste de Textos e Cores para Tema Claro */
+        html:not(.dark) .text-white { color: #0f172a !important; }
+        html:not(.dark) .text-zinc-400 { color: #475569 !important; }
+        html:not(.dark) .text-zinc-300 { color: #334155 !important; }
+        html:not(.dark) .bg-zinc-900 { background-color: #f1f5f9 !important; }
+        html:not(.dark) .bg-zinc-950 { background-color: #e2e8f0 !important; }
+        html:not(.dark) .border-zinc-800 { border-color: #cbd5e1 !important; }
+
         .gold-gradient-text {
+            background: linear-gradient(135deg, #d4a017 0%, #b78103 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        html.dark .gold-gradient-text {
             background: linear-gradient(135deg, #fff 0%, #fef08a 30%, #d4a017 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -93,13 +143,13 @@
         }
 
         ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: #050508; }
-        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #d4a017; }
 
         .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.4; }
         .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 2px; }
-        .chat-bot { background: rgba(212, 160, 23, 0.12); border: 1px solid rgba(212, 160, 23, 0.4); color: #fef08a; border-bottom-left-radius: 2px; }
+        .chat-bot { background: rgba(212, 160, 23, 0.12); border: 1px solid rgba(212, 160, 23, 0.4); color: #d4a017; border-bottom-left-radius: 2px; }
         
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { padding: 12px 18px; border-radius: 14px; font-size: 13px; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; border: 1px solid rgba(255,255,255,0.1); }
@@ -149,7 +199,12 @@
             </nav>
 
             <!-- Ações Direitas -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Botão Alternar Tema Claro/Escuro -->
+                <button onclick="toggleTheme()" id="btn-theme-toggle" class="bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/60 text-gold p-2.5 rounded-2xl flex items-center justify-center transition shrink-0" title="Alternar Tema Escuro / Claro">
+                    <i id="theme-toggle-icon" class="fa-solid fa-moon text-base sm:text-lg"></i>
+                </button>
+
                 <div id="user-status-container" class="hidden text-xs text-zinc-400 lg:flex items-center gap-2 bg-zinc-900/80 border border-zinc-800 px-3 py-1.5 rounded-full shrink-0">
                     <i class="fa-solid fa-circle text-[8px] text-green-500 animate-pulse"></i>
                     <span id="logged-user-email" class="max-w-[100px] truncate font-medium">admin</span>
@@ -683,6 +738,36 @@
         let chatHistory = [];
         let deferredPrompt = null;
 
+        // Controle de Tema (Claro / Escuro)
+        function initTheme() {
+            const savedTheme = localStorage.getItem('fenix_theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                updateThemeIcon(false);
+            } else {
+                document.documentElement.classList.add('dark');
+                updateThemeIcon(true);
+            }
+        }
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('fenix_theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+            showToast(`Modo ${isDark ? 'Escuro' : 'Claro'} ativado!`, 'info');
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('theme-toggle-icon');
+            if (icon) {
+                if (isDark) {
+                    icon.className = 'fa-solid fa-moon text-base sm:text-lg text-gold';
+                } else {
+                    icon.className = 'fa-solid fa-sun text-base sm:text-lg text-amber-500';
+                }
+            }
+        }
+
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -758,6 +843,7 @@
         }
 
         async function initApp() {
+            initTheme();
             if (window.auth && window.firebaseFns) {
                 window.firebaseFns.onAuthStateChanged(window.auth, (user) => { 
                     currentUser = user; 
@@ -867,8 +953,8 @@
                 
                 const isEncomenda = p.availability === 'encomenda';
                 const availBadge = isEncomenda 
-                    ? `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-md"><i class="fa-solid fa-clock"></i> Sob Encomenda</span>`
-                    : `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-md"><i class="fa-solid fa-bolt"></i> Pronta Entrega</span>`;
+                    ? `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-amber-500 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-md"><i class="fa-solid fa-clock"></i> Sob Encomenda</span>`
+                    : `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-md"><i class="fa-solid fa-bolt"></i> Pronta Entrega</span>`;
 
                 const deliveryText = p.deliveryDays 
                     ? `<div class="text-[10px] text-zinc-400 mt-1 flex items-center gap-1"><i class="fa-solid fa-truck-ramp-box text-gold text-[9px]"></i> Entrega em: <b class="text-white">${p.deliveryDays}</b></div>` 
@@ -894,7 +980,7 @@
                         <div class="pt-3 mt-3 border-t border-zinc-800/80 flex items-center justify-between gap-2">
                             <div>
                                 <span class="text-xs text-zinc-500 block leading-none text-[10px]">Preço</span>
-                                <span class="text-sm sm:text-lg font-black ${p.promoPrice ? 'text-green-400' : 'text-gold'}">R$ ${formatMoney(price)}</span>
+                                <span class="text-sm sm:text-lg font-black ${p.promoPrice ? 'text-green-500' : 'text-gold'}">R$ ${formatMoney(price)}</span>
                             </div>
                             <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'gold-btn-gradient'} text-xs px-3.5 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md">
                                 <i class="fa-solid fa-bag-shopping"></i> <span>${out ? 'Esgotado' : 'Comprar'}</span>
@@ -1132,7 +1218,7 @@
             
             try {
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
-                let msg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🚚 *Envio:* ${shippingType}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Concluído. Segue comprovante:_`;
+                let msg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🚚 *Envio:* ${shippingType}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(totals.total)}\n_Pagamento Pix Concluído. Segue comprovante:_`;
                 
                 const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
                 window.open(`https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -1671,7 +1757,7 @@
             document.getElementById('select-all-checkbox').checked = false;
 
             products.forEach(p => {
-                const availText = p.availability === 'encomenda' ? '<span class="text-amber-400 font-bold">Sob Encomenda</span>' : '<span class="text-emerald-400 font-bold">Pronta Entrega</span>';
+                const availText = p.availability === 'encomenda' ? '<span class="text-amber-500 font-bold">Sob Encomenda</span>' : '<span class="text-emerald-500 font-bold">Pronta Entrega</span>';
                 const daysText = p.deliveryDays ? `<br><span class="text-[10px] text-zinc-500">${p.deliveryDays}</span>` : '';
 
                 tb.innerHTML += `
