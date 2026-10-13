@@ -515,7 +515,7 @@
                     <label class="text-[10px] text-zinc-400 block mb-1">Foto do Produto (Envio da Galeria ou Link)</label>
                     <input type="text" id="prod-imageUrl" placeholder="Link da foto ou selecione abaixo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-gold">
                     <input type="file" id="prod-file-input" accept="image/*" onchange="uploadImageToGallery(event)" class="mt-2 w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-300 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gold file:text-black cursor-pointer">
-                    <div id="upload-status" class="text-[10px] text-gold mt-1 hidden">Enviando foto para a nuvem...</div>
+                    <div id="upload-status" class="text-[10px] text-gold mt-1 hidden">Enviando foto...</div>
                 </div>
 
                 <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
@@ -1477,29 +1477,24 @@
             
             const statusEl = document.getElementById('upload-status');
             statusEl.classList.remove('hidden');
-            statusEl.innerText = 'Enviando foto para a nuvem...';
+            statusEl.innerText = 'Processando foto...';
+            statusEl.className = 'text-[10px] text-gold mt-1 font-bold';
 
-            const formData = new FormData();
-            formData.append('reqtype', 'upload-file');
-            formData.append('fileToUpload', file);
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                document.getElementById('prod-imageUrl').value = imageUrl;
+                statusEl.innerText = 'Foto anexada com sucesso!';
+                statusEl.className = 'text-[10px] text-green-400 mt-1 font-bold';
+            };
 
-            try {
-                const response = await fetch('https://catbox.moe/user/api.php', {
-                    method: 'POST',
-                    body: formData
-                });
-                const resultUrl = await response.text();
-                if (resultUrl && resultUrl.startsWith('http')) {
-                    document.getElementById('prod-imageUrl').value = resultUrl.trim();
-                    statusEl.innerText = 'Upload concluído com sucesso!';
-                    statusEl.className = 'text-[10px] text-green-400 mt-1 font-bold';
-                } else {
-                    throw new Error('Falha no upload');
-                }
-            } catch (err) {
-                statusEl.innerText = 'Erro ao enviar. Tente novamente ou insira a URL.';
+            reader.onerror = function() {
+                statusEl.innerText = 'Erro ao ler arquivo da galeria.';
                 statusEl.className = 'text-[10px] text-red-400 mt-1 font-bold';
-            }
+            };
+
+            reader.readAsDataURL(file);
         }
 
         function toggleAIChat() { document.getElementById('ai-chat-window').classList.toggle('hidden'); }
