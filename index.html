@@ -519,23 +519,41 @@
                 </div>
 
                 <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" class="w-full bg-zinc-950 border border-red-900/40 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-red-500">
-                    <input type="number" id="prod-stock" required value="10" placeholder="Estoque" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="number" step="0.01" id="prod-price" required placeholder="Preço Venda R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
-                    <input type="number" step="0.01" id="prod-promo-price" placeholder="Preço Promo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-1">Custo R$</label>
+                        <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" oninput="calculatePriceFromMargin()" class="w-full bg-zinc-950 border border-red-900/40 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gold font-bold block mb-1">Margem de Lucro %</label>
+                        <input type="number" step="0.1" id="prod-margin-pct" placeholder="Ex: 100 (%)" oninput="calculatePriceFromMargin()" class="w-full bg-zinc-900 border border-gold/40 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    </div>
                 </div>
 
-                <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
-                    <option value="Peptídeos">Peptídeos</option>
-                    <option value="Insumos & Soluções">Insumos & Soluções</option>
-                    <option value="Estética Avançada">Estética Avançada</option>
-                    <option value="Hormônios">Hormônios</option>
-                    <option value="Performance">Performance</option>
-                    <option value="Outros">Outros</option>
-                </select>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-1">Preço Venda R$</label>
+                        <input type="number" step="0.01" id="prod-price" required placeholder="Preço Venda R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-zinc-400 block mb-1">Preço Promo R$</label>
+                        <input type="number" step="0.01" id="prod-promo-price" placeholder="Preço Promo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                        <option value="Peptídeos">Peptídeos</option>
+                        <option value="Insumos & Soluções">Insumos & Soluções</option>
+                        <option value="Estética Avançada">Estética Avançada</option>
+                        <option value="Hormônios">Hormônios</option>
+                        <option value="Performance">Performance</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                    <input type="number" id="prod-stock" required value="10" placeholder="Estoque" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                </div>
+
                 <textarea id="prod-desc" rows="2" required placeholder="Descrição detalhada do produto..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold"></textarea>
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs">Cancelar</button>
@@ -828,7 +846,6 @@
                 
                 const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600/95 backdrop-blur-md text-white text-[9px] font-black px-2.5 py-1 rounded-lg uppercase z-10 tracking-wider"><i class="fa-solid fa-fire"></i> Promoção</div>` : '';
                 
-                // Imagem otimizada: object-contain para mostrar a foto inteira perfeitamente sem cortes, com fundo escuro e elegante
                 const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-40 sm:h-48 object-contain bg-zinc-950/80 rounded-2xl mb-3 border border-zinc-800/80 p-2 group-hover:scale-105 transition duration-500">` : `<div class="w-full h-40 sm:h-48 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center border border-zinc-800"><i class="fa-solid fa-image text-zinc-700 text-3xl"></i></div>`;
                 
                 grid.innerHTML += `
@@ -1473,6 +1490,15 @@
             } catch(e) { res.innerHTML = '<span class="text-red-400">Erro na consulta. Tente novamente.</span>'; }
         }
 
+        function calculatePriceFromMargin() {
+            const cost = parseFloat(document.getElementById('prod-cost-price').value) || 0;
+            const margin = parseFloat(document.getElementById('prod-margin-pct').value);
+            if (!isNaN(margin) && cost > 0) {
+                const sellingPrice = cost * (1 + (margin / 100));
+                document.getElementById('prod-price').value = sellingPrice.toFixed(2);
+            }
+        }
+
         async function uploadImageToGallery(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1536,6 +1562,7 @@
         function openProductModal(id = null) {
             document.getElementById('product-form').reset(); 
             document.getElementById('prod-id').value = '';
+            document.getElementById('prod-margin-pct').value = '';
             const statusEl = document.getElementById('upload-status');
             if(statusEl) statusEl.classList.add('hidden');
 
@@ -1551,6 +1578,13 @@
                     document.getElementById('prod-promo-price').value = p.promoPrice || ''; 
                     document.getElementById('prod-category').value = p.category; 
                     document.getElementById('prod-desc').value = p.description; 
+                    
+                    const cost = Number(p.costPrice) || 0;
+                    const price = Number(p.price) || 0;
+                    if(cost > 0 && price > 0) {
+                        const margin = ((price - cost) / cost) * 100;
+                        document.getElementById('prod-margin-pct').value = margin.toFixed(1);
+                    }
                 } 
             }
             document.getElementById('product-modal').classList.remove('hidden');
