@@ -1248,7 +1248,7 @@
             }
         }
 
-        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA (COMPATÍVEL COM CHAVES AQ. E AIza) ---
+        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA (UTILIZANDO MODELO GEMINI 2.0 FLASH) ---
         function renderStockAlertsTable() {
             const tb = document.getElementById('admin-stock-alerts-table');
             if(!tb) return;
@@ -1283,7 +1283,7 @@
 
             try {
                 let apiKey = storeSettings.geminiKey.trim();
-                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
                 let headers = { 
                     'Content-Type': 'application/json',
                     'x-goog-api-key': apiKey
@@ -1441,7 +1441,7 @@
             
             try {
                 let apiKey = storeSettings.geminiKey.trim();
-                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
                 let headers = { 
                     'Content-Type': 'application/json',
                     'x-goog-api-key': apiKey
