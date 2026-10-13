@@ -1248,7 +1248,7 @@
             }
         }
 
-        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA ---
+        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA (SUPORTA TOKENS AQ. e Chaves AIzaSy) ---
         function renderStockAlertsTable() {
             const tb = document.getElementById('admin-stock-alerts-table');
             if(!tb) return;
@@ -1282,18 +1282,29 @@
             }
 
             try {
+                let apiKey = storeSettings.geminiKey.trim();
+                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+                let headers = { 'Content-Type': 'application/json' };
+
+                if (apiKey.startsWith('AIzaSy')) {
+                    url += `?key=${apiKey}`;
+                } else {
+                    headers['Authorization'] = `Bearer ${apiKey}`;
+                }
+
                 let summary = products.map(p => `${p.name} (${p.category}): Estoque ${p.stock}, Preço R$ ${p.price}`).join('; ');
                 let prompt = `Aja como um analista financeiro de e-commerce sênior. Analise estes produtos do nosso estoque: ${summary}. Dê 3 recomendações diretas e objetivas em tópicos sobre quais categorias focar e sugestões de kits ou promoções para otimizar o fluxo de caixa. Responda em português.`;
 
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${storeSettings.geminiKey}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                const res = await fetch(url, {
+                    method: 'POST', headers: headers,
                     body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] })
                 });
                 const data = await res.json();
+                if(data.error) throw new Error(data.error.message || 'Erro na API');
                 let reply = data.candidates[0].content.parts[0].text;
                 resBox.innerHTML = `<div class="space-y-2"><b class="text-gold block">Relatório de IA:</b><p>${reply.replace(/\n/g, '<br>').replace(/\*/g, '')}</p></div>`;
             } catch(e) {
-                resBox.innerHTML = '<span class="text-red-400">Erro ao consultar Gemini IA. Verifique a chave de API.</span>';
+                resBox.innerHTML = `<span class="text-red-400">Erro ao consultar Gemini IA: ${e.message}</span>`;
             }
         }
 
@@ -1431,12 +1442,23 @@
             chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Pensando...</div>`;
             
             try {
+                let apiKey = storeSettings.geminiKey.trim();
+                let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+                let headers = { 'Content-Type': 'application/json' };
+
+                if (apiKey.startsWith('AIzaSy')) {
+                    url += `?key=${apiKey}`;
+                } else {
+                    headers['Authorization'] = `Bearer ${apiKey}`;
+                }
+
                 const contentsPayload = [{ role: "user", parts: [{ text: systemPrompt }] }, ...chatHistory];
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${storeSettings.geminiKey}`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                const res = await fetch(url, {
+                    method: 'POST', headers: headers,
                     body: JSON.stringify({ contents: contentsPayload })
                 });
                 const data = await res.json(); 
+                if (data.error) throw new Error(data.error.message || 'Erro na API');
                 const botReply = data.candidates[0].content.parts[0].text;
                 chatHistory.push({ role: "model", parts: [{ text: botReply }] });
                 document.getElementById('bot-typing').remove();
@@ -1444,7 +1466,7 @@
                 chatBody.scrollTop = chatBody.scrollHeight;
             } catch(e) { 
                 if(document.getElementById('bot-typing')) document.getElementById('bot-typing').remove();
-                chatBody.innerHTML += `<div class="chat-bubble chat-bot text-red-400">Desculpe, instabilidade temporária na conexão com a IA.</div>`;
+                chatBody.innerHTML += `<div class="chat-bubble chat-bot text-red-400">Desculpe, erro na IA: ${e.message}</div>`;
             }
         }
 
