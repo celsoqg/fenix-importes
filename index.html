@@ -1248,7 +1248,7 @@
             }
         }
 
-        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA MULTI-FALLBACK ---
+        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA MULTI-ENDPOINT (CORRIGIDO V1 & V1BETA) ---
         function renderStockAlertsTable() {
             const tb = document.getElementById('admin-stock-alerts-table');
             if(!tb) return;
@@ -1272,25 +1272,28 @@
         }
 
         async function fetchGeminiAPI(apiKey, promptText) {
-            const models = ['gemini-2.5-flash', 'gemini-2.5-flash-lite', 'gemini-1.5-flash'];
+            const endpoints = [
+                `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+                `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+            ];
+
             let lastError = null;
 
-            for (const model of models) {
+            for (const url of endpoints) {
                 try {
-                    let url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-                    let headers = { 
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': apiKey
-                    };
-
                     const res = await fetch(url, {
                         method: 'POST',
-                        headers: headers,
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'x-goog-api-key': apiKey
+                        },
                         body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: promptText }] }] })
                     });
                     
                     const data = await res.json();
-                    if (!data.error && data.candidates && data.candidates[0]) {
+                    if (!data.error && data.candidates && data.candidates[0] && data.candidates[0].content) {
                         return data.candidates[0].content.parts[0].text;
                     }
                     if (data.error) lastError = data.error.message;
@@ -1298,7 +1301,7 @@
                     lastError = err.message;
                 }
             }
-            throw new Error(lastError || 'Não foi possível conectar a nenhum modelo ativo do Gemini.');
+            throw new Error(lastError || 'Não foi possível comunicar com a API do Gemini. Verifique a sua chave nas Configurações.');
         }
 
         async function runAiStockAudit() {
@@ -1307,7 +1310,7 @@
             resBox.innerHTML = '<i class="fa-solid fa-spinner animate-spin text-gold"></i> Analisando catálogo e vendas com Gemini IA...';
 
             if(!storeSettings.geminiKey) {
-                resBox.innerHTML = '<span class="text-red-400">Configure sua Chave API Gemini no painel de Configurações para usar esta IA.</span>';
+                resBox.innerHTML = '<span class="text-red-400">Configure a sua Chave API Gemini no painel de Configurações para usar esta IA.</span>';
                 return;
             }
 
