@@ -129,7 +129,7 @@
             <!-- Logo -->
             <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('catalog')">
                 <div id="header-logo-container" class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-700 p-0.5 shadow-lg group-hover:scale-105 transition-all duration-300">
-                    <div class="w-full h-full bg-darkBg rounded-[14px] flex items-center justify-center text-gold text-lg sm:text-xl font-black">
+                    <div class="w-full h-full bg-darkBg rounded-[14px] flex items-center justify-center text-gold text-lg sm:text-xl font-black overflow-hidden">
                         <i id="header-logo-icon" class="fa-solid fa-fire-flame-curved"></i>
                         <img id="header-logo-img" src="" class="w-full h-full object-cover rounded-[14px] hidden" alt="Logo">
                     </div>
@@ -539,9 +539,9 @@
             <h3 class="text-lg font-black text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-sliders text-gold"></i> Configurações da Loja</h3>
             <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-3 text-xs">
                 <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-2">
-                    <label class="text-[10px] text-gold font-bold uppercase tracking-wider block">Marca White Label</label>
+                    <label class="text-[10px] text-gold font-bold uppercase tracking-wider block">Marca White Label & Logo</label>
                     <input type="text" id="set-store-name" required placeholder="Nome da Loja" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
-                    <input type="text" id="set-store-logo" placeholder="URL da Logo (Opcional)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                    <input type="text" id="set-store-logo" placeholder="URL da Logo (Cole o link da sua logo aqui)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 </div>
 
                 <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-2">
@@ -684,6 +684,17 @@
             document.getElementById('header-store-name').innerHTML = `${name.toUpperCase()}`;
             document.getElementById('page-title').innerText = `${name} | Exclusividade & Alta Performance`;
             document.getElementById('ai-bot-title').innerText = `Consultor ${name} IA`;
+
+            const logoImg = document.getElementById('header-logo-img');
+            const logoIcon = document.getElementById('header-logo-icon');
+            if (storeSettings.logoUrl && storeSettings.logoUrl.trim() !== '') {
+                logoImg.src = storeSettings.logoUrl.trim();
+                logoImg.classList.remove('hidden');
+                logoIcon.classList.add('hidden');
+            } else {
+                logoImg.classList.add('hidden');
+                logoIcon.classList.remove('hidden');
+            }
         }
 
         function showToast(message, type = 'info') {
@@ -1162,11 +1173,9 @@
             });
         }
 
-        // --- AUTOMAÇÃO DE IMPORTAÇÃO DIRETA DO FORNECEDOR ---
         async function importSupplierAutomated() {
             showToast('Conectando ao fornecedor para buscar produtos...', 'info');
             try {
-                // Utiliza proxy CORS para extrair os dados do site do fornecedor
                 const targetUrl = 'https://minha-loja-ashen.vercel.app';
                 const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
                 
@@ -1175,14 +1184,10 @@
                 
                 if (!data.contents) throw new Error('Não foi possível ler o site do fornecedor.');
 
-                // Cria um elemento temporário para ler o HTML do site do fornecedor
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data.contents, 'text/html');
-                
-                // Tenta extrair produtos mapeados na página do fornecedor
                 let extractedProducts = [];
                 
-                // Se o site do fornecedor expuser variáveis globais ou cartões de produtos
                 doc.querySelectorAll('.glass-card, .product-card, div').forEach(card => {
                     const titleEl = card.querySelector('h3, h4, .product-title');
                     const priceEl = card.querySelector('.price, span');
@@ -1204,11 +1209,8 @@
                     }
                 });
 
-                if (extractedProducts.length === 0) {
-                    throw new Error('Nenhum produto estruturado encontrado automaticamente.');
-                }
+                if (extractedProducts.length === 0) throw new Error('Nenhum produto estruturado encontrado.');
 
-                // Salva no Firebase
                 let count = 0;
                 for (let prod of extractedProducts) {
                     await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), prod);
@@ -1218,7 +1220,7 @@
                 showToast(`Sincronização concluída! ${count} produtos importados.`, 'success');
                 loadProductsFromFirebase();
             } catch (err) {
-                showToast('O site do fornecedor possui restrição direta. Use a opção "Importar JSON".', 'error');
+                showToast('Use a opção "Importar JSON".', 'error');
             }
         }
 
@@ -1272,7 +1274,7 @@
                 closeJsonImportModal();
                 loadProductsFromFirebase();
             } catch(e) {
-                showToast('Formato JSON inválido. Verifique a sintaxe.', 'error');
+                showToast('Formato JSON inválido.', 'error');
             }
         }
 
