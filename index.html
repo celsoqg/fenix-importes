@@ -826,8 +826,10 @@
                 const out = st <= 0;
                 const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
                 
-                const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600/90 backdrop-blur-md text-white text-[9px] font-black px-2.5 py-1 rounded-lg uppercase z-10 tracking-wider"><i class="fa-solid fa-fire"></i> Promoção</div>` : '';
-                const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-40 sm:h-52 object-cover rounded-2xl mb-3 border border-zinc-800 group-hover:scale-105 transition duration-500">` : `<div class="w-full h-40 sm:h-52 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center border border-zinc-800"><i class="fa-solid fa-image text-zinc-700 text-3xl"></i></div>`;
+                const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600/95 backdrop-blur-md text-white text-[9px] font-black px-2.5 py-1 rounded-lg uppercase z-10 tracking-wider"><i class="fa-solid fa-fire"></i> Promoção</div>` : '';
+                
+                // Imagem otimizada: object-contain para mostrar a foto inteira perfeitamente sem cortes, com fundo escuro e elegante
+                const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-40 sm:h-48 object-contain bg-zinc-950/80 rounded-2xl mb-3 border border-zinc-800/80 p-2 group-hover:scale-105 transition duration-500">` : `<div class="w-full h-40 sm:h-48 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center border border-zinc-800"><i class="fa-solid fa-image text-zinc-700 text-3xl"></i></div>`;
                 
                 grid.innerHTML += `
                     <div class="glass-card rounded-3xl p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
