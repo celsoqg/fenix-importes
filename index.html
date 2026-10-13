@@ -258,6 +258,7 @@
                                     <th class="p-4 w-10 text-center"><input type="checkbox" id="select-all-checkbox" onchange="toggleSelectAllProducts(this)" class="rounded bg-zinc-900 border-zinc-700 cursor-pointer accent-amber-500"></th>
                                     <th class="p-4">Foto</th>
                                     <th class="p-4">Produto</th>
+                                    <th class="p-4">Tipo/Prazo</th>
                                     <th class="p-4">Estoque</th>
                                     <th class="p-4">Custo</th>
                                     <th class="p-4">Venda</th>
@@ -520,6 +521,24 @@
 
                 <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 
+                <!-- Disponibilidade & Prazo de Entrega -->
+                <div class="bg-zinc-950/80 p-3 rounded-2xl border border-zinc-800/80 space-y-2">
+                    <span class="text-[10px] text-gold font-bold uppercase tracking-wider block"><i class="fa-solid fa-clock flex-inline mr-1"></i> Logística & Disponibilidade</span>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="text-[10px] text-zinc-400 block mb-1">Status de Entrega</label>
+                            <select id="prod-availability" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-gold">
+                                <option value="pronta_entrega">🟢 Pronta Entrega</option>
+                                <option value="encomenda">🟠 Sob Encomenda</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-zinc-400 block mb-1">Prazo Estimado</label>
+                            <input type="text" id="prod-delivery-days" placeholder="Ex: 1 a 3 dias úteis" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-gold">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="text-[10px] text-zinc-400 block mb-1">Custo R$</label>
@@ -846,6 +865,15 @@
                 
                 const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600/95 backdrop-blur-md text-white text-[9px] font-black px-2.5 py-1 rounded-lg uppercase z-10 tracking-wider"><i class="fa-solid fa-fire"></i> Promoção</div>` : '';
                 
+                const isEncomenda = p.availability === 'encomenda';
+                const availBadge = isEncomenda 
+                    ? `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-2 py-0.5 rounded-md"><i class="fa-solid fa-clock"></i> Sob Encomenda</span>`
+                    : `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-md"><i class="fa-solid fa-bolt"></i> Pronta Entrega</span>`;
+
+                const deliveryText = p.deliveryDays 
+                    ? `<div class="text-[10px] text-zinc-400 mt-1 flex items-center gap-1"><i class="fa-solid fa-truck-ramp-box text-gold text-[9px]"></i> Entrega em: <b class="text-white">${p.deliveryDays}</b></div>` 
+                    : '';
+
                 const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-40 sm:h-48 object-contain bg-zinc-950/80 rounded-2xl mb-3 border border-zinc-800/80 p-2 group-hover:scale-105 transition duration-500">` : `<div class="w-full h-40 sm:h-48 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center border border-zinc-800"><i class="fa-solid fa-image text-zinc-700 text-3xl"></i></div>`;
                 
                 grid.innerHTML += `
@@ -855,9 +883,13 @@
                             <div class="overflow-hidden rounded-2xl">
                                 ${img}
                             </div>
-                            <span class="px-2.5 py-1 rounded-full text-[9px] font-black bg-gold/10 text-gold border border-gold/20 uppercase inline-block truncate max-w-full tracking-wider">${p.category || 'Geral'}</span>
-                            <h3 class="text-sm sm:text-base font-extrabold text-white mt-1.5 group-hover:text-gold transition line-clamp-1">${p.name}</h3>
+                            <div class="flex flex-wrap items-center gap-1.5 mb-1">
+                                <span class="px-2.5 py-1 rounded-full text-[9px] font-black bg-gold/10 text-gold border border-gold/20 uppercase inline-block truncate max-w-full tracking-wider">${p.category || 'Geral'}</span>
+                                ${availBadge}
+                            </div>
+                            <h3 class="text-sm sm:text-base font-extrabold text-white mt-1 group-hover:text-gold transition line-clamp-1">${p.name}</h3>
                             <p class="text-zinc-400 text-xs leading-relaxed line-clamp-2 mt-1 font-medium">${p.description}</p>
+                            ${deliveryText}
                         </div>
                         <div class="pt-3 mt-3 border-t border-zinc-800/80 flex items-center justify-between gap-2">
                             <div>
@@ -1235,6 +1267,8 @@
                                 costPrice: Number((price * 0.6).toFixed(2)),
                                 price: Number(price.toFixed(2)),
                                 stock: 15,
+                                availability: 'pronta_entrega',
+                                deliveryDays: '1 a 3 dias úteis',
                                 description: 'Produto importado sincronizado do catálogo do fornecedor.',
                                 imageUrl: ''
                             });
@@ -1295,6 +1329,8 @@
                         price: finalPrice,
                         promoPrice: item.promoPrice ? Number(item.promoPrice) : null,
                         stock: Number(item.stock) || defaultStock,
+                        availability: item.availability || 'pronta_entrega',
+                        deliveryDays: item.deliveryDays || '1 a 3 dias úteis',
                         description: item.description || 'Produto importado de alta performance.',
                         imageUrl: item.imageUrl || ''
                     };
@@ -1399,7 +1435,7 @@
 
             try {
                 let apiKey = storeSettings.geminiKey.trim();
-                let summary = products.map(p => `${p.name} (${p.category}): Estoque ${p.stock}, Preço R$ ${p.price}`).join('; ');
+                let summary = products.map(p => `${p.name} (${p.category}): Estoque ${p.stock}, Status ${p.availability || 'Pronta Entrega'}, Preço R$ ${p.price}`).join('; ');
                 let prompt = `Aja como um analista financeiro de e-commerce sênior. Analise estes produtos do nosso estoque: ${summary}. Dê 3 recomendações diretas e objetivas em tópicos sobre quais categorias focar e sugestões de kits ou promoções para otimizar o fluxo de caixa. Responda em português.`;
 
                 let reply = await fetchGeminiAPI(apiKey, prompt);
@@ -1540,7 +1576,7 @@
             chatHistory.push({ role: "user", parts: [{ text: msg }] });
             
             const storeTitle = storeSettings.storeName || 'Loja';
-            const catalog = products.map(p => `${p.name} (${p.category}) - R$${p.price}`).join(', ');
+            const catalog = products.map(p => `${p.name} (${p.category}) - R$${p.price} [${p.availability === 'encomenda' ? 'Sob Encomenda, ' + (p.deliveryDays || '') : 'Pronta Entrega'}]`).join(', ');
             const systemPrompt = `Você é o assistente virtual exclusivo da loja ${storeTitle}. Nossos envios são expressos para todo o Brasil. Catálogo de produtos: ${catalog}. Pergunta do cliente: ${msg}`;
 
             chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Pensando...</div>`;
@@ -1563,6 +1599,9 @@
             document.getElementById('product-form').reset(); 
             document.getElementById('prod-id').value = '';
             document.getElementById('prod-margin-pct').value = '';
+            document.getElementById('prod-availability').value = 'pronta_entrega';
+            document.getElementById('prod-delivery-days').value = '1 a 3 dias úteis';
+
             const statusEl = document.getElementById('upload-status');
             if(statusEl) statusEl.classList.add('hidden');
 
@@ -1578,6 +1617,8 @@
                     document.getElementById('prod-promo-price').value = p.promoPrice || ''; 
                     document.getElementById('prod-category').value = p.category; 
                     document.getElementById('prod-desc').value = p.description; 
+                    document.getElementById('prod-availability').value = p.availability || 'pronta_entrega';
+                    document.getElementById('prod-delivery-days').value = p.deliveryDays || '';
                     
                     const cost = Number(p.costPrice) || 0;
                     const price = Number(p.price) || 0;
@@ -1602,6 +1643,8 @@
                 promoPrice: document.getElementById('prod-promo-price').value ? parseFloat(document.getElementById('prod-promo-price').value) : null, 
                 costPrice: parseFloat(document.getElementById('prod-cost-price').value), 
                 stock: parseInt(document.getElementById('prod-stock').value), 
+                availability: document.getElementById('prod-availability').value,
+                deliveryDays: document.getElementById('prod-delivery-days').value.trim(),
                 description: document.getElementById('prod-desc').value, 
                 imageUrl: document.getElementById('prod-imageUrl').value 
             };
@@ -1628,11 +1671,15 @@
             document.getElementById('select-all-checkbox').checked = false;
 
             products.forEach(p => {
+                const availText = p.availability === 'encomenda' ? '<span class="text-amber-400 font-bold">Sob Encomenda</span>' : '<span class="text-emerald-400 font-bold">Pronta Entrega</span>';
+                const daysText = p.deliveryDays ? `<br><span class="text-[10px] text-zinc-500">${p.deliveryDays}</span>` : '';
+
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
                         <td class="p-4 text-center"><input type="checkbox" value="${p.id}" class="product-checkbox rounded bg-zinc-900 border-zinc-700 cursor-pointer accent-amber-500"></td>
                         <td class="p-3">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-8 h-8 rounded-lg object-cover">` : '-'}</td>
                         <td class="p-3 truncate max-w-[150px] font-bold text-white">${p.name}</td>
+                        <td class="p-3 text-xs">${availText}${daysText}</td>
                         <td class="p-3">${p.stock}</td>
                         <td class="p-3 text-red-400 font-bold">R$ ${formatMoney(p.costPrice || 0)}</td>
                         <td class="p-3 text-green-400 font-bold">R$ ${formatMoney(p.promoPrice || p.price)}</td>
