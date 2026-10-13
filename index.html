@@ -1248,7 +1248,7 @@
             }
         }
 
-        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA MULTI-ENDPOINT (CORRIGIDO V1 & V1BETA) ---
+        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA (ENDPOINT ATUALIZADO 2026) ---
         function renderStockAlertsTable() {
             const tb = document.getElementById('admin-stock-alerts-table');
             if(!tb) return;
@@ -1272,36 +1272,44 @@
         }
 
         async function fetchGeminiAPI(apiKey, promptText) {
-            const endpoints = [
-                `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+            // Endpoints padrão atualizados para as versões mais recentes e funcionais do Gemini
+            const urls = [
                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-                `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent?key=${apiKey}`,
+                `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`
             ];
 
-            let lastError = null;
+            let lastErrorMessage = '';
 
-            for (const url of endpoints) {
+            for (const url of urls) {
                 try {
                     const res = await fetch(url, {
                         method: 'POST',
                         headers: { 
-                            'Content-Type': 'application/json',
-                            'x-goog-api-key': apiKey
+                            'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: promptText }] }] })
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{ text: promptText }]
+                            }]
+                        })
                     });
-                    
+
                     const data = await res.json();
-                    if (!data.error && data.candidates && data.candidates[0] && data.candidates[0].content) {
+
+                    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0]) {
                         return data.candidates[0].content.parts[0].text;
                     }
-                    if (data.error) lastError = data.error.message;
-                } catch(err) {
-                    lastError = err.message;
+
+                    if (data.error) {
+                        lastErrorMessage = data.error.message || 'Erro desconhecido na API do Gemini';
+                    }
+                } catch (err) {
+                    lastErrorMessage = err.message;
                 }
             }
-            throw new Error(lastError || 'Não foi possível comunicar com a API do Gemini. Verifique a sua chave nas Configurações.');
+
+            throw new Error(lastErrorMessage || 'Não foi possível conectar à IA Gemini. Verifique se a sua Chave API está correta e ativa nas Configurações.');
         }
 
         async function runAiStockAudit() {
