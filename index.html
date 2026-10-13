@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Fênix Imports | Alta Performance & Exclusividade</title>
+    <title id="page-title">Fênix Imports | Exclusividade & Alta Performance</title>
     
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#d4a017">
@@ -11,341 +11,414 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { 
+            darkMode: 'class',
             theme: { 
                 extend: { 
                     colors: { 
-                        darkBg: '#0b0b0f', 
-                        cardBg: '#13131a', 
+                        darkBg: '#050508', 
+                        cardBg: '#0f0f15', 
+                        glassBg: 'rgba(18, 18, 26, 0.75)',
                         gold: 'var(--theme-gold, #d4a017)', 
-                        goldHover: 'var(--theme-gold-hover, #e5b224)', 
-                        accentYellow: 'var(--theme-gold-light, #facc15)' 
-                    } 
+                        goldHover: 'var(--theme-gold-hover, #f1c40f)', 
+                        goldLight: 'var(--theme-gold-light, #fef08a)' 
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
                 } 
             } 
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <style id="dynamic-theme-style">
         :root {
             --theme-gold: #d4a017;
-            --theme-gold-hover: #e5b224;
-            --theme-gold-light: #facc15;
+            --theme-gold-hover: #f1c40f;
+            --theme-gold-light: #fef08a;
         }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0b0f; color: #f3f4f6; }
-        .bg-gold { background-color: var(--theme-gold) !important; }
-        .text-gold { color: var(--theme-gold) !important; }
-        .border-gold { border-color: var(--theme-gold) !important; }
-        .glow-gold { box-shadow: 0 0 25px var(--theme-gold) !important; }
-        .glow-yellow { box-shadow: 0 0 20px var(--theme-gold-light) !important; }
-        .glow-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.25); }
-        .text-gradient { background: linear-gradient(135deg, var(--theme-gold-light) 0%, var(--theme-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #050508; 
+            color: #f3f4f6; 
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 160, 23, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 160, 23, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
         
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: #0b0b0f; }
-        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
-        .chat-bubble { max-width: 85%; padding: 8px 12px; border-radius: 14px; margin-bottom: 8px; font-size: 12px; line-height: 1.4; }
-        .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 4px; }
-        .chat-bot { background: rgba(212, 160, 23, 0.1); border: 1px solid var(--theme-gold); color: var(--theme-gold-light); border-bottom-left-radius: 4px; }
+        .glass-card {
+            background: rgba(15, 15, 23, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
         
-        #toast-container { position: fixed; top: 15px; right: 15px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
-        .toast { padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; color: white; display: flex; items-center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s ease forwards; border: 1px solid rgba(255,255,255,0.1); }
-        .toast-success { background: #13131a; border-left: 4px solid #22c55e; color: #22c55e; }
-        .toast-error { background: #13131a; border-left: 4px solid #ef4444; color: #ef4444; }
-        .toast-info { background: #13131a; border-left: 4px solid var(--theme-gold); color: var(--theme-gold-light); }
+        .glass-card:hover {
+            border-color: rgba(212, 160, 23, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(212, 160, 23, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .glass-nav {
+            background: rgba(5, 5, 8, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #fef08a 30%, #d4a017 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-btn-gradient {
+            background: linear-gradient(135deg, #fef08a 0%, #d4a017 50%, #b78103 100%);
+            color: #000;
+            font-weight: 800;
+            box-shadow: 0 4px 20px rgba(212, 160, 23, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .gold-btn-gradient:hover {
+            box-shadow: 0 6px 25px rgba(212, 160, 23, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .glow-gold-lg {
+            box-shadow: 0 0 35px rgba(212, 160, 23, 0.2);
+        }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #050508; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d4a017; }
+
+        .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.4; }
+        .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 2px; }
+        .chat-bot { background: rgba(212, 160, 23, 0.12); border: 1px solid rgba(212, 160, 23, 0.4); color: #fef08a; border-bottom-left-radius: 2px; }
+        
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 12px 18px; border-radius: 14px; font-size: 13px; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; border: 1px solid rgba(255,255,255,0.1); }
+        .toast-success { background: #0f172a; border-left: 4px solid #22c55e; color: #4ade80; }
+        .toast-error { background: #0f172a; border-left: 4px solid #ef4444; color: #f87171; }
+        .toast-info { background: #0f172a; border-left: 4px solid #d4a017; color: #fef08a; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        .skeleton { animation: pulse-skeleton 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; background-color: #1f1f2e; }
-        @keyframes pulse-skeleton { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .skeleton { animation: pulse-skeleton 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; background-color: #181824; }
+        @keyframes pulse-skeleton { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative">
 
     <div id="toast-container"></div>
 
-    <!-- Banner Topo -->
-    <div class="bg-gradient-to-r from-yellow-600 via-gold to-yellow-500 text-black text-[10px] sm:text-xs font-bold py-1 px-2 text-center tracking-wide uppercase flex items-center justify-center gap-2 shadow-md">
-        <i class="fa-solid fa-truck-fast"></i> <span>Entrega Via Motoboy na Região do Rio & J&T Express para todo o Brasil</span>
+    <!-- Banner Topo Ultra-Moderno -->
+    <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
+        <i class="fa-solid fa-bolt text-sm"></i> 
+        <span>Envios Expressos: Motoboy no Rio de Janeiro & J&T Express para todo o Brasil</span>
     </div>
 
-    <!-- Header Otimizado -->
-    <header class="sticky top-0 z-50 bg-darkBg/95 backdrop-blur-md border-b border-zinc-800">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-            <div class="flex items-center gap-2 sm:gap-3 cursor-pointer min-w-0" onclick="switchTab('catalog')">
-                <div id="header-logo-container" class="w-8 h-8 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center glow-gold text-black text-base sm:text-xl font-black overflow-hidden shrink-0">
-                    <i id="header-logo-icon" class="fa-solid fa-fire-flame-curved"></i>
-                    <img id="header-logo-img" src="" class="w-full h-full object-cover hidden" alt="Logo">
+    <!-- Header Glassmorphism -->
+    <header class="sticky top-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('catalog')">
+                <div id="header-logo-container" class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-700 p-0.5 shadow-lg group-hover:scale-105 transition-all duration-300">
+                    <div class="w-full h-full bg-darkBg rounded-[14px] flex items-center justify-center text-gold text-lg sm:text-xl font-black">
+                        <i id="header-logo-icon" class="fa-solid fa-fire-flame-curved"></i>
+                        <img id="header-logo-img" src="" class="w-full h-full object-cover rounded-[14px] hidden" alt="Logo">
+                    </div>
                 </div>
                 <div class="min-w-0">
-                    <span id="header-store-name" class="text-sm sm:text-xl font-extrabold tracking-wider text-white block leading-tight truncate">FÊNIX IMPORTS</span>
-                    <span class="text-[8px] sm:text-[10px] text-gold font-semibold tracking-widest uppercase block truncate">Evolução Máxima</span>
+                    <span id="header-store-name" class="text-base sm:text-2xl font-black tracking-tight text-white block leading-none">FÊNIX <span class="text-gold">IMPORTS</span></span>
+                    <span class="text-[9px] sm:text-[11px] text-zinc-400 font-bold tracking-widest uppercase block mt-1">Alta Performance</span>
                 </div>
             </div>
 
-            <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
-                <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold font-semibold transition hover:text-yellow-400 flex items-center gap-2"><i class="fa-solid fa-store"></i> Catálogo</button>
-                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
-                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-user-lock"></i> Admin</button>
-                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-2"><i class="fa-solid fa-gauge-high"></i> Gestão</button>
+            <!-- Navegação Desktop -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-2 hover:text-yellow-300 transition"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
+                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
+                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-shield-halved text-xs"></i> Admin</button>
+                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-2"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
             </nav>
 
-            <div class="flex items-center gap-2">
-                <div id="user-status-container" class="hidden text-xs text-zinc-400 lg:flex items-center gap-1.5 bg-zinc-900 px-2.5 py-1 rounded-full border border-zinc-800 shrink-0">
-                    <i class="fa-solid fa-user-shield text-gold"></i><span id="logged-user-email" class="max-w-[90px] truncate">admin</span>
+            <!-- Ações Direitas -->
+            <div class="flex items-center gap-3">
+                <div id="user-status-container" class="hidden text-xs text-zinc-400 lg:flex items-center gap-2 bg-zinc-900/80 border border-zinc-800 px-3 py-1.5 rounded-full shrink-0">
+                    <i class="fa-solid fa-circle text-[8px] text-green-500 animate-pulse"></i>
+                    <span id="logged-user-email" class="max-w-[100px] truncate font-medium">admin</span>
                     <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300 ml-1" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
-                <button onclick="installAppPrompt()" id="btn-install-app" class="hidden bg-gold hover:bg-yellow-400 text-black px-2.5 py-2 rounded-xl text-xs font-extrabold items-center gap-1.5 transition shrink-0 shadow-md">
+
+                <button onclick="installAppPrompt()" id="btn-install-app" class="hidden gold-btn-gradient px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 shrink-0">
                     <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">Baixar App</span>
                 </button>
-                <button onclick="toggleCartDrawer(true)" class="relative bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white px-2.5 py-2 sm:px-4 sm:py-2.5 rounded-xl flex items-center gap-2 transition group shrink-0">
-                    <i class="fa-solid fa-cart-shopping text-gold group-hover:scale-110 transition text-sm sm:text-base"></i>
-                    <span class="hidden sm:inline text-sm font-medium">Carrinho</span>
-                    <span id="cart-counter" class="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 bg-yellow-500 text-black text-[10px] sm:text-xs font-bold w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center glow-yellow shadow-lg">0</span>
+
+                <button onclick="toggleCartDrawer(true)" class="relative bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/60 text-white px-3.5 py-2.5 rounded-2xl flex items-center gap-2.5 transition group shrink-0">
+                    <i class="fa-solid fa-bag-shopping text-gold group-hover:scale-110 transition text-base"></i>
+                    <span class="hidden sm:inline text-xs font-bold uppercase tracking-wider">Carrinho</span>
+                    <span id="cart-counter" class="bg-gold text-black text-xs font-black w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
                 </button>
-                <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-400 hover:text-white p-1.5"><i class="fa-solid fa-bars text-lg"></i></button>
+
+                <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-400 hover:text-white p-2"><i class="fa-solid fa-bars text-xl"></i></button>
             </div>
         </div>
 
         <!-- Menu Mobile -->
-        <div id="mobile-menu" class="hidden md:hidden bg-cardBg border-b border-zinc-800 px-4 py-3 space-y-2">
-            <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-store"></i> Catálogo</button>
-            <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
-            <button onclick="installAppPrompt(); toggleMobileMenu();" id="mobile-btn-install" class="hidden w-full text-left text-gold font-bold py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-download"></i> Baixar App no Celular</button>
-            <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-user-lock"></i> Login Admin</button>
-            <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-medium py-1.5 text-sm flex items-center gap-2.5"><i class="fa-solid fa-gauge-high"></i> Gestão de Elite</button>
+        <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-zinc-800 px-5 py-4 space-y-3">
+            <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-bold text-sm flex items-center gap-3"><i class="fa-solid fa-store"></i> Catálogo de Produtos</button>
+            <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
+            <button onclick="installAppPrompt(); toggleMobileMenu();" id="mobile-btn-install" class="hidden w-full text-left text-gold font-bold text-sm flex items-center gap-3"><i class="fa-solid fa-download"></i> Instalar Aplicativo</button>
+            <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3"><i class="fa-solid fa-shield-halved"></i> Painel de Controle</button>
+            <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-bold text-sm flex items-center gap-3"><i class="fa-solid fa-chart-line"></i> Gestão da Loja</button>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-4 sm:py-8 w-full">
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full">
 
         <!-- TAB CATÁLOGO -->
-        <div id="tab-catalog" class="space-y-4 sm:space-y-8">
-            <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-r from-zinc-900 via-cardBg to-zinc-900 border border-zinc-800 p-4 sm:p-12">
-                <div class="absolute -right-10 -bottom-10 w-48 h-48 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 max-w-2xl space-y-2 sm:space-y-4">
-                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-bold bg-gold/10 text-gold border border-gold/20"><i class="fa-solid fa-bolt"></i> Envios Expressos J&T + Motoboy RJ</span>
-                    <h1 class="text-xl sm:text-5xl font-black tracking-tight leading-tight">A Base da sua <span class="text-gradient">Evolução Máxima</span></h1>
+        <div id="tab-catalog" class="space-y-8">
+            
+            <!-- Hero Banner Futurista -->
+            <div class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-12 glow-gold-lg">
+                <div class="absolute -right-20 -bottom-20 w-80 h-80 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-check"></i> Produtos Originais & Certificados</span>
+                    <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
+                    <p class="text-xs sm:text-sm text-zinc-400 font-medium leading-relaxed">Entregas ultra-rápidas via Motoboy no Rio de Janeiro e envio seguro para todo o Brasil via J&T Express.</p>
                 </div>
             </div>
 
-            <!-- Filtros -->
-            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 bg-cardBg p-3 sm:p-4 rounded-2xl border border-zinc-800">
-                <div class="relative w-full xl:w-80 shrink-0">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-xs sm:text-sm"></i>
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar produtos..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none transition">
+            <!-- Filtros & Pesquisa -->
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 glass-card p-4 rounded-2xl">
+                <div class="relative w-full xl:w-96 shrink-0">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Pesquisar por nome ou categoria..." class="w-full bg-zinc-900/90 border border-zinc-800 rounded-xl pl-11 pr-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none transition shadow-inner">
                 </div>
-                <div class="flex items-center gap-1.5 overflow-x-auto w-full pb-1 xl:pb-0 scroll-smooth">
-                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold bg-gold text-black transition whitespace-nowrap">Todos</button>
-                    <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Peptídeos</button>
-                    <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Insumos & Soluções</button>
-                    <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética Avançada</button>
-                    <button onclick="setCategoryFilter('Hormônios')" data-cat="Hormônios" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Hormônios</button>
-                    <button onclick="setCategoryFilter('Performance')" data-cat="Performance" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Performance</button>
-                    <button onclick="setCategoryFilter('Outros')" data-cat="Outros" class="filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Outros</button>
+                
+                <div class="flex items-center gap-2 overflow-x-auto w-full pb-1 xl:pb-0 scroll-smooth">
+                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold gold-btn-gradient whitespace-nowrap">Todos</button>
+                    <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Peptídeos</button>
+                    <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Insumos & Soluções</button>
+                    <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Estética Avançada</button>
+                    <button onclick="setCategoryFilter('Hormônios')" data-cat="Hormônios" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Hormônios</button>
+                    <button onclick="setCategoryFilter('Performance')" data-cat="Performance" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Performance</button>
+                    <button onclick="setCategoryFilter('Outros')" data-cat="Outros" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap">Outros</button>
                 </div>
             </div>
 
-            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-6">
-                <div class="bg-cardBg border border-zinc-800 rounded-2xl p-3 space-y-3"><div class="skeleton w-full h-32 rounded-xl"></div><div class="skeleton w-3/4 h-4 rounded"></div><div class="skeleton w-1/2 h-4 rounded"></div></div>
-                <div class="bg-cardBg border border-zinc-800 rounded-2xl p-3 space-y-3"><div class="skeleton w-full h-32 rounded-xl"></div><div class="skeleton w-3/4 h-4 rounded"></div><div class="skeleton w-1/2 h-4 rounded"></div></div>
+            <!-- Grelha de Produtos -->
+            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div><div class="skeleton w-1/2 h-4 rounded"></div></div>
+                <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div><div class="skeleton w-1/2 h-4 rounded"></div></div>
             </div>
         </div>
 
         <!-- TAB ADMIN -->
-        <div id="tab-admin" class="hidden space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-cardBg p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-zinc-800">
-                <div><h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-microchip text-gold"></i> Gestão de Elite</h2></div>
-                <div class="flex gap-2 w-full md:w-auto bg-zinc-900 p-1.5 rounded-xl border border-zinc-800">
-                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-zinc-800 text-white transition">Estoque</button>
-                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-zinc-400 transition">Vendas & Caixa</button>
+        <div id="tab-admin" class="hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 rounded-3xl">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-chart-line text-gold"></i> Painel de Gestão Fênix</h2>
+                    <p class="text-xs text-zinc-400 mt-1">Controle de estoque, fluxo de caixa e envio de pedidos.</p>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800">
+                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold bg-zinc-800 text-white transition">Estoque</button>
+                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold text-zinc-400 transition">Vendas & Pedidos</button>
                 </div>
             </div>
 
             <div id="admin-subtab-products" class="space-y-4">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-base sm:text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos Cadastrados</h3>
+                    <h3 class="text-base sm:text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos em Catálogo</h3>
                     <div class="flex gap-2">
-                        <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-3 py-2 rounded-xl text-xs sm:text-sm border border-zinc-700 flex items-center gap-1.5"><i class="fa-solid fa-gear"></i> Configs</button>
-                        <button onclick="openProductModal()" class="bg-gold hover:bg-yellow-400 text-black font-bold px-3 py-2 rounded-xl text-xs sm:text-sm flex items-center gap-1.5 shadow-lg"><i class="fa-solid fa-plus"></i> Novo</button>
+                        <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Configs</button>
+                        <button onclick="openProductModal()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-plus"></i> Novo Produto</button>
                     </div>
                 </div>
-                <div class="bg-cardBg rounded-2xl sm:rounded-3xl border border-zinc-800 overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                        <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-3 sm:p-4">Foto</th><th class="p-3 sm:p-4">Produto</th><th class="p-3 sm:p-4">Estoque</th><th class="p-3 sm:p-4">Custo</th><th class="p-3 sm:p-4">Venda</th><th class="p-3 sm:p-4 text-right">Ações</th></tr></thead>
-                        <tbody id="admin-product-table" class="divide-y divide-zinc-800/60"></tbody>
-                    </table>
+                <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Foto</th><th class="p-4">Produto</th><th class="p-4">Estoque</th><th class="p-4">Custo</th><th class="p-4">Venda</th><th class="p-4 text-right">Ações</th></tr></thead>
+                            <tbody id="admin-product-table" class="divide-y divide-zinc-800/60"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
             <div id="admin-subtab-orders" class="hidden space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                    <div class="bg-zinc-900 border border-zinc-800 p-4 sm:p-5 rounded-2xl relative overflow-hidden group"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Faturamento Conf.</p><h4 id="dash-revenue" class="text-2xl sm:text-3xl font-black text-white">R$ 0,00</h4></div>
-                    <div class="bg-gradient-to-br from-green-900/40 to-zinc-900 border border-green-900/50 p-4 sm:p-5 rounded-2xl relative overflow-hidden group glow-green"><p class="text-xs font-bold text-green-400 uppercase tracking-wider mb-1">Lucro Estimado</p><h4 id="dash-profit" class="text-2xl sm:text-3xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-500/70 mt-2 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
-                    <div class="bg-zinc-900 border border-zinc-800 p-4 sm:p-5 rounded-2xl relative overflow-hidden group"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-2xl sm:text-3xl font-black text-white">0</h4></div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Faturamento Confirmado</p><h4 id="dash-revenue" class="text-2xl sm:text-3xl font-black text-white">R$ 0,00</h4></div>
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden border-green-500/30"><p class="text-xs font-bold text-green-400 uppercase tracking-wider mb-2">Lucro Estimado</p><h4 id="dash-profit" class="text-2xl sm:text-3xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-400/80 mt-2 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
+                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-2xl sm:text-3xl font-black text-white">0</h4></div>
                 </div>
-                <div class="bg-cardBg rounded-2xl sm:rounded-3xl border border-zinc-800 overflow-x-auto">
-                    <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                        <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-900/50"><th class="p-3 sm:p-4">Cliente/Envio</th><th class="p-3 sm:p-4">Itens/Total</th><th class="p-3 sm:p-4">Status & Rastreio</th><th class="p-3 sm:p-4 text-right">Ação</th></tr></thead>
-                        <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60"></tbody>
-                    </table>
+                <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Cliente/Envio</th><th class="p-4">Itens/Total</th><th class="p-4">Status & Rastreio</th><th class="p-4 text-right">Ação</th></tr></thead>
+                            <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
     <!-- Flutuantes -->
-    <div class="fixed bottom-4 right-4 flex flex-col gap-2.5 z-40">
-        <button onclick="toggleAIChat()" class="bg-zinc-800 border border-gold/50 text-gold w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,160,23,0.3)] hover:scale-110 transition-all relative">
-            <i class="fa-solid fa-robot text-lg sm:text-2xl"></i>
-            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[8px] sm:text-[9px] font-bold px-1.5 py-0.5 rounded-full border border-darkBg animate-pulse">IA</span>
+    <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
+        <button onclick="toggleAIChat()" class="bg-zinc-900 border border-gold/60 text-gold w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(212,160,23,0.35)] hover:scale-110 transition-all relative">
+            <i class="fa-solid fa-robot text-xl sm:text-2xl"></i>
+            <span class="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full border border-darkBg animate-pulse">IA</span>
         </button>
-        <a id="btn-floating-support" href="#" target="_blank" class="bg-green-500 text-white w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-all">
+        <a id="btn-floating-support" href="#" target="_blank" class="bg-green-500 text-white w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(34,197,94,0.4)] hover:scale-110 transition-all">
             <i class="fa-brands fa-whatsapp text-2xl sm:text-3xl"></i>
         </a>
     </div>
 
     <!-- IA Chat -->
-    <div id="ai-chat-window" class="fixed bottom-20 right-4 w-[88vw] sm:w-80 bg-cardBg border border-zinc-800 rounded-2xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-80 sm:h-96">
-        <div class="bg-gradient-to-r from-zinc-900 to-zinc-800 p-3 border-b border-zinc-700 flex justify-between items-center">
-            <div class="flex items-center gap-2"><i class="fa-solid fa-robot text-gold text-base"></i> <span id="ai-bot-title" class="font-bold text-xs sm:text-sm text-white">Consultor Fênix IA</span></div>
-            <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+    <div id="ai-chat-window" class="fixed bottom-24 right-6 w-[90vw] sm:w-88 glass-card rounded-3xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-96 border border-zinc-700/60">
+        <div class="bg-zinc-950/90 p-4 border-b border-zinc-800 flex justify-between items-center">
+            <div class="flex items-center gap-2.5"><i class="fa-solid fa-robot text-gold text-lg"></i> <span id="ai-bot-title" class="font-bold text-xs sm:text-sm text-white">Consultor Fênix IA</span></div>
+            <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
-            <div class="chat-bubble chat-bot">Olá! Sou o assistente de inteligência artificial da Fênix Imports. Dúvidas sobre produtos ou envios (Motoboy RJ / J&T Express)?</div>
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5">
+            <div class="chat-bubble chat-bot">Olá! Sou a inteligência artificial da Fênix Imports. Em que posso ajudar na sua compra hoje?</div>
         </div>
-        <div class="p-2.5 bg-zinc-900 border-t border-zinc-800 flex gap-2">
-            <input type="text" id="chat-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-950 border border-zinc-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-gold">
-            <button onclick="sendChatMessage()" class="bg-gold text-black rounded-lg px-3 py-1.5 hover:bg-yellow-400 transition text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+        <div class="p-3 bg-zinc-950/90 border-t border-zinc-800 flex gap-2">
+            <input type="text" id="chat-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
+            <button onclick="sendChatMessage()" class="gold-btn-gradient rounded-xl px-3.5 py-2 transition text-xs"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <!-- Rastreio com Timeline Visual -->
+    <!-- Modal de Rastreio -->
     <div id="tracking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeTrackingModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl z-10 text-center">
-            <i class="fa-solid fa-route text-3xl sm:text-4xl text-gold mb-1"></i>
-            <h3 class="text-lg sm:text-xl font-extrabold text-white">Rastrear Pedido</h3>
-            <p class="text-xs text-zinc-400">Digite seu WhatsApp para ver o progresso da sua entrega.</p>
-            <input type="text" id="track-phone" placeholder="Ex: 21999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-center text-sm text-white focus:border-gold outline-none">
-            <button onclick="trackOrder()" class="w-full bg-zinc-800 text-white font-bold py-2.5 rounded-xl hover:bg-gold hover:text-black transition text-xs sm:text-sm">Consultar</button>
-            <div id="track-result" class="mt-3 text-xs sm:text-sm text-left space-y-2 hidden"></div>
-            <button onclick="closeTrackingModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeTrackingModal()"></div>
+        <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl z-10 text-center">
+            <i class="fa-solid fa-route text-4xl text-gold mb-1"></i>
+            <h3 class="text-xl font-extrabold text-white">Rastrear Entrega</h3>
+            <p class="text-xs text-zinc-400">Digite seu número de WhatsApp com DDD para acompanhar seu pedido.</p>
+            <input type="text" id="track-phone" placeholder="Ex: 21999999999" class="w-full bg-zinc-900/90 border border-zinc-800 rounded-2xl px-4 py-3 text-center text-sm text-white focus:border-gold outline-none">
+            <button onclick="trackOrder()" class="w-full gold-btn-gradient py-3 rounded-2xl text-xs sm:text-sm">Consultar Status</button>
+            <div id="track-result" class="mt-4 text-xs sm:text-sm text-left space-y-3 hidden"></div>
+            <button onclick="closeTrackingModal()" class="absolute top-5 right-5 text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
     </div>
 
-    <!-- Carrinho Drawer com Cupom -->
+    <!-- Carrinho Drawer -->
     <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
-        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="toggleCartDrawer(false)"></div>
-        <div class="absolute inset-y-0 right-0 max-w-full flex pl-8">
-            <div class="w-screen max-w-md bg-cardBg border-l border-zinc-800 flex flex-col shadow-2xl">
-                <div class="p-4 sm:p-6 border-b border-zinc-800 flex justify-between bg-zinc-900/50">
-                    <h3 class="text-base sm:text-lg font-bold text-white flex gap-2"><i class="fa-solid fa-bag-shopping text-gold"></i> Seu Carrinho</h3>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleCartDrawer(false)"></div>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+            <div class="w-screen max-w-md glass-card border-l border-zinc-800 flex flex-col shadow-2xl">
+                <div class="p-5 border-b border-zinc-800 flex justify-between bg-zinc-950/80">
+                    <h3 class="text-lg font-extrabold text-white flex gap-2.5 items-center"><i class="fa-solid fa-bag-shopping text-gold"></i> Seu Carrinho</h3>
                     <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
-                <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 divide-y divide-zinc-800/40"></div>
-                <div class="p-4 sm:p-6 border-t border-zinc-800 bg-zinc-900/50 space-y-3">
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3 divide-y divide-zinc-800/60"></div>
+                <div class="p-5 border-t border-zinc-800 bg-zinc-950/80 space-y-3">
                     <div class="flex gap-2">
-                        <input type="text" id="coupon-code" placeholder="Cupom de Desconto" class="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-white uppercase outline-none focus:border-gold">
-                        <button onclick="applyCoupon()" class="bg-zinc-800 hover:bg-gold hover:text-black text-white text-xs font-bold px-3 rounded-xl transition">Aplicar</button>
+                        <input type="text" id="coupon-code" placeholder="CUPOM DE DESCONTO" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white uppercase outline-none focus:border-gold">
+                        <button onclick="applyCoupon()" class="bg-zinc-800 hover:bg-gold hover:text-black text-white text-xs font-bold px-4 rounded-xl transition">Aplicar</button>
                     </div>
-                    <div class="space-y-1 pt-1">
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal Produtos</span><span id="cart-subtotal">R$ 0,00</span></div>
+                    <div class="space-y-1.5 pt-2">
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
                         <div id="cart-discount-row" class="flex justify-between text-xs text-green-400 hidden"><span>Desconto Cupom</span><span id="cart-discount">- R$ 0,00</span></div>
                         <div class="flex justify-between text-xs text-zinc-400"><span>Seguro Mercadoria</span><span id="cart-insurance-cost" class="text-gold">R$ 0,00</span></div>
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Envio Estimado</span><span id="cart-shipping-cost">R$ 0,00</span></div>
-                        <div class="flex justify-between text-sm sm:text-base font-extrabold text-white pt-2 border-t border-zinc-800"><span>Total Estimado</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete Estimado</span><span id="cart-shipping-cost">R$ 0,00</span></div>
+                        <div class="flex justify-between text-base font-black text-white pt-2 border-t border-zinc-800"><span>Total</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
-                    <button onclick="proceedToCheckout()" class="w-full bg-gradient-to-r from-yellow-500 via-gold to-yellow-400 text-black font-extrabold py-3 rounded-xl shadow-lg glow-yellow transition flex justify-center gap-2 text-xs sm:text-sm"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido</button>
+                    <button onclick="proceedToCheckout()" class="w-full gold-btn-gradient py-3.5 rounded-2xl flex justify-center gap-2 text-xs sm:text-sm tracking-wider uppercase"><i class="fa-solid fa-qrcode"></i> Finalizar Pedido via Pix</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Checkout Modal -->
-    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeCheckoutModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-lg w-full p-5 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[95vh]">
-            <div class="flex justify-between border-b border-zinc-800 pb-3 mb-3">
-                <h3 class="text-base sm:text-lg font-extrabold text-white flex gap-2"><i class="fa-solid fa-truck-fast text-gold"></i> Dados & Modalidade de Envio</h3>
-                <button onclick="closeCheckoutModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-base"></i></button>
+    <!-- Modal de Checkout -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeCheckoutModal()"></div>
+        <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[92vh]">
+            <div class="flex justify-between border-b border-zinc-800 pb-4 mb-4">
+                <h3 class="text-lg font-extrabold text-white flex gap-2.5 items-center"><i class="fa-solid fa-truck-fast text-gold"></i> Dados e Frete</h3>
+                <button onclick="closeCheckoutModal()" class="text-zinc-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
-            <div id="checkout-step-1" class="space-y-3">
-                <p class="text-[11px] sm:text-xs font-semibold text-zinc-400 border-l-2 border-gold pl-2">Informações do Cliente</p>
-                <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
-                <input type="text" id="cust-whatsapp" placeholder="WhatsApp (Ex: 21999999999)" oninput="maskPhone(this)" maxlength="15" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+            <div id="checkout-step-1" class="space-y-3.5">
+                <input type="text" id="cust-name" placeholder="Seu Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                <input type="text" id="cust-whatsapp" placeholder="WhatsApp com DDD (Ex: 21999999999)" oninput="maskPhone(this)" maxlength="15" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
                 <div class="grid grid-cols-3 gap-2">
-                    <input type="text" id="cust-cep" placeholder="CEP" oninput="maskCEP(this)" onblur="buscarCEP()" maxlength="9" class="col-span-1 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
-                    <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                    <input type="text" id="cust-cep" placeholder="CEP" oninput="maskCEP(this)" onblur="buscarCEP()" maxlength="9" class="col-span-1 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                    <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
                 </div>
-                <input type="text" id="cust-number" placeholder="Número e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                <input type="text" id="cust-number" placeholder="Número e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
 
-                <!-- Seleção Inteligente de Frete -->
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-2">
                     <label class="text-[10px] text-gold font-bold uppercase tracking-wider block"><i class="fa-solid fa-shipping-fast"></i> Método de Envio Calculado</label>
-                    <div id="shipping-method-badge" class="text-xs text-zinc-300 flex items-center justify-between bg-zinc-900 p-2 rounded-lg border border-zinc-800">
+                    <div id="shipping-method-badge" class="text-xs text-zinc-300 flex items-center justify-between bg-zinc-900 p-2.5 rounded-xl border border-zinc-800">
                         <span id="shipping-type-text"><i class="fa-solid fa-motorcycle text-gold"></i> Motoboy Rápido (Rio de Janeiro)</span>
                         <span id="shipping-price-text" class="font-bold text-gold">R$ 0,00</span>
                     </div>
                 </div>
 
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800/60 space-y-1.5 text-xs">
-                    <div class="flex justify-between text-zinc-400"><span>Subtotal Produtos:</span><span id="summary-subtotal">R$ 0,00</span></div>
-                    <div class="flex justify-between text-zinc-400"><span>Seguro Mercadoria:</span><span id="summary-insurance" class="text-gold font-bold">R$ 0,00</span></div>
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-1.5 text-xs">
+                    <div class="flex justify-between text-zinc-400"><span>Produtos:</span><span id="summary-subtotal">R$ 0,00</span></div>
+                    <div class="flex justify-between text-zinc-400"><span>Seguro:</span><span id="summary-insurance" class="text-gold font-bold">R$ 0,00</span></div>
                     <div class="flex justify-between text-zinc-400"><span>Frete:</span><span id="summary-shipping">R$ 0,00</span></div>
-                    <div class="flex justify-between font-bold text-white pt-1.5 border-t border-zinc-800 text-xs sm:text-sm"><span>Total Final:</span><span id="summary-total" class="text-gold">R$ 0,00</span></div>
+                    <div class="flex justify-between font-bold text-white pt-2 border-t border-zinc-800 text-sm"><span>Total Final:</span><span id="summary-total" class="text-gold">R$ 0,00</span></div>
                 </div>
 
-                <button onclick="generateDynamicPix()" class="w-full bg-gold hover:bg-yellow-400 text-black font-extrabold py-3 rounded-xl transition text-xs sm:text-sm mt-1">Avançar para Pagamento <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                <button onclick="generateDynamicPix()" class="w-full gold-btn-gradient py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider mt-2">Gerar Pagamento Pix <i class="fa-solid fa-arrow-right ml-1"></i></button>
             </div>
 
-            <div id="checkout-step-2" class="space-y-3 hidden mt-2">
-                <p class="text-[11px] sm:text-xs font-semibold text-zinc-400 text-center">Escaneie ou copie o código (Valor: <span id="pix-exact-value" class="text-white font-bold"></span>)</p>
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 text-center space-y-3">
-                    <div id="dynamic-qrcode" class="w-32 h-32 sm:w-40 sm:h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-md"></div>
+            <div id="checkout-step-2" class="space-y-4 hidden mt-2">
+                <p class="text-xs font-semibold text-zinc-400 text-center">Valor a pagar: <span id="pix-exact-value" class="text-gold font-bold"></span></p>
+                <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-4 text-center space-y-3">
+                    <div id="dynamic-qrcode" class="w-36 h-36 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-lg"></div>
                     <div class="space-y-1">
-                        <span class="text-[10px] sm:text-xs text-zinc-400 block">Pix Copia e Cola</span>
-                        <div class="flex items-center gap-2 bg-zinc-950 p-2 rounded-xl border border-zinc-800">
+                        <span class="text-[10px] text-zinc-400 block">Pix Copia e Cola</span>
+                        <div class="flex items-center gap-2 bg-zinc-900 p-2 rounded-xl border border-zinc-800">
                             <input type="text" readonly id="pix-emv-input" class="bg-transparent text-xs font-mono text-green-400 w-full focus:outline-none text-ellipsis whitespace-nowrap">
-                            <button onclick="copyPixEMV()" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs px-2.5 py-1 rounded-lg transition shrink-0"><i class="fa-regular fa-copy"></i></button>
+                            <button onclick="copyPixEMV()" class="bg-green-600 hover:bg-green-500 text-white font-bold text-xs px-3 py-1.5 rounded-lg transition shrink-0"><i class="fa-regular fa-copy"></i> Copiar</button>
                         </div>
                     </div>
                 </div>
-                <button onclick="processAndSendOrder()" id="btn-finish-order" class="w-full bg-green-600 hover:bg-green-500 text-white font-extrabold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-xs sm:text-sm">
-                    <i class="fa-brands fa-whatsapp text-base"></i> Já paguei! Enviar Comprovante
+                <button onclick="processAndSendOrder()" id="btn-finish-order" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-xs sm:text-sm uppercase">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Já Paguei! Enviar Comprovante
                 </button>
-                <button onclick="backToStep1()" class="w-full text-zinc-500 hover:text-white text-xs underline text-center">Voltar</button>
+                <button onclick="backToStep1()" class="w-full text-zinc-500 hover:text-white text-xs underline text-center">Voltar para os dados</button>
             </div>
         </div>
     </div>
 
-    <!-- Product Modal com Upload de Galeria -->
-    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeProductModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
-            <h3 class="text-base sm:text-lg font-extrabold text-white mb-3">Adicionar/Editar Produto</h3>
-            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-2.5">
+    <!-- Modal de Produto -->
+    <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeProductModal()"></div>
+        <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-lg font-black text-white mb-4">Adicionar / Editar Produto</h3>
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-3">
                 <input type="hidden" id="prod-id">
                 
                 <div>
-                    <label class="text-[10px] text-zinc-400 block mb-1">Foto do Produto (Escolher da Galeria ou Link)</label>
-                    <input type="text" id="prod-imageUrl" placeholder="Link da foto ou selecione abaixo" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
-                    <input type="file" id="prod-file-input" accept="image/*" onchange="uploadImageToGallery(event)" class="mt-1.5 w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-300 file:mr-3 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-gold file:text-black hover:file:bg-yellow-400 cursor-pointer">
-                    <div id="upload-status" class="text-[10px] text-gold mt-1 hidden">Enviando imagem para a nuvem...</div>
+                    <label class="text-[10px] text-zinc-400 block mb-1">Foto do Produto (Envio da Galeria ou Link)</label>
+                    <input type="text" id="prod-imageUrl" placeholder="Link da foto ou selecione abaixo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-gold">
+                    <input type="file" id="prod-file-input" accept="image/*" onchange="uploadImageToGallery(event)" class="mt-2 w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-300 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gold file:text-black cursor-pointer">
+                    <div id="upload-status" class="text-[10px] text-gold mt-1 hidden">Enviando foto para a nuvem...</div>
                 </div>
 
-                <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" class="w-full bg-zinc-950 border border-red-900/50 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-red-500">
-                    <input type="number" id="prod-stock" required value="10" placeholder="Estoque" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" class="w-full bg-zinc-950 border border-red-900/40 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-red-500">
+                    <input type="number" id="prod-stock" required value="10" placeholder="Estoque" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="number" step="0.01" id="prod-price" required placeholder="Preço Normal" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
-                    <input type="number" step="0.01" id="prod-promo-price" placeholder="Promocional" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    <input type="number" step="0.01" id="prod-price" required placeholder="Preço Venda R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    <input type="number" step="0.01" id="prod-promo-price" placeholder="Preço Promo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                 </div>
 
-                <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
                     <option value="Peptídeos">Peptídeos</option>
                     <option value="Insumos & Soluções">Insumos & Soluções</option>
                     <option value="Estética Avançada">Estética Avançada</option>
@@ -353,72 +426,46 @@
                     <option value="Performance">Performance</option>
                     <option value="Outros">Outros</option>
                 </select>
-                <textarea id="prod-desc" rows="2" required placeholder="Descrição" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold"></textarea>
-                <div class="flex gap-2 pt-1">
-                    <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2 rounded-xl text-xs sm:text-sm">Cancelar</button>
-                    <button type="submit" id="btn-salvar-produto" class="flex-1 bg-gold text-black font-extrabold py-2 rounded-xl text-xs sm:text-sm">Salvar</button>
+                <textarea id="prod-desc" rows="2" required placeholder="Descrição detalhada do produto..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold"></textarea>
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs">Cancelar</button>
+                    <button type="submit" id="btn-salvar-produto" class="flex-1 gold-btn-gradient py-2.5 rounded-xl text-xs">Salvar Produto</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Configs Modal -->
-    <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeSettingsModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
-            <h3 class="text-base sm:text-lg font-extrabold text-white mb-3 flex items-center gap-2"><i class="fa-solid fa-sliders text-gold"></i> Personalizar Marca & Fretes</h3>
-            <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-2.5 text-xs sm:text-sm">
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
-                    <label class="text-[10px] text-gold font-bold uppercase tracking-wider block">🎨 Marca White Label</label>
-                    <div>
-                        <label class="text-[10px] text-zinc-400 block mb-0.5">Nome da Loja</label>
-                        <input type="text" id="set-store-name" required placeholder="Ex: FÊNIX IMPORTS" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-zinc-400 block mb-0.5">Link da Logo (URL)</label>
-                        <input type="text" id="set-store-logo" placeholder="https://exemplo.com/logo.png" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
-                    </div>
+    <!-- Modal Configs -->
+    <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeSettingsModal()"></div>
+        <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-lg font-black text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-sliders text-gold"></i> Configurações da Loja</h3>
+            <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-3 text-xs">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-2">
+                    <label class="text-[10px] text-gold font-bold uppercase tracking-wider block">Marca White Label</label>
+                    <input type="text" id="set-store-name" required placeholder="Nome da Loja" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                    <input type="text" id="set-store-logo" placeholder="URL da Logo (Opcional)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 </div>
 
-                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
-                    <label class="text-[10px] text-gold font-bold uppercase tracking-wider block"><i class="fa-solid fa-motorcycle"></i> Configuração de Fretes R$</label>
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-2">
+                    <label class="text-[10px] text-gold font-bold uppercase tracking-wider block">Valores de Frete R$</label>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[10px] text-zinc-400 block mb-0.5">Motoboy (RJ)</label>
-                            <input type="number" step="0.01" id="set-ship-motoboy" required placeholder="Ex: 20.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-zinc-400 block mb-0.5">J&T Express (Fora RJ)</label>
-                            <input type="number" step="0.01" id="set-ship-jt" required placeholder="Ex: 35.00" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-1.5 text-white">
-                        </div>
+                        <input type="number" step="0.01" id="set-ship-motoboy" required placeholder="Motoboy (RJ)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                        <input type="number" step="0.01" id="set-ship-jt" required placeholder="J&T Express (Fora RJ)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                     </div>
                 </div>
 
-                <div>
-                    <label class="text-[10px] text-zinc-400 block mb-0.5">Chave PIX Recebedora</label>
-                    <input type="text" id="set-pix" required placeholder="Chave PIX" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                </div>
+                <input type="text" id="set-pix" required placeholder="Chave PIX Recebedora" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
                 <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <label class="text-[10px] text-zinc-400 block mb-0.5">Nome Titular Pix</label>
-                        <input type="text" id="set-pix-name" required placeholder="Nome Titular" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                    </div>
-                    <div>
-                        <label class="text-[10px] text-zinc-400 block mb-0.5">Cidade Titular Pix</label>
-                        <input type="text" id="set-pix-city" required placeholder="Cidade" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                    </div>
+                    <input type="text" id="set-pix-name" required placeholder="Nome Titular Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
+                    <input type="text" id="set-pix-city" required placeholder="Cidade Titular" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
                 </div>
-                <div>
-                    <label class="text-[10px] text-zinc-400 block mb-0.5">WhatsApp Vendas</label>
-                    <input type="text" id="set-wpp-sales" required placeholder="Ex: 21999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-white">
-                </div>
-                <div>
-                    <label class="text-[10px] text-zinc-400 block mb-0.5">Gemini IA API Key</label>
-                    <input type="text" id="set-gemini" placeholder="Chave API Google Gemini" class="w-full bg-zinc-950 border border-blue-900/50 rounded-lg px-3 py-2 text-blue-300">
-                </div>
-                <div class="flex gap-2 pt-1">
-                    <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2 rounded-xl">Cancelar</button>
-                    <button type="submit" class="flex-1 bg-gold text-black font-extrabold py-2 rounded-xl">Salvar Configs</button>
+                <input type="text" id="set-wpp-sales" required placeholder="WhatsApp de Vendas (com DDD)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
+                <input type="text" id="set-gemini" placeholder="Chave API Gemini IA" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2.5 text-blue-300">
+                
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl">Cancelar</button>
+                    <button type="submit" class="flex-1 gold-btn-gradient py-2.5 rounded-xl">Salvar Configurações</button>
                 </div>
             </form>
         </div>
@@ -426,13 +473,13 @@
 
     <!-- Login Modal -->
     <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/80" onclick="closeLoginModal()"></div>
-        <div class="relative bg-cardBg border border-zinc-800 rounded-2xl w-full max-w-xs p-5 shadow-2xl z-10">
-            <h3 class="text-base font-bold text-white mb-3">Acesso Admin Protegido</h3>
-            <form onsubmit="handleAdminLogin(event)" class="space-y-2.5">
-                <input type="email" id="login-email" required placeholder="E-mail Admin" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
-                <input type="password" id="login-password" required placeholder="Senha Secreta" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-xs sm:text-sm text-white">
-                <button type="submit" class="w-full bg-gold text-black font-bold py-2 rounded-lg text-xs sm:text-sm">Entrar e Destravar</button>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeLoginModal()"></div>
+        <div class="relative glass-card border border-zinc-700/60 rounded-3xl w-full max-w-xs p-6 shadow-2xl z-10">
+            <h3 class="text-base font-bold text-white mb-4">Acesso Administrativo</h3>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-3">
+                <input type="email" id="login-email" required placeholder="E-mail Admin" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
+                <input type="password" id="login-password" required placeholder="Senha Secreta" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
+                <button type="submit" class="w-full gold-btn-gradient py-2.5 rounded-xl text-xs sm:text-sm">Acessar Painel</button>
             </form>
         </div>
     </div>
@@ -541,8 +588,8 @@
 
         function applyStoreBranding() {
             const name = storeSettings.storeName || "FÊNIX IMPORTS";
-            document.getElementById('header-store-name').innerText = name.toUpperCase();
-            document.getElementById('page-title').innerText = `${name} | Alta Performance & Exclusividade`;
+            document.getElementById('header-store-name').innerHTML = `${name.toUpperCase()} <span class="text-gold">IMPORTS</span>`;
+            document.getElementById('page-title').innerText = `${name} | Exclusividade & Alta Performance`;
             document.getElementById('ai-bot-title').innerText = `Consultor ${name} IA`;
         }
 
@@ -627,11 +674,11 @@
         function switchAdminSubTab(sub) {
             document.getElementById('admin-subtab-products').classList.add('hidden'); 
             document.getElementById('admin-subtab-orders').classList.add('hidden');
-            document.getElementById('subnav-products').className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-zinc-400 transition";
-            document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold text-zinc-400 transition";
+            document.getElementById('subnav-products').className = "flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold text-zinc-400 transition";
+            document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold text-zinc-400 transition";
             
             document.getElementById(`admin-subtab-${sub}`).classList.remove('hidden');
-            document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-zinc-800 text-white transition";
+            document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold bg-zinc-800 text-white transition";
             if(sub === 'orders') loadOrdersFromFirebase();
         }
 
@@ -643,7 +690,7 @@
             const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal)));
             
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500 text-xs sm:text-sm">Nenhum produto encontrado.</div>`;
+                grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 text-sm">Nenhum produto encontrado no catálogo.</div>`;
                 return;
             }
 
@@ -652,22 +699,27 @@
                 const out = st <= 0;
                 const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
                 
-                const promo = p.promoPrice ? `<div class="absolute top-2 left-2 bg-red-600 text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 sm:px-2 sm:py-1 rounded shadow uppercase z-10"><i class="fa-solid fa-tag"></i> Oferta</div>` : '';
-                const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-32 sm:h-48 object-cover rounded-xl mb-2 sm:mb-3 border border-zinc-700/50">` : `<div class="w-full h-32 sm:h-48 bg-zinc-900 rounded-xl mb-2 sm:mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-600 text-2xl sm:text-3xl"></i></div>`;
+                const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600/90 backdrop-blur-md text-white text-[9px] font-black px-2.5 py-1 rounded-lg uppercase z-10 tracking-wider"><i class="fa-solid fa-fire"></i> Promoção</div>` : '';
+                const img = p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-40 sm:h-52 object-cover rounded-2xl mb-3 border border-zinc-800 group-hover:scale-105 transition duration-500">` : `<div class="w-full h-40 sm:h-52 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center border border-zinc-800"><i class="fa-solid fa-image text-zinc-700 text-3xl"></i></div>`;
                 
                 grid.innerHTML += `
-                    <div class="bg-cardBg border border-zinc-800 rounded-2xl sm:rounded-3xl p-2.5 sm:p-4 flex flex-col justify-between hover:border-gold/50 transition relative overflow-hidden group">
+                    <div class="glass-card rounded-3xl p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
                         ${promo}
                         <div>
-                            ${img}
-                            <span class="px-2 py-0.5 rounded-full text-[8px] sm:text-[10px] font-extrabold bg-gold/10 text-gold border border-gold/20 uppercase inline-block truncate max-w-full">${p.category || 'Geral'}</span>
-                            <h3 class="text-xs sm:text-base font-bold text-white mt-1 group-hover:text-gold transition line-clamp-1">${p.name}</h3>
-                            <p class="text-zinc-400 text-[10px] sm:text-xs leading-tight line-clamp-2 mt-0.5">${p.description}</p>
+                            <div class="overflow-hidden rounded-2xl">
+                                ${img}
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[9px] font-black bg-gold/10 text-gold border border-gold/20 uppercase inline-block truncate max-w-full tracking-wider">${p.category || 'Geral'}</span>
+                            <h3 class="text-sm sm:text-base font-extrabold text-white mt-1.5 group-hover:text-gold transition line-clamp-1">${p.name}</h3>
+                            <p class="text-zinc-400 text-xs leading-relaxed line-clamp-2 mt-1 font-medium">${p.description}</p>
                         </div>
-                        <div class="pt-2 sm:pt-3 mt-2 border-t border-zinc-800 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-1.5">
-                            <div><span class="text-xs sm:text-base font-extrabold ${p.promoPrice ? 'text-green-400' : 'text-gold'}">R$ ${formatMoney(price)}</span></div>
-                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-900 hover:bg-gold hover:text-black text-white'} text-[10px] sm:text-xs font-bold px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl border border-zinc-700 transition flex items-center justify-center gap-1">
-                                <i class="fa-solid fa-cart-plus"></i> <span>${out ? 'Esgotado' : 'Adicionar'}</span>
+                        <div class="pt-3 mt-3 border-t border-zinc-800/80 flex items-center justify-between gap-2">
+                            <div>
+                                <span class="text-xs text-zinc-500 block leading-none text-[10px]">Preço</span>
+                                <span class="text-sm sm:text-lg font-black ${p.promoPrice ? 'text-green-400' : 'text-gold'}">R$ ${formatMoney(price)}</span>
+                            </div>
+                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'gold-btn-gradient'} text-xs px-3.5 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md">
+                                <i class="fa-solid fa-bag-shopping"></i> <span>${out ? 'Esgotado' : 'Comprar'}</span>
                             </button>
                         </div>
                     </div>`;
@@ -676,9 +728,9 @@
 
         function setCategoryFilter(cat) { 
             currentFilter = cat; 
-            document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 whitespace-nowrap"); 
+            document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap"); 
             const activeBtn = cat === 'all' ? document.getElementById('filter-btn-all') : document.querySelector(`.filter-btn[data-cat="${cat}"]`); 
-            if(activeBtn) activeBtn.className = "filter-btn px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold bg-gold text-black shadow whitespace-nowrap"; 
+            if(activeBtn) activeBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold gold-btn-gradient whitespace-nowrap"; 
             renderProducts(); 
         }
 
@@ -736,7 +788,7 @@
             document.getElementById('cart-counter').innerText = cart.reduce((s, i) => s + i.qty, 0);
             
             if (cart.length === 0) { 
-                cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-xs sm:text-sm">Seu carrinho está vazio</div>`; 
+                cont.innerHTML = `<div class="py-16 text-center text-zinc-500 text-xs sm:text-sm">Seu carrinho está vazio</div>`; 
                 document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
                 document.getElementById('cart-insurance-cost').innerText = 'R$ 0,00';
                 document.getElementById('cart-shipping-cost').innerText = 'R$ 0,00';
@@ -747,15 +799,15 @@
             cont.innerHTML = ''; 
             cart.forEach(i => { 
                 cont.innerHTML += `
-                    <div class="py-3 flex items-center justify-between gap-2 border-b border-zinc-800/40">
+                    <div class="py-3.5 flex items-center justify-between gap-3 border-b border-zinc-800/60">
                         <div class="flex-1 min-w-0">
                             <h4 class="text-xs font-bold text-white truncate">${i.name}</h4>
                             <span class="text-xs text-gold font-bold">R$ ${formatMoney(i.activePrice)}</span>
                         </div>
-                        <div class="flex gap-1.5 items-center bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1">
-                            <button onclick="decreaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">-</button>
-                            <span class="text-xs w-3 text-center font-bold">${i.qty}</span>
-                            <button onclick="increaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 text-xs">+</button>
+                        <div class="flex gap-2 items-center bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-1">
+                            <button onclick="decreaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 font-bold text-xs">-</button>
+                            <span class="text-xs w-4 text-center font-bold text-white">${i.qty}</span>
+                            <button onclick="increaseCartQty('${i.id}')" class="text-zinc-400 hover:text-white px-1 font-bold text-xs">+</button>
                         </div>
                     </div>`; 
             });
@@ -873,7 +925,7 @@
             document.getElementById('pix-emv-input').value = currentPixPayload;
             
             document.getElementById('dynamic-qrcode').innerHTML = '';
-            new QRCode(document.getElementById('dynamic-qrcode'), { text: currentPixPayload, width: 130, height: 130, colorDark: "#000000", colorLight: "#ffffff" });
+            new QRCode(document.getElementById('dynamic-qrcode'), { text: currentPixPayload, width: 140, height: 140, colorDark: "#000000", colorLight: "#ffffff" });
 
             document.getElementById('checkout-step-1').classList.add('hidden'); 
             document.getElementById('checkout-step-2').classList.remove('hidden');
@@ -883,7 +935,7 @@
             const i = document.getElementById('pix-emv-input'); 
             i.select(); 
             navigator.clipboard.writeText(i.value); 
-            showToast('Pix Copiado! Cole no app do banco.', 'success'); 
+            showToast('Pix Copiado! Cole no app do seu banco.', 'success'); 
         }
 
         async function processAndSendOrder() {
@@ -930,7 +982,7 @@
                 const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
                 window.open(`https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(`Novo pedido em ${storeTitle}`)}`, '_blank');
             }
-            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-base"></i> Já paguei! Enviar Comprovante'; 
+            btn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> Já Paguei! Enviar Comprovante'; 
             btn.disabled = false;
         }
 
@@ -965,16 +1017,16 @@
                 const trackCode = o.trackingCode || '';
                 const trackInput = o.status !== 'aguardando' ? `
                     <div class="flex gap-1 mt-1">
-                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="Cód J&T ou Motoboy" class="bg-zinc-950 border border-zinc-700 text-[10px] px-1.5 py-0.5 rounded w-24 outline-none text-white focus:border-gold">
-                        <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-1.5 py-0.5 rounded text-[10px]" title="Enviar WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="Cód J&T ou Motoboy" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-0.5 rounded-lg w-28 outline-none text-white focus:border-gold">
+                        <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-2 py-0.5 rounded-lg text-[10px]" title="Enviar WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
                     </div>` : '';
 
                 tb.innerHTML += `
-                    <tr class="border-b border-zinc-800 hover:bg-zinc-900/40">
-                        <td class="p-3 text-xs"><b>${o.client.name}</b><br><span class="text-[10px] text-zinc-400">${o.shippingType || 'Padrão'}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
-                        <td class="p-3 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td>
-                        <td class="p-3">${st}${trackInput}</td>
-                        <td class="p-3 text-right">${act} <button onclick="deleteOrder('${o.id}')" class="text-red-400 hover:bg-zinc-800 p-1.5 rounded"><i class="fa-solid fa-trash"></i></button></td>
+                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
+                        <td class="p-4 text-xs"><b>${o.client.name}</b><br><span class="text-[10px] text-zinc-400">${o.shippingType || 'Padrão'}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
+                        <td class="p-4 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td>
+                        <td class="p-4">${st}${trackInput}</td>
+                        <td class="p-4 text-right">${act} <button onclick="deleteOrder('${o.id}')" class="text-red-400 hover:bg-zinc-800 p-1.5 rounded ml-1"><i class="fa-solid fa-trash"></i></button></td>
                     </tr>`;
             });
             
@@ -1005,7 +1057,7 @@
             const cleanPhone = formatWhatsappNumber(phone);
             const storeTitle = storeSettings.storeName || 'Loja';
             window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na${storeTitle} foi enviado! 🚚\n\nCódigo/Informação de rastreio: *${code}*\n\nAcompanhe em nosso site.`)}`, '_blank');
-            showToast('Status enviado!', 'success');
+            showToast('Status enviado com sucesso!', 'success');
             loadOrdersFromFirebase();
         }
 
@@ -1041,7 +1093,7 @@
                 let transportadora = o.shippingType === 'J&T Express' ? 'J&T Express' : 'Motoboy Regional';
 
                 res.innerHTML = `
-                    <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-xl space-y-4">
+                    <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-2xl space-y-4">
                         <div class="flex items-center justify-between text-xs text-zinc-400 border-b border-zinc-800 pb-2">
                             <span>Envio: <b class="text-white">${transportadora}</b></span>
                             <span class="text-gold font-bold">R$ ${formatMoney(o.financials.total)}</span>
@@ -1050,20 +1102,20 @@
                         <!-- Timeline -->
                         <div class="flex items-center justify-between relative px-2">
                             <div class="flex flex-col items-center gap-1 z-10">
-                                <div class="w-7 h-7 rounded-full ${step1} flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-clock"></i></div>
-                                <span class="text-[9px] text-zinc-400">Pedido</span>
+                                <div class="w-8 h-8 rounded-full ${step1} flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-clock"></i></div>
+                                <span class="text-[9px] text-zinc-400 font-bold">Pedido</span>
                             </div>
                             <div class="flex flex-col items-center gap-1 z-10">
-                                <div class="w-7 h-7 rounded-full ${step2} flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-box"></i></div>
-                                <span class="text-[9px] text-zinc-400">Separação</span>
+                                <div class="w-8 h-8 rounded-full ${step2} flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-box"></i></div>
+                                <span class="text-[9px] text-zinc-400 font-bold">Separação</span>
                             </div>
                             <div class="flex flex-col items-center gap-1 z-10">
-                                <div class="w-7 h-7 rounded-full ${step3} flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-truck"></i></div>
-                                <span class="text-[9px] text-zinc-400">Em Trânsito</span>
+                                <div class="w-8 h-8 rounded-full ${step3} flex items-center justify-center text-xs font-bold"><i class="fa-solid fa-truck"></i></div>
+                                <span class="text-[9px] text-zinc-400 font-bold">Em Trânsito</span>
                             </div>
                         </div>
 
-                        ${o.trackingCode ? `<div class="bg-zinc-950 border border-zinc-800 p-2.5 rounded-xl text-center"><span class="text-[10px] text-zinc-500 block">Código / Observação de Envio</span><span class="text-gold font-mono tracking-wider text-xs font-bold">${o.trackingCode}</span></div>` : ''}
+                        ${o.trackingCode ? `<div class="bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-center"><span class="text-[10px] text-zinc-500 block uppercase tracking-wider font-bold">Código / Informação de Envio</span><span class="text-gold font-mono tracking-wider text-xs font-bold">${o.trackingCode}</span></div>` : ''}
                     </div>`;
             } catch(e) { res.innerHTML = '<span class="text-red-400">Erro na consulta. Tente novamente.</span>'; }
         }
@@ -1074,7 +1126,7 @@
             
             const statusEl = document.getElementById('upload-status');
             statusEl.classList.remove('hidden');
-            statusEl.innerText = 'Enviando imagem para a nuvem...';
+            statusEl.innerText = 'Enviando foto para a nuvem...';
 
             const formData = new FormData();
             formData.append('reqtype', 'upload-file');
@@ -1089,13 +1141,13 @@
                 if (resultUrl && resultUrl.startsWith('http')) {
                     document.getElementById('prod-imageUrl').value = resultUrl.trim();
                     statusEl.innerText = 'Upload concluído com sucesso!';
-                    statusEl.className = 'text-[10px] text-green-400 mt-1';
+                    statusEl.className = 'text-[10px] text-green-400 mt-1 font-bold';
                 } else {
                     throw new Error('Falha no upload');
                 }
             } catch (err) {
-                statusEl.innerText = 'Erro ao enviar. Tente novamente ou cole o link.';
-                statusEl.className = 'text-[10px] text-red-400 mt-1';
+                statusEl.innerText = 'Erro ao enviar. Tente novamente ou insira a URL.';
+                statusEl.className = 'text-[10px] text-red-400 mt-1 font-bold';
             }
         }
 
@@ -1184,7 +1236,7 @@
                 closeProductModal(); 
                 loadProductsFromFirebase();
             } catch(err) { showToast('Produto salvo localmente.', 'info'); }
-            document.getElementById('btn-salvar-produto').innerText = 'Salvar';
+            document.getElementById('btn-salvar-produto').innerText = 'Salvar Produto';
         }
 
         function renderAdminTable() {
@@ -1192,14 +1244,14 @@
             tb.innerHTML = '';
             products.forEach(p => {
                 tb.innerHTML += `
-                    <tr class="border-b border-zinc-800">
-                        <td class="p-2">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-7 h-7 sm:w-8 sm:h-8 rounded object-cover">` : '-'}</td>
-                        <td class="p-2 truncate max-w-[120px] sm:max-w-[150px] font-medium text-white">${p.name}</td>
-                        <td class="p-2">${p.stock}</td>
-                        <td class="p-2 text-red-400">R$ ${formatMoney(p.costPrice || 0)}</td>
-                        <td class="p-2 text-green-400">R$ ${formatMoney(p.promoPrice || p.price)}</td>
-                        <td class="p-2 text-right">
-                            <button onclick="openProductModal('${p.id}')" class="text-gold hover:text-yellow-300 mx-1 sm:mx-2"><i class="fa-solid fa-pen"></i></button>
+                    <tr class="border-b border-zinc-800/60">
+                        <td class="p-3">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-8 h-8 rounded-lg object-cover">` : '-'}</td>
+                        <td class="p-3 truncate max-w-[150px] font-bold text-white">${p.name}</td>
+                        <td class="p-3">${p.stock}</td>
+                        <td class="p-3 text-red-400 font-bold">R$ ${formatMoney(p.costPrice || 0)}</td>
+                        <td class="p-3 text-green-400 font-bold">R$ ${formatMoney(p.promoPrice || p.price)}</td>
+                        <td class="p-3 text-right">
+                            <button onclick="openProductModal('${p.id}')" class="text-gold hover:text-yellow-300 mx-1.5"><i class="fa-solid fa-pen"></i></button>
                             <button onclick="deleteProduct('${p.id}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>`;
@@ -1254,7 +1306,7 @@
                 await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings);
             } catch(err) {}
 
-            showToast('Configurações e valores de frete salvos!', 'success');
+            showToast('Configurações salvas com sucesso!', 'success');
             applyStoreBranding();
             closeSettingsModal();
             loadSettings();
@@ -1270,11 +1322,11 @@
 
             try {
                 await window.firebaseFns.signInWithEmailAndPassword(window.auth, email, pass);
-                showToast('Login realizado com sucesso!', 'success');
+                showToast('Acesso concedido!', 'success');
                 closeLoginModal();
                 switchTab('admin');
             } catch(err) {
-                showToast('E-mail ou senha inválidos.', 'error');
+                showToast('E-mail ou senha incorretos.', 'error');
             }
         }
 
