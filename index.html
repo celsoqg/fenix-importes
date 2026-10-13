@@ -116,10 +116,10 @@
 
     <div id="toast-container"></div>
 
-    <!-- Banner Topo Ultra-Moderno -->
+    <!-- Banner Topo -->
     <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
-        <i class="fa-solid fa-bolt text-sm"></i> 
-        <span>Envios Expressos: Motoboy no Rio de Janeiro & J&T Express para todo o Brasil</span>
+        <i class="fa-solid fa-truck-fast text-sm"></i> 
+        <span>ENVIOS EXPRESSOS E SEGUROS PARA TODO O BRASIL</span>
     </div>
 
     <!-- Header Glassmorphism -->
@@ -185,13 +185,13 @@
         <!-- TAB CATÁLOGO -->
         <div id="tab-catalog" class="space-y-8">
             
-            <!-- Hero Banner Futurista -->
+            <!-- Hero Banner -->
             <div class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-12 glow-gold-lg">
                 <div class="absolute -right-20 -bottom-20 w-80 h-80 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="relative z-10 max-w-2xl space-y-4">
                     <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-check"></i> Produtos Originais & Certificados</span>
                     <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
-                    <p class="text-xs sm:text-sm text-zinc-400 font-medium leading-relaxed">Entregas ultra-rápidas via Motoboy no Rio de Janeiro e envio seguro para todo o Brasil via J&T Express.</p>
+                    <p class="text-xs sm:text-sm text-zinc-400 font-medium leading-relaxed">Entregas ultra-rápidas, discretas e seguras para todo o Brasil.</p>
                 </div>
             </div>
 
@@ -358,7 +358,7 @@
                 <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-2">
                     <label class="text-[10px] text-gold font-bold uppercase tracking-wider block"><i class="fa-solid fa-shipping-fast"></i> Método de Envio Calculado</label>
                     <div id="shipping-method-badge" class="text-xs text-zinc-300 flex items-center justify-between bg-zinc-900 p-2.5 rounded-xl border border-zinc-800">
-                        <span id="shipping-type-text"><i class="fa-solid fa-motorcycle text-gold"></i> Motoboy Rápido (Rio de Janeiro)</span>
+                        <span id="shipping-type-text"><i class="fa-solid fa-truck-fast text-gold"></i> Envio Expresso (Nacional)</span>
                         <span id="shipping-price-text" class="font-bold text-gold">R$ 0,00</span>
                     </div>
                 </div>
@@ -448,11 +448,8 @@
                 </div>
 
                 <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-2">
-                    <label class="text-[10px] text-gold font-bold uppercase tracking-wider block">Valores de Frete R$</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="number" step="0.01" id="set-ship-motoboy" required placeholder="Motoboy (RJ)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
-                        <input type="number" step="0.01" id="set-ship-jt" required placeholder="J&T Express (Fora RJ)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
-                    </div>
+                    <label class="text-[10px] text-gold font-bold uppercase tracking-wider block">Valor do Frete R$</label>
+                    <input type="number" step="0.01" id="set-ship-express" required placeholder="Frete Fixo Nacional R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 </div>
 
                 <input type="text" id="set-pix" required placeholder="Chave PIX Recebedora" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
@@ -522,8 +519,8 @@
     <script>
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
         let activeDiscount = 0;
-        let calculatedShippingCost = 0;
-        let shippingType = 'Motoboy RJ';
+        let calculatedShippingCost = 25;
+        let shippingType = 'Envio Expresso';
 
         let storeSettings = { 
             storeName: "FÊNIX IMPORTS", 
@@ -533,8 +530,7 @@
             pixName: "Fenix Imports", 
             pixCity: "Rio de Janeiro", 
             whatsappSales: "5521999999999", 
-            shippingMotoboy: 20,
-            shippingJT: 35,
+            shippingExpress: 25,
             geminiKey: "" 
         };
         let chatHistory = [];
@@ -588,7 +584,7 @@
 
         function applyStoreBranding() {
             const name = storeSettings.storeName || "FÊNIX IMPORTS";
-            document.getElementById('header-store-name').innerHTML = `${name.toUpperCase()} <span class="text-gold">IMPORTS</span>`;
+            document.getElementById('header-store-name').innerHTML = `${name.toUpperCase()}`;
             document.getElementById('page-title').innerText = `${name} | Exclusividade & Alta Performance`;
             document.getElementById('ai-bot-title').innerText = `Consultor ${name} IA`;
         }
@@ -626,6 +622,7 @@
                 }
             } catch (e) {}
             applyStoreBranding();
+            calculatedShippingCost = Number(storeSettings.shippingExpress || 25);
             const cleanSalesWpp = formatWhatsappNumber(storeSettings.whatsappSales);
             document.getElementById('btn-floating-support').href = `https://wa.me/${cleanSalesWpp}?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida.`;
             updateCartUI();
@@ -868,16 +865,8 @@
                 let data = await res.json();
                 if(!data.erro) {
                     document.getElementById('cust-address').value = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
-                    
-                    if (data.uf === 'RJ') {
-                        shippingType = 'Motoboy RJ';
-                        calculatedShippingCost = Number(storeSettings.shippingMotoboy || 20);
-                        document.getElementById('shipping-type-text').innerHTML = '<i class="fa-solid fa-motorcycle text-gold"></i> Motoboy Rápido (Rio de Janeiro)';
-                    } else {
-                        shippingType = 'J&T Express';
-                        calculatedShippingCost = Number(storeSettings.shippingJT || 35);
-                        document.getElementById('shipping-type-text').innerHTML = '<i class="fa-solid fa-truck-fast text-gold"></i> J&T Express (Nacional)';
-                    }
+                    calculatedShippingCost = Number(storeSettings.shippingExpress || 25);
+                    document.getElementById('shipping-type-text').innerHTML = '<i class="fa-solid fa-truck-fast text-gold"></i> Envio Expresso (Nacional)';
                     document.getElementById('shipping-price-text').innerText = `R$ ${formatMoney(calculatedShippingCost)}`;
                     updateCheckoutSummary();
                 }
@@ -1017,13 +1006,13 @@
                 const trackCode = o.trackingCode || '';
                 const trackInput = o.status !== 'aguardando' ? `
                     <div class="flex gap-1 mt-1">
-                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="Cód J&T ou Motoboy" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-0.5 rounded-lg w-28 outline-none text-white focus:border-gold">
+                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="Código de rastreio" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-0.5 rounded-lg w-28 outline-none text-white focus:border-gold">
                         <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-2 py-0.5 rounded-lg text-[10px]" title="Enviar WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
                     </div>` : '';
 
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
-                        <td class="p-4 text-xs"><b>${o.client.name}</b><br><span class="text-[10px] text-zinc-400">${o.shippingType || 'Padrão'}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
+                        <td class="p-4 text-xs"><b>${o.client.name}</b><br><span class="text-[10px] text-zinc-400">${o.shippingType || 'Envio Expresso'}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
                         <td class="p-4 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td>
                         <td class="p-4">${st}${trackInput}</td>
                         <td class="p-4 text-right">${act} <button onclick="deleteOrder('${o.id}')" class="text-red-400 hover:bg-zinc-800 p-1.5 rounded ml-1"><i class="fa-solid fa-trash"></i></button></td>
@@ -1052,11 +1041,11 @@
         
         async function saveAndSendTrack(id, phone, name) {
             const code = document.getElementById(`track-${id}`).value.trim(); 
-            if(!code) return showToast("Digite o código de rastreio ou status do motoboy.", "error");
+            if(!code) return showToast("Digite o código de rastreio.", "error");
             await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
             const cleanPhone = formatWhatsappNumber(phone);
             const storeTitle = storeSettings.storeName || 'Loja';
-            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na${storeTitle} foi enviado! 🚚\n\nCódigo/Informação de rastreio: *${code}*\n\nAcompanhe em nosso site.`)}`, '_blank');
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(`Olá ${name}, seu pedido na${storeTitle} foi enviado! 🚚\n\nCódigo de rastreio: *${code}*\n\nAcompanhe em nosso site.`)}`, '_blank');
             showToast('Status enviado com sucesso!', 'success');
             loadOrdersFromFirebase();
         }
@@ -1090,12 +1079,10 @@
                 let step2 = o.status === 'pago' || o.status === 'enviado' ? 'bg-green-500 text-black' : 'bg-zinc-800 text-zinc-500';
                 let step3 = o.status === 'enviado' ? 'bg-green-500 text-black' : 'bg-zinc-800 text-zinc-500';
 
-                let transportadora = o.shippingType === 'J&T Express' ? 'J&T Express' : 'Motoboy Regional';
-
                 res.innerHTML = `
                     <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-2xl space-y-4">
                         <div class="flex items-center justify-between text-xs text-zinc-400 border-b border-zinc-800 pb-2">
-                            <span>Envio: <b class="text-white">${transportadora}</b></span>
+                            <span>Envio: <b class="text-white">Envio Expresso</b></span>
                             <span class="text-gold font-bold">R$ ${formatMoney(o.financials.total)}</span>
                         </div>
                         
@@ -1115,7 +1102,7 @@
                             </div>
                         </div>
 
-                        ${o.trackingCode ? `<div class="bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-center"><span class="text-[10px] text-zinc-500 block uppercase tracking-wider font-bold">Código / Informação de Envio</span><span class="text-gold font-mono tracking-wider text-xs font-bold">${o.trackingCode}</span></div>` : ''}
+                        ${o.trackingCode ? `<div class="bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-center"><span class="text-[10px] text-zinc-500 block uppercase tracking-wider font-bold">Código de Rastreio</span><span class="text-gold font-mono tracking-wider text-xs font-bold">${o.trackingCode}</span></div>` : ''}
                     </div>`;
             } catch(e) { res.innerHTML = '<span class="text-red-400">Erro na consulta. Tente novamente.</span>'; }
         }
@@ -1167,7 +1154,7 @@
             
             const storeTitle = storeSettings.storeName || 'Loja';
             const catalog = products.map(p => `${p.name} (${p.category}) - R$${p.price}`).join(', ');
-            const systemPrompt = `Você é o assistente virtual exclusivo da loja ${storeTitle}. Nossos envios funcionam via Motoboy para a região do Rio de Janeiro e via J&T Express para todo o resto do Brasil. Catálogo de produtos: ${catalog}.`;
+            const systemPrompt = `Você é o assistente virtual exclusivo da loja ${storeTitle}. Nossos envios são expressos e seguros para todo o Brasil. Catálogo de produtos: ${catalog}.`;
 
             chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1 flex items-center gap-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Pensando...</div>`;
             
@@ -1274,8 +1261,7 @@
         function openSettingsModal() {
             document.getElementById('set-store-name').value = storeSettings.storeName || 'FÊNIX IMPORTS';
             document.getElementById('set-store-logo').value = storeSettings.logoUrl || '';
-            document.getElementById('set-ship-motoboy').value = storeSettings.shippingMotoboy || 20;
-            document.getElementById('set-ship-jt').value = storeSettings.shippingJT || 35;
+            document.getElementById('set-ship-express').value = storeSettings.shippingExpress || 25;
             document.getElementById('set-pix').value = storeSettings.pixKey || '';
             document.getElementById('set-pix-name').value = storeSettings.pixName || '';
             document.getElementById('set-pix-city').value = storeSettings.pixCity || '';
@@ -1291,8 +1277,7 @@
             storeSettings = {
                 storeName: document.getElementById('set-store-name').value.trim(),
                 logoUrl: document.getElementById('set-store-logo').value.trim(),
-                shippingMotoboy: parseFloat(document.getElementById('set-ship-motoboy').value),
-                shippingJT: parseFloat(document.getElementById('set-ship-jt').value),
+                shippingExpress: parseFloat(document.getElementById('set-ship-express').value),
                 pixKey: document.getElementById('set-pix').value.trim(),
                 pixName: document.getElementById('set-pix-name').value.trim(),
                 pixCity: document.getElementById('set-pix-city').value.trim(),
