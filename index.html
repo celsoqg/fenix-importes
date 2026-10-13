@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Fênix Imports | Exclusividade & Alta Performance</title>
     
-    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#d4a017">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,9 +30,8 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
-    <style id="dynamic-theme-style">
+    <style>
         :root {
             --theme-gold: #d4a017;
             --theme-gold-hover: #f1c40f;
@@ -50,20 +48,14 @@
         }
         
         .glass-card {
-            background: rgba(15, 15, 23, 0.7);
+            background: rgba(15, 15, 23, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        
-        .glass-card:hover {
-            border-color: rgba(212, 160, 23, 0.4);
-            box-shadow: 0 10px 30px -10px rgba(212, 160, 23, 0.25);
-            transform: translateY(-3px);
-        }
 
         .glass-nav {
-            background: rgba(5, 5, 8, 0.85);
+            background: rgba(5, 5, 8, 0.9);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -88,28 +80,12 @@
             transform: translateY(-1px);
         }
 
-        .glow-gold-lg {
-            box-shadow: 0 0 35px rgba(212, 160, 23, 0.2);
-        }
-
-        ::-webkit-scrollbar { width: 5px; height: 5px; }
-        ::-webkit-scrollbar-track { background: #050508; }
-        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #d4a017; }
-
-        .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.4; }
-        .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 2px; }
-        .chat-bot { background: rgba(212, 160, 23, 0.12); border: 1px solid rgba(212, 160, 23, 0.4); color: #fef08a; border-bottom-left-radius: 2px; }
-        
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { padding: 12px 18px; border-radius: 14px; font-size: 13px; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; border: 1px solid rgba(255,255,255,0.1); }
         .toast-success { background: #0f172a; border-left: 4px solid #22c55e; color: #4ade80; }
         .toast-error { background: #0f172a; border-left: 4px solid #ef4444; color: #f87171; }
         .toast-info { background: #0f172a; border-left: 4px solid #d4a017; color: #fef08a; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-
-        .skeleton { animation: pulse-skeleton 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; background-color: #181824; }
-        @keyframes pulse-skeleton { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative">
@@ -121,60 +97,48 @@
         <span>ENVIOS EXPRESSOS PARA TODO O BRASIL</span>
     </div>
 
-    <header class="sticky top-0 z-50 glass-nav transition-all duration-300">
+    <header class="sticky top-0 z-50 glass-nav">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('catalog')">
-                <div id="header-logo-container" class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-700 p-0.5 shadow-lg group-hover:scale-105 transition-all duration-300">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('catalog')">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-700 p-0.5 shadow-lg">
                     <div class="w-full h-full bg-darkBg rounded-[14px] flex items-center justify-center text-gold text-lg sm:text-xl font-black">
-                        <i id="header-logo-icon" class="fa-solid fa-fire-flame-curved"></i>
+                        <i class="fa-solid fa-fire-flame-curved"></i>
                     </div>
                 </div>
-                <div class="min-w-0">
-                    <span id="header-store-name" class="text-base sm:text-2xl font-black tracking-tight text-white block leading-none">FÊNIX <span class="text-gold">IMPORTS</span></span>
+                <div>
+                    <span class="text-base sm:text-2xl font-black tracking-tight text-white block leading-none">FÊNIX <span class="text-gold">IMPORTS</span></span>
                     <span class="text-[9px] sm:text-[11px] text-zinc-400 font-bold tracking-widest uppercase block mt-1">Alta Performance</span>
                 </div>
             </div>
 
             <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-2 hover:text-yellow-300 transition"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
-                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
-                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-2"><i class="fa-solid fa-shield-halved text-xs"></i> Admin</button>
-                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-2"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
+                <button onclick="switchTab('admin')" id="nav-admin" class="text-zinc-400 hover:text-gold transition flex items-center gap-2"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
             </nav>
 
             <div class="flex items-center gap-3">
-                <div id="user-status-container" class="hidden text-xs text-zinc-400 lg:flex items-center gap-2 bg-zinc-900/80 border border-zinc-800 px-3 py-1.5 rounded-full shrink-0">
-                    <i class="fa-solid fa-circle text-[8px] text-green-500 animate-pulse"></i>
-                    <span id="logged-user-email" class="max-w-[100px] truncate font-medium">admin</span>
-                    <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300 ml-1" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
-                </div>
-
-                <button onclick="toggleCartDrawer(true)" class="relative bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/60 text-white px-3.5 py-2.5 rounded-2xl flex items-center gap-2.5 transition group shrink-0">
-                    <i class="fa-solid fa-bag-shopping text-gold group-hover:scale-110 transition text-base"></i>
-                    <span class="hidden sm:inline text-xs font-bold uppercase tracking-wider">Carrinho</span>
-                    <span id="cart-counter" class="bg-gold text-black text-xs font-black w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
+                <button onclick="switchTab('admin')" class="bg-zinc-900 border border-zinc-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:text-gold">
+                    <i class="fa-solid fa-user-shield text-gold mr-1"></i> Painel Admin
                 </button>
-
-                <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-400 hover:text-white p-2"><i class="fa-solid fa-bars text-xl"></i></button>
             </div>
         </div>
     </header>
 
     <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full">
 
+        <!-- ABA CATÁLOGO -->
         <div id="tab-catalog" class="space-y-8">
-            <div class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-12 glow-gold-lg">
+            <div class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-12">
                 <div class="relative z-10 max-w-2xl space-y-4">
-                    <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-check"></i> Produtos Originais & Certificados</span>
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-check"></i> Produtos Originais</span>
                     <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
-                    <p class="text-xs sm:text-sm text-zinc-400 font-medium leading-relaxed">Entregas ultra-rápidas e discretas para todo o Brasil.</p>
                 </div>
             </div>
 
             <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 glass-card p-4 rounded-2xl">
                 <div class="relative w-full xl:w-96 shrink-0">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Pesquisar por nome ou categoria..." class="w-full bg-zinc-900/90 border border-zinc-800 rounded-xl pl-11 pr-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none transition shadow-inner">
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Pesquisar por nome ou categoria..." class="w-full bg-zinc-900/90 border border-zinc-800 rounded-xl pl-11 pr-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none transition">
                 </div>
                 
                 <div class="flex items-center gap-2 overflow-x-auto w-full pb-1 xl:pb-0 scroll-smooth">
@@ -191,6 +155,7 @@
             <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"></div>
         </div>
 
+        <!-- ABA GESTÃO ADMIN -->
         <div id="tab-admin" class="hidden space-y-8">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 rounded-3xl">
                 <div>
@@ -205,79 +170,48 @@
                 </div>
             </div>
 
+            <!-- SUBTAB ESTOQUE -->
             <div id="admin-subtab-products" class="space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <h3 class="text-base sm:text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos & Automações</h3>
                     <div class="flex flex-wrap gap-2">
-                        <!-- NOVO BOTÃO DIRETO SEM FICHEIROS -->
                         <button onclick="importNativeSupplierList()" id="btn-native-import" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg">
                             <i class="fa-solid fa-bolt"></i> Carregar Catálogo (1 Clique)
                         </button>
                         <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Configs</button>
-                        <button onclick="openProductModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-2"><i class="fa-solid fa-plus"></i> Novo</button>
                     </div>
                 </div>
                 <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Foto</th><th class="p-4">Produto</th><th class="p-4">Estoque</th><th class="p-4">Custo</th><th class="p-4">Venda</th><th class="p-4 text-right">Ações</th></tr></thead>
+                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Produto</th><th class="p-4">Categoria</th><th class="p-4">Estoque</th><th class="p-4">Custo</th><th class="p-4">Venda</th><th class="p-4 text-right">Ação</th></tr></thead>
                             <tbody id="admin-product-table" class="divide-y divide-zinc-800/60"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
+            <!-- SUBTAB VENDAS -->
             <div id="admin-subtab-orders" class="hidden space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Faturamento Confirmado</p><h4 id="dash-revenue" class="text-2xl sm:text-3xl font-black text-white">R$ 0,00</h4></div>
-                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden border-green-500/30"><p class="text-xs font-bold text-green-400 uppercase tracking-wider mb-2">Lucro Estimado</p><h4 id="dash-profit" class="text-2xl sm:text-3xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-400/80 mt-2 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
-                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-2xl sm:text-3xl font-black text-white">0</h4></div>
-                </div>
-                <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Cliente/Envio</th><th class="p-4">Itens/Total</th><th class="p-4">Status & Rastreio</th><th class="p-4 text-right">Ação</th></tr></thead>
-                            <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60"></tbody>
-                        </table>
-                    </div>
+                <div class="glass-card p-6 rounded-3xl">
+                    <h3 class="text-base font-bold text-white mb-2"><i class="fa-solid fa-cart-shopping text-gold"></i> Histórico de Vendas</h3>
+                    <p class="text-xs text-zinc-400">Nenhum pedido efetuado no momento.</p>
                 </div>
             </div>
 
+            <!-- SUBTAB CRM VIP -->
             <div id="admin-subtab-crm" class="hidden space-y-6">
-                <div class="glass-card p-6 rounded-3xl space-y-3">
-                    <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-crown text-gold"></i> Clientes Recorrentes & CRM VIP</h3>
-                    <p class="text-xs text-zinc-400">Lista consolidada dos seus compradores calculada automaticamente pelo histórico de pedidos.</p>
-                </div>
-                <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Cliente</th><th class="p-4">WhatsApp</th><th class="p-4">Total Gasto</th><th class="p-4">Pedidos</th><th class="p-4 text-right">Ação VIP</th></tr></thead>
-                            <tbody id="admin-crm-table" class="divide-y divide-zinc-800/60"></tbody>
-                        </table>
-                    </div>
+                <div class="glass-card p-6 rounded-3xl">
+                    <h3 class="text-base font-bold text-white mb-2"><i class="fa-solid fa-crown text-gold"></i> Clientes VIP</h3>
+                    <p class="text-xs text-zinc-400">Lista de clientes recorrentes.</p>
                 </div>
             </div>
 
+            <!-- SUBTAB ANALYTICS -->
             <div id="admin-subtab-analytics" class="hidden space-y-6">
-                <div class="glass-card p-6 rounded-3xl space-y-4">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-robot text-gold"></i> Auditoria de Giro e Reposição via Gemini IA</h3>
-                            <p class="text-xs text-zinc-400 mt-1">A IA analisa seu estoque atual e sugere quais itens recomprar ou colocar em promoção.</p>
-                        </div>
-                        <button onclick="runAiStockAudit()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Executar Auditoria IA</button>
-                    </div>
-                    <div id="ai-audit-result" class="bg-zinc-950 border border-zinc-800 p-4 rounded-2xl text-xs text-zinc-300 leading-relaxed hidden"></div>
-                </div>
-
-                <div class="glass-card p-6 rounded-3xl space-y-4">
-                    <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Alerta de Estoque Crítico ou Parado</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Produto</th><th class="p-4">Estoque Atual</th><th class="p-4">Status Sugerido</th></tr></thead>
-                            <tbody id="admin-stock-alerts-table" class="divide-y divide-zinc-800/60"></tbody>
-                        </table>
-                    </div>
+                <div class="glass-card p-6 rounded-3xl">
+                    <h3 class="text-base font-bold text-white mb-2"><i class="fa-solid fa-robot text-gold"></i> Análise de Giro IA</h3>
+                    <p class="text-xs text-zinc-400">Auditoria automatizada de estoque.</p>
                 </div>
             </div>
         </div>
@@ -286,42 +220,23 @@
     <!-- Modal Configs -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeSettingsModal()"></div>
-        <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+        <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10">
             <h3 class="text-lg font-black text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-sliders text-gold"></i> Configurações da Loja</h3>
             <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-3 text-xs">
-                <input type="text" id="set-store-name" required placeholder="Nome da Loja" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
-                <input type="number" step="0.01" id="set-ship-express" required placeholder="Frete Fixo Nacional R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
-                <input type="text" id="set-pix" required placeholder="Chave PIX Recebedora" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
-                <input type="text" id="set-pix-name" required placeholder="Nome Titular Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
-                <input type="text" id="set-pix-city" required placeholder="Cidade Titular" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
-                <input type="text" id="set-wpp-sales" required placeholder="WhatsApp de Vendas (com DDD)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
-                <input type="text" id="set-gemini" placeholder="Chave API Gemini IA" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2.5 text-blue-300">
+                <input type="text" id="set-store-name" value="FÊNIX IMPORTS" required placeholder="Nome da Loja" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                <input type="text" id="set-pix" value="admin@fenix.com" required placeholder="Chave PIX Recebedora" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
                 <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl">Cancelar</button>
-                    <button type="submit" class="flex-1 gold-btn-gradient py-2.5 rounded-xl">Salvar Configurações</button>
+                    <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl">Fechar</button>
+                    <button type="submit" class="flex-1 gold-btn-gradient py-2.5 rounded-xl">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Login Modal -->
-    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeLoginModal()"></div>
-        <div class="relative glass-card border border-zinc-700/60 rounded-3xl w-full max-w-xs p-6 shadow-2xl z-10">
-            <h3 class="text-base font-bold text-white mb-4">Acesso Administrativo</h3>
-            <form onsubmit="handleAdminLogin(event)" class="space-y-3">
-                <input type="email" id="login-email" required placeholder="E-mail Admin" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-                <input type="password" id="login-password" required placeholder="Senha Secreta" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white">
-                <button type="submit" class="w-full gold-btn-gradient py-2.5 rounded-xl text-xs sm:text-sm">Acessar Painel</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Firebase -->
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
         const firebaseConfig = { 
             apiKey: "AIzaSyBJS8BmQipFFG9qjgML4VTVJnIQVClXiNo", 
@@ -333,218 +248,93 @@
         };
         
         const app = initializeApp(firebaseConfig); 
-        const auth = getAuth(app); 
         const db = getFirestore(app);
         
         window.db = db; 
-        window.auth = auth; 
-        window.firebaseFns = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+        window.firebaseFns = { collection, getDocs, addDoc, deleteDoc, doc };
 
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => window.initApp());
-        } else {
-            window.initApp();
-        }
+        window.initApp();
     </script>
 
-    <!-- App Main Script -->
     <script>
-        let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
-        let storeSettings = { storeName: "FÊNIX IMPORTS", shippingExpress: 25, geminiKey: "" };
+        let products = [], currentFilter = 'all';
 
-        // CATÁLOGO NATIVO EMBUTIDO COM MARGEM DE 70% JÁ CALCULADA
         const NATIVE_SUPPLIER_CATALOG = [
           {"name": "TIRZEPATIDE TG 15MG / 0,5ML", "category": "Peptídeos", "costPrice": 550, "price": 935, "stock": 15, "description": "Tirzepatida TG de alta pureza 15mg/0,5ml."},
           {"name": "TIRZEDRAL TIRZEPATIDA 15MG / 0,5ML - 04 VIAL", "category": "Peptídeos", "costPrice": 550, "price": 935, "stock": 15, "description": "Kit Tirzedral Tirzepatida 15mg/0,5ml com 4 frascos."},
           {"name": "LIPOLESS TIRZEPATIDA 15MG - 04 VIALS - CX NOVA", "category": "Peptídeos", "costPrice": 550, "price": 935, "stock": 15, "description": "Lipoless Tirzepatida 15mg em nova embalagem com 4 vials."},
-          {"name": "LIPOLESS TIRZEPATIDA 15MG / 0,6ML - 01 VIAL", "category": "Peptídeos", "costPrice": 550, "price": 935, "stock": 15, "description": "Lipoless Tirzepatida 15mg/0,6ml unidade frasco."},
-          {"name": "T36 TIRZEPATIDA 15MG / 0,6ML - 01 VIAL", "category": "Peptídeos", "costPrice": 550, "price": 935, "stock": 15, "description": "T36 Tirzepatida 15mg/0,6ml em vial individual."},
-          {"name": "SLIMEX TIRZEPATIDA 15MG - 01 VIAL", "category": "Peptídeos", "costPrice": 550, "price": 935, "stock": 15, "description": "Slimex Tirzepatida 15mg vial individual."},
-          {"name": "GLUCONEX TIRZEPATIDA 15MG - 04 VIAL", "category": "Peptídeos", "costPrice": 550, "price": 935, "stock": 15, "description": "Gluconex Tirzepatida 15mg kit com 4 frascos."},
           {"name": "BIOGENESIS RETATRUTIDE 10MG", "category": "Peptídeos", "costPrice": 210, "price": 357, "stock": 15, "description": "Retatrutide Biogenesis 10mg."},
           {"name": "BIOGENESIS RETATRUTIDE 20MG", "category": "Peptídeos", "costPrice": 260, "price": 442, "stock": 15, "description": "Retatrutide Biogenesis 20mg."},
-          {"name": "BIOGENESIS RETATRUTIDE 30MG", "category": "Peptídeos", "costPrice": 315, "price": 535.5, "stock": 0, "description": "Retatrutide Biogenesis 30mg. (Esgotado no fornecedor)"},
-          {"name": "BIOGENESIS RETATRUTIDE 40MG", "category": "Peptídeos", "costPrice": 340, "price": 578, "stock": 15, "description": "Retatrutide Biogenesis 40mg."},
-          {"name": "BIOGENESIS RETATRUTIDE 120MG", "category": "Peptídeos", "costPrice": 660, "price": 1122, "stock": 15, "description": "Retatrutide Biogenesis 120mg dosagem concentrada."},
-          {"name": "BIOGENESIS TIRZEPATIDE 30MG", "category": "Peptídeos", "costPrice": 260, "price": 442, "stock": 15, "description": "Tirzepatide Biogenesis 30mg."},
-          {"name": "BIOGENESIS TIRZEPATIDE 60MG", "category": "Peptídeos", "costPrice": 315, "price": 535.5, "stock": 15, "description": "Tirzepatide Biogenesis 60mg."},
-          {"name": "BIOGENESIS TIRZEPATIDE 120MG", "category": "Peptídeos", "costPrice": 525, "price": 892.5, "stock": 15, "description": "Tirzepatide Biogenesis 120mg."},
-          {"name": "BIOGENESIS 5 AMINO-1MQ 5MG", "category": "Performance", "costPrice": 290, "price": 493, "stock": 15, "description": "5 Amino-1MQ Biogenesis 5mg."},
-          {"name": "BIOGENESIS AOD-9604 10MG", "category": "Peptídeos", "costPrice": 315, "price": 535.5, "stock": 15, "description": "AOD-9604 Biogenesis 10mg."},
           {"name": "BIOGENESIS BPC-157 10MG", "category": "Peptídeos", "costPrice": 260, "price": 442, "stock": 15, "description": "BPC-157 Biogenesis 10mg para regeneração tecidual."},
-          {"name": "BIOGENESIS CJC 1295 WITHOUT DAC 10MG", "category": "Peptídeos", "costPrice": 290, "price": 493, "stock": 15, "description": "CJC 1295 sem DAC Biogenesis 10mg."},
-          {"name": "BIOGENESIS CJC 1295 WITHOUT DAC + IPAMORELIN 10MG", "category": "Peptídeos", "costPrice": 290, "price": 493, "stock": 15, "description": "Blend CJC 1295 no DAC + Ipamorelin Biogenesis 10mg."},
-          {"name": "BIOGENESIS DSIP 10MG", "category": "Peptídeos", "costPrice": 290, "price": 493, "stock": 15, "description": "DSIP Biogenesis 10mg otimizador de sono."},
-          {"name": "BIOGENESIS EPITHALON 50MG", "category": "Peptídeos", "costPrice": 340, "price": 578, "stock": 15, "description": "Epithalon Biogenesis 50mg regulação celular."},
           {"name": "BIOGENESIS GLOW 70MG", "category": "Estética Avançada", "costPrice": 290, "price": 493, "stock": 15, "description": "Glow 70mg Biogenesis fórmula estética."},
-          {"name": "BIOGENESIS IGF-1 LR3 1MG", "category": "Performance", "costPrice": 315, "price": 535.5, "stock": 15, "description": "IGF-1 LR3 Biogenesis 1mg."},
-          {"name": "BIOGENESIS IPAMORELIN 10MG", "category": "Peptídeos", "costPrice": 290, "price": 493, "stock": 15, "description": "Ipamorelin Biogenesis 10mg."},
-          {"name": "BIOGENESIS KISSPEPTIN 05MG", "category": "Peptídeos", "costPrice": 260, "price": 442, "stock": 15, "description": "Kisspeptin Biogenesis 5mg regulador hormonal."},
-          {"name": "BIOGENESIS KLOW 80MG", "category": "Estética Avançada", "costPrice": 320, "price": 544, "stock": 15, "description": "Klow 80mg Biogenesis fórmula de alta performance."},
-          {"name": "BIOGENESIS MELANOTAN 10MG", "category": "Estética Avançada", "costPrice": 290, "price": 493, "stock": 15, "description": "Melanotan Biogenesis 10mg."},
-          {"name": "BIOGENESIS MOTS-C 10MG", "category": "Performance", "costPrice": 290, "price": 493, "stock": 15, "description": "MOTS-C Biogenesis 10mg ativador metabólico."},
-          {"name": "BIOGENESIS MOTS-C 40MG", "category": "Performance", "costPrice": 355, "price": 603.5, "stock": 15, "description": "MOTS-C Biogenesis 40mg concentração estendida."},
           {"name": "BIOGENESIS NAD+ 1000MG", "category": "Performance", "costPrice": 365, "price": 620.5, "stock": 15, "description": "NAD+ Biogenesis 1000mg longevidade e energia."},
-          {"name": "BIOGENESIS OXYTOCIN 10MG", "category": "Peptídeos", "costPrice": 260, "price": 442, "stock": 15, "description": "Oxytocin Biogenesis 10mg."},
-          {"name": "BIOGENESIS PT-141 10MG", "category": "Performance", "costPrice": 290, "price": 493, "stock": 15, "description": "PT-141 Biogenesis 10mg."},
-          {"name": "BIOGENESIS REVIVE TESA + IPA 15MG", "category": "Peptídeos", "costPrice": 365, "price": 620.5, "stock": 15, "description": "Revive Tesamorelin + Ipamorelin 15mg Biogenesis."},
-          {"name": "BIOGENESIS SCULPT TESA + IPA 15MG", "category": "Peptídeos", "costPrice": 365, "price": 620.5, "stock": 15, "description": "Sculpt Tesamorelin + Ipamorelin 15mg Biogenesis."},
-          {"name": "BIOGENESIS SELANK 10MG", "category": "Peptídeos", "costPrice": 290, "price": 493, "stock": 15, "description": "Selank Biogenesis 10mg nootrópico."},
-          {"name": "BIOGENESIS SEMAX 10MG", "category": "Peptídeos", "costPrice": 290, "price": 493, "stock": 15, "description": "Semax Biogenesis 10mg foco e performance cognitiva."},
-          {"name": "BIOGENESIS SEMAX 30MG", "category": "Peptídeos", "costPrice": 365, "price": 620.5, "stock": 15, "description": "Semax Biogenesis 30mg."},
-          {"name": "BIOGENESIS SERMORELIN 10MG", "category": "Peptídeos", "costPrice": 290, "price": 493, "stock": 15, "description": "Sermorelin Biogenesis 10mg."},
-          {"name": "BIOGENESIS SS-31 50MG", "category": "Peptídeos", "costPrice": 365, "price": 620.5, "stock": 15, "description": "SS-31 Biogenesis 50mg suporte mitocondrial."},
-          {"name": "BIOGENESIS TB500 10MG", "category": "Peptídeos", "costPrice": 260, "price": 442, "stock": 15, "description": "TB500 Biogenesis 10mg regeneração e recuperação."},
-          {"name": "BIOGENESIS TESAMORELIN 10MG", "category": "Peptídeos", "costPrice": 340, "price": 578, "stock": 15, "description": "Tesamorelin Biogenesis 10mg."},
-          {"name": "BIOGENESIS THYMALIN 10MG", "category": "Peptídeos", "costPrice": 260, "price": 442, "stock": 15, "description": "Thymalin Biogenesis 10mg suporte imune."},
-          {"name": "BIOGENESIS THYMOSIN ALPHA-1 10MG", "category": "Peptídeos", "costPrice": 315, "price": 535.5, "stock": 15, "description": "Thymosin Alpha-1 Biogenesis 10mg."},
-          {"name": "BIOGENESIS WOLVERINE BLEND BPC157 + TB500 20MG", "category": "Performance", "costPrice": 315, "price": 535.5, "stock": 15, "description": "Wolverine Blend (BPC-157 + TB500) 20mg Biogenesis."},
-          {"name": "BIOGENESIS RETATRUTIDE 15MG (1ML)", "category": "Peptídeos", "costPrice": 180, "price": 306, "stock": 15, "description": "Retatrutide Biogenesis 15mg frasco prático de 1ml."},
-          {"name": "BIOGENESIS GHK-CU 100MG + AGUA", "category": "Insumos & Soluções", "costPrice": 290, "price": 493, "stock": 15, "description": "GHK-CU 100mg Biogenesis acompanhado de água bacteriostática."},
-          {"name": "BIOGENESIS GLOW 70MG + AGUA", "category": "Insumos & Soluções", "costPrice": 315, "price": 535.5, "stock": 15, "description": "Glow 70mg Biogenesis kit com água de diluição."},
-          {"name": "BIOGENESIS KLOW 80MG + AGUA", "category": "Insumos & Soluções", "costPrice": 340, "price": 578, "stock": 15, "description": "Klow 80mg Biogenesis kit com água de diluição."},
-          {"name": "BIOGENESIS PT-141 10MG + AGUA", "category": "Insumos & Soluções", "costPrice": 290, "price": 493, "stock": 15, "description": "PT-141 10mg Biogenesis acompanhado de água."},
-          {"name": "BIOGENESIS TESAMORELIN 10MG + AGUA", "category": "Insumos & Soluções", "costPrice": 315, "price": 535.5, "stock": 15, "description": "Tesamorelin 10mg Biogenesis kit com água de diluição."},
           {"name": "OXYGEN RETAGEN RETATRUTIDE 40MG - 01 PEN", "category": "Peptídeos", "costPrice": 655, "price": 1113.5, "stock": 15, "description": "Caneta de aplicação prática Retagen 40mg Oxygen."},
-          {"name": "OXYGEN RETAGEN 40MG (LIOFILIZADA)", "category": "Peptídeos", "costPrice": 600, "price": 1020, "stock": 15, "description": "Retagen 40mg Oxygen versão liofilizada."},
-          {"name": "OXYGEN RETATRUTIDE 160MG - 01 VIAL (LIOFILIZADA)", "category": "Peptídeos", "costPrice": 783, "price": 1331.1, "stock": 15, "description": "Retatrutide 160mg dosagem super concentrada liofilizada."},
-          {"name": "OXYGEN HGH FRAG 10MG - 01 VIAL", "category": "Peptídeos", "costPrice": 410, "price": 697, "stock": 15, "description": "HGH Fragment 176-191 Oxygen 10mg."},
-          {"name": "OXYGEN RETAGEN 80MG - 01 VIAL DILUIDA", "category": "Peptídeos", "costPrice": 585, "price": 994.5, "stock": 15, "description": "Retagen 80mg Oxygen solução pronta/diluída."},
-          {"name": "OXYGEN RETAGEN 120MG - 01 VIAL DILUIDA", "category": "Peptídeos", "costPrice": 816, "price": 1387.2, "stock": 15, "description": "Retagen 120mg Oxygen alta dosagem diluída."},
-          {"name": "OXYGEN TIRZEGEN 60MG - 01 VIAL", "category": "Peptídeos", "costPrice": 500, "price": 850, "stock": 15, "description": "Tirzegen (Tirzepatida) 60mg Oxygen."},
-          {"name": "OXYGEN AHK-CU 100MG - 01 VIAL", "category": "Estética Avançada", "costPrice": 420, "price": 714, "stock": 15, "description": "AHK-CU Peptídeo de Cobre Oxygen 100mg capilar/estético."},
-          {"name": "OXYGEN AOD-9604 05MG - 01 VIAL", "category": "Peptídeos", "costPrice": 365, "price": 620.5, "stock": 15, "description": "AOD-9604 Oxygen 5mg."},
-          {"name": "OXYGEN CBL 514 20MG - 01 VIAL", "category": "Estética Avançada", "costPrice": 475, "price": 807.5, "stock": 15, "description": "CBL-514 Oxygen 20mg lipólise focalizada."},
-          {"name": "OXYGEN CBL-514 50MG - 01 VIAL", "category": "Estética Avançada", "costPrice": 520, "price": 884, "stock": 15, "description": "CBL-514 Oxygen 50mg concentração avançada."},
-          {"name": "OXYGEN DSIP 05MG - 01 VIAL", "category": "Peptídeos", "costPrice": 420, "price": 714, "stock": 15, "description": "DSIP Oxygen 5mg regulação do sono."},
-          {"name": "OXYGEN GHK-CU 100MG - PEN", "category": "Estética Avançada", "costPrice": 625, "price": 1062.5, "stock": 15, "description": "Caneta GHK-CU Oxygen 100mg regeneração dérmica."},
-          {"name": "OXYGEN GLOW 70MG - 01 PEN", "category": "Estética Avançada", "costPrice": 705, "price": 1198.5, "stock": 15, "description": "Caneta Glow 70mg Oxygen aplicação fácil."},
-          {"name": "OXYGEN GLOW 70MG - 01 VIAL", "category": "Estética Avançada", "costPrice": 445, "price": 756.5, "stock": 15, "description": "Glow 70mg Oxygen frasco vial."},
-          {"name": "OXYGEN KISSPEPTIN 10MG - 01 VIAL", "category": "Peptídeos", "costPrice": 395, "price": 671.5, "stock": 15, "description": "Kisspeptin 10mg Oxygen."},
-          {"name": "OXYGEN KLOW 80MG - 01 PEN", "category": "Estética Avançada", "costPrice": 680, "price": 1156, "stock": 15, "description": "Caneta Klow 80mg Oxygen."},
-          {"name": "OXYGEN KLOW 80MG - 01 VIAL", "category": "Estética Avançada", "costPrice": 475, "price": 807.5, "stock": 15, "description": "Klow 80mg Oxygen vial individual."},
-          {"name": "OXYGEN KPV 10MG 02ML - 01 VIAL", "category": "Peptídeos", "costPrice": 395, "price": 671.5, "stock": 15, "description": "KPV 10mg/2ml Oxygen anti-inflamatório e imune."},
-          {"name": "OXYGEN NAD+ 1000MG - 01 VIAL", "category": "Performance", "costPrice": 500, "price": 850, "stock": 15, "description": "NAD+ Oxygen 1000mg otimização celular."},
-          {"name": "OXYGEN SELANK 18MG NASAL", "category": "Peptídeos", "costPrice": 340, "price": 578, "stock": 15, "description": "Selank Oxygen 18mg aplicação por spray nasal."},
-          {"name": "OXYGEN SEMAX 18MG NASAL", "category": "Peptídeos", "costPrice": 340, "price": 578, "stock": 15, "description": "Semax Oxygen 18mg aplicação por spray nasal."},
-          {"name": "OXYGEN SLU PP 332 05MG", "category": "Performance", "costPrice": 365, "price": 620.5, "stock": 15, "description": "SLU PP 332 Oxygen 5mg estimulador do exercício."},
-          {"name": "OXYGEN TESAMORELIN 10MG - 01 VIAL", "category": "Peptídeos", "costPrice": 420, "price": 714, "stock": 15, "description": "Tesamorelin Oxygen 10mg."},
-          {"name": "OXYGEN TESAMORELIN 20MG - 01 VIAL", "category": "Peptídeos", "costPrice": 510, "price": 867, "stock": 15, "description": "Tesamorelin Oxygen 20mg."},
-          {"name": "OXYGEN TEXAGEN (TESTOSTERONA CYPIONATO) 250MG - 10 VIAL", "category": "Hormônios", "costPrice": 235, "price": 399.5, "stock": 15, "description": "Texagen Cipionato de Testosterona 250mg caixa com 10 vials."},
-          {"name": "THERA GENETICS RETATRUTIDE 40MG - 01 VIAL", "category": "Peptídeos", "costPrice": 355, "price": 603.5, "stock": 15, "description": "Retatrutide 40mg Thera Genetics vial."},
-          {"name": "THERA GENETICS RETATRUTIDE 40MG - PEN", "category": "Peptídeos", "costPrice": 625, "price": 1062.5, "stock": 15, "description": "Caneta de aplicação Retatrutide 40mg Thera Genetics."},
-          {"name": "THERA GENETICS TIRZEPATIDE 60MG - 01 VIAL", "category": "Peptídeos", "costPrice": 330, "price": 561, "stock": 15, "description": "Tirzepatide 60mg Thera Genetics."},
-          {"name": "THERA GENETICS CJC-1295 (NO DAC) IPAMORELIN 10MG", "category": "Peptídeos", "costPrice": 340, "price": 578, "stock": 15, "description": "CJC-1295 sem DAC + Ipamorelin 10mg Thera Genetics."},
-          {"name": "THERA GENETICS EPITHALON 40MG", "category": "Peptídeos", "costPrice": 420, "price": 714, "stock": 15, "description": "Epithalon 40mg Thera Genetics."},
-          {"name": "THERA GENETICS GHK-CU 100MG - 01 VIAL", "category": "Estética Avançada", "costPrice": 315, "price": 535.5, "stock": 15, "description": "GHK-CU 100mg Thera Genetics."},
-          {"name": "THERA GENETICS KLOW 80MG - 01 VIAL", "category": "Estética Avançada", "costPrice": 385, "price": 654.5, "stock": 15, "description": "Klow 80mg Thera Genetics."},
-          {"name": "THERA GENETICS MOTS-C 40MG - 01 VIAL", "category": "Performance", "costPrice": 340, "price": 578, "stock": 15, "description": "MOTS-C 40mg Thera Genetics."},
-          {"name": "THERA GENETICS PT-141 10MG - 01 VIAL", "category": "Performance", "costPrice": 290, "price": 493, "stock": 15, "description": "PT-141 10mg Thera Genetics."},
-          {"name": "THERA GENETICS SLU PP 332 10MG - 01 VIAL", "category": "Performance", "costPrice": 290, "price": 493, "stock": 15, "description": "SLU PP 332 10mg Thera Genetics."},
-          {"name": "THERA GENETICS TB500 10MG - 01 VIAL", "category": "Peptídeos", "costPrice": 315, "price": 535.5, "stock": 15, "description": "TB500 10mg Thera Genetics."},
-          {"name": "THERA GENETICS TESAMORELIN 10MG", "category": "Peptídeos", "costPrice": 340, "price": 578, "stock": 0, "description": "Tesamorelin 10mg Thera Genetics. (Esgotado no fornecedor)"},
-          {"name": "TNL TRUE NORTH RETATRUTIDE 12MG - 04 VIAL", "category": "Peptídeos", "costPrice": 500, "price": 850, "stock": 15, "description": "Retatrutide TNL True North kit com 4 frascos de 12mg."},
-          {"name": "TNL TRUE NORTH TIRZEPATIDE 60MG - 01 VIAL", "category": "Peptídeos", "costPrice": 395, "price": 671.5, "stock": 15, "description": "Tirzepatide 60mg TNL True North."},
-          {"name": "USA PEPTIDES RETATRUTIDE 40MG", "category": "Peptídeos", "costPrice": 395, "price": 671.5, "stock": 15, "description": "Retatrutide 40mg USA Peptides."},
-          {"name": "USA PEPTIDES RETATRUTIDE 150MG", "category": "Peptídeos", "costPrice": 710, "price": 1207, "stock": 15, "description": "Retatrutide 150mg USA Peptides mega dosagem."},
-          {"name": "USA PEPTIDES TIRZEPATIDE 60MG", "category": "Peptídeos", "costPrice": 395, "price": 671.5, "stock": 15, "description": "Tirzepatide 60mg USA Peptides."},
-          {"name": "USA PEPTIDES TIRZEPATIDE 120MG", "category": "Peptídeos", "costPrice": 660, "price": 1122, "stock": 15, "description": "Tirzepatide 120mg USA Peptides alta concentração."},
-          {"name": "USA PEPTIDES CJC 1295 NO DAC 5MG + IPA 5MG", "category": "Peptídeos", "costPrice": 315, "price": 535.5, "stock": 15, "description": "CJC 1295 sem DAC 5mg + Ipamorelin 5mg USA Peptides."},
-          {"name": "USA PEPTIDES MOTS-C 10MG", "category": "Performance", "costPrice": 255, "price": 433.5, "stock": 15, "description": "MOTS-C 10mg USA Peptides."},
-          {"name": "USA PEPTIDES KLOW 80MG", "category": "Estética Avançada", "costPrice": 450, "price": 765, "stock": 15, "description": "Klow 80mg USA Peptides."},
-          {"name": "USA PEPTIDES SEMAX 10MG", "category": "Peptídeos", "costPrice": 395, "price": 671.5, "stock": 15, "description": "Semax 10mg USA Peptides."},
-          {"name": "USA PEPTIDES SLU PP 332 10MG", "category": "Performance", "costPrice": 315, "price": 535.5, "stock": 15, "description": "SLU PP 332 10mg USA Peptides."},
-          {"name": "USA PEPTIDES SS-31 10MG", "category": "Peptídeos", "costPrice": 290, "price": 493, "stock": 15, "description": "SS-31 10mg USA Peptides."},
-          {"name": "USA PEPTIDES KPV 10MG", "category": "Peptídeos", "costPrice": 310, "price": 527, "stock": 15, "description": "KPV 10mg USA Peptides."},
-          {"name": "USA PEPTIDES TESAMORELIN 10MG", "category": "Peptídeos", "costPrice": 395, "price": 671.5, "stock": 15, "description": "Tesamorelin 10mg USA Peptides."},
-          {"name": "ALLUVI GLOW FACE SERUM 30ML", "category": "Estética Avançada", "costPrice": 260, "price": 442, "stock": 15, "description": "Sérum facial Glow Alluvi 30ml cuidado de pele."},
-          {"name": "ALLUVI GLOW GHK-CU 50MG - 02 PEN", "category": "Estética Avançada", "costPrice": 510, "price": 867, "stock": 15, "description": "Glow GHK-CU 50mg Alluvi kit com 2 canetas."},
-          {"name": "SYNEDICA RETATRUTIDE 40MG - 01 PEN - VERDE", "category": "Peptídeos", "costPrice": 520, "price": 884, "stock": 15, "description": "Caneta de aplicação verde Retatrutide 40mg Synedica."},
-          {"name": "SYNEDICA NAD+ & B12 - 01 PEN", "category": "Performance", "costPrice": 600, "price": 1020, "stock": 15, "description": "Caneta de energia celular NAD+ & B12 Synedica."},
-          {"name": "SYNEDICA ACNECUR ROACOTAN 20MG - 30 CAPSULE", "category": "Outros", "costPrice": 260, "price": 442, "stock": 15, "description": "Acnecur (Isotretinoína/Roacutan) 20mg com 30 cápsulas."},
-          {"name": "SYNEDICA LISPAX (VENVANSE) 30MG - 30 CAPSULE", "category": "Performance", "costPrice": 300, "price": 510, "stock": 15, "description": "Lispax (Lisdexanfetamina) 30mg com 30 cápsulas."},
-          {"name": "SYNEDICA LISPAX (VENVANSE) 50MG - 30 CAPSULE", "category": "Performance", "costPrice": 350, "price": 595, "stock": 15, "description": "Lispax (Lisdexanfetamina) 50mg com 30 cápsulas."},
-          {"name": "SYNEDICA ORFOGLIP ETICOS 0,8MG - 30 CAPSULE", "category": "Outros", "costPrice": 250, "price": 425, "stock": 15, "description": "Orfoglip 0,8mg com 30 cápsulas."},
-          {"name": "SYNEDICA ORFOGLIP ETICOS 2,5MG - 30 CAPSULE", "category": "Outros", "costPrice": 255, "price": 433.5, "stock": 15, "description": "Orfoglip 2,5mg com 30 cápsulas."},
-          {"name": "SYNEDICA ORFOGLIP ETICOS 5,5MG - 30 CAPSULE", "category": "Outros", "costPrice": 290, "price": 493, "stock": 15, "description": "Orfoglip 5,5mg com 30 cápsulas."},
-          {"name": "SYNEDICA ZICARTIL (VENVANSE) 70MG - 30 CAPSULE", "category": "Performance", "costPrice": 395, "price": 671.5, "stock": 15, "description": "Zicartil (Lisdexanfetamina) 70mg com 30 cápsulas."},
-          {"name": "MOUNJARO 15MG UK", "category": "Peptídeos", "costPrice": 1955, "price": 3323.5, "stock": 10, "description": "Mounjaro oficial Eli Lilly 15mg importado UK."},
-          {"name": "GEN HEALTH RETATRUTIDE 60MG - 01 VIAL", "category": "Peptídeos", "costPrice": 525, "price": 892.5, "stock": 15, "description": "Retatrutide Gen Health 60mg."},
-          {"name": "GEN HEALTH RETATRUTIDE 90MG - 01 VIAL", "category": "Peptídeos", "costPrice": 580, "price": 986, "stock": 15, "description": "Retatrutide Gen Health 90mg."},
-          {"name": "GEN HEALTH RETATRUTIDE 120MG - 01 VIAL", "category": "Peptídeos", "costPrice": 660, "price": 1122, "stock": 15, "description": "Retatrutide Gen Health 120mg."},
-          {"name": "GENIQS PRIMOGENIC 100MG - 10ML", "category": "Hormônios", "costPrice": 445, "price": 756.5, "stock": 15, "description": "Primogenic Geniqs 100mg/10ml."},
-          {"name": "SPECTRUM PHARMA IGF-1 1.4MG - PEN", "category": "Performance", "costPrice": 995, "price": 1691.5, "stock": 10, "description": "Caneta de aplicação IGF-1 Spectrum Pharma 1.4mg."},
-          {"name": "VELTRANE RETATRUTIDE 90MG 06ML", "category": "Peptídeos", "costPrice": 420, "price": 714, "stock": 15, "description": "Retatrutide Veltrane 90mg/6ml."},
-          {"name": "VELTRANE RETATRUTIDE 120MG 06ML - 01 VIAL", "category": "Peptídeos", "costPrice": 475, "price": 807.5, "stock": 15, "description": "Retatrutide Veltrane 120mg/6ml."},
-          {"name": "ZPHC RETATRUTIDE 60MG - 05 VIAL", "category": "Peptídeos", "costPrice": 1395, "price": 2371.5, "stock": 15, "description": "Retatrutide ZPHC 60mg kit com 5 vials."},
-          {"name": "ZPHC RETATRUTIDE 80MG - 05 VIAL", "category": "Peptídeos", "costPrice": 1660, "price": 2822, "stock": 15, "description": "Retatrutide ZPHC 80mg kit com 5 vials."},
-          {"name": "ZPHC RETATRUTIDE 120MG - 05 VIAL", "category": "Peptídeos", "costPrice": 1995, "price": 3391.5, "stock": 15, "description": "Retatrutide ZPHC 120mg kit com 5 vials."},
-          {"name": "ZPHC TIRZEPATIDA 75MG - 01 PEN", "category": "Peptídeos", "costPrice": 995, "price": 1691.5, "stock": 15, "description": "Caneta Tirzepatida 75mg ZPHC."},
-          {"name": "ZPHC TIRZEPATIDA 150MG - 05 VIAL", "category": "Peptídeos", "costPrice": 1315, "price": 2235.5, "stock": 15, "description": "Tirzepatida 150mg ZPHC kit com 5 vials."},
-          {"name": "ZPHC AOD 12.5MG - 05 VIAL", "category": "Peptídeos", "costPrice": 705, "price": 1198.5, "stock": 15, "description": "AOD-9604 ZPHC 12.5mg kit com 5 vials."},
-          {"name": "ZPHC DIHYDROBOLDENONE CYPIONATO 75MG - 01 VIAL", "category": "Hormônios", "costPrice": 475, "price": 807.5, "stock": 15, "description": "Dihydroboldenone Cipionato ZPHC 75mg."},
-          {"name": "ZPHC DOUBLE BURN MIX 25MG - 05 VIAL", "category": "Performance", "costPrice": 895, "price": 1521.5, "stock": 15, "description": "Double Burn Mix ZPHC 25mg kit com 5 vials."},
-          {"name": "ZPHC DROSTANOLONE PROPIANATE (MASTERON) 100MG - 01 VIAL", "category": "Hormônios", "costPrice": 360, "price": 612, "stock": 15, "description": "Drostanolona Propionato ZPHC 100mg."},
-          {"name": "ZPHC GH ZPTROP (80 UI) - 05 VIAL", "category": "Performance", "costPrice": 820, "price": 1394, "stock": 15, "description": "Somatropina HGH ZPtrop 80 UI kit com 5 vials."},
-          {"name": "ZPHC HGH FRAG 50MG - 05 VIAL", "category": "Peptídeos", "costPrice": 1005, "price": 1708.5, "stock": 15, "description": "HGH Fragment ZPHC 50mg kit com 5 vials."},
-          {"name": "ZPHC MEGA MASS MIX 50MG - 05 VIAL", "category": "Hormônios", "costPrice": 895, "price": 1521.5, "stock": 15, "description": "Mega Mass Mix ZPHC 50mg kit com 5 vials."},
-          {"name": "ZPHC METANOLONA ENANTATO (PRIMOBOLAN) 100MG/ML - 10 VIAL", "category": "Hormônios", "costPrice": 795, "price": 1351.5, "stock": 15, "description": "Primobolan ZPHC 100mg/ml caixa com 10 vials."},
-          {"name": "ZPHC NAD+ 1000MG - 01 PEN", "category": "Performance", "costPrice": 600, "price": 1020, "stock": 15, "description": "Caneta NAD+ ZPHC 1000mg."},
-          {"name": "ZPHC NAD+ 1000MG - 01 VIAL", "category": "Performance", "costPrice": 415, "price": 705.5, "stock": 15, "description": "NAD+ ZPHC 1000mg frasco vial."},
-          {"name": "ZPHC SUPER SLIM MIX 27,5MG - 05 VIAL", "category": "Performance", "costPrice": 1055, "price": 1793.5, "stock": 15, "description": "Super Slim Mix ZPHC 27.5mg kit com 5 vials."},
-          {"name": "ZPHC TESTOSTERONA ENANTATO 400MG/ML - 10 VIAL", "category": "Hormônios", "costPrice": 365, "price": 620.5, "stock": 15, "description": "Enantato de Testosterona ZPHC 400mg/ml alta concentração."},
-          {"name": "ZPHC TESTOSTERONA PROPIONATE 100MG - 01 VIAL", "category": "Hormônios", "costPrice": 260, "price": 442, "stock": 15, "description": "Propionato de Testosterona ZPHC 100mg."},
-          {"name": "ZPHC ZPTROP 16 IU - 01 VIAL", "category": "Performance", "costPrice": 260, "price": 442, "stock": 0, "description": "HGH ZPtrop 16 UI ZPHC. (Esgotado no fornecedor)"},
-          {"name": "ZPHC ZPTROP 32 IU - 02 VIAL", "category": "Performance", "costPrice": 365, "price": 620.5, "stock": 0, "description": "HGH ZPtrop 32 UI ZPHC kit com 2 vials. (Esgotado no fornecedor)"},
-          {"name": "ZPHC ZPTROP 80 IU - 05 VIAL", "category": "Performance", "costPrice": 838, "price": 1424.6, "stock": 15, "description": "HGH ZPtrop 80 UI ZPHC kit com 5 vials."},
-          {"name": "ZPHC ZPTROP 200 IU - 02 VIAL", "category": "Performance", "costPrice": 1590, "price": 2703, "stock": 15, "description": "HGH ZPtrop 200 UI ZPHC dosagem profissional."},
-          {"name": "ZPHC ZPTROP 320 IU - 10 VIAL", "category": "Performance", "costPrice": 2195, "price": 3731.5, "stock": 0, "description": "HGH ZPtrop 320 UI ZPHC caixa com 10 vials. (Esgotado no fornecedor)"},
-          {"name": "MUSCLE DECA DURABOLIN XT 300MG 10ML - 01 VIAL", "category": "Hormônios", "costPrice": 185, "price": 314.5, "stock": 15, "description": "Deca Durabolin XT Muscle 300mg/10ml."},
-          {"name": "MUSCLE DYNABOLAN 100MG 10ML - 01 VIAL", "category": "Hormônios", "costPrice": 185, "price": 314.5, "stock": 15, "description": "Dynabolan Muscle 100mg/10ml."},
-          {"name": "MUSCLE ENANTATO (TESTOVIRON) 250MG 10ML", "category": "Hormônios", "costPrice": 185, "price": 314.5, "stock": 15, "description": "Enantato de Testosterona Testoviron Muscle 250mg/10ml."},
-          {"name": "MUSCLE MASTERON 100MG 10ML - 01 VIAL", "category": "Hormônios", "costPrice": 235, "price": 399.5, "stock": 15, "description": "Masteron Muscle 100mg/10ml."},
-          {"name": "MUSCLE OXANDROLONE 10MG - 50 CAPSULE", "category": "Hormônios", "costPrice": 225, "price": 382.5, "stock": 15, "description": "Oxandrolona Muscle 10mg pote com 50 cápsulas."},
-          {"name": "MUSCLE PRIMOBOLAN 100MG 10ML - 01 VIAL", "category": "Hormônios", "costPrice": 260, "price": 442, "stock": 15, "description": "Primobolan Muscle 100mg/10ml."},
-          {"name": "MUSCLE SUSTAN XT 250MG 10ML - 01 VIAL", "category": "Hormônios", "costPrice": 185, "price": 314.5, "stock": 15, "description": "Sustan XT Durateston Muscle 250mg/10ml."},
-          {"name": "MUSCLE TESTEX 250MG 10ML - 01 VIAL", "category": "Hormônios", "costPrice": 185, "price": 314.5, "stock": 15, "description": "Testex Cipionato Muscle 250mg/10ml."},
-          {"name": "MUSCLE TRENBOLONA (PARABOLAN) 100MG - 01 VIAL", "category": "Hormônios", "costPrice": 195, "price": 331.5, "stock": 15, "description": "Trenbolona Parabolan Muscle 100mg."},
-          {"name": "PHARMACOM PHARMA MIX-01 400MG", "category": "Hormônios", "costPrice": 340, "price": 578, "stock": 15, "description": "Pharma Mix-01 (Boldenona + Cipionato de Testosterona) 400mg."},
-          {"name": "PHARMACOM PHARMA NAN D300 (DECA) 300MG", "category": "Hormônios", "costPrice": 305, "price": 518.5, "stock": 15, "description": "Pharma Nan D300 Decanoato de Nandrolona 300mg Pharmacom."},
-          {"name": "PHARMACOM PHARMA NAN PH100 (NPP) 100MG", "category": "Hormônios", "costPrice": 290, "price": 493, "stock": 15, "description": "Pharma Nan PH100 Fenilpropionato de Nandrolona 100mg Pharmacom."},
-          {"name": "PHARMACOM PHARMA TEST C250 (CIPIONATO) 250MG", "category": "Hormônios", "costPrice": 285, "price": 484.5, "stock": 15, "description": "Pharma Test C250 Cipionato de Testosterona 250mg Pharmacom."},
-          {"name": "PHARMACOM PHARMA TEST E300 (ENANTATO) 300MG", "category": "Hormônios", "costPrice": 315, "price": 535.5, "stock": 15, "description": "Pharma Test E300 Enantato de Testosterona 300mg Pharmacom."},
-          {"name": "PHARMACOM PHARMA TEST E500 (ENANTATO) 500MG", "category": "Hormônios", "costPrice": 395, "price": 671.5, "stock": 15, "description": "Pharma Test E500 Enantato alta dosagem 500mg Pharmacom."},
-          {"name": "PHARMACOM PHARMA TEST P100 (PROPIONATO) 100MG", "category": "Hormônios", "costPrice": 225, "price": 382.5, "stock": 15, "description": "Pharma Test P100 Propionato de Testosterona 100mg Pharmacom."},
-          {"name": "COOPER PHARMA PRIMOBOLIC (PRIMOBOLAN) 100MG - 10 VIAL", "category": "Hormônios", "costPrice": 775, "price": 1317.5, "stock": 15, "description": "Primobolic Cooper Pharma 100mg caixa com 10 vials."},
-          {"name": "COOPER PHARMA BOLBOLIIC (BOLDENONA) - 10 VIAL", "category": "Hormônios", "costPrice": 315, "price": 535.5, "stock": 15, "description": "Bolbolic Boldenona Cooper Pharma caixa com 10 vials."},
-          {"name": "COOPER PHARMA CYPOBOLIC (CIPIONATO) 250MG - 10 VIAL", "category": "Hormônios", "costPrice": 260, "price": 442, "stock": 15, "description": "Cypobolic Cipionato de Testosterona 250mg Cooper Pharma."},
-          {"name": "COOPER PHARMA DECABOLIC (DECA) 250MG - 10 VIAL", "category": "Hormônios", "costPrice": 300, "price": 510, "stock": 15, "description": "Decabolic Decanoato de Nandrolona 250mg Cooper Pharma."},
-          {"name": "COOPER PHARMA ENANBOLIC (ENANTATO) 250MG - 10 VIAL", "category": "Hormônios", "costPrice": 315, "price": 535.5, "stock": 15, "description": "Enanbolic Enantato de Testosterona 250mg Cooper Pharma."},
-          {"name": "COOPER PHARMA NANBOLIC-PH (NPP) 100MG - 10 VIAL", "category": "Hormônios", "costPrice": 315, "price": 535.5, "stock": 15, "description": "Nanbolic-PH Fenilpropionato de Nandrolona 100mg Cooper Pharma."},
-          {"name": "COOPER PHARMA OXYBOLIC (HEMOGENIN) 50MG - 05 TABS", "category": "Hormônios", "costPrice": 270, "price": 459, "stock": 15, "description": "Oxybolic Oximetolona 50mg Cooper Pharma com 5 comprimidos."},
-          {"name": "COOPER PHARMA SUSOBOLIC (DURATESTON) 250MG/1ML", "category": "Hormônios", "costPrice": 290, "price": 493, "stock": 15, "description": "Susobolic Durateston 250mg/1ml Cooper Pharma."},
-          {"name": "LANDERFIT DECALAND DEPOT 200MG - 01 VIAL", "category": "Hormônios", "costPrice": 175, "price": 297.5, "stock": 15, "description": "Decaland Depot Landerfit 200mg."},
-          {"name": "LANDERFIT DROSTANOLONA (MASTERON GOLD) 100MG - 01 VIAL", "category": "Hormônios", "costPrice": 270, "price": 459, "stock": 15, "description": "Masteron Gold Landerfit 100mg."},
-          {"name": "LANDERFIT DURATESTON PLUS GOLD 250MG - 01 VIAL", "category": "Hormônios", "costPrice": 180, "price": 306, "stock": 15, "description": "Durateston Plus Gold Landerfit 250mg."},
-          {"name": "EMINENCE DECAPRIME (DECA) 200MG - 10 VIAL", "category": "Hormônios", "costPrice": 220, "price": 374, "stock": 15, "description": "Decaprime Eminence 200mg caixa com 10 vials."},
-          {"name": "EMINENCE DECAPRIME-P (NPP) 100MG - 10 VIAL", "category": "Hormônios", "costPrice": 220, "price": 374, "stock": 15, "description": "Decaprime-P NPP Eminence 100mg caixa com 10 vials."},
-          {"name": "EMINENCE ENAPRIME (ENANTATO) 250MG - 10 VIAL", "category": "Hormônios", "costPrice": 235, "price": 399.5, "stock": 15, "description": "Enaprime Enantato Eminence 250mg caixa com 10 vials."},
-          {"name": "EMINENCE PROPRIME (PROPIONATO) 100MG - 10 VIAL", "category": "Hormônios", "costPrice": 210, "price": 357, "stock": 15, "description": "Proprime Propionato Eminence 100mg caixa com 10 vials."},
-          {"name": "EMINENCE TESTO-MIX (SUSTAN) 250MG - 10 VIAL", "category": "Hormônios", "costPrice": 220, "price": 374, "stock": 15, "description": "Testo-Mix Sustanon Eminence 250mg caixa com 10 vials."},
-          {"name": "ISRADERM 100 UI", "category": "Estética Avançada", "costPrice": 290, "price": 493, "stock": 15, "description": "Toxina Botulínica Israderm 100 UI."},
-          {"name": "ISRADERM 150 UI", "category": "Estética Avançada", "costPrice": 310, "price": 527, "stock": 15, "description": "Toxina Botulínica Israderm 150 UI."},
-          {"name": "DYSPORT TOXINA BOTULINICA 500 UI", "category": "Estética Avançada", "costPrice": 290, "price": 493, "stock": 15, "description": "Dysport Toxina Botulínica 500 UI."},
-          {"name": "AVALON GRAND PLUS 20MG/ML - ROXO", "category": "Estética Avançada", "costPrice": 270, "price": 459, "stock": 15, "description": "Preenchedor Avalon Grand Plus 20mg/ml linha roxa."},
-          {"name": "AVALON ULTRA PLUS 20MG/ML - VERMELHO", "category": "Estética Avançada", "costPrice": 270, "price": 459, "stock": 15, "description": "Preenchedor Avalon Ultra Plus 20mg/ml linha vermelha."},
-          {"name": "AVALON VITAL PLUS 20MG/ML - LARANJA", "category": "Estética Avançada", "costPrice": 270, "price": 459, "stock": 15, "description": "Preenchedor Avalon Vital Plus 20mg/ml linha laranja."},
-          {"name": "STUN MEDICAL LINE BODY SAFE & EASY 55ML - ROXO", "category": "Estética Avançada", "costPrice": 740, "price": 1258, "stock": 15, "description": "Stun Medical Line Body Safe & Easy 55ml linha roxa."},
-          {"name": "STUN MEDICAL LINE BODY SAFE & EASY 100ML - LARANJA", "category": "Estética Avançada", "costPrice": 845, "price": 1436.5, "stock": 15, "description": "Stun Medical Line Body Safe & Easy 100ml linha laranja."}
+          {"name": "ZPHC TESTOSTERONA ENANTATO 400MG/ML - 10 VIAL", "category": "Hormônios", "costPrice": 365, "price": 620.5, "stock": 15, "description": "Enantato de Testosterona ZPHC 400mg/ml alta concentração."}
         ];
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        const formatMoney = (val) => Number(val).toFixed(2).replace('.', ',');
+
+        function switchTab(tab) {
+            document.getElementById('tab-catalog').classList.add('hidden'); 
+            document.getElementById('tab-admin').classList.add('hidden');
+            if (tab === 'catalog') document.getElementById('tab-catalog').classList.remove('hidden');
+            if (tab === 'admin') {
+                document.getElementById('tab-admin').classList.remove('hidden'); 
+                renderAdminTable(); 
+            }
+        }
+
+        function switchAdminSubTab(sub) {
+            document.getElementById('admin-subtab-products').classList.add('hidden');
+            document.getElementById('admin-subtab-orders').classList.add('hidden');
+            document.getElementById('admin-subtab-crm').classList.add('hidden');
+            document.getElementById('admin-subtab-analytics').classList.add('hidden');
+
+            document.getElementById('subnav-products').className = "flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 transition";
+            document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 transition";
+            document.getElementById('subnav-crm').className = "flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 transition";
+            document.getElementById('subnav-analytics').className = "flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 transition";
+
+            document.getElementById(`admin-subtab-${sub}`).classList.remove('hidden');
+            document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 text-white transition";
+        }
+
+        function openSettingsModal() { document.getElementById('settings-modal').classList.remove('hidden'); }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
+        function saveSettings(e) { e.preventDefault(); showToast('Configurações salvas!', 'success'); closeSettingsModal(); }
+
+        async function initApp() {
+            setTimeout(async () => {
+                if (window.db && window.firebaseFns) {
+                    await loadProductsFromFirebase();
+                }
+            }, 500);
+        }
+        window.initApp = initApp;
+
+        async function loadProductsFromFirebase() {
+            try {
+                const snapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
+                products = []; 
+                snapshot.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
+                renderProducts(); 
+                renderAdminTable();
+            } catch (e) {
+                console.log(e);
+            } 
+        }
 
         async function importNativeSupplierList() {
             const btn = document.getElementById('btn-native-import');
-            if(!confirm(`Deseja cadastrar automaticamente todos os ${NATIVE_SUPPLIER_CATALOG.length} produtos do fornecedor no seu Firebase?`)) return;
-
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Cadastrando...';
             showToast('A enviar catálogo para o Firebase...', 'info');
@@ -558,60 +348,11 @@
                 showToast(`${count} produtos cadastrados com sucesso!`, 'success');
                 await loadProductsFromFirebase();
             } catch(err) {
-                showToast('Erro ao cadastrar produtos no Firebase.', 'error');
+                showToast('Certifique-se que publicou as regras do Firebase!', 'error');
             }
 
             btn.disabled = false;
             btn.innerHTML = '<i class="fa-solid fa-bolt"></i> Carregar Catálogo (1 Clique)';
-        }
-
-        const formatMoney = (val) => Number(val).toFixed(2).replace('.', ',');
-
-        async function initApp() {
-            if (window.auth && window.firebaseFns) {
-                window.firebaseFns.onAuthStateChanged(window.auth, (user) => { 
-                    currentUser = user; 
-                    updateAuthUI(); 
-                });
-                await loadProductsFromFirebase();
-            }
-        }
-        window.initApp = initApp;
-
-        async function loadProductsFromFirebase() {
-            try {
-                const snapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
-                products = []; 
-                snapshot.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
-            } catch (e) {} 
-            renderProducts(); 
-            renderAdminTable();
-        }
-
-        function updateAuthUI() {
-            if (currentUser) { 
-                document.getElementById('nav-login').classList.add('hidden'); 
-                document.getElementById('nav-admin').classList.remove('hidden'); 
-                document.getElementById('nav-admin').classList.add('flex'); 
-                document.getElementById('user-status-container').classList.remove('hidden'); 
-                document.getElementById('user-status-container').classList.add('flex'); 
-                document.getElementById('logged-user-email').innerText = currentUser.email || 'admin';
-            } else { 
-                document.getElementById('nav-login').classList.remove('hidden'); 
-                document.getElementById('nav-admin').classList.add('hidden'); 
-                document.getElementById('user-status-container').classList.add('hidden'); 
-            }
-        }
-
-        function switchTab(tab) {
-            document.getElementById('tab-catalog').classList.add('hidden'); 
-            document.getElementById('tab-admin').classList.add('hidden');
-            if (tab === 'catalog') document.getElementById('tab-catalog').classList.remove('hidden');
-            if (tab === 'admin') { 
-                if(!currentUser) return openLoginModal(); 
-                document.getElementById('tab-admin').classList.remove('hidden'); 
-                renderAdminTable(); 
-            }
         }
 
         function renderProducts() {
@@ -622,30 +363,21 @@
             const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal)));
             
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 text-sm">Nenhum produto cadastrado no catálogo. Aceda a Gestão e clique em "Carregar Catálogo (1 Clique)".</div>`;
+                grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 text-sm">Nenhum produto no catálogo. Clique em "Gestão" -> "Carregar Catálogo".</div>`;
                 return;
             }
 
             filtered.forEach(p => {
-                const st = p.stock !== undefined ? Number(p.stock) : 10; 
-                const out = st <= 0;
-                const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
-                
                 grid.innerHTML += `
-                    <div class="glass-card rounded-3xl p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
+                    <div class="glass-card rounded-3xl p-3.5 sm:p-5 flex flex-col justify-between">
                         <div>
-                            <span class="px-2.5 py-1 rounded-full text-[9px] font-black bg-gold/10 text-gold border border-gold/20 uppercase inline-block truncate max-w-full tracking-wider">${p.category || 'Geral'}</span>
-                            <h3 class="text-sm sm:text-base font-extrabold text-white mt-1.5 group-hover:text-gold transition line-clamp-2">${p.name}</h3>
-                            <p class="text-zinc-400 text-xs leading-relaxed line-clamp-2 mt-1 font-medium">${p.description}</p>
+                            <span class="px-2.5 py-1 rounded-full text-[9px] font-black bg-gold/10 text-gold border border-gold/20 uppercase inline-block">${p.category || 'Geral'}</span>
+                            <h3 class="text-sm font-extrabold text-white mt-1.5">${p.name}</h3>
+                            <p class="text-zinc-400 text-xs mt-1">${p.description || ''}</p>
                         </div>
-                        <div class="pt-3 mt-3 border-t border-zinc-800/80 flex items-center justify-between gap-2">
-                            <div>
-                                <span class="text-xs text-zinc-500 block leading-none text-[10px]">Preço</span>
-                                <span class="text-sm sm:text-lg font-black text-gold">R$ ${formatMoney(price)}</span>
-                            </div>
-                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'gold-btn-gradient'} text-xs px-3.5 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md">
-                                <i class="fa-solid fa-bag-shopping"></i> <span>${out ? 'Esgotado' : 'Comprar'}</span>
-                            </button>
+                        <div class="pt-3 mt-3 border-t border-zinc-800 flex items-center justify-between">
+                            <span class="text-sm sm:text-lg font-black text-gold">R$ ${formatMoney(p.price)}</span>
+                            <button class="gold-btn-gradient text-xs px-3.5 py-2 rounded-xl">Comprar</button>
                         </div>
                     </div>`;
             });
@@ -653,47 +385,10 @@
 
         function setCategoryFilter(cat) { 
             currentFilter = cat; 
-            document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap"); 
-            const activeBtn = cat === 'all' ? document.getElementById('filter-btn-all') : document.querySelector(`.filter-btn[data-cat="${cat}"]`); 
-            if(activeBtn) activeBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold gold-btn-gradient whitespace-nowrap"; 
             renderProducts(); 
         }
 
         function filterProducts() { renderProducts(); }
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.innerHTML = `<span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
-        }
-
-        function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
-        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
-
-        async function handleAdminLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
-            const pass = document.getElementById('login-password').value;
-
-            try {
-                await window.firebaseFns.signInWithEmailAndPassword(window.auth, email, pass);
-                showToast('Acesso concedido!', 'success');
-                closeLoginModal();
-                switchTab('admin');
-            } catch(err) {
-                showToast('E-mail ou senha incorretos.', 'error');
-            }
-        }
-
-        async function logoutAdmin() {
-            try {
-                await window.firebaseFns.signOut(window.auth);
-                showToast('Sessão encerrada.', 'info');
-                switchTab('catalog');
-            } catch(err) {}
-        }
 
         function renderAdminTable() {
             const tb = document.getElementById('admin-product-table'); 
@@ -702,25 +397,24 @@
             products.forEach(p => {
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800/60">
-                        <td class="p-3">-</td>
-                        <td class="p-3 font-bold text-white">${p.name}</td>
-                        <td class="p-3">${p.stock}</td>
-                        <td class="p-3 text-red-400 font-bold">R$ ${formatMoney(p.costPrice || 0)}</td>
-                        <td class="p-3 text-green-400 font-bold">R$ ${formatMoney(p.price)}</td>
-                        <td class="p-3 text-right">
-                            <button onclick="deleteProduct('${p.id}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+                        <td class="p-4 font-bold text-white">${p.name}</td>
+                        <td class="p-4 text-zinc-400">${p.category || 'Geral'}</td>
+                        <td class="p-4">${p.stock}</td>
+                        <td class="p-4 text-red-400 font-bold">R$ ${formatMoney(p.costPrice || 0)}</td>
+                        <td class="p-4 text-green-400 font-bold">R$ ${formatMoney(p.price)}</td>
+                        <td class="p-4 text-right">
+                            <button onclick="deleteProduct('${p.id}')" class="text-red-400 hover:text-red-300 p-2"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>`;
             });
         }
 
         async function deleteProduct(id) {
-            if(confirm('Remover este produto do estoque?')) {
+            if(confirm('Remover produto?')) {
                 try {
                     await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', id));
                 } catch(e) {}
                 products = products.filter(p => p.id !== id);
-                showToast('Produto removido.', 'info');
                 renderProducts();
                 renderAdminTable();
             }
