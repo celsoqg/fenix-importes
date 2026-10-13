@@ -225,20 +225,25 @@
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 rounded-3xl">
                 <div>
                     <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-chart-line text-gold"></i> Painel de Gestão Fênix</h2>
-                    <p class="text-xs text-zinc-400 mt-1">Controle de estoque, fluxo de caixa e envio de pedidos.</p>
+                    <p class="text-xs text-zinc-400 mt-1">Controle de estoque, importação JSON, CRM VIP e IA analítica.</p>
                 </div>
-                <div class="flex gap-2 w-full md:w-auto bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800">
-                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold bg-zinc-800 text-white transition">Estoque</button>
-                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold text-zinc-400 transition">Vendas & Pedidos</button>
+                <div class="flex flex-wrap gap-2 w-full md:w-auto bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800">
+                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 text-white transition">Estoque</button>
+                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 transition">Vendas</button>
+                    <button onclick="switchAdminSubTab('crm')" id="subnav-crm" class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 transition">CRM VIP</button>
+                    <button onclick="switchAdminSubTab('analytics')" id="subnav-analytics" class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 transition">IA & Giro</button>
                 </div>
             </div>
 
+            <!-- Subtab Estoque & Importação JSON -->
             <div id="admin-subtab-products" class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-base sm:text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos em Catálogo</h3>
-                    <div class="flex gap-2">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <h3 class="text-base sm:text-lg font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos & Automações</h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-file-code"></i> Importar JSON</button>
+                        <button onclick="openMassPriceModal()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-percent"></i> Ajustar Preços</button>
                         <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-2"><i class="fa-solid fa-sliders"></i> Configs</button>
-                        <button onclick="openProductModal()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-plus"></i> Novo Produto</button>
+                        <button onclick="openProductModal()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg"><i class="fa-solid fa-plus"></i> Novo</button>
                     </div>
                 </div>
                 <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
@@ -251,6 +256,7 @@
                 </div>
             </div>
 
+            <!-- Subtab Pedidos -->
             <div id="admin-subtab-orders" class="hidden space-y-6">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div class="glass-card p-6 rounded-3xl relative overflow-hidden"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Faturamento Confirmado</p><h4 id="dash-revenue" class="text-2xl sm:text-3xl font-black text-white">R$ 0,00</h4></div>
@@ -262,6 +268,46 @@
                         <table class="w-full text-left border-collapse text-xs sm:text-sm">
                             <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Cliente/Envio</th><th class="p-4">Itens/Total</th><th class="p-4">Status & Rastreio</th><th class="p-4 text-right">Ação</th></tr></thead>
                             <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subtab CRM VIP -->
+            <div id="admin-subtab-crm" class="hidden space-y-6">
+                <div class="glass-card p-6 rounded-3xl space-y-3">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-crown text-gold"></i> Clientes Recorrentes & CRM VIP</h3>
+                    <p class="text-xs text-zinc-400">Lista consolidada dos seus compradores calculada automaticamente pelo histórico de pedidos.</p>
+                </div>
+                <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Cliente</th><th class="p-4">WhatsApp</th><th class="p-4">Total Gasto</th><th class="p-4">Pedidos</th><th class="p-4 text-right">Ação VIP</th></tr></thead>
+                            <tbody id="admin-crm-table" class="divide-y divide-zinc-800/60"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subtab IA & Giro de Estoque -->
+            <div id="admin-subtab-analytics" class="hidden space-y-6">
+                <div class="glass-card p-6 rounded-3xl space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-robot text-gold"></i> Auditoria de Giro e Reposição via Gemini IA</h3>
+                            <p class="text-xs text-zinc-400 mt-1">A IA analisa seu estoque atual e sugere quais itens recomprar ou colocar em promoção.</p>
+                        </div>
+                        <button onclick="runAiStockAudit()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Executar Auditoria IA</button>
+                    </div>
+                    <div id="ai-audit-result" class="bg-zinc-950 border border-zinc-800 p-4 rounded-2xl text-xs text-zinc-300 leading-relaxed hidden"></div>
+                </div>
+
+                <div class="glass-card p-6 rounded-3xl space-y-4">
+                    <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Alerta de Estoque Crítico ou Parado</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Produto</th><th class="p-4">Estoque Atual</th><th class="p-4">Status Sugerido</th></tr></thead>
+                            <tbody id="admin-stock-alerts-table" class="divide-y divide-zinc-800/60"></tbody>
                         </table>
                     </div>
                 </div>
@@ -292,6 +338,58 @@
         <div class="p-3 bg-zinc-950/90 border-t border-zinc-800 flex gap-2">
             <input type="text" id="chat-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
             <button onclick="sendChatMessage()" class="gold-btn-gradient rounded-xl px-3.5 py-2 transition text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Modal Importar JSON -->
+    <div id="json-import-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeJsonImportModal()"></div>
+        <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-4 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-lg font-black text-white flex items-center gap-2"><i class="fa-solid fa-file-code text-gold"></i> Importar Produtos via JSON</h3>
+            <p class="text-xs text-zinc-400">Cole a estrutura JSON contendo seus produtos ou selecione um arquivo. Você pode definir multiplicadores automáticos de margem sobre o preço de custo.</p>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[10px] text-zinc-400 block mb-1">Multiplicador Padrão (Ex: 2.0 = 100%)</label>
+                    <input type="number" step="0.1" id="json-default-markup" value="2.0" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+                <div>
+                    <label class="text-[10px] text-zinc-400 block mb-1">Estoque Padrão por Item</label>
+                    <input type="number" id="json-default-stock" value="15" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1">Arquivo JSON</label>
+                <input type="file" id="json-file-input" accept=".json" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-300 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gold file:text-black cursor-pointer">
+            </div>
+
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1">Ou cole o Código JSON aqui:</label>
+                <textarea id="json-text-area" rows="6" placeholder='[{"name": "Produto X", "costPrice": 100, "category": "Peptídeos", "description": "...", "imageUrl": "..."}]' class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs font-mono text-white outline-none focus:border-gold"></textarea>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button type="button" onclick="closeJsonImportModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs">Cancelar</button>
+                <button type="button" onclick="processJsonImport()" class="flex-1 gold-btn-gradient py-2.5 rounded-xl text-xs">Processar & Salvar no Firebase</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ajuste em Massa de Preços -->
+    <div id="mass-price-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeMassPriceModal()"></div>
+        <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-2xl z-10">
+            <h3 class="text-base font-black text-white flex items-center gap-2"><i class="fa-solid fa-percent text-gold"></i> Ajustar Preços em Massa</h3>
+            <p class="text-xs text-zinc-400">Aplique um reajuste percentual em todos os produtos do catálogo.</p>
+            <div>
+                <label class="text-[10px] text-zinc-400 block mb-1">Percentual (Ex: 10 para +10% ou -10 para desconto)</label>
+                <input type="number" step="0.1" id="mass-percent" value="10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeMassPriceModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs">Cancelar</button>
+                <button onclick="applyMassPriceUpdate()" class="flex-1 gold-btn-gradient py-2.5 rounded-xl text-xs">Aplicar Reajuste</button>
+            </div>
         </div>
     </div>
 
@@ -669,12 +767,20 @@
         function switchAdminSubTab(sub) {
             document.getElementById('admin-subtab-products').classList.add('hidden'); 
             document.getElementById('admin-subtab-orders').classList.add('hidden');
-            document.getElementById('subnav-products').className = "flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold text-zinc-400 transition";
-            document.getElementById('subnav-orders').className = "flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold text-zinc-400 transition";
+            document.getElementById('admin-subtab-crm').classList.add('hidden');
+            document.getElementById('admin-subtab-analytics').classList.add('hidden');
+
+            ['products', 'orders', 'crm', 'analytics'].forEach(s => {
+                const btn = document.getElementById(`subnav-${s}`);
+                if(btn) btn.className = "flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold text-zinc-400 transition";
+            });
             
             document.getElementById(`admin-subtab-${sub}`).classList.remove('hidden');
-            document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-5 py-2.5 rounded-xl text-xs font-bold bg-zinc-800 text-white transition";
+            document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 text-white transition";
+            
             if(sub === 'orders') loadOrdersFromFirebase();
+            if(sub === 'crm') renderCrmTable();
+            if(sub === 'analytics') renderStockAlertsTable();
         }
 
         function renderProducts() {
@@ -976,6 +1082,7 @@
                 orders.sort((a, b) => new Date(b.date) - new Date(a.date));
             } catch(e) {}
             renderOrdersTable();
+            renderCrmTable();
         }
 
         function renderOrdersTable() {
@@ -1015,6 +1122,179 @@
             document.getElementById('dash-profit').innerText = `R$ ${formatMoney(prof)}`; 
             document.getElementById('dash-sales-count').innerText = count; 
             document.getElementById('dash-margin').innerText = `Margem: ${rev > 0 ? ((prof / rev) * 100).toFixed(1) : 0}%`;
+        }
+
+        // --- FEATURE: CRM VIP / CLIENTES RECORRENTES ---
+        function renderCrmTable() {
+            const tb = document.getElementById('admin-crm-table');
+            if(!tb) return;
+            tb.innerHTML = '';
+
+            let clientMap = {};
+            orders.forEach(o => {
+                if(!o.client || !o.client.phone) return;
+                let phoneKey = o.client.phone.replace(/\D/g, '');
+                if(!clientMap[phoneKey]) {
+                    clientMap[phoneKey] = { name: o.client.name, phone: o.client.phone, totalSpent: 0, count: 0 };
+                }
+                clientMap[phoneKey].totalSpent += Number(o.financials?.total || 0);
+                clientMap[phoneKey].count += 1;
+            });
+
+            let clients = Object.values(clientMap).sort((a,b) => b.totalSpent - a.totalSpent);
+
+            if(clients.length === 0) {
+                tb.innerHTML = `<tr><td colspan="5" class="py-12 text-center text-zinc-500 text-xs">Nenhum cliente registrado nos pedidos ainda.</td></tr>`;
+                return;
+            }
+
+            clients.forEach(c => {
+                tb.innerHTML += `
+                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
+                        <td class="p-4 text-xs font-bold text-white">${c.name}</td>
+                        <td class="p-4 text-xs text-zinc-300">${c.phone}</td>
+                        <td class="p-4 text-xs text-gold font-bold">R$ ${formatMoney(c.totalSpent)}</td>
+                        <td class="p-4 text-xs">${c.count} pedido(s)</td>
+                        <td class="p-4 text-right">
+                            <a href="https://wa.me/${formatWhatsappNumber(c.phone)}?text=${encodeURIComponent('Olá ' + c.name + '! Temos novidades exclusivas na Fênix Imports.')}" target="_blank" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-whatsapp"></i> Oferta VIP</a>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        // --- FEATURE: IMPORTAÇÃO JSON COM MARGEM ---
+        function openJsonImportModal() { document.getElementById('json-import-modal').classList.remove('hidden'); }
+        function closeJsonImportModal() { document.getElementById('json-import-modal').classList.add('hidden'); }
+
+        async function processJsonImport() {
+            let jsonString = document.getElementById('json-text-area').value.trim();
+            const fileInput = document.getElementById('json-file-input');
+            const defaultMarkup = parseFloat(document.getElementById('json-default-markup').value) || 2.0;
+            const defaultStock = parseInt(document.getElementById('json-default-stock').value) || 15;
+
+            if (fileInput.files && fileInput.files[0]) {
+                try {
+                    jsonString = await fileInput.files[0].text();
+                } catch(e) {
+                    return showToast('Erro ao ler arquivo JSON.', 'error');
+                }
+            }
+
+            if(!jsonString) return showToast('Cole o JSON ou selecione um arquivo.', 'error');
+
+            try {
+                let importedArray = JSON.parse(jsonString);
+                if(!Array.isArray(importedArray)) importedArray = [importedArray];
+
+                showToast('Importando produtos...', 'info');
+                let count = 0;
+
+                for(let item of importedArray) {
+                    let cost = Number(item.costPrice || item.price || 50);
+                    let finalPrice = Number(item.price) || (cost * defaultMarkup);
+                    if(!item.price && cost) finalPrice = cost * defaultMarkup;
+
+                    let newProd = {
+                        name: item.name || 'Produto Importado',
+                        category: item.category || 'Peptídeos',
+                        costPrice: cost,
+                        price: finalPrice,
+                        promoPrice: item.promoPrice ? Number(item.promoPrice) : null,
+                        stock: Number(item.stock) || defaultStock,
+                        description: item.description || 'Produto importado de alta performance.',
+                        imageUrl: item.imageUrl || ''
+                    };
+
+                    await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), newProd);
+                    count++;
+                }
+
+                showToast(`${count} produtos importados com sucesso!`, 'success');
+                closeJsonImportModal();
+                loadProductsFromFirebase();
+            } catch(e) {
+                showToast('Formato JSON inválido. Verifique a sintaxe.', 'error');
+            }
+        }
+
+        // --- FEATURE: AJUSTE EM MASSA DE PREÇOS ---
+        function openMassPriceModal() { document.getElementById('mass-price-modal').classList.remove('hidden'); }
+        function closeMassPriceModal() { document.getElementById('mass-price-modal').classList.add('hidden'); }
+
+        async function applyMassPriceUpdate() {
+            let pct = parseFloat(document.getElementById('mass-percent').value);
+            if(isNaN(pct)) return showToast('Insira um percentual válido.', 'error');
+
+            if(!confirm(`Confirma aplicar reajuste de ${pct}% em todos os produtos da loja?`)) return;
+
+            showToast('Atualizando preços...', 'info');
+            try {
+                for(let p of products) {
+                    let newPrice = Number(p.price) * (1 + (pct / 100));
+                    let newCost = Number(p.costPrice || 0) * (1 + (pct / 100));
+                    let newPromo = p.promoPrice ? Number(p.promoPrice) * (1 + (pct / 100)) : null;
+
+                    await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", p.id), {
+                        price: Number(newPrice.toFixed(2)),
+                        costPrice: Number(newCost.toFixed(2)),
+                        promoPrice: newPromo ? Number(newPromo.toFixed(2)) : null
+                    });
+                }
+                showToast('Preços atualizados em massa!', 'success');
+                closeMassPriceModal();
+                loadProductsFromFirebase();
+            } catch(e) {
+                showToast('Erro ao atualizar preços.', 'error');
+            }
+        }
+
+        // --- FEATURE: ALERTA DE ESTOQUE & AUDITORIA IA ---
+        function renderStockAlertsTable() {
+            const tb = document.getElementById('admin-stock-alerts-table');
+            if(!tb) return;
+            tb.innerHTML = '';
+
+            let lowStock = products.filter(p => (p.stock !== undefined ? Number(p.stock) : 10) <= 5);
+
+            if(lowStock.length === 0) {
+                tb.innerHTML = `<tr><td colspan="3" class="py-8 text-center text-zinc-500 text-xs">Nenhum produto com estoque crítico no momento.</td></tr>`;
+                return;
+            }
+
+            lowStock.forEach(p => {
+                tb.innerHTML += `
+                    <tr class="border-b border-zinc-800/60">
+                        <td class="p-4 text-xs font-bold text-white">${p.name}</td>
+                        <td class="p-4 text-xs text-red-400 font-bold">${p.stock} unidades</td>
+                        <td class="p-4 text-xs text-amber-400 font-bold">Reposição Recomendada</td>
+                    </tr>`;
+            });
+        }
+
+        async function runAiStockAudit() {
+            const resBox = document.getElementById('ai-audit-result');
+            resBox.classList.remove('hidden');
+            resBox.innerHTML = '<i class="fa-solid fa-spinner animate-spin text-gold"></i> Analisando catálogo e vendas com Gemini IA...';
+
+            if(!storeSettings.geminiKey) {
+                resBox.innerHTML = '<span class="text-red-400">Configure sua Chave API Gemini no painel de Configurações para usar esta IA.</span>';
+                return;
+            }
+
+            try {
+                let summary = products.map(p => `${p.name} (${p.category}): Estoque ${p.stock}, Preço R$ ${p.price}`).join('; ');
+                let prompt = `Aja como um analista financeiro de e-commerce sênior. Analise estes produtos do nosso estoque: ${summary}. Dê 3 recomendações diretas e objetivas em tópicos sobre quais categorias focar e sugestões de kits ou promoções para otimizar o fluxo de caixa. Responda em português.`;
+
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${storeSettings.geminiKey}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] })
+                });
+                const data = await res.json();
+                let reply = data.candidates[0].content.parts[0].text;
+                resBox.innerHTML = `<div class="space-y-2"><b class="text-gold block">Relatório de IA:</b><p>${reply.replace(/\n/g, '<br>').replace(/\*/g, '')}</p></div>`;
+            } catch(e) {
+                resBox.innerHTML = '<span class="text-red-400">Erro ao consultar Gemini IA. Verifique a chave de API.</span>';
+            }
         }
 
         async function updateOrderStatus(id, st) { 
