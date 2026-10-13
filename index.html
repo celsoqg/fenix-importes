@@ -750,14 +750,15 @@
         }
 
         async function loadProductsFromFirebase() {
-            const local = localStorage.getItem('fenix_products');
-            if (local) products = JSON.parse(local);
             try {
                 const snapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
                 products = []; 
                 snapshot.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
                 localStorage.setItem('fenix_products', JSON.stringify(products));
-            } catch (e) {} 
+            } catch (e) {
+                const local = localStorage.getItem('fenix_products');
+                if (local) products = JSON.parse(local);
+            } 
             renderProducts(); 
             renderAdminTable();
         }
@@ -1581,7 +1582,7 @@
                 showToast('Produto salvo com sucesso!', 'success');
                 closeProductModal(); 
                 loadProductsFromFirebase();
-            } catch(err) { showToast('Produto salvo localmente.', 'info'); }
+            } catch(err) { showToast('Erro ao salvar no Firebase.', 'error'); }
             document.getElementById('btn-salvar-produto').innerText = 'Salvar Produto';
         }
 
@@ -1620,19 +1621,16 @@
 
             if (!confirm(`Confirma a exclusão de ${selectedCheckboxes.length} produto(s) selecionado(s)?`)) return;
 
-            showToast('Excluindo produtos selecionados...', 'info');
+            showToast('Excluindo do banco de dados...', 'info');
             try {
                 for (const cb of selectedCheckboxes) {
                     const id = cb.value;
                     await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', id));
-                    products = products.filter(p => p.id !== id);
                 }
-                localStorage.setItem('fenix_products', JSON.stringify(products));
                 showToast('Produtos excluídos com sucesso!', 'success');
-                renderProducts();
-                renderAdminTable();
+                await loadProductsFromFirebase();
             } catch (e) {
-                showToast('Erro ao excluir alguns produtos.', 'error');
+                showToast('Erro ao excluir do Firebase. Verifique sua conexão.', 'error');
             }
         }
 
@@ -1640,12 +1638,11 @@
             if(confirm('Remover este produto do estoque?')) {
                 try {
                     await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', id));
-                } catch(e) {}
-                products = products.filter(p => p.id !== id);
-                localStorage.setItem('fenix_products', JSON.stringify(products));
-                showToast('Produto removido.', 'info');
-                renderProducts();
-                renderAdminTable();
+                    showToast('Produto removido.', 'success');
+                    await loadProductsFromFirebase();
+                } catch(e) {
+                    showToast('Erro ao remover produto do banco.', 'error');
+                }
             }
         }
 
