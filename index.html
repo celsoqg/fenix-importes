@@ -285,7 +285,20 @@
                 </div>
             </div>
 
-            <!-- Grelha de Produtos -->
+            <!-- SEÇÃO DE DESTAQUES / PROMOÇÕES -->
+            <div id="featured-section" class="hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base sm:text-xl font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-amber-500 animate-bounce"></i> Destaques & Ofertas Imperdíveis
+                    </h2>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/30">Oportunidade</span>
+                </div>
+                <div id="featured-grid" class="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x">
+                    <!-- Renderizado dinamicamente pelo JavaScript -->
+                </div>
+            </div>
+
+            <!-- Grelha Geral de Produtos -->
             <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch">
                 <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div><div class="skeleton w-1/2 h-4 rounded"></div></div>
                 <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div><div class="skeleton w-1/2 h-4 rounded"></div></div>
@@ -428,7 +441,7 @@
         </div>
     </div>
 
-    <!-- Modais (JSON, Massa, Rastreio, Carrinho, Checkout, Produto, Configs, Login) -->
+    <!-- Modais -->
     <div id="json-import-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeJsonImportModal()"></div>
         <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-lg w-full p-6 sm:p-8 space-y-4 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
@@ -556,20 +569,31 @@
         </div>
     </div>
 
-    <!-- Modal de Produto com IA de Remoção de Fundo -->
+    <!-- Modal de Produto (Com caixinha de Destaque) -->
     <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeProductModal()"></div>
         <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
             <h3 class="text-lg font-black text-white mb-4">Adicionar / Editar Produto</h3>
             <form id="product-form" onsubmit="saveProduct(event)" class="space-y-3">
                 <input type="hidden" id="prod-id">
+                
                 <div>
-                    <label class="text-[10px] text-zinc-400 block mb-1">Foto do Produto (IA remove fundo automaticamente)</label>
+                    <label class="text-[10px] text-zinc-400 block mb-1">Foto do Produto (IA Remove o Fundo)</label>
                     <input type="text" id="prod-imageUrl" placeholder="Link da foto ou selecione arquivo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-gold">
                     <input type="file" id="prod-file-input" accept="image/*" onchange="uploadImageToGallery(event)" class="mt-2 w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-300 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gold file:text-black cursor-pointer">
                     <div id="upload-status" class="text-[10px] text-gold mt-1 hidden">Enviando foto...</div>
                 </div>
+
+                <!-- Marcador de Destaque / Promoção -->
+                <div class="flex items-center gap-2 bg-zinc-950 p-3 rounded-2xl border border-zinc-800">
+                    <input type="checkbox" id="prod-isFeatured" class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-gold focus:ring-gold cursor-pointer accent-amber-500">
+                    <label for="prod-isFeatured" class="text-xs font-bold text-white cursor-pointer flex items-center gap-1.5">
+                        <i class="fa-solid fa-star text-gold"></i> Fixar este produto na Seção de Destaques
+                    </label>
+                </div>
+
                 <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                
                 <div class="bg-zinc-950/80 p-3 rounded-2xl border border-zinc-800/80 space-y-2">
                     <span class="text-[10px] text-gold font-bold uppercase tracking-wider block"><i class="fa-solid fa-clock"></i> Logística & Disponibilidade</span>
                     <div class="grid grid-cols-2 gap-2">
@@ -581,11 +605,12 @@
                             </select>
                         </div>
                         <div>
-                            <label class="text-[10px] text-zinc-400 block mb-1">Prazo</label>
-                            <input type="text" id="prod-delivery-days" placeholder="Ex: 1 a 3 dias" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                            <label class="text-[10px] text-zinc-400 block mb-1">Prazo Estimado</label>
+                            <input type="text" id="prod-delivery-days" placeholder="Ex: 1 a 3 dias úteis" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
                         </div>
                     </div>
                 </div>
+
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="text-[10px] text-zinc-400 block mb-1">Custo R$</label>
@@ -596,6 +621,7 @@
                         <input type="number" step="0.1" id="prod-margin-pct" oninput="calculatePriceFromMargin()" class="w-full bg-zinc-900 border border-gold/40 rounded-xl px-3 py-2 text-xs sm:text-sm text-white">
                     </div>
                 </div>
+
                 <div class="grid grid-cols-2 gap-2">
                     <div>
                         <label class="text-[10px] text-zinc-400 block mb-1">Preço Venda R$</label>
@@ -606,6 +632,7 @@
                         <input type="number" step="0.01" id="prod-promo-price" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white">
                     </div>
                 </div>
+
                 <div class="grid grid-cols-2 gap-2">
                     <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white">
                         <option value="Peptídeos">Peptídeos</option>
@@ -617,7 +644,9 @@
                     </select>
                     <input type="number" id="prod-stock" required value="10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white">
                 </div>
+
                 <textarea id="prod-desc" rows="2" required placeholder="Descrição..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white outline-none"></textarea>
+                
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs">Cancelar</button>
                     <button type="submit" id="btn-salvar-produto" class="flex-1 gold-btn-gradient py-2.5 rounded-xl text-xs">Salvar Produto</button>
@@ -707,7 +736,7 @@
         }
     </script>
 
-    <!-- App Main Script com IA de Remoção de Fundo -->
+    <!-- App Main Script -->
     <script>
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
         let activeDiscount = 0;
@@ -771,11 +800,11 @@
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choice) => {
-                    if (choice.outcome === 'accepted') showToast('App instalado com sucesso!', 'success');
+                    if (choice.outcome === 'accepted') showToast('App instalado!', 'success');
                     deferredPrompt = null;
                 });
             } else {
-                showToast('Acesse pelo Chrome no celular e clique em "Adicionar à Tela Inicial".', 'info');
+                showToast('Acesse no Chrome e clique em "Adicionar à Tela Inicial".', 'info');
             }
         }
 
@@ -922,11 +951,53 @@
             if(sub === 'analytics') renderStockAlertsTable();
         }
 
+        /* RENDERIZADOR DE PRODUTOS E CARROSSEL DE DESTAQUES */
         function renderProducts() {
             const grid = document.getElementById('product-grid'); 
+            const featuredGrid = document.getElementById('featured-grid');
+            const featuredSection = document.getElementById('featured-section');
             const searchVal = document.getElementById('search-input').value.toLowerCase();
-            grid.innerHTML = '';
             
+            grid.innerHTML = '';
+            if (featuredGrid) featuredGrid.innerHTML = '';
+
+            // Renderiza Seção de Destaques / Promoções
+            const featuredProducts = products.filter(p => p.promoPrice || p.isFeatured);
+
+            if (featuredGrid && featuredSection) {
+                if (featuredProducts.length > 0 && currentFilter === 'all' && !searchVal) {
+                    featuredSection.classList.remove('hidden');
+                    featuredProducts.forEach(p => {
+                        const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+                        const oldPrice = p.promoPrice ? `<span class="text-[10px] text-zinc-400 line-through">R$ ${formatMoney(p.price)}</span>` : '';
+                        
+                        featuredGrid.innerHTML += `
+                            <div class="min-w-[240px] sm:min-w-[280px] max-w-[280px] glass-card rounded-3xl p-4 flex flex-col justify-between shrink-0 snap-start border-amber-500/40 glow-gold-lg relative overflow-hidden">
+                                <span class="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-[9px] font-black px-2.5 py-0.5 rounded-lg uppercase z-10 shadow-md flex items-center gap-1"><i class="fa-solid fa-star"></i> Destaque</span>
+                                
+                                <div>
+                                    ${p.imageUrl ? `<div class="w-full h-36 bg-zinc-950/60 rounded-2xl mb-3 p-2 flex items-center justify-center overflow-hidden border border-zinc-800/80"><img src="${p.imageUrl}" class="max-h-full max-w-full object-contain"></div>` : `<div class="w-full h-36 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-700 text-2xl"></i></div>`}
+                                    <h3 class="text-xs sm:text-sm font-extrabold text-white truncate">${p.name}</h3>
+                                    <p class="text-zinc-400 text-[10px] line-clamp-1 mt-0.5">${p.description}</p>
+                                </div>
+
+                                <div class="pt-3 mt-3 border-t border-zinc-800/80 flex items-center justify-between gap-2">
+                                    <div>
+                                        ${oldPrice}
+                                        <span class="text-sm font-black text-amber-400 block leading-none">R$ ${formatMoney(price)}</span>
+                                    </div>
+                                    <button onclick="addToCart('${p.id}')" class="gold-btn-gradient text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1 shadow-md">
+                                        <i class="fa-solid fa-bag-shopping"></i> Comprar
+                                    </button>
+                                </div>
+                            </div>`;
+                    });
+                } else {
+                    featuredSection.classList.add('hidden');
+                }
+            }
+
+            // Renderiza Catálogo Geral
             const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal)));
             
             if (filtered.length === 0) {
@@ -1505,7 +1576,6 @@
             }
         }
 
-        /* NOVA FUNÇÃO COM IA REMOVE.BG INTEGRADA */
         async function uploadImageToGallery(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1545,7 +1615,6 @@
                 }
             }
 
-            // Fallback local se falhar a API
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
@@ -1600,6 +1669,7 @@
             document.getElementById('product-form').reset(); 
             document.getElementById('prod-id').value = '';
             document.getElementById('prod-margin-pct').value = '';
+            document.getElementById('prod-isFeatured').checked = false;
             document.getElementById('upload-status').classList.add('hidden');
             if(id) { 
                 const p = products.find(x => x.id === id); 
@@ -1615,6 +1685,7 @@
                     document.getElementById('prod-desc').value = p.description; 
                     document.getElementById('prod-availability').value = p.availability || 'pronta_entrega';
                     document.getElementById('prod-delivery-days').value = p.deliveryDays || '';
+                    document.getElementById('prod-isFeatured').checked = !!p.isFeatured;
                 } 
             }
             document.getElementById('product-modal').classList.remove('hidden');
@@ -1635,7 +1706,8 @@
                 availability: document.getElementById('prod-availability').value,
                 deliveryDays: document.getElementById('prod-delivery-days').value.trim(),
                 description: document.getElementById('prod-desc').value, 
-                imageUrl: document.getElementById('prod-imageUrl').value 
+                imageUrl: document.getElementById('prod-imageUrl').value,
+                isFeatured: document.getElementById('prod-isFeatured').checked
             };
             try {
                 if(id) await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", id), data); 
@@ -1659,7 +1731,7 @@
                     <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
                         <td class="p-4 text-center"><input type="checkbox" value="${p.id}" class="product-checkbox rounded bg-zinc-900 border-zinc-700 cursor-pointer accent-amber-500"></td>
                         <td class="p-3">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-8 h-8 rounded-lg object-cover">` : '-'}</td>
-                        <td class="p-3 truncate max-w-[150px] font-bold text-white">${p.name}</td>
+                        <td class="p-3 truncate max-w-[150px] font-bold text-white">${p.name} ${p.isFeatured ? '<i class="fa-solid fa-star text-gold text-[10px]" title="Em Destaque"></i>' : ''}</td>
                         <td class="p-3 text-xs">${p.availability}</td>
                         <td class="p-3">${p.stock}</td>
                         <td class="p-3 text-red-400 font-bold">R$ ${formatMoney(p.costPrice || 0)}</td>
