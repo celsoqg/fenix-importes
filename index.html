@@ -269,7 +269,7 @@
                 </div>
             </div>
 
-            <!-- Botão de Ativar Notificações no Celular -->
+            <!-- Botão com Toggle Switch para Ativar/Desativar Notificações -->
             <div class="bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 p-4 rounded-2xl border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400 text-lg shrink-0">
@@ -277,12 +277,18 @@
                     </div>
                     <div>
                         <h4 class="text-xs font-bold text-white">Notificações Push de Vendas</h4>
-                        <p class="text-[11px] text-zinc-400">Receba alertas com som e vibração no celular no momento em que a venda for feita.</p>
+                        <p class="text-[11px] text-zinc-400">Ative para receber alertas sonoros, vibração e push no celular ao vender.</p>
                     </div>
                 </div>
-                <button onclick="requestPushPermission()" class="gold-btn-gradient px-4 py-2 rounded-xl text-xs font-black flex items-center gap-2 shrink-0">
-                    <i class="fa-solid fa-bell-ring"></i> Ativar / Testar Alertas
-                </button>
+                <div class="flex items-center gap-3 shrink-0">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="push-toggle-checkbox" onchange="togglePushNotifications(this)" class="sr-only peer" checked>
+                        <div class="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
+                    </label>
+                    <button onclick="requestPushPermission()" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-3 py-2 rounded-xl text-xs font-bold border border-zinc-700 flex items-center gap-1.5" title="Testar Alerta">
+                        <i class="fa-solid fa-bell-ring"></i> Testar
+                    </button>
+                </div>
             </div>
 
             <!-- Subtab Estoque -->
@@ -711,11 +717,13 @@
             whatsappSales: "5521999999999", 
             shippingExpress: 25,
             geminiKey: "",
-            removeBgKey: "SHEGD9sUfLfncxyyQ7vds1r8"
+            removeBgKey: "SHEGD9sUfLfncxyyQ7vds1r8",
+            pushNotificationsEnabled: true
         };
 
         // 🔊 Toca Som e Vibração de Nova Venda
         function playSaleBeep() {
+            if (storeSettings.pushNotificationsEnabled === false) return;
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator();
@@ -736,7 +744,19 @@
             }
         }
 
-        /* 🔔 NOTIFICAÇÃO NATIVA DO NAVEGADOR / CELULAR */
+        /* 🔔 CONTROLE DO TOGGLE SWITCH DE NOTIFICAÇÕES */
+        function togglePushNotifications(el) {
+            storeSettings.pushNotificationsEnabled = el.checked;
+            localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
+            if(el.checked) {
+                requestPushPermission();
+                showToast("Notificações de vendas ativadas!", "success");
+            } else {
+                showToast("Notificações de vendas desativadas.", "info");
+            }
+        }
+        window.togglePushNotifications = togglePushNotifications;
+
         function requestPushPermission() {
             if (!("Notification" in window)) {
                 showToast("Este navegador não suporta notificações Push.", "error");
@@ -754,6 +774,7 @@
         window.requestPushPermission = requestPushPermission;
 
         function sendNativeNotification(title, body) {
+            if (storeSettings.pushNotificationsEnabled === false) return;
             playSaleBeep();
             if ("Notification" in window && Notification.permission === "granted") {
                 const options = {
@@ -858,6 +879,13 @@
                     localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
                 }
             } catch (e) {}
+            
+            if (storeSettings.pushNotificationsEnabled === undefined) {
+                storeSettings.pushNotificationsEnabled = true;
+            }
+            const pushCb = document.getElementById('push-toggle-checkbox');
+            if(pushCb) pushCb.checked = storeSettings.pushNotificationsEnabled;
+
             applyStoreBranding();
             calculatedShippingCost = Number(storeSettings.shippingExpress || 25);
             const cleanSalesWpp = formatWhatsappNumber(storeSettings.whatsappSales);
@@ -904,7 +932,7 @@
                 
                 if (!isFirstLoadOrders && newOrdersList.length > orders.length) {
                     const latest = newOrdersList.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
-                    if (latest && latest.client) {
+                    if (latest && latest.client && storeSettings.pushNotificationsEnabled !== false) {
                         sendNativeNotification(
                             `🔔 NOVA VENDA: R$ ${formatMoney(latest.financials?.total || 0)}`,
                             `Cliente: ${latest.client.name}`
@@ -1573,7 +1601,6 @@
             }
         }
 
-        // 🔌 FUNÇÃO ATUALIZADA PARA ACEITAR CHAVES "AQ." VIA HEADER x-goog-api-key
         async function fetchGeminiAPI(apiKey, promptText) {
             const models = ['gemini-2.5-flash', 'gemini-flash', 'gemini-1.5-flash'];
             for (const model of models) {
@@ -1712,6 +1739,7 @@
         async function saveSettings(e) {
             e.preventDefault();
             storeSettings = {
+                ...storeSettings,
                 storeName: document.getElementById('set-store-name').value.trim(),
                 logoUrl: document.getElementById('set-store-logo').value.trim(),
                 removeBgKey: document.getElementById('set-removebg').value.trim(),
