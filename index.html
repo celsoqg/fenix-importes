@@ -340,9 +340,14 @@
 
             <!-- Subtab CRM VIP -->
             <div id="admin-subtab-crm" class="hidden space-y-6">
-                <div class="glass-card p-6 rounded-3xl space-y-3">
-                    <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-crown text-gold"></i> Clientes Recorrentes & CRM VIP</h3>
-                    <p class="text-xs text-zinc-300">Lista consolidada dos seus compradores calculada automaticamente pelo histórico de pedidos.</p>
+                <div class="glass-card p-6 rounded-3xl space-y-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-crown text-gold"></i> Clientes Recorrentes & CRM VIP</h3>
+                        <p class="text-xs text-zinc-300 mt-1">Lista consolidada dos seus compradores calculada automaticamente pelo histórico de pedidos.</p>
+                    </div>
+                    <button onclick="sendBulkWhatsappToAll()" class="bg-green-600 hover:bg-green-500 text-white font-black px-5 py-3 rounded-2xl text-xs flex items-center gap-2 shadow-lg transition shrink-0 cursor-pointer">
+                        <i class="fa-brands fa-whatsapp text-base"></i> Enviar para Todos no WhatsApp
+                    </button>
                 </div>
                 <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
                     <div class="overflow-x-auto">
@@ -362,7 +367,7 @@
                             <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-robot text-gold"></i> Auditoria de Giro e Reposição via Gemini IA</h3>
                             <p class="text-xs text-zinc-300 mt-1">A IA analisa seu estoque atual e sugere quais itens recomprar ou colocar em promoção.</p>
                         </div>
-                        <button onclick="runAiStockAudit()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> Executar Auditoria IA</button>
+                        <button onclick="runAiStockAudit()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-wand-magic-sparkles"></i> Executar Auditoria IA</button>
                     </div>
                     <div id="ai-audit-result" class="bg-zinc-950 border border-zinc-800 p-4 rounded-2xl text-xs text-zinc-200 leading-relaxed hidden"></div>
                 </div>
@@ -1380,6 +1385,7 @@
             btn.disabled = false;
         }
 
+        /* 👑 TABELA CRM VIP & DISPARO EM MASSA */
         function renderCrmTable() {
             const tb = document.getElementById('admin-crm-table');
             if(!tb) return;
@@ -1407,11 +1413,85 @@
                         <td class="p-4 text-xs text-gold font-bold">R$ ${formatMoney(c.totalSpent)}</td>
                         <td class="p-4 text-xs">${c.count} pedido(s)</td>
                         <td class="p-4 text-right">
-                            <a href="https://wa.me/${formatWhatsappNumber(c.phone)}?text=${encodeURIComponent('Olá ' + c.name + '! Temos novidades exclusivas na Fênix Imports.')}" target="_blank" class="bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-whatsapp"></i> Oferta VIP</a>
+                            <a href="https://wa.me/${formatWhatsappNumber(c.phone)}?text=${encodeURIComponent('Olá ' + c.name + '! Temos novidades e ofertas exclusivas na ' + (storeSettings.storeName || 'Fênix Imports') + '.')}" target="_blank" class="bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-whatsapp"></i> Oferta VIP</a>
                         </td>
                     </tr>`;
             });
         }
+
+        /* 🚀 FUNÇÃO DE DISPARO EM MASSA PARA TODOS OS CLIENTES VIP */
+        function sendBulkWhatsappToAll() {
+            let clientMap = {};
+            orders.forEach(o => {
+                if(!o.client || !o.client.phone) return;
+                let phoneKey = o.client.phone.replace(/\D/g, '');
+                if(!clientMap[phoneKey]) {
+                    clientMap[phoneKey] = { name: o.client.name, phone: o.client.phone };
+                }
+            });
+            let clients = Object.values(clientMap);
+            if(clients.length === 0) return showToast("Nenhum cliente cadastrado no histórico.", "error");
+
+            let promoMsg = prompt("Digite a mensagem VIP que deseja enviar para TODOS os clientes:", `Olá! Temos novidades e ofertas exclusivas na ${storeSettings.storeName || 'Fênix Imports'}. Confira nosso catálogo atualizado!`);
+            if(!promoMsg || !promoMsg.trim()) return;
+
+            if(confirm(`Confirmar envio para todos os ${clients.length} clientes VIP registrados?`)) {
+                clients.forEach((c, idx) => {
+                    setTimeout(() => {
+                        let finalMsg = `Olá *${c.name}*!\n\n${promoMsg}`;
+                        window.open(`https://wa.me/${formatWhatsappNumber(c.phone)}?text=${encodeURIComponent(finalMsg)}`, '_blank');
+                    }, idx * 1500);
+                });
+                showToast(`Iniciando envio para ${clients.length} clientes...`, 'success');
+            }
+        }
+        window.sendBulkWhatsappToAll = sendBulkWhatsappToAll;
+
+        // 🤖 AUDITORIA DE GIRO E REPOSIÇÃO VIA GEMINI IA
+        async function runAiStockAudit() {
+            const resultEl = document.getElementById('ai-audit-result');
+            resultEl.classList.remove('hidden');
+            resultEl.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Analisando estoque com Gemini IA...';
+            
+            if(!storeSettings.geminiKey || storeSettings.geminiKey.trim() === '') {
+                resultEl.innerHTML = '<span class="text-red-400">⚠️ Configure a Chave API Gemini IA nas Configurações da Loja (botão Configs no estoque) para usar esta função.</span>';
+                return;
+            }
+
+            const stockSummary = products.map(p => `- ${p.name}: ${p.stock || 10} unidades (Preço: R$ ${p.price})`).join('\n');
+            const prompt = `Analise o seguinte estoque da loja e dê sugestões estratégicas em português de quais produtos repor urgentemente ou colocar em promoção por terem muito estoque:\n${stockSummary}`;
+
+            try {
+                let reply = await fetchGeminiAPI(storeSettings.geminiKey.trim(), prompt);
+                resultEl.innerHTML = `<b class="text-gold block mb-1 text-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> Relatório Estratégico da IA:</b> ${reply.replace(/\n/g, '<br>')}`;
+            } catch(e) {
+                resultEl.innerHTML = '<span class="text-red-400">Erro ao consultar a IA. Verifique se a sua chave API Gemini está correta nas configurações.</span>';
+            }
+        }
+        window.runAiStockAudit = runAiStockAudit;
+
+        // 📊 TABELA DE ALERTAS DE ESTOQUE CRÍTICO
+        function renderStockAlertsTable() {
+            const tb = document.getElementById('admin-stock-alerts-table');
+            if(!tb) return;
+            tb.innerHTML = '';
+            
+            const alerts = products.filter(p => (p.stock !== undefined ? Number(p.stock) : 10) <= 3);
+            if(alerts.length === 0) {
+                tb.innerHTML = `<tr><td colspan="3" class="py-8 text-center text-zinc-500 text-xs">Nenhum alerta de estoque crítico no momento (todos acima de 3 unidades).</td></tr>`;
+                return;
+            }
+
+            alerts.forEach(p => {
+                tb.innerHTML += `
+                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
+                        <td class="p-4 text-xs font-bold text-white">${p.name}</td>
+                        <td class="p-4 text-xs text-red-400 font-bold">${p.stock} unidades</td>
+                        <td class="p-4 text-xs text-amber-400 font-bold">Reposição Urgente / Comprar Mais</td>
+                    </tr>`;
+            });
+        }
+        window.renderStockAlertsTable = renderStockAlertsTable;
 
         async function uploadImageToGallery(event) {
             const file = event.target.files[0];
