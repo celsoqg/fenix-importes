@@ -637,7 +637,7 @@
                     <input type="text" id="set-pix-city" required placeholder="Cidade" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
                 </div>
                 <input type="text" id="set-wpp-sales" required placeholder="WhatsApp de Vendas" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
-                <input type="text" id="set-gemini" placeholder="Chave API Gemini IA" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2.5 text-blue-300">
+                <input type="text" id="set-gemini" placeholder="Chave API Gemini IA (Iniciada em AQ...)" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2.5 text-blue-300">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl">Cancelar</button>
                     <button type="submit" class="flex-1 gold-btn-gradient py-2.5 rounded-xl">Salvar Configurações</button>
@@ -906,7 +906,7 @@
                     const latest = newOrdersList.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
                     if (latest && latest.client) {
                         sendNativeNotification(
-                            `💰 NOVA VENDA: R$ ${formatMoney(latest.financials?.total || 0)}`,
+                            `🔔 NOVA VENDA: R$ ${formatMoney(latest.financials?.total || 0)}`,
                             `Cliente: ${latest.client.name}`
                         );
                     }
@@ -924,7 +924,6 @@
                 await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { status: st }); 
                 showToast(st === 'pago' ? 'Venda Aprovada e Confirmada!' : 'Status Atualizado!', 'success');
                 
-                // Atualiza localmente
                 const target = orders.find(o => o.id === id);
                 if(target) target.status = st;
                 renderOrdersTable();
@@ -1366,7 +1365,7 @@
             try {
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
                 
-                sendNativeNotification(`🚨 NOVA VENDA: R$ ${formatMoney(totals.total)}`, `Cliente: ${n}`);
+                sendNativeNotification(`🔔 NOVA VENDA: R$ ${formatMoney(totals.total)}`, `Cliente: ${n}`);
 
                 let msg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🚚 *Envio:* ${shippingType}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(totals.total)}`;
                 const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
@@ -1574,14 +1573,18 @@
             }
         }
 
+        // 🔌 FUNÇÃO ATUALIZADA PARA ACEITAR CHAVES "AQ." VIA HEADER x-goog-api-key
         async function fetchGeminiAPI(apiKey, promptText) {
             const models = ['gemini-2.5-flash', 'gemini-flash', 'gemini-1.5-flash'];
             for (const model of models) {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
                 try {
                     const res = await fetch(url, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'x-goog-api-key': apiKey.trim()
+                        },
                         body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
                     });
                     const data = await res.json();
