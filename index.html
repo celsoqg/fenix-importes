@@ -709,23 +709,47 @@
             removeBgKey: "SHEGD9sUfLfncxyyQ7vds1r8"
         };
 
+        // 🔊 Toca Som e Vibração de Nova Venda
+        function playSaleBeep() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.25);
+            } catch(e) {}
+
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200, 100, 400]);
+            }
+        }
+
         /* 🔔 NOTIFICAÇÃO NATIVA DO NAVEGADOR / CELULAR */
         function requestPushPermission() {
             if (!("Notification" in window)) {
-                showToast("Este dispositivo não suporta notificações de navegador.", "error");
+                showToast("Este navegador não suporta notificações Push.", "error");
                 return;
             }
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
-                    showToast("Notificações ativas com sucesso!", "success");
-                    sendNativeNotification("🔔 Alerta Fênix Ativado", "Você receberá uma notificação aqui sempre que realizar uma nova venda!");
+                    showToast("Notificações Push ativadas com sucesso!", "success");
+                    sendNativeNotification("🔔 Alerta de Vendas Ativado", "Você receberá uma notificação aqui sempre que realizar uma nova venda!");
                 } else {
-                    showToast("Permissão de notificação negada.", "error");
+                    showToast("Permissão de notificação foi negada no seu celular.", "error");
                 }
             });
         }
+        window.requestPushPermission = requestPushPermission;
 
         function sendNativeNotification(title, body) {
+            playSaleBeep();
             if ("Notification" in window && Notification.permission === "granted") {
                 const options = {
                     body: body,
@@ -769,7 +793,7 @@
             }
         }
 
-        const formatMoney = (val) => Number(val).toFixed(2).replace('.', ',');
+        const formatMoney = (val) => Number(val || 0).toFixed(2).replace('.', ',');
 
         function formatWhatsappNumber(phone) {
             if (!phone) return '';
@@ -888,6 +912,111 @@
                 renderCrmTable();
             });
         }
+
+        /* 🔄 ALTERAR STATUS DO PEDIDO (APROVAR / ACEITAR / ENVIAR) */
+        async function updateOrderStatus(id, st) { 
+            try {
+                await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { status: st }); 
+                showToast(st === 'pago' ? 'Venda Aprovada e Confirmada!' : 'Status Atualizado!', 'success');
+                
+                // Atualiza localmente
+                const target = orders.find(o => o.id === id);
+                if(target) target.status = st;
+                renderOrdersTable();
+            } catch(err) {
+                showToast('Erro ao atualizar status do pedido.', 'error');
+            }
+        }
+        window.updateOrderStatus = updateOrderStatus;
+
+        async function deleteOrder(id) {
+            if(confirm('Excluir pedido permanentemente?')) {
+                try {
+                    await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'orders', id));
+                    showToast('Pedido excluído.', 'info');
+                    orders = orders.filter(o => o.id !== id);
+                    renderOrdersTable();
+                } catch(e) {
+                    showToast('Erro ao excluir pedido.', 'error');
+                }
+            }
+        }
+        window.deleteOrder = deleteOrder;
+
+        function renderOrdersTable() {
+            const tb = document.getElementById('admin-orders-table'); 
+            if(!tb) return;
+            tb.innerHTML = '';
+            let rev = 0, prof = 0, count = 0;
+
+            if(orders.length === 0) {
+                tb.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-zinc-500 text-xs">Nenhum pedido recebido ainda.</td></tr>`;
+            }
+
+            orders.forEach(o => {
+                const total = Number(o.financials?.total || o.financials?.subtotal || 0);
+                const profit = Number(o.financials?.estimatedProfit || 0);
+
+                if(o.status === 'pago' || o.status === 'enviado'){ 
+                    rev += total; 
+                    prof += profit; 
+                    count++; 
+                }
+
+                const d = o.date ? new Date(o.date) : new Date(); 
+                const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+                
+                let stBadge = o.status === 'aguardando' 
+                    ? '<span class="text-amber-400 font-bold text-[10px] uppercase bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">AGUARD.</span>' 
+                    : (o.status === 'pago' 
+                        ? '<span class="text-emerald-400 font-bold text-[10px] uppercase bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">PAGO</span>' 
+                        : '<span class="text-blue-400 font-bold text-[10px] uppercase bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">ENVIADO</span>');
+                
+                let actButtons = o.status === 'aguardando' 
+                    ? `<button onclick="window.updateOrderStatus('${o.id}', 'pago')" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/40 p-2 rounded-xl transition cursor-pointer" title="Aprovar/Aceitar Venda"><i class="fa-solid fa-check text-xs"></i></button>` 
+                    : `<button onclick="window.updateOrderStatus('${o.id}', 'enviado')" class="bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/40 p-2 rounded-xl transition cursor-pointer" title="Marcar como Enviado"><i class="fa-solid fa-truck text-xs"></i></button>`;
+                
+                const trackCode = o.trackingCode || '';
+                const trackInput = (o.status === 'pago' || o.status === 'enviado') ? `
+                    <div class="flex gap-1 mt-1.5">
+                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="Código de rastreio" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-1 rounded-lg w-28 outline-none text-white focus:border-gold">
+                        <button onclick="window.saveAndSendTrack('${o.id}', '${o.client?.phone || ''}', '${o.client?.name || ''}')" class="bg-green-600 hover:bg-green-500 text-white px-2 py-1 rounded-lg text-[10px] font-bold"><i class="fa-brands fa-whatsapp"></i></button>
+                    </div>` : '';
+
+                tb.innerHTML += `
+                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40 transition">
+                        <td class="p-4 text-xs">
+                            <b class="text-white">${o.client?.name || 'Cliente'}</b><br>
+                            <span class="text-[10px] text-zinc-400">${o.shippingType || 'Envio Expresso'}</span><br>
+                            <span class="text-[9px] text-zinc-600">${ds}</span>
+                        </td>
+                        <td class="p-4 text-xs font-bold text-gold">R$ ${formatMoney(total)}</td>
+                        <td class="p-4">${stBadge}${trackInput}</td>
+                        <td class="p-4 text-right">
+                            <div class="flex items-center justify-end gap-1.5">
+                                ${actButtons} 
+                                <button onclick="window.deleteOrder('${o.id}')" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 p-2 rounded-xl transition cursor-pointer" title="Excluir"><i class="fa-solid fa-trash text-xs"></i></button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+
+            document.getElementById('dash-revenue').innerText = `R$ ${formatMoney(rev)}`; 
+            document.getElementById('dash-profit').innerText = `R$ ${formatMoney(prof)}`; 
+            document.getElementById('dash-sales-count').innerText = count; 
+            document.getElementById('dash-margin').innerText = `Margem: ${rev > 0 ? ((prof / rev) * 100).toFixed(1) : 0}%`;
+        }
+
+        async function saveAndSendTrack(id, phone, name) {
+            const code = document.getElementById(`track-${id}`).value.trim(); 
+            if(!code) return showToast("Digite o código de rastreio.", "error");
+            await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
+            if(phone) {
+                window.open(`https://wa.me/${formatWhatsappNumber(phone)}?text=${encodeURIComponent(`Olá ${name}, seu pedido foi enviado com sucesso! Código de rastreio: ${code}`)}`, '_blank');
+            }
+            showToast('Rastreio salvo e enviado!', 'success');
+        }
+        window.saveAndSendTrack = saveAndSendTrack;
 
         function switchTab(tab) {
             document.getElementById('tab-catalog').classList.add('hidden'); 
@@ -1232,7 +1361,6 @@
             try {
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
                 
-                // 🔔 Dispara Notificação Nativa Imediata no Dispositivo
                 sendNativeNotification(`🚨 NOVA VENDA: R$ ${formatMoney(totals.total)}`, `Cliente: ${n}`);
 
                 let msg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🚚 *Envio:* ${shippingType}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(totals.total)}`;
@@ -1250,42 +1378,6 @@
             }
             btn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> Já Paguei! Enviar Comprovante'; 
             btn.disabled = false;
-        }
-
-        function renderOrdersTable() {
-            const tb = document.getElementById('admin-orders-table'); 
-            tb.innerHTML = '';
-            let rev = 0, prof = 0, count = 0;
-            orders.forEach(o => {
-                if(o.status !== 'aguardando'){ 
-                    rev += o.financials.subtotal || 0; 
-                    prof += o.financials.estimatedProfit || 0; 
-                    count++; 
-                }
-                const d = new Date(o.date); 
-                const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-                let st = o.status === 'aguardando' ? '<span class="text-yellow-500 font-bold text-[10px] uppercase">Aguard.</span>' : (o.status === 'pago' ? '<span class="text-green-400 font-bold text-[10px] uppercase">Pago</span>' : '<span class="text-blue-400 font-bold text-[10px] uppercase">Enviado</span>');
-                let act = o.status === 'aguardando' ? `<button onclick="updateOrderStatus('${o.id}', 'pago')" class="text-green-400 hover:bg-zinc-800 p-1.5 rounded" title="Aprovar"><i class="fa-solid fa-check"></i></button>` : `<button onclick="updateOrderStatus('${o.id}', 'enviado')" class="text-blue-400 hover:bg-zinc-800 p-1.5 rounded" title="Marcar Enviado"><i class="fa-solid fa-truck"></i></button>`;
-                
-                const trackCode = o.trackingCode || '';
-                const trackInput = o.status !== 'aguardando' ? `
-                    <div class="flex gap-1 mt-1">
-                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="Código de rastreio" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-0.5 rounded-lg w-28 outline-none text-white">
-                        <button onclick="saveAndSendTrack('${o.id}', '${o.client.phone}', '${o.client.name}')" class="bg-green-600 text-white px-2 py-0.5 rounded-lg text-[10px]"><i class="fa-brands fa-whatsapp"></i></button>
-                    </div>` : '';
-
-                tb.innerHTML += `
-                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
-                        <td class="p-4 text-xs"><b>${o.client.name}</b><br><span class="text-[10px] text-zinc-400">${o.shippingType || 'Envio Expresso'}</span><br><span class="text-[9px] text-zinc-600">${ds}</span></td>
-                        <td class="p-4 text-xs font-bold text-gold">R$ ${formatMoney(o.financials.total)}</td>
-                        <td class="p-4">${st}${trackInput}</td>
-                        <td class="p-4 text-right">${act} <button onclick="deleteOrder('${o.id}')" class="text-red-400 hover:bg-zinc-800 p-1.5 rounded ml-1"><i class="fa-solid fa-trash"></i></button></td>
-                    </tr>`;
-            });
-            document.getElementById('dash-revenue').innerText = `R$ ${formatMoney(rev)}`; 
-            document.getElementById('dash-profit').innerText = `R$ ${formatMoney(prof)}`; 
-            document.getElementById('dash-sales-count').innerText = count; 
-            document.getElementById('dash-margin').innerText = `Margem: ${rev > 0 ? ((prof / rev) * 100).toFixed(1) : 0}%`;
         }
 
         function renderCrmTable() {
