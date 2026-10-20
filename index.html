@@ -2,18 +2,13 @@
 <html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Fênix Imports | Exclusividade & Alta Performance</title>
     
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRsOqbml4IEltcG9ydHMiLCJzaG9ydF9uYW1lIjoiRsOqbml4Iiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwNTA1MDgiLCJ0aGVtZV9jb2xvciI6IiNkNGEwMTciLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMzExOS8zMTE5MzM4LnBuZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
-    <meta name="theme-color" content="#050508">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Fênix Imports">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#d4a017">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
     <script>
         tailwind.config = { 
             darkMode: 'class',
@@ -23,46 +18,80 @@
                         darkBg: '#050508', 
                         cardBg: '#0f0f15', 
                         glassBg: 'rgba(18, 18, 26, 0.75)',
-                        gold: '#d4a017', 
-                        goldHover: '#f1c40f', 
-                        goldLight: '#fef08a' 
+                        gold: 'var(--theme-gold, #d4a017)', 
+                        goldHover: 'var(--theme-gold-hover, #f1c40f)', 
+                        goldLight: 'var(--theme-gold-light, #fef08a)' 
                     },
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
                 } 
             } 
-        };
+        }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
-    <style>
-        html, body { overscroll-behavior-y: none; -webkit-tap-highlight-color: transparent; }
-        
+    <style id="dynamic-theme-style">
+        :root {
+            --theme-gold: #d4a017;
+            --theme-gold-hover: #f1c40f;
+            --theme-gold-light: #fef08a;
+        }
+
         html.dark body { 
-            background-color: #050508; color: #f3f4f6; 
-            background-image: radial-gradient(at 0% 0%, rgba(212, 160, 23, 0.08) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(212, 160, 23, 0.05) 0px, transparent 50%);
+            background-color: #050508; 
+            color: #f3f4f6; 
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 160, 23, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 160, 23, 0.05) 0px, transparent 50%);
             background-attachment: fixed;
         }
-        html.dark .glass-card { background: rgba(15, 15, 23, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        html.dark .glass-nav { background: rgba(5, 5, 8, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-        html.dark .filter-btn { background-color: #181824; color: #d4a017; border: 1px solid rgba(212, 160, 23, 0.3); }
 
         html:not(.dark) body {
-            background-color: #f1f5f9; color: #0f172a;
-            background-image: radial-gradient(at 0% 0%, rgba(212, 160, 23, 0.1) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(212, 160, 23, 0.05) 0px, transparent 50%);
+            background-color: #f8fafc;
+            color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 160, 23, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 160, 23, 0.08) 0px, transparent 50%);
             background-attachment: fixed;
         }
-        html:not(.dark) .glass-card { background: #ffffff; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid #cbd5e1; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08); }
-        html:not(.dark) .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid #cbd5e1; border-top: 1px solid #cbd5e1; }
-        html:not(.dark) input, html:not(.dark) select, html:not(.dark) textarea { background-color: #ffffff !important; color: #0f172a !important; border: 1px solid #94a3b8 !important; }
-        html:not(.dark) input:focus, html:not(.dark) select:focus, html:not(.dark) textarea:focus { border-color: #d4a017 !important; outline: none; box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.2); }
-        html:not(.dark) .filter-btn { background-color: #e2e8f0; color: #0f172a; border: 1px solid #94a3b8; font-weight: 700; }
-        html:not(.dark) .filter-btn:hover { background-color: #cbd5e1; }
+        
+        html.dark .glass-card {
+            background: rgba(15, 15, 23, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        html:not(.dark) .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        }
+
+        html.dark .glass-nav {
+            background: rgba(5, 5, 8, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        html:not(.dark) .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        html:not(.dark) .text-white { color: #0f172a !important; }
         html:not(.dark) .text-zinc-400 { color: #475569 !important; }
-        html:not(.dark) .text-zinc-300 { color: #1e293b !important; }
-        html:not(.dark) .bg-zinc-900 { background-color: #e2e8f0 !important; color: #0f172a !important; }
-        html:not(.dark) .bg-zinc-950 { background-color: #f8fafc !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        html:not(.dark) .text-zinc-300 { color: #334155 !important; }
+        html:not(.dark) .bg-zinc-900 { background-color: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        html:not(.dark) .bg-zinc-950 { background-color: #f1f5f9 !important; }
         html:not(.dark) .border-zinc-800 { border-color: #cbd5e1 !important; }
 
         .gold-gradient-text {
@@ -70,6 +99,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         html.dark .gold-gradient-text {
             background: linear-gradient(135deg, #fff 0%, #fef08a 30%, #d4a017 100%);
             -webkit-background-clip: text;
@@ -78,162 +108,186 @@
 
         .gold-btn-gradient {
             background: linear-gradient(135deg, #fef08a 0%, #d4a017 50%, #b78103 100%);
-            color: #000000 !important;
+            color: #000 !important;
             font-weight: 800;
-            box-shadow: 0 4px 15px rgba(212, 160, 23, 0.3);
+            box-shadow: 0 4px 20px rgba(212, 160, 23, 0.3);
             transition: all 0.3s ease;
         }
-        .gold-btn-gradient:hover { box-shadow: 0 6px 20px rgba(212, 160, 23, 0.5); transform: translateY(-1px); }
-        .gold-btn-gradient:active { transform: scale(0.97); }
+
+        .gold-btn-gradient:hover {
+            box-shadow: 0 6px 25px rgba(212, 160, 23, 0.5);
+            transform: translateY(-1px);
+        }
 
         .mp-btn-gradient {
             background: linear-gradient(135deg, #009ee3 0%, #007eb5 100%);
-            color: #ffffff !important;
+            color: #fff !important;
             font-weight: 800;
-            box-shadow: 0 4px 15px rgba(0, 158, 227, 0.35);
+            box-shadow: 0 4px 20px rgba(0, 158, 227, 0.35);
             transition: all 0.3s ease;
         }
-        .mp-btn-gradient:active { transform: scale(0.97); }
 
-        .glow-gold-lg { box-shadow: 0 0 30px rgba(212, 160, 23, 0.2); }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        .mp-btn-gradient:hover {
+            box-shadow: 0 6px 25px rgba(0, 158, 227, 0.55);
+            transform: translateY(-1px);
+        }
+
+        .glow-gold-lg {
+            box-shadow: 0 0 35px rgba(212, 160, 23, 0.18);
+        }
+
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
 
-        .chat-bubble { max-width: 88%; padding: 10px 14px; border-radius: 14px; margin-bottom: 8px; font-size: 12.5px; line-height: 1.5; font-weight: 500; }
-        .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 2px; }
-        html:not(.dark) .chat-user { background: #0f172a; color: #fff; }
-        .chat-bot { background: rgba(212, 160, 23, 0.15); border: 1px solid rgba(212, 160, 23, 0.4); color: #b45309; border-bottom-left-radius: 2px; font-weight: 600; }
-        html.dark .chat-bot { color: #fef08a; }
+        .chat-bubble { max-width: 88%; padding: 12px 15px; border-radius: 16px; margin-bottom: 10px; font-size: 13px; line-height: 1.5; font-weight: 500; }
+        .chat-user { background: #27272a; color: #fff !important; margin-left: auto; border-bottom-right-radius: 2px; }
+        .chat-bot { background: rgba(212, 160, 23, 0.12); border: 1px solid rgba(212, 160, 23, 0.4); color: #fef08a; border-bottom-left-radius: 2px; }
+        html:not(.dark) .chat-bot { color: #713f12; background: rgba(212, 160, 23, 0.18); }
 
-        #toast-container { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 8px; width: 90vw; max-width: 400px; pointer-events: none; }
-        .toast { padding: 12px 16px; border-radius: 12px; font-size: 12px; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: popIn 0.4s forwards; border: 1px solid rgba(255,255,255,0.1); pointer-events: auto; }
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 12px 18px; border-radius: 14px; font-size: 13px; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); animation: slideIn 0.3s forwards; border: 1px solid rgba(255,255,255,0.1); }
         .toast-success { background: #0f172a; border-left: 4px solid #22c55e; color: #4ade80; }
         .toast-error { background: #0f172a; border-left: 4px solid #ef4444; color: #f87171; }
         .toast-info { background: #0f172a; border-left: 4px solid #d4a017; color: #fef08a; }
-        @keyframes popIn { 0% { transform: scale(0.8) translateY(-20px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        .skeleton { animation: pulse-skeleton 1.5s infinite; background-color: #cbd5e1; }
-        html.dark .skeleton { background-color: #181824; }
+        .skeleton { animation: pulse-skeleton 1.5s infinite; background-color: #181824; }
         @keyframes pulse-skeleton { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative pb-20 md:pb-0">
+<body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative">
 
     <div id="toast-container"></div>
+    
     <audio id="notification-sound" preload="auto">
         <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[10px] sm:text-xs font-black py-1 px-2 text-center tracking-wider uppercase flex items-center justify-center gap-1.5 shadow-md z-50 relative">
-        <i class="fa-solid fa-bolt text-xs"></i> 
-        <span>PIX & CARTÃO 12X (MERCADO PAGO) • ENVIOS EXPRESSOS BRASIL</span>
+    <!-- Banner Topo -->
+    <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
+        <i class="fa-solid fa-bolt text-sm"></i> 
+        <span id="top-promo-banner-text">PIX IMEDIATO & CARTÃO EM ATÉ 12X (MERCADO PAGO) • ENVIO EXPRESSO BRASIL</span>
     </div>
 
-    <!-- Header Principal -->
+    <!-- Header Glassmorphism -->
     <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <div class="flex items-center gap-2.5 cursor-pointer group" onclick="window.switchTab('catalog')">
-                <div id="header-logo-container" class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-700 p-0.5 shadow-md">
-                    <div class="w-full h-full bg-white dark:bg-darkBg rounded-[10px] flex items-center justify-center text-gold text-base sm:text-lg font-black overflow-hidden">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('catalog')">
+                <div id="header-logo-container" class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-700 p-0.5 shadow-lg group-hover:scale-105 transition duration-300">
+                    <div class="w-full h-full bg-darkBg rounded-[14px] flex items-center justify-center text-gold text-lg sm:text-xl font-black overflow-hidden">
                         <i id="header-logo-icon" class="fa-solid fa-fire-flame-curved"></i>
-                        <img id="header-logo-img" src="" class="w-full h-full object-cover rounded-[10px] hidden" alt="Logo">
+                        <img id="header-logo-img" src="" class="w-full h-full object-cover rounded-[14px] hidden" alt="Logo">
                     </div>
                 </div>
                 <div class="min-w-0">
-                    <span id="header-store-name" class="text-sm sm:text-xl font-black tracking-tight text-zinc-900 dark:text-white block leading-none">FÊNIX <span class="text-gold">IMPORTS</span></span>
-                    <span class="text-[8px] sm:text-[10px] text-zinc-500 dark:text-zinc-400 font-bold tracking-widest uppercase block mt-0.5">Alta Performance</span>
+                    <span id="header-store-name" class="text-base sm:text-2xl font-black tracking-tight text-white block leading-none">FÊNIX <span class="text-gold">IMPORTS</span></span>
+                    <span class="text-[9px] sm:text-[11px] text-zinc-400 font-bold tracking-widest uppercase block mt-1">Alta Performance</span>
                 </div>
             </div>
 
-            <nav class="hidden md:flex items-center gap-6 text-xs sm:text-sm font-semibold">
-                <button onclick="window.switchTab('catalog')" id="nav-catalog" class="text-amber-600 dark:text-gold flex items-center gap-1.5 hover:text-amber-700 dark:hover:text-yellow-300 transition cursor-pointer">
-                    <i class="fa-solid fa-store text-xs"></i> Catálogo
-                </button>
-                <button onclick="window.openTrackingModal()" class="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-route text-xs"></i> Rastrear Pedido
-                </button>
-                <button onclick="window.openLoginModal()" id="nav-login" class="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-shield-halved text-xs"></i> Admin
-                </button>
-                <button onclick="window.switchTab('admin')" id="nav-admin" class="hidden text-zinc-600 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-gold transition flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-chart-line text-xs"></i> Gestão
-                </button>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
+                <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-2 hover:text-yellow-300 transition cursor-pointer"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
+                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
+                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-shield-halved text-xs"></i> Admin</button>
+                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
             </nav>
 
-            <div class="flex items-center gap-1.5 sm:gap-2.5">
-                <button onclick="window.toggleTheme()" id="btn-theme-toggle" class="bg-zinc-200 dark:bg-zinc-900/80 hover:bg-zinc-300 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/60 text-amber-600 dark:text-gold p-2 sm:p-2.5 rounded-xl flex items-center justify-center transition shrink-0 cursor-pointer" title="Alternar Tema">
-                    <i id="theme-toggle-icon" class="fa-solid fa-moon text-sm sm:text-base"></i>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button onclick="toggleTheme()" id="btn-theme-toggle" class="bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/60 text-gold p-2.5 rounded-2xl flex items-center justify-center transition shrink-0 cursor-pointer" title="Alternar Tema">
+                    <i id="theme-toggle-icon" class="fa-solid fa-moon text-base sm:text-lg"></i>
                 </button>
 
-                <div id="user-status-container" class="hidden text-[10px] text-zinc-600 dark:text-zinc-400 lg:flex items-center gap-1.5 bg-zinc-200 dark:bg-zinc-900/80 border border-zinc-300 dark:border-zinc-800 px-2.5 py-1 rounded-full shrink-0">
-                    <i class="fa-solid fa-circle text-[6px] text-green-500 animate-pulse"></i>
-                    <span id="logged-user-email" class="max-w-[70px] truncate font-medium">admin</span>
-                    <button onclick="window.logoutAdmin()" class="text-red-500 hover:text-red-600 ml-0.5 cursor-pointer" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
+                <div id="user-status-container" class="hidden text-xs text-zinc-400 lg:flex items-center gap-2 bg-zinc-900/80 border border-zinc-800 px-3 py-1.5 rounded-full shrink-0">
+                    <i class="fa-solid fa-circle text-[8px] text-green-500 animate-pulse"></i>
+                    <span id="logged-user-email" class="max-w-[100px] truncate font-medium">admin</span>
+                    <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300 ml-1 cursor-pointer" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
 
-                <button onclick="window.toggleCartDrawer(true)" class="relative bg-zinc-200 dark:bg-zinc-900/80 hover:bg-zinc-300 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-700/60 text-zinc-900 dark:text-white px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl flex items-center gap-2 transition group shrink-0 cursor-pointer shadow-sm">
-                    <i class="fa-solid fa-bag-shopping text-amber-600 dark:text-gold group-hover:scale-110 transition text-sm sm:text-base"></i>
+                <button onclick="toggleCartDrawer(true)" class="relative bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/60 text-white px-3.5 py-2.5 rounded-2xl flex items-center gap-2.5 transition group shrink-0 cursor-pointer">
+                    <i class="fa-solid fa-bag-shopping text-gold group-hover:scale-110 transition text-base"></i>
                     <span class="hidden sm:inline text-xs font-bold uppercase tracking-wider">Carrinho</span>
-                    <span id="cart-counter" class="bg-gold text-black text-[10px] sm:text-xs font-black w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shadow-md">0</span>
+                    <span id="cart-counter" class="bg-gold text-black text-xs font-black w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
                 </button>
 
-                <button onclick="window.toggleMobileMenu()" class="md:hidden text-zinc-700 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white p-1.5 cursor-pointer">
-                    <i class="fa-solid fa-bars text-xl"></i>
-                </button>
+                <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-400 hover:text-white p-2 cursor-pointer"><i class="fa-solid fa-bars text-xl"></i></button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-zinc-200 dark:border-zinc-800 px-4 py-3 space-y-2.5 absolute w-full shadow-lg z-30">
-            <button onclick="window.switchTab('catalog'); window.toggleMobileMenu();" class="w-full text-left text-amber-600 dark:text-gold font-bold text-xs flex items-center gap-2.5"><i class="fa-solid fa-store"></i> Catálogo de Produtos</button>
-            <button onclick="window.openTrackingModal(); window.toggleMobileMenu();" class="w-full text-left text-zinc-700 dark:text-zinc-300 font-semibold text-xs flex items-center gap-2.5"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
-            <button onclick="window.openLoginModal(); window.toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-700 dark:text-zinc-300 font-semibold text-xs flex items-center gap-2.5"><i class="fa-solid fa-shield-halved"></i> Painel de Controle</button>
-            <button onclick="window.switchTab('admin'); window.toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-amber-600 dark:text-gold font-bold text-xs flex items-center gap-2.5"><i class="fa-solid fa-chart-line"></i> Gestão da Loja</button>
+        <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-zinc-800 px-5 py-4 space-y-3">
+            <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-bold text-sm flex items-center gap-3"><i class="fa-solid fa-store"></i> Catálogo de Produtos</button>
+            <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
+            <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3"><i class="fa-solid fa-shield-halved"></i> Painel de Controle</button>
+            <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-bold text-sm flex items-center gap-3"><i class="fa-solid fa-chart-line"></i> Gestão da Loja</button>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 w-full pb-24 md:pb-8">
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full">
 
         <!-- TAB CATÁLOGO -->
-        <div id="tab-catalog" class="space-y-5 sm:space-y-6">
-            <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl glass-card border border-zinc-200 dark:border-zinc-800/80 p-5 sm:p-10 glow-gold-lg">
-                <div class="absolute -right-20 -bottom-20 w-60 h-60 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 max-w-2xl space-y-3">
-                    <div class="flex flex-wrap gap-1.5">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-gold/10 text-amber-700 dark:text-gold border border-gold/30 uppercase tracking-widest shadow-sm"><i class="fa-solid fa-shield-check"></i> Produtos Originais</span>
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/30 shadow-sm"><i class="fa-solid fa-credit-card"></i> Pix & Cartão 12x</span>
+        <div id="tab-catalog" class="space-y-8">
+            <div class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-12 glow-gold-lg">
+                <div class="absolute -right-20 -bottom-20 w-80 h-80 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <div class="flex flex-wrap gap-2">
+                        <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-halved"></i> Produtos Originais</span>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30"><i class="fa-solid fa-credit-card"></i> Pix & Cartão Mercado Pago</span>
                     </div>
-                    <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-zinc-900 dark:text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
-                    <p class="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 font-medium leading-relaxed">Aprovação automática e envio expresso discreto para todo o Brasil.</p>
+                    <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
+                    <p class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Aprovação 100% automática via Pix ou Cartão de Crédito em até 12x e envio expresso discreto para todo o Brasil.</p>
                 </div>
             </div>
 
-            <!-- Filtros & Pesquisa -->
-            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 glass-card p-3 rounded-2xl">
-                <div class="relative w-full lg:w-80 shrink-0">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs"></i>
-                    <input type="text" id="search-input" oninput="window.filterProducts()" placeholder="Pesquisar por nome ou sigla..." class="w-full bg-white dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-800 rounded-xl pl-10 pr-3 py-2 text-xs text-zinc-900 dark:text-white focus:border-gold outline-none transition shadow-inner">
+            <!-- Filtros, Ordenação & Pesquisa -->
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 glass-card p-4 rounded-2xl">
+                <div class="flex flex-col sm:flex-row gap-2 w-full xl:w-auto shrink-0">
+                    <div class="relative w-full sm:w-80">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
+                        <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar nome, sigla (ex: TG) ou efeito..." class="w-full bg-zinc-900/90 border border-zinc-800 rounded-xl pl-11 pr-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none transition shadow-inner">
+                    </div>
+                    <select id="sort-select" onchange="filterProducts()" class="bg-zinc-900/90 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-300 focus:border-gold outline-none cursor-pointer">
+                        <option value="featured">⭐ Destaques Primeiro</option>
+                        <option value="price-asc">💰 Menor Preço</option>
+                        <option value="price-desc">💎 Maior Preço</option>
+                        <option value="name-asc">🔤 Nome (A-Z)</option>
+                    </select>
                 </div>
                 
-                <div class="flex items-center gap-1.5 overflow-x-auto w-full pb-1 lg:pb-0 scroll-smooth">
-                    <button onclick="window.setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold gold-btn-gradient whitespace-nowrap cursor-pointer shadow-sm text-black">Todos</button>
-                    <button onclick="window.setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap cursor-pointer shadow-sm">Peptídeos</button>
-                    <button onclick="window.setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap cursor-pointer shadow-sm">Insumos</button>
-                    <button onclick="window.setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap cursor-pointer shadow-sm">Estética</button>
-                    <button onclick="window.setCategoryFilter('Hormônios')" data-cat="Hormônios" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap cursor-pointer shadow-sm">Hormônios</button>
-                    <button onclick="window.setCategoryFilter('Performance')" data-cat="Performance" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap cursor-pointer shadow-sm">Performance</button>
-                    <button onclick="window.setCategoryFilter('Outros')" data-cat="Outros" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold transition whitespace-nowrap cursor-pointer shadow-sm">Outros</button>
+                <div class="flex items-center gap-2 overflow-x-auto w-full pb-1 xl:pb-0 scroll-smooth">
+                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold gold-btn-gradient whitespace-nowrap cursor-pointer">Todos</button>
+                    <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Peptídeos</button>
+                    <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Insumos & Soluções</button>
+                    <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Estética Avançada</button>
+                    <button onclick="setCategoryFilter('Hormônios')" data-cat="Hormônios" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Hormônios</button>
+                    <button onclick="setCategoryFilter('Performance')" data-cat="Performance" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Performance</button>
+                    <button onclick="setCategoryFilter('Outros')" data-cat="Outros" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Outros</button>
                 </div>
             </div>
 
             <!-- Destaques -->
-            <div id="featured-section" class="hidden space-y-3">
-                <div class="flex items-center justify-between px-1">
-                    <h2 class="text-sm sm:text-lg font-black text-zinc-900 dark:text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-fire text-amber-500 animate-bounce"></i> Destaques & Ofertas
+            <div id="featured-section" class="hidden space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-base sm:text-xl font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-amber-500 animate-bounce"></i> Destaques & Ofertas Imperdíveis
                     </h2>
-                    <span class="text-[9px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">Oportunidade</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/30">Alta Procura</span>
                 </div>
-                <div
+                <div id="featured-grid" class="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x"></div>
+            </div>
+
+            <!-- Grelha Geral -->
+            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch">
+                <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div></div>
+                <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div></div>
+            </div>
+        </div>
+
+        <!-- TAB ADMIN -->
+        <div id="tab-admin" class="hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 rounded-3xl">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-chart-line text-gold"></i> Painel de Gestão Fênix</h2>
+                    <p class="text-xs text-zinc-300 mt-1">Automação Mercado Pago (Pix & Cartão), compressor de imagens, estoque e Mega IA Online.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full md:w-auto bg-zinc-950 p-1.5 rounded
