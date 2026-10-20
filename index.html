@@ -197,11 +197,13 @@
                 </div>
             </div>
 
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-2 hover:text-yellow-300 transition cursor-pointer"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
-                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
-                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-shield-halved text-xs"></i> Admin</button>
-                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
+            <nav class="hidden md:flex items-center gap-5 lg:gap-7 text-xs lg:text-sm font-semibold">
+                <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-1.5 hover:text-yellow-300 transition cursor-pointer"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
+                <button onclick="openReconstitutionModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-syringe text-gold text-xs"></i> Calculadora UI</button>
+                <button onclick="openLabVerifyModal()" class="text-zinc-300 hover:text-emerald-400 transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400 text-xs"></i> Laudos HPLC</button>
+                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
+                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-shield-halved text-xs"></i> Admin</button>
+                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
             </nav>
 
             <div class="flex items-center gap-2 sm:gap-3">
@@ -227,6 +229,8 @@
 
         <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-zinc-800 px-5 py-4 space-y-3">
             <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-store"></i> Catálogo de Produtos</button>
+            <button onclick="openReconstitutionModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-syringe text-gold"></i> Calculadora de Reconstituição (UI)</button>
+            <button onclick="openLabVerifyModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400"></i> Verificar Lote & Laudos HPLC</button>
             <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
             <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-shield-halved"></i> Painel de Controle</button>
             <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-chart-line"></i> Gestão da Loja</button>
@@ -237,17 +241,60 @@
 
         <!-- TAB CATÁLOGO -->
         <div id="tab-catalog" class="space-y-8">
-            <div class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-12 glow-gold-lg">
+            <div class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-10 glow-gold-lg">
                 <div class="absolute -right-20 -bottom-20 w-80 h-80 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 max-w-2xl space-y-4">
-                    <div class="flex flex-wrap gap-2">
-                        <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-halved"></i> Produtos Originais</span>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30"><i class="fa-solid fa-credit-card"></i> Pix & Cartão Mercado Pago</span>
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"><i class="fa-solid fa-truck-fast"></i> Envio Discreto c/ Rastreio</span>
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="flex flex-wrap gap-2">
+                            <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-halved"></i> Pureza HPLC 99.8%</span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30"><i class="fa-solid fa-credit-card"></i> Pix & Cartão 12x</span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"><i class="fa-solid fa-coins"></i> 5% Cashback VIP</span>
+                        </div>
+                        <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Aprovação 100% automática via Pix ou Cartão em até 12x, envio expresso discreto e frete grátis acima de R$ 450. Use o cupom <b class="text-gold">FENIX10</b> para 10% OFF!</p>
+                        <div class="flex flex-wrap gap-2.5 pt-1">
+                            <button onclick="openReconstitutionModal()" class="gold-btn-gradient px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-syringe"></i> Calculadora de Dosagem (UI)
+                            </button>
+                            <button onclick="openLabVerifyModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-emerald-400 border border-emerald-500/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
+                                <i class="fa-solid fa-microscope"></i> Consultar Laudos HPLC & Lote
+                            </button>
+                        </div>
                     </div>
-                    <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
-                    <p class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Aprovação 100% automática via Pix ou Cartão de Crédito em até 12x e envio expresso discreto para todo o Brasil. Use o cupom <b class="text-gold">FENIX10</b> para 10% OFF!</p>
+                    <div class="lg:col-span-5 grid grid-cols-2 gap-3">
+                        <div onclick="openReconstitutionModal()" class="bg-zinc-950/80 hover:border-gold/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
+                            <div class="w-9 h-9 rounded-xl bg-gold/15 text-gold flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-calculator"></i></div>
+                            <h3 class="text-xs font-black text-white">Calculadora UI/mg</h3>
+                            <p class="text-[10px] text-zinc-400 mt-0.5">Descubra na hora quantas UI puxar na seringa.</p>
+                        </div>
+                        <div onclick="openLabVerifyModal()" class="bg-zinc-950/80 hover:border-emerald-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
+                            <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-file-shield"></i></div>
+                            <h3 class="text-xs font-black text-white">Laudos HPLC 99.8%</h3>
+                            <p class="text-[10px] text-zinc-400 mt-0.5">Certificados de pureza e autenticidade de lote.</p>
+                        </div>
+                        <div onclick="setGoalFilter('definicao')" class="bg-zinc-950/80 hover:border-amber-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
+                            <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-fire-flame-simple"></i></div>
+                            <h3 class="text-xs font-black text-white">Protocolos Seca/GLP</h3>
+                            <p class="text-[10px] text-zinc-400 mt-0.5">Desconto progressivo de até 15% em combos.</p>
+                        </div>
+                        <div onclick="toggleCartDrawer(true)" class="bg-zinc-950/80 hover:border-sky-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
+                            <div class="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-gift"></i></div>
+                            <h3 class="text-xs font-black text-white">Frete Grátis + Brinde</h3>
+                            <p class="text-[10px] text-zinc-400 mt-0.5">Ganhe Água Bac de brinde em compras VIP.</p>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <!-- Filtros Rápidos por Objetivo (2026 Goal Pills) -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-1 scroll-smooth">
+                <span class="text-[10px] font-black uppercase tracking-wider text-zinc-400 shrink-0 mr-1"><i class="fa-solid fa-bullseye text-gold"></i> Objetivo:</span>
+                <button onclick="setGoalFilter('all')" id="goal-btn-all" class="goal-pill px-3 py-1.5 rounded-full text-[11px] font-bold bg-gold/20 text-gold border border-gold/40 whitespace-nowrap cursor-pointer">⚡ Todos os Objetivos</button>
+                <button onclick="setGoalFilter('definicao')" id="goal-btn-definicao" class="goal-pill px-3 py-1.5 rounded-full text-[11px] font-semibold bg-zinc-900/90 text-zinc-300 border border-zinc-800 hover:border-gold/40 whitespace-nowrap cursor-pointer">🔥 Definição Metabólica (GLP-1/GIP)</button>
+                <button onclick="setGoalFilter('recuperacao')" id="goal-btn-recuperacao" class="goal-pill px-3 py-1.5 rounded-full text-[11px] font-semibold bg-zinc-900/90 text-zinc-300 border border-zinc-800 hover:border-gold/40 whitespace-nowrap cursor-pointer">🧬 Recuperação & Articulação</button>
+                <button onclick="setGoalFilter('hipertrofia')" id="goal-btn-hipertrofia" class="goal-pill px-3 py-1.5 rounded-full text-[11px] font-semibold bg-zinc-900/90 text-zinc-300 border border-zinc-800 hover:border-gold/40 whitespace-nowrap cursor-pointer">💪 Ganho Limpo & Densidade</button>
+                <button onclick="setGoalFilter('insumos')" id="goal-btn-insumos" class="goal-pill px-3 py-1.5 rounded-full text-[11px] font-semibold bg-zinc-900/90 text-zinc-300 border border-zinc-800 hover:border-gold/40 whitespace-nowrap cursor-pointer">💧 Diluentes & Reconstituição</button>
+                <button onclick="setGoalFilter('wishlist')" id="goal-btn-wishlist" class="goal-pill px-3 py-1.5 rounded-full text-[11px] font-semibold bg-zinc-900/90 text-zinc-300 border border-zinc-800 hover:border-red-500/40 whitespace-nowrap cursor-pointer"><i class="fa-solid fa-heart text-red-400"></i> Favoritos (<span id="wishlist-count-badge">0</span>)</button>
             </div>
 
             <!-- Filtros, Ordenação & Pesquisa -->
@@ -370,10 +417,11 @@
 
             <!-- Subtab Pedidos -->
             <div id="admin-subtab-orders" class="hidden space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Faturamento Confirmado</p><h4 id="dash-revenue" class="text-2xl sm:text-3xl font-black text-white">R$ 0,00</h4></div>
-                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden border-green-500/30"><p class="text-xs font-bold text-green-400 uppercase tracking-wider mb-2">Lucro Estimado</p><h4 id="dash-profit" class="text-2xl sm:text-3xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-400/80 mt-2 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
-                    <div class="glass-card p-6 rounded-3xl relative overflow-hidden"><p class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-2xl sm:text-3xl font-black text-white">0</h4></div>
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div class="glass-card p-5 rounded-3xl relative overflow-hidden"><p class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Faturamento Confirmado</p><h4 id="dash-revenue" class="text-2xl font-black text-white">R$ 0,00</h4><span id="dash-ticket-medio" class="text-[10px] text-gold font-bold mt-1 block">Ticket Médio: R$ 0,00</span></div>
+                    <div class="glass-card p-5 rounded-3xl relative overflow-hidden border-green-500/30"><p class="text-[11px] font-bold text-green-400 uppercase tracking-wider mb-1">Lucro Líquido Real</p><h4 id="dash-profit" class="text-2xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-400/80 mt-1 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
+                    <div class="glass-card p-5 rounded-3xl relative overflow-hidden"><p class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-2xl font-black text-white">0</h4><span id="dash-pending-count" class="text-[10px] text-amber-400 font-bold mt-1 block">0 aguardando</span></div>
+                    <div class="glass-card p-5 rounded-3xl relative overflow-hidden"><p class="text-[11px] font-bold text-sky-400 uppercase tracking-wider mb-1">Conversão PIX vs Cartão</p><div id="dash-pay-split" class="text-xs font-bold text-white mt-2 space-y-1"></div></div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass-card p-4 rounded-2xl">
@@ -488,6 +536,142 @@
         </div>
     </div>
 
+    <!-- Modal Calculadora Interativa de Reconstituição & Dosagem (UI/mg) -->
+    <div id="reconstitution-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeReconstitutionModal()"></div>
+        <div class="relative glass-card border border-gold/40 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[92vh] space-y-5">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gold/15 border border-gold/40 flex items-center justify-center text-gold text-lg">
+                        <i class="fa-solid fa-syringe"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-black text-white">Calculadora de Reconstituição & Dosagem</h3>
+                        <p class="text-[11px] text-zinc-400">Precisão farmacêutica para seringas de insulina (100 UI / 1 mL)</p>
+                    </div>
+                </div>
+                <button onclick="closeReconstitutionModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800">
+                    <label class="text-[10px] font-bold text-zinc-400 uppercase block mb-1.5">1. Frasco (Total mg)</label>
+                    <input type="number" step="0.5" id="calc-vial-mg" value="15" oninput="updatePeptideCalculator()" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm font-black text-white focus:border-gold outline-none">
+                    <div class="flex gap-1 mt-2">
+                        <button type="button" onclick="setCalcPreset('vial', 5)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold py-1 rounded border border-zinc-800 text-zinc-300 cursor-pointer">5mg</button>
+                        <button type="button" onclick="setCalcPreset('vial', 10)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold py-1 rounded border border-zinc-800 text-zinc-300 cursor-pointer">10mg</button>
+                        <button type="button" onclick="setCalcPreset('vial', 15)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold py-1 rounded border border-gold/40 text-gold cursor-pointer">15mg</button>
+                    </div>
+                </div>
+
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800">
+                    <label class="text-[10px] font-bold text-zinc-400 uppercase block mb-1.5">2. Água Bac (mL)</label>
+                    <input type="number" step="0.1" id="calc-water-ml" value="2" oninput="updatePeptideCalculator()" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm font-black text-white focus:border-gold outline-none">
+                    <div class="flex gap-1 mt-2">
+                        <button type="button" onclick="setCalcPreset('water', 1)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold py-1 rounded border border-zinc-800 text-zinc-300 cursor-pointer">1ml</button>
+                        <button type="button" onclick="setCalcPreset('water', 2)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold py-1 rounded border border-gold/40 text-gold cursor-pointer">2ml</button>
+                        <button type="button" onclick="setCalcPreset('water', 3)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold py-1 rounded border border-zinc-800 text-zinc-300 cursor-pointer">3ml</button>
+                    </div>
+                </div>
+
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800">
+                    <label class="text-[10px] font-bold text-gold uppercase block mb-1.5">3. Dose Desejada (mg)</label>
+                    <input type="number" step="0.25" id="calc-dose-mg" value="2.5" oninput="updatePeptideCalculator()" class="w-full bg-zinc-900 border border-gold/50 rounded-xl px-3 py-2 text-sm font-black text-gold focus:border-gold outline-none">
+                    <div class="flex gap-1 mt-2">
+                        <button type="button" onclick="setCalcPreset('dose', 2.5)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold py-1 rounded border border-gold/40 text-gold cursor-pointer">2.5mg</button>
+                        <button type="button" onclick="setCalcPreset('dose', 5)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold py-1 rounded border border-zinc-800 text-zinc-300 cursor-pointer">5mg</button>
+                        <button type="button" onclick="setCalcPreset('dose', 7.5)" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold py-1 rounded border border-zinc-800 text-zinc-300 cursor-pointer">7.5mg</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultado Visual na Seringa -->
+            <div class="bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 border border-gold/30 rounded-2xl p-5 space-y-4">
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-zinc-950/90 p-3 rounded-xl border border-zinc-800">
+                        <span class="text-[10px] text-zinc-400 uppercase font-bold block">Puxar na Seringa</span>
+                        <span id="calc-result-ui" class="text-xl sm:text-2xl font-black text-gold">33.3 UI</span>
+                        <span class="text-[10px] text-zinc-500 block">Seringa 100 UI</span>
+                    </div>
+                    <div class="bg-zinc-950/90 p-3 rounded-xl border border-zinc-800">
+                        <span class="text-[10px] text-zinc-400 uppercase font-bold block">Volume em mL</span>
+                        <span id="calc-result-ml" class="text-xl sm:text-2xl font-black text-sky-400">0.33 mL</span>
+                        <span id="calc-concentration-info" class="text-[10px] text-zinc-500 block">7.5 mg/mL</span>
+                    </div>
+                    <div class="bg-zinc-950/90 p-3 rounded-xl border border-zinc-800">
+                        <span class="text-[10px] text-zinc-400 uppercase font-bold block">Rendimento Total</span>
+                        <span id="calc-result-doses" class="text-xl sm:text-2xl font-black text-emerald-400">6 Doses</span>
+                        <span class="text-[10px] text-zinc-500 block">Por frasco</span>
+                    </div>
+                </div>
+
+                <!-- Seringa Gráfica -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-[10px] font-bold text-zinc-400">
+                        <span>0 UI</span><span>20 UI</span><span>40 UI</span><span>60 UI</span><span>80 UI</span><span>100 UI (1.0 mL)</span>
+                    </div>
+                    <div class="w-full h-6 bg-zinc-950 rounded-xl border border-zinc-700 p-1 relative overflow-hidden">
+                        <div id="calc-syringe-bar" class="h-full rounded-lg bg-gradient-to-r from-amber-400 via-gold to-emerald-400 transition-all duration-300" style="width: 33.3%"></div>
+                    </div>
+                    <p id="calc-human-summary" class="text-xs text-zinc-300 text-center pt-1 font-medium">Para aplicar <b class="text-gold">2.5 mg</b>, puxe até a marca de <b class="text-gold">33.3 UI</b> na seringa de insulina.</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2.5 pt-1">
+                <button type="button" onclick="addToCart('seed-agua-bac'); closeReconstitutionModal();" class="flex-1 bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/30 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-droplet"></i> + Água Bacteriostática 10ml (R$ 49,90)
+                </button>
+                <button type="button" onclick="addToCart('seed-tg-15'); closeReconstitutionModal();" class="flex-1 gold-btn-gradient py-3 rounded-xl text-xs font-black flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-bag-shopping"></i> Comprar TG Tirzepatida 15mg
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Verificador de Lote & Laudos HPLC 99.8% -->
+    <div id="lab-verify-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeLabVerifyModal()"></div>
+        <div class="relative glass-card border border-emerald-500/40 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[92vh] space-y-5">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-lg">
+                        <i class="fa-solid fa-flask-vial"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-black text-white">Autenticidade & Laudos HPLC</h3>
+                        <p class="text-[11px] text-zinc-400">Certificados de Análise Cromatográfica (Pureza ≥ 99.8%)</p>
+                    </div>
+                </div>
+                <button onclick="closeLabVerifyModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <div class="flex gap-2">
+                <input type="text" id="batch-code-input" placeholder="Digite o lote (Ex: FX-2026-TG15 ou FX-2026-RT10)" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white uppercase outline-none focus:border-emerald-400">
+                <button type="button" onclick="verifyBatchCode()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer shrink-0">
+                    <i class="fa-solid fa-shield-check"></i> Verificar Lote
+                </button>
+            </div>
+
+            <div id="batch-verify-result" class="space-y-3"></div>
+        </div>
+    </div>
+
+    <!-- Modal Etiqueta de Envio / Romaneio Discreto (Admin) -->
+    <div id="shipping-label-modal" class="fixed inset-0 z-[65] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeShippingLabelModal()"></div>
+        <div class="relative glass-card border border-zinc-700 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 space-y-4">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <h3 class="text-sm font-black text-white flex items-center gap-2"><i class="fa-solid fa-box text-gold"></i> Etiqueta de Envio Discreto</h3>
+                <button onclick="closeShippingLabelModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="shipping-label-body" class="bg-white text-black p-5 rounded-2xl font-mono text-xs space-y-3 border-2 border-dashed border-zinc-400"></div>
+            <div class="flex gap-2">
+                <button type="button" onclick="closeShippingLabelModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">Fechar</button>
+                <button type="button" onclick="copyShippingLabelText()" class="flex-1 gold-btn-gradient py-2.5 rounded-xl text-xs font-black cursor-pointer"><i class="fa-regular fa-copy"></i> Copiar Etiqueta</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Detalhes do Produto (Quick View) -->
     <div id="product-detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeProductDetailModal()"></div>
@@ -574,7 +758,19 @@
                         <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
                     </div>
                 </div>
+                <!-- Barra de Progresso Frete Grátis + Brinde VIP -->
+                <div id="cart-free-shipping-bar" class="px-5 py-3 bg-zinc-900/90 border-b border-zinc-800 space-y-1.5">
+                    <div class="flex justify-between items-center text-[11px] font-bold">
+                        <span id="cart-progress-text" class="text-zinc-200"><i class="fa-solid fa-truck-fast text-gold"></i> Adicione R$ 450,00 para <b class="text-emerald-400">Frete Grátis</b></span>
+                        <span id="cart-progress-pct" class="text-gold">0%</span>
+                    </div>
+                    <div class="w-full h-2 bg-zinc-950 rounded-full overflow-hidden border border-zinc-800">
+                        <div id="cart-progress-fill" class="h-full bg-gradient-to-r from-amber-500 via-gold to-emerald-400 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
                 <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3 divide-y divide-zinc-800/60"></div>
+                <!-- Order Bump 1 Clique (Compre Junto Inteligente) -->
+                <div id="cart-order-bump" class="mx-5 mb-2 p-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 border border-gold/40 hidden"></div>
                 <div class="p-5 border-t border-zinc-800 bg-zinc-950/80 space-y-3">
                     <div class="flex gap-2">
                         <input type="text" id="coupon-code" placeholder="CUPOM (EX: FENIX10 OU FRETEGRATIS)" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white uppercase outline-none focus:border-gold">
@@ -620,6 +816,17 @@
                     <div id="shipping-method-badge" class="text-xs text-zinc-300 flex items-center justify-between bg-zinc-900 p-2.5 rounded-xl border border-zinc-800">
                         <span id="shipping-type-text"><i class="fa-solid fa-truck-fast text-gold"></i> Envio Expresso (Nacional)</span>
                         <span id="shipping-price-text" class="font-bold text-gold">R$ 0,00</span>
+                    </div>
+                    <!-- Cashback VIP 5% -->
+                    <div id="checkout-cashback-box" class="flex items-center justify-between bg-emerald-500/10 border border-emerald-500/30 p-2.5 rounded-xl text-xs">
+                        <div>
+                            <span class="font-bold text-emerald-400 block"><i class="fa-solid fa-coins"></i> Programa Cashback VIP (5%)</span>
+                            <span id="checkout-cashback-info" class="text-[10px] text-zinc-300">Este pedido gera R$ 0,00 de volta no seu WhatsApp!</span>
+                        </div>
+                        <label id="use-cashback-label" class="hidden items-center gap-1.5 cursor-pointer bg-zinc-900 px-2.5 py-1 rounded-lg border border-emerald-500/40">
+                            <input type="checkbox" id="use-cashback-checkbox" onchange="toggleUseCashback(this)" class="accent-emerald-500 cursor-pointer">
+                            <span class="text-[10px] font-bold text-emerald-400">Usar Saldo</span>
+                        </label>
                     </div>
                     <div class="flex justify-between items-center text-xs px-1 pt-1">
                         <span class="text-zinc-400">Total a Pagar:</span>
@@ -1017,468 +1224,4 @@
                 name: "GH Somatropina 100 UI Kit Completo",
                 category: "Hormônios",
                 price: 1190.00,
-                promoPrice: 980.00,
-                costPrice: 580.00,
-                stock: 6,
-                availability: "pronta_entrega",
-                deliveryDays: "1 a 3 dias úteis",
-                description: "Somatropina recombinante 191 aminoácidos para hiperplasia muscular, lipólise avançada, rejuvenescimento e qualidade do sono.",
-                imageUrl: makeProductSvgDataUri("GH 100 UI", "SOMATROPINA", "#a855f7"),
-                isFeatured: true
-            },
-            {
-                id: "seed-masteron",
-                name: "Masteron Propionato 100mg/ml (10ml)",
-                category: "Hormônios",
-                price: 295.00,
-                promoPrice: null,
-                costPrice: 135.00,
-                stock: 15,
-                availability: "pronta_entrega",
-                deliveryDays: "2 a 4 dias úteis",
-                description: "Drostanolona Propionato de grau farmacêutico. Densidade muscular superior, efeito estético seco e ganho de força limpa.",
-                imageUrl: makeProductSvgDataUri("MASTERON", "100 MG/ML", "#d4a017"),
-                isFeatured: false
-            },
-            {
-                id: "seed-susobolic",
-                name: "Susobolic 250mg/ml Blend Testo (10ml)",
-                category: "Performance",
-                price: 279.90,
-                promoPrice: 249.90,
-                costPrice: 120.00,
-                stock: 18,
-                availability: "pronta_entrega",
-                deliveryDays: "2 a 4 dias úteis",
-                description: "Combinação estratégica de 4 ésteres de testosterona para liberação imediata e sustentada com estabilidade plasmática.",
-                imageUrl: makeProductSvgDataUri("SUSOBOLIC", "250 MG/ML", "#ef4444"),
-                isFeatured: false
-            },
-            {
-                id: "seed-l-carnitina",
-                name: "L-Carnitina Injetável Pura 600mg/ml (30ml)",
-                category: "Estética Avançada",
-                price: 230.00,
-                promoPrice: 189.90,
-                costPrice: 85.00,
-                stock: 11,
-                availability: "pronta_entrega",
-                deliveryDays: "1 a 3 dias úteis",
-                description: "Alta biodisponibilidade mitocondrial para oxidação de gordura localizada, resistência cardiovascular e sensibilidade insulínica.",
-                imageUrl: makeProductSvgDataUri("L-CARNITINA", "600 MG/ML", "#f97316"),
-                isFeatured: false
-            }
-        ];
-
-        let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
-        let currentOrderStatusFilter = 'all';
-        let activeDiscount = 0;
-        let appliedCouponCode = '';
-        let freeShippingApplied = false;
-        let calculatedShippingCost = 25;
-        let shippingType = 'Envio Expresso';
-        let isFirstLoadOrders = true;
-        let activeOrderId = null;
-        let autoPayInterval = null;
-        let currentWhatsappOrderMsg = "";
-        let customDialogCallback = null;
-
-        let storeSettings = { 
-            storeName: "FÊNIX IMPORTS", 
-            logoUrl: "",
-            themeColor: "#d4a017", 
-            pixKey: "5521999999999", 
-            pixName: "FENIX IMPORTS", 
-            pixCity: "RIO DE JANEIRO", 
-            whatsappSales: "5521999999999", 
-            shippingExpress: 25,
-            mpAccessToken: "",
-            geminiKey: "", 
-            removeBgKey: "",
-            pushNotificationsEnabled: true
-        };
-
-        // Modal customizado de Confirmação / Prompt (substitui confirm() e prompt() nativos)
-        function openConfirmModal(title, message, onConfirm) {
-            document.getElementById('custom-dialog-title').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-gold"></i> ${title}`;
-            document.getElementById('custom-dialog-message').innerText = message;
-            document.getElementById('custom-dialog-input-wrap').classList.add('hidden');
-            customDialogCallback = () => {
-                closeCustomDialog();
-                if (typeof onConfirm === 'function') onConfirm();
-            };
-            document.getElementById('custom-dialog-confirm-btn').onclick = customDialogCallback;
-            document.getElementById('custom-dialog-modal').classList.remove('hidden');
-        }
-
-        function openPromptModal(title, message, defaultValue, onConfirm) {
-            document.getElementById('custom-dialog-title').innerHTML = `<i class="fa-brands fa-whatsapp text-green-400"></i> ${title}`;
-            document.getElementById('custom-dialog-message').innerText = message;
-            const wrap = document.getElementById('custom-dialog-input-wrap');
-            const input = document.getElementById('custom-dialog-input');
-            wrap.classList.remove('hidden');
-            input.value = defaultValue || '';
-            customDialogCallback = () => {
-                const val = input.value;
-                closeCustomDialog();
-                if (typeof onConfirm === 'function') onConfirm(val);
-            };
-            document.getElementById('custom-dialog-confirm-btn').onclick = customDialogCallback;
-            document.getElementById('custom-dialog-modal').classList.remove('hidden');
-        }
-
-        function closeCustomDialog() {
-            document.getElementById('custom-dialog-modal').classList.add('hidden');
-            customDialogCallback = null;
-        }
-        window.closeCustomDialog = closeCustomDialog;
-
-        // Som Sintetizado de Caixa Registradora ("Cha-Ching!") via Web Audio API + Vibração
-        function playSaleBeep() {
-            if (storeSettings.pushNotificationsEnabled === false) return;
-            try {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                if (AudioCtx) {
-                    const ctx = new AudioCtx();
-                    const now = ctx.currentTime;
-                    // Primeiro tom metálico (B5)
-                    const osc1 = ctx.createOscillator();
-                    const gain1 = ctx.createGain();
-                    osc1.type = 'triangle';
-                    osc1.frequency.setValueAtTime(987.77, now);
-                    gain1.gain.setValueAtTime(0.25, now);
-                    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-                    osc1.connect(gain1);
-                    gain1.connect(ctx.destination);
-                    osc1.start(now);
-                    osc1.stop(now + 0.18);
-
-                    // Segundo sino de caixa registradora (E6 + harmônico)
-                    const osc2 = ctx.createOscillator();
-                    const gain2 = ctx.createGain();
-                    osc2.type = 'sine';
-                    osc2.frequency.setValueAtTime(1318.51, now + 0.11);
-                    gain2.gain.setValueAtTime(0.3, now + 0.11);
-                    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
-                    osc2.connect(gain2);
-                    gain2.connect(ctx.destination);
-                    osc2.start(now + 0.11);
-                    osc2.stop(now + 0.65);
-                }
-            } catch(e) {}
-            try {
-                if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 400]);
-            } catch(e) {}
-        }
-
-        function testNotificationSound() {
-            playSaleBeep();
-            sendNativeNotification("💰 Teste de Venda Confirmada!", "O som de caixa registradora e o alerta Push estão funcionando!");
-            showToast("Alerta sonoro e Push disparados!", "success");
-        }
-        window.testNotificationSound = testNotificationSound;
-
-        function togglePushNotifications(el) {
-            storeSettings.pushNotificationsEnabled = el.checked;
-            safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
-            if(el.checked) {
-                requestPushPermission();
-                showToast("Notificações de vendas ativadas!", "success");
-            } else {
-                showToast("Notificações de vendas desativadas.", "info");
-            }
-        }
-        window.togglePushNotifications = togglePushNotifications;
-
-        function requestPushPermission() {
-            if (!("Notification" in window)) return;
-            try {
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        showToast("Notificações Push ativas!", "success");
-                    }
-                }).catch(() => {});
-            } catch (e) {}
-        }
-        window.requestPushPermission = requestPushPermission;
-
-        function sendNativeNotification(title, body) {
-            if (storeSettings.pushNotificationsEnabled === false) return;
-            playSaleBeep();
-            try {
-                if ("Notification" in window && Notification.permission === "granted") {
-                    const options = {
-                        body: body,
-                        vibrate: [200, 100, 200, 100, 400]
-                    };
-                    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-                        navigator.serviceWorker.ready.then(reg => reg.showNotification(title, options)).catch(() => {});
-                    } else {
-                        new Notification(title, options);
-                    }
-                }
-            } catch (e) {}
-        }
-
-        function initTheme() {
-            const savedTheme = safeGetStorage('fenix_theme', 'dark');
-            if (savedTheme === 'light') {
-                document.documentElement.classList.remove('dark');
-                updateThemeIcon(false);
-            } else {
-                document.documentElement.classList.add('dark');
-                updateThemeIcon(true);
-            }
-        }
-
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
-            safeSetStorage('fenix_theme', isDark ? 'dark' : 'light');
-            updateThemeIcon(isDark);
-            showToast(`Modo ${isDark ? 'Escuro' : 'Claro'} ativado!`, 'info');
-        }
-        window.toggleTheme = toggleTheme;
-
-        function updateThemeIcon(isDark) {
-            const icon = document.getElementById('theme-toggle-icon');
-            if (icon) {
-                icon.className = isDark ? 'fa-solid fa-moon text-base sm:text-lg text-gold' : 'fa-solid fa-sun text-base sm:text-lg text-amber-500';
-            }
-        }
-
-        const formatMoney = (val) => Number(val || 0).toFixed(2).replace('.', ',');
-
-        function formatWhatsappNumber(phone) {
-            if (!phone) return '';
-            let cleaned = String(phone).replace(/\D/g, '');
-            if (cleaned.length === 10 || cleaned.length === 11) cleaned = '55' + cleaned;
-            return cleaned;
-        }
-
-        function applyStoreBranding() {
-            const name = (storeSettings.storeName || "FÊNIX IMPORTS").trim();
-            const parts = name.split(' ');
-            const firstWord = parts[0] || "FÊNIX";
-            const restWords = parts.slice(1).join(' ');
-            document.getElementById('header-store-name').innerHTML = restWords
-                ? `${firstWord.toUpperCase()} <span class="text-gold">${restWords.toUpperCase()}</span>`
-                : `${firstWord.toUpperCase()}`;
-            document.getElementById('page-title').innerText = `${name} | Exclusividade & Alta Performance`;
-            document.getElementById('ai-bot-title').innerText = `Consultor ${name} IA`;
-            const footerName = document.getElementById('footer-store-name');
-            if (footerName) footerName.innerText = name.toUpperCase();
-
-            if (storeSettings.themeColor) {
-                document.documentElement.style.setProperty('--theme-gold', storeSettings.themeColor);
-            }
-
-            const logoImg = document.getElementById('header-logo-img');
-            const logoIcon = document.getElementById('header-logo-icon');
-            if (storeSettings.logoUrl && storeSettings.logoUrl.trim() !== '') {
-                logoImg.src = storeSettings.logoUrl.trim();
-                logoImg.classList.remove('hidden');
-                logoIcon.classList.add('hidden');
-            } else {
-                logoImg.classList.add('hidden');
-                logoIcon.classList.remove('hidden');
-            }
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            const icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-xmark' : 'fa-circle-info';
-            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 4000);
-        }
-
-        function loadPersistedCartAndCustomer() {
-            try {
-                const savedCart = safeGetStorage('fenix_cart');
-                if (savedCart) {
-                    const parsed = JSON.parse(savedCart);
-                    if (Array.isArray(parsed)) cart = parsed;
-                }
-                const savedCust = safeGetStorage('fenix_customer_info');
-                if (savedCust) {
-                    const c = JSON.parse(savedCust);
-                    if (c.name) document.getElementById('cust-name').value = c.name;
-                    if (c.whatsapp) document.getElementById('cust-whatsapp').value = c.whatsapp;
-                    if (c.cep) document.getElementById('cust-cep').value = c.cep;
-                    if (c.address) document.getElementById('cust-address').value = c.address;
-                    if (c.number) document.getElementById('cust-number').value = c.number;
-                }
-                const savedOrders = safeGetStorage('fenix_orders');
-                if (savedOrders) {
-                    const parsedOrders = JSON.parse(savedOrders);
-                    if (Array.isArray(parsedOrders)) orders = parsedOrders;
-                }
-            } catch (e) {}
-        }
-
-        function saveCartToStorage() {
-            safeSetStorage('fenix_cart', JSON.stringify(cart));
-        }
-
-        async function initApp() {
-            initTheme();
-            loadPersistedCartAndCustomer();
-            await loadSettings();
-            await loadProductsFromFirebase();
-
-            if (window.auth && window.firebaseFns) {
-                try {
-                    window.firebaseFns.onAuthStateChanged(window.auth, (user) => { 
-                        if (user) {
-                            currentUser = user;
-                            updateAuthUI();
-                        }
-                    });
-                } catch (e) {}
-            }
-            // Verifica se sessão local de admin estava ativa
-            const localAdmin = safeGetStorage('fenix_local_admin');
-            if (localAdmin && !currentUser) {
-                currentUser = { email: localAdmin, isLocal: true };
-                updateAuthUI();
-            }
-        }
-        window.initApp = initApp;
-
-        async function loadSettings() {
-            const local = safeGetStorage('fenix_store_settings');
-            if (local) {
-                try { storeSettings = { ...storeSettings, ...JSON.parse(local) }; } catch(e) {}
-            }
-            if (window.db && window.firebaseFns) {
-                try { 
-                    const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
-                    if (docSnap.exists()) {
-                        storeSettings = { ...storeSettings, ...docSnap.data() };
-                    }
-                } catch (e) {}
-            }
-            
-            if (storeSettings.pushNotificationsEnabled === undefined) {
-                storeSettings.pushNotificationsEnabled = true;
-            }
-            safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
-
-            const pushCb = document.getElementById('push-toggle-checkbox');
-            if(pushCb) pushCb.checked = storeSettings.pushNotificationsEnabled;
-
-            applyStoreBranding();
-            if (!freeShippingApplied) {
-                calculatedShippingCost = Number(storeSettings.shippingExpress ?? 25);
-            }
-            const cleanSalesWpp = formatWhatsappNumber(storeSettings.whatsappSales || '5521999999999');
-            const supportBtn = document.getElementById('btn-floating-support');
-            if (supportBtn) {
-                supportBtn.href = `https://wa.me/${cleanSalesWpp}?text=${encodeURIComponent('Olá! Gostaria de tirar uma dúvida sobre os produtos da ' + (storeSettings.storeName || 'Fênix Imports') + '.')}`;
-            }
-            updateCartUI();
-        }
-
-        async function loadProductsFromFirebase() {
-            let loadedFromCloud = false;
-            if (window.db && window.firebaseFns) {
-                try {
-                    const snapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
-                    const cloudList = [];
-                    snapshot.forEach(doc => cloudList.push({ id: doc.id, ...doc.data() }));
-                    if (cloudList.length > 0) {
-                        products = cloudList;
-                        loadedFromCloud = true;
-                        safeSetStorage('fenix_products', JSON.stringify(products));
-                    }
-                } catch (e) {}
-            }
-
-            if (!loadedFromCloud) {
-                const local = safeGetStorage('fenix_products');
-                if (local) {
-                    try {
-                        const parsed = JSON.parse(local);
-                        if (Array.isArray(parsed) && parsed.length > 0) {
-                            products = parsed;
-                        }
-                    } catch (e) {}
-                }
-            }
-
-            // Se ainda não houver produtos no banco nem no cache local, carrega o catálogo padrão de elite
-            if (!products || products.length === 0) {
-                products = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
-                safeSetStorage('fenix_products', JSON.stringify(products));
-            }
-
-            renderProducts(); 
-            renderAdminTable();
-        }
-
-        async function restoreDefaultCatalog() {
-            openConfirmModal(
-                "Restaurar Catálogo Padrão",
-                "Deseja carregar os 8 produtos padrão de alta performance no seu catálogo?",
-                async () => {
-                    products = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
-                    safeSetStorage('fenix_products', JSON.stringify(products));
-                    if (window.db && window.firebaseFns) {
-                        for (const item of products) {
-                            try {
-                                const { id, ...data } = item;
-                                await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "products", id), data);
-                            } catch (e) {}
-                        }
-                    }
-                    renderProducts();
-                    renderAdminTable();
-                    showToast("Catálogo padrão restaurado com sucesso!", "success");
-                }
-            );
-        }
-        window.restoreDefaultCatalog = restoreDefaultCatalog;
-
-        function updateAuthUI() {
-            const navLogin = document.getElementById('nav-login');
-            const navAdmin = document.getElementById('nav-admin');
-            const mobLogin = document.getElementById('mobile-nav-login');
-            const mobAdmin = document.getElementById('mobile-nav-admin');
-            const userStatus = document.getElementById('user-status-container');
-
-            if (currentUser) { 
-                navLogin?.classList.add('hidden'); 
-                navAdmin?.classList.remove('hidden'); 
-                navAdmin?.classList.add('flex'); 
-                mobLogin?.classList.add('hidden');
-                mobAdmin?.classList.remove('hidden');
-                userStatus?.classList.remove('hidden'); 
-                userStatus?.classList.add('flex'); 
-                document.getElementById('logged-user-email').innerText = currentUser.email || 'admin';
-                listenOrdersRealtime(); 
-            } else { 
-                navLogin?.classList.remove('hidden'); 
-                navAdmin?.classList.add('hidden'); 
-                navAdmin?.classList.remove('flex');
-                mobLogin?.classList.remove('hidden');
-                mobAdmin?.classList.add('hidden');
-                userStatus?.classList.add('hidden'); 
-                userStatus?.classList.remove('flex');
-            }
-        }
-
-        function listenOrdersRealtime() {
-            if (!currentUser) return;
-            renderOrdersTable();
-            renderCrmTable();
-
-            if (window.db && window.firebaseFns) {
-                try {
-                    window.firebaseFns.onSnapshot(window.firebaseFns.collection(window.db, "orders"), (snapshot) => {
-                        let newOrdersList = [];
-                        snapshot.forEach(doc => newOrdersList.push({ id: doc.id, ...doc.data() }));
-                        
-                     
+    
