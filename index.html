@@ -389,6 +389,7 @@
                     </div>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="restoreDefaultCatalog()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-1.5 cursor-pointer" title="Restaurar produtos de exemplo"><i class="fa-solid fa-rotate-left"></i> Catálogo Padrão</button>
+                        <button onclick="downloadCleanIndexHtml()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-lg cursor-pointer" title="Baixar arquivo index.html pronto para hospedagem"><i class="fa-solid fa-file-arrow-down"></i> Baixar index.html</button>
                         <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-file-code"></i> JSON</button>
                         <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-sliders"></i> Configs & Mercado Pago</button>
                         <button onclick="openProductModal()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-plus"></i> Novo</button>
@@ -1215,13 +1216,4 @@
                 stock: 35,
                 availability: "pronta_entrega",
                 deliveryDays: "Imediato (1 a 2 dias)",
-                description: "Solução bacteriostática padrão USP para reconstituição segura e preservação prolongada de peptídeos liofilizados.",
-                imageUrl: makeProductSvgDataUri("ÁGUA BAC", "10 ML USP", "#38bdf8"),
-                isFeatured: true
-            },
-            {
-                id: "seed-gh-somatropina",
-                name: "GH Somatropina 100 UI Kit Completo",
-                category: "Hormônios",
-                price: 1190.00,
-    
+                description: "Solução bacteriostática padrão USP para reconstituição segura e preservação prolongada de peptíde
