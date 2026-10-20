@@ -2,165 +2,315 @@
 <html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title id="page-title">Fênix Imports | Exclusividade & Alta Performance</title>
     
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRsOqbml4IEltcG9ydHMiLCJzaG9ydF9uYW1lIjoiRsOqbml4Iiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwNTA1MDgiLCJ0aGVtZV9jb2xvciI6IiNkNGEwMTciLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMzExOS8zMTE5MzM4LnBuZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
-    <meta name="theme-color" content="#050508">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#d4a017">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkBg: '#050508', cardBg: '#0f0f15', gold: '#d4a017', goldHover: '#f1c40f', goldLight: '#fef08a' } } } };
+        tailwind.config = { 
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    colors: { 
+                        darkBg: '#050508', 
+                        cardBg: '#0f0f15', 
+                        glassBg: 'rgba(18, 18, 26, 0.75)',
+                        gold: 'var(--theme-gold, #d4a017)', 
+                        goldHover: 'var(--theme-gold-hover, #f1c40f)', 
+                        goldLight: 'var(--theme-gold-light, #fef08a)' 
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                } 
+            } 
+        }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style id="dynamic-theme-style">
+        :root {
+            --theme-gold: #d4a017;
+            --theme-gold-hover: #f1c40f;
+            --theme-gold-light: #fef08a;
+        }
 
-    <style>
-        * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        html, body { overscroll-behavior-y: none; -webkit-tap-highlight-color: transparent; }
-        html.dark body { background-color: #050508; color: #f3f4f6; }
-        html.dark .glass-card { background: rgba(15, 15, 23, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        html.dark .glass-nav { background: rgba(5, 5, 8, 0.92); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-        html.dark .filter-btn { background-color: #181824; color: #d4a017; border: 1px solid rgba(212, 160, 23, 0.3); }
+        /* Cores Base Tema Escuro */
+        html.dark body { 
+            background-color: #050508; 
+            color: #f3f4f6; 
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 160, 23, 0.08) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 160, 23, 0.05) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
 
-        html:not(.dark) body { background-color: #f8fafc; color: #0f172a; }
-        html:not(.dark) .glass-card { background: #ffffff; backdrop-filter: blur(16px); border: 1px solid #cbd5e1; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08); }
-        html:not(.dark) .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-bottom: 1px solid #cbd5e1; }
-        html:not(.dark) input, html:not(.dark) select, html:not(.dark) textarea { background-color: #ffffff !important; color: #0f172a !important; border: 1px solid #94a3b8 !important; }
-        html:not(.dark) .filter-btn { background-color: #e2e8f0; color: #0f172a; border: 1px solid #94a3b8; font-weight: 700; }
-        html:not(.dark) .filter-btn:hover { background-color: #cbd5e1; }
-        html:not(.dark) .text-zinc-400 { color: #475569 !important; }
-        html:not(.dark) .text-zinc-300 { color: #1e293b !important; }
-        html:not(.dark) .bg-zinc-900 { background-color: #e2e8f0 !important; color: #0f172a !important; }
-        html:not(.dark) .bg-zinc-950 { background-color: #f8fafc !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        /* Cores Base Tema Claro (Otimizado iPhone) */
+        html:not(.dark) body {
+            background-color: #f8fafc;
+            color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(212, 160, 23, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(212, 160, 23, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+        
+        html.dark .glass-card {
+            background: rgba(15, 15, 23, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
 
-        .gold-btn-gradient { background: linear-gradient(135deg, #fef08a 0%, #d4a017 50%, #b78103 100%); color: #000 !important; font-weight: 800; }
-        .gold-btn-gradient:hover { filter: brightness(1.05); }
-        .mp-btn-gradient { background: linear-gradient(135deg, #009ee3 0%, #007eb5 100%); color: #fff !important; font-weight: 800; }
-        .chat-bubble { max-width: 88%; padding: 10px 14px; border-radius: 14px; margin-bottom: 8px; font-size: 12.5px; line-height: 1.5; }
+        html:not(.dark) .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.06);
+        }
+
+        html.dark .glass-nav {
+            background: rgba(5, 5, 8, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        html:not(.dark) .glass-nav {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        /* Sobrescritas inteligentes para Tema Claro no iPhone */
+        html:not(.dark) .text-white { color: #0f172a !important; }
+        html:not(.dark) .text-zinc-400 { color: #64748b !important; }
+        html:not(.dark) .text-zinc-300 { color: #334155 !important; }
+        html:not(.dark) .bg-zinc-900 { background-color: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        html:not(.dark) .bg-zinc-950 { background-color: #f1f5f9 !important; color: #0f172a !important; }
+        html:not(.dark) .border-zinc-800 { border-color: #cbd5e1 !important; }
+        html:not(.dark) input, html:not(.dark) select, html:not(.dark) textarea { background-color: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #d4a017 0%, #b78103 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        html.dark .gold-gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #fef08a 30%, #d4a017 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-btn-gradient {
+            background: linear-gradient(135deg, #fef08a 0%, #d4a017 50%, #b78103 100%);
+            color: #000;
+            font-weight: 800;
+            box-shadow: 0 4px 20px rgba(212, 160, 23, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .gold-btn-gradient:hover {
+            box-shadow: 0 6px 25px rgba(212, 160, 23, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .mp-btn-gradient {
+            background: linear-gradient(135deg, #009ee3 0%, #007eb5 100%);
+            color: #fff;
+            font-weight: 800;
+            box-shadow: 0 4px 20px rgba(0, 158, 227, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .glow-gold-lg {
+            box-shadow: 0 0 35px rgba(212, 160, 23, 0.2);
+        }
+
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
+
+        .chat-bubble { max-width: 88%; padding: 10px 14px; border-radius: 14px; margin-bottom: 8px; font-size: 12px; line-height: 1.4; font-weight: 500; }
         .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 2px; }
-        html:not(.dark) .chat-user { background: #0f172a; }
-        .chat-bot { background: rgba(212, 160, 23, 0.15); border: 1px solid rgba(212, 160, 23, 0.4); color: #b45309; border-bottom-left-radius: 2px; }
-        html.dark .chat-bot { color: #fef08a; }
-        #toast-container { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 99999; display: flex; flex-direction: column; gap: 8px; width: 90vw; max-width: 400px; pointer-events: none; }
-        .toast { padding: 12px 16px; border-radius: 12px; font-size: 12px; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); pointer-events: auto; }
+        .chat-bot { background: rgba(212, 160, 23, 0.12); border: 1px solid rgba(212, 160, 23, 0.4); color: var(--theme-gold, #d4a017); border-bottom-left-radius: 2px; }
+        html:not(.dark) .chat-bot { background: rgba(212, 160, 23, 0.1); color: #92400e; }
+
+        .typing-cursor::after { content: '|'; animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        #toast-container { position: fixed; top: 15px; right: 15px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; max-width: 90vw; }
+        .toast { padding: 10px 16px; border-radius: 12px; font-size: 12px; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); animation: slideIn 0.3s forwards; border: 1px solid rgba(255,255,255,0.1); }
         .toast-success { background: #0f172a; border-left: 4px solid #22c55e; color: #4ade80; }
         .toast-error { background: #0f172a; border-left: 4px solid #ef4444; color: #f87171; }
         .toast-info { background: #0f172a; border-left: 4px solid #d4a017; color: #fef08a; }
-        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 16px); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .skeleton { animation: pulse-skeleton 1.5s infinite; background-color: #181824; }
+        @keyframes pulse-skeleton { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
-<body class="min-h-screen flex flex-col relative pb-20 md:pb-0">
+<body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative pb-16 md:pb-0">
 
     <div id="toast-container"></div>
-    <audio id="notification-sound" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg"></audio>
+    
+    <audio id="notification-sound" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+    </audio>
 
-    <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[10px] sm:text-xs font-black py-1 px-2 text-center tracking-wider uppercase z-50 relative">
-        <i class="fa-solid fa-bolt"></i> PIX & CARTÃO 12X • ENVIOS EXPRESSOS BRASIL
+    <!-- Banner Topo -->
+    <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[10px] sm:text-xs font-black py-1 px-2 text-center tracking-wider uppercase flex items-center justify-center gap-1.5 shadow-md">
+        <i class="fa-solid fa-bolt text-xs"></i> 
+        <span>PIX & CARTÃO 12X • ENVIOS EXPRESSOS BRASIL</span>
     </div>
 
-    <!-- Header -->
-    <header class="sticky top-0 z-40 glass-nav transition-all">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
-            <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('catalog')">
-                <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-yellow-300 to-yellow-700 p-0.5 shadow-md">
-                    <div class="w-full h-full bg-white dark:bg-darkBg rounded-[10px] flex items-center justify-center text-gold font-black">
+    <!-- Header Glassmorphism Otimizado iPhone -->
+    <header class="sticky top-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+            
+            <div class="flex items-center gap-2.5 cursor-pointer group" onclick="switchTab('catalog')">
+                <div id="header-logo-container" class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-700 p-0.5 shadow-md">
+                    <div class="w-full h-full bg-darkBg rounded-[10px] flex items-center justify-center text-gold text-base sm:text-lg font-black overflow-hidden">
                         <i id="header-logo-icon" class="fa-solid fa-fire-flame-curved"></i>
-                        <img id="header-logo-img" src="" class="w-full h-full object-cover hidden rounded-[10px]">
+                        <img id="header-logo-img" src="" class="w-full h-full object-cover rounded-[10px] hidden" alt="Logo">
                     </div>
                 </div>
-                <div>
-                    <span id="header-store-name" class="text-sm sm:text-xl font-black text-zinc-900 dark:text-white block leading-none">FÊNIX IMPORTS</span>
-                    <span class="text-[8px] sm:text-[10px] text-zinc-500 font-bold uppercase block mt-0.5">Alta Performance</span>
+                <div class="min-w-0">
+                    <span id="header-store-name" class="text-sm sm:text-xl font-black tracking-tight text-white block leading-none">FÊNIX <span class="text-gold">IMPORTS</span></span>
+                    <span class="text-[8px] sm:text-[10px] text-zinc-400 font-bold tracking-widest uppercase block mt-0.5">Alta Performance</span>
                 </div>
             </div>
 
-            <nav class="hidden md:flex items-center gap-6 text-sm font-semibold">
-                <button onclick="switchTab('catalog')" class="text-amber-600 dark:text-gold flex items-center gap-1.5"><i class="fa-solid fa-store"></i> Catálogo</button>
-                <button onclick="openTrackingModal()" class="text-zinc-600 dark:text-zinc-400 hover:text-white flex items-center gap-1.5"><i class="fa-solid fa-route"></i> Rastrear</button>
-                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-600 dark:text-zinc-400 hover:text-white flex items-center gap-1.5"><i class="fa-solid fa-shield-halved"></i> Admin</button>
-                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-600 dark:text-zinc-400 hover:text-gold flex items-center gap-1.5"><i class="fa-solid fa-chart-line"></i> Gestão</button>
+            <nav class="hidden md:flex items-center gap-6 text-xs sm:text-sm font-semibold">
+                <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-1.5 hover:text-yellow-300 transition cursor-pointer"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
+                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
+                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-shield-halved text-xs"></i> Admin</button>
+                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
             </nav>
 
-            <div class="flex items-center gap-2">
-                <button onclick="toggleTheme()" class="bg-zinc-200 dark:bg-zinc-900/80 border border-zinc-300 dark:border-zinc-700/60 p-2 sm:p-2.5 rounded-xl"><i id="theme-toggle-icon" class="fa-solid fa-moon text-amber-600 dark:text-gold"></i></button>
-                <div id="user-status-container" class="hidden text-[10px] text-zinc-600 dark:text-zinc-400 lg:flex items-center gap-1.5 bg-zinc-200 dark:bg-zinc-900/80 px-2.5 py-1 rounded-full">
-                    <span id="logged-user-email">admin</span>
-                    <button onclick="logoutAdmin()" class="text-red-500 ml-1"><i class="fa-solid fa-right-from-bracket"></i></button>
-                </div>
-                <button onclick="toggleCartDrawer(true)" class="relative bg-zinc-200 dark:bg-zinc-900/80 border border-zinc-300 dark:border-zinc-700/60 text-zinc-900 dark:text-white px-3 py-2 rounded-xl flex items-center gap-2">
-                    <i class="fa-solid fa-bag-shopping text-amber-600 dark:text-gold"></i>
-                    <span class="hidden sm:inline text-xs font-bold uppercase">Carrinho</span>
-                    <span id="cart-counter" class="bg-gold text-black text-[10px] sm:text-xs font-black w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center">0</span>
+            <div class="flex items-center gap-1.5 sm:gap-2.5">
+                <button onclick="toggleTheme()" id="btn-theme-toggle" class="bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/60 text-gold p-2 sm:p-2.5 rounded-xl flex items-center justify-center transition shrink-0 cursor-pointer" title="Alternar Tema">
+                    <i id="theme-toggle-icon" class="fa-solid fa-moon text-sm sm:text-base"></i>
                 </button>
-                <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-700 dark:text-zinc-400 p-1.5"><i class="fa-solid fa-bars text-xl"></i></button>
+
+                <div id="user-status-container" class="hidden text-[10px] text-zinc-400 lg:flex items-center gap-1.5 bg-zinc-900/80 border border-zinc-800 px-2.5 py-1 rounded-full shrink-0">
+                    <i class="fa-solid fa-circle text-[6px] text-green-500 animate-pulse"></i>
+                    <span id="logged-user-email" class="max-w-[70px] truncate font-medium">admin</span>
+                    <button onclick="logoutAdmin()" class="text-red-400 hover:text-red-300 ml-0.5 cursor-pointer" title="Sair"><i class="fa-solid fa-right-from-bracket"></i></button>
+                </div>
+
+                <button onclick="toggleCartDrawer(true)" class="relative bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/60 text-white px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl flex items-center gap-2 transition group shrink-0 cursor-pointer">
+                    <i class="fa-solid fa-bag-shopping text-gold group-hover:scale-110 transition text-sm sm:text-base"></i>
+                    <span class="hidden sm:inline text-xs font-bold uppercase tracking-wider">Carrinho</span>
+                    <span id="cart-counter" class="bg-gold text-black text-[10px] sm:text-xs font-black w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shadow-md">0</span>
+                </button>
+
+                <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-400 hover:text-white p-1.5 cursor-pointer"><i class="fa-solid fa-bars text-lg"></i></button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-zinc-200 dark:border-zinc-800 px-4 py-3 space-y-2.5 absolute w-full shadow-lg z-30">
-            <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-amber-600 dark:text-gold font-bold text-xs flex items-center gap-2"><i class="fa-solid fa-store"></i> Catálogo</button>
-            <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-700 dark:text-zinc-300 font-semibold text-xs flex items-center gap-2"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
-            <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-700 dark:text-zinc-300 font-semibold text-xs flex items-center gap-2"><i class="fa-solid fa-shield-halved"></i> Login Admin</button>
-            <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-amber-600 dark:text-gold font-bold text-xs flex items-center gap-2"><i class="fa-solid fa-chart-line"></i> Gestão Admin</button>
+        <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-zinc-800 px-4 py-3 space-y-2.5">
+            <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-bold text-xs flex items-center gap-2.5"><i class="fa-solid fa-store"></i> Catálogo de Produtos</button>
+            <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-semibold text-xs flex items-center gap-2.5"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
+            <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-semibold text-xs flex items-center gap-2.5"><i class="fa-solid fa-shield-halved"></i> Painel de Controlo</button>
+            <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-bold text-xs flex items-center gap-2.5"><i class="fa-solid fa-chart-line"></i> Gestão da Loja</button>
         </div>
     </header>
 
-    <!-- Conteúdo Principal -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8 w-full pb-24 md:pb-8">
-        
-        <!-- CATÁLOGO -->
-        <div id="tab-catalog" class="space-y-5 sm:space-y-6">
-            <div class="relative overflow-hidden rounded-2xl glass-card p-5 sm:p-10">
-                <div class="relative z-10 space-y-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-gold/10 text-amber-700 dark:text-gold border border-gold/30 uppercase"><i class="fa-solid fa-shield-check"></i> Produtos Originais</span>
-                    <h1 class="text-2xl sm:text-5xl font-black text-zinc-900 dark:text-white">Padrão de <span class="text-gold">Alta Performance</span></h1>
-                    <p class="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">Aprovação imediata e envio expresso discreto para todo o Brasil.</p>
+    <main class="flex-grow max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 w-full">
+
+        <!-- TAB CATÁLOGO -->
+        <div id="tab-catalog" class="space-y-6">
+            <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl glass-card border border-zinc-800/80 p-5 sm:p-10 glow-gold-lg">
+                <div class="absolute -right-20 -bottom-20 w-60 h-60 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 max-w-2xl space-y-3">
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-check"></i> Produtos Originais</span>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30"><i class="fa-solid fa-credit-card"></i> Pix & Cartão 12x</span>
+                    </div>
+                    <h1 class="text-xl sm:text-4xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
+                    <p class="text-[11px] sm:text-sm text-zinc-300 font-medium leading-relaxed">Aprovação automática e envio expresso discreto para todo o Brasil.</p>
                 </div>
             </div>
 
-            <!-- Filtros & Pesquisa -->
+            <!-- Filtros & Pesquisa Responsivos -->
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 glass-card p-3 rounded-2xl">
-                <div class="relative w-full lg:w-80">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs"></i>
-                    <input type="text" id="search-input" oninput="renderProducts()" placeholder="Pesquisar por nome ou sigla..." class="w-full bg-white dark:bg-zinc-900/90 border border-zinc-300 dark:border-zinc-800 rounded-xl pl-10 pr-3 py-2 text-xs focus:border-gold outline-none">
+                <div class="relative w-full lg:w-80 shrink-0">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 text-xs"></i>
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Pesquisar por nome ou sigla..." class="w-full bg-zinc-900/90 border border-zinc-800 rounded-xl pl-10 pr-3 py-2 text-xs text-white focus:border-gold outline-none transition shadow-inner">
                 </div>
-                <div class="flex items-center gap-1.5 overflow-x-auto w-full pb-1 lg:pb-0">
-                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold gold-btn-gradient">Todos</button>
-                    <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold">Peptídeos</button>
-                    <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold">Insumos</button>
-                    <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold">Estética</button>
-                    <button onclick="setCategoryFilter('Hormônios')" data-cat="Hormônios" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold">Hormônios</button>
-                    <button onclick="setCategoryFilter('Performance')" data-cat="Performance" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold">Performance</button>
-                    <button onclick="setCategoryFilter('Outros')" data-cat="Outros" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold">Outros</button>
+                
+                <div class="flex items-center gap-1.5 overflow-x-auto w-full pb-1 lg:pb-0 scroll-smooth">
+                    <button onclick="setCategoryFilter('all')" id="filter-btn-all" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-bold gold-btn-gradient whitespace-nowrap cursor-pointer">Todos</button>
+                    <button onclick="setCategoryFilter('Peptídeos')" data-cat="Peptídeos" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Peptídeos</button>
+                    <button onclick="setCategoryFilter('Insumos & Soluções')" data-cat="Insumos & Soluções" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Insumos</button>
+                    <button onclick="setCategoryFilter('Estética Avançada')" data-cat="Estética Avançada" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Estética</button>
+                    <button onclick="setCategoryFilter('Hormônios')" data-cat="Hormônios" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Hormônios</button>
+                    <button onclick="setCategoryFilter('Performance')" data-cat="Performance" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Performance</button>
+                    <button onclick="setCategoryFilter('Outros')" data-cat="Outros" class="filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer">Outros</button>
                 </div>
             </div>
 
             <!-- Destaques -->
             <div id="featured-section" class="hidden space-y-3">
-                <h2 class="text-sm sm:text-lg font-black text-zinc-900 dark:text-white flex items-center gap-1.5"><i class="fa-solid fa-fire text-amber-500"></i> Destaques</h2>
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xs sm:text-lg font-black text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-fire text-amber-500 animate-bounce"></i> Destaques & Ofertas
+                    </h2>
+                    <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">Oportunidade</span>
+                </div>
                 <div id="featured-grid" class="flex gap-3 overflow-x-auto pb-3 scroll-smooth snap-x"></div>
             </div>
 
-            <!-- Grade Geral -->
-            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5 items-stretch"></div>
+            <!-- Grelha Geral Otimizada iPhone -->
+            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5 items-stretch">
+                <div class="glass-card rounded-2xl p-3 space-y-3"><div class="skeleton w-full h-32 sm:h-40 rounded-xl"></div><div class="skeleton w-3/4 h-4 rounded"></div></div>
+                <div class="glass-card rounded-2xl p-3 space-y-3"><div class="skeleton w-full h-32 sm:h-40 rounded-xl"></div><div class="skeleton w-3/4 h-4 rounded"></div></div>
+            </div>
         </div>
 
-        <!-- PAINEL ADMIN -->
-        <div id="tab-admin" class="hidden space-y-5 sm:space-y-6">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 glass-card p-4 sm:p-5 rounded-2xl">
+        <!-- TAB ADMIN -->
+        <div id="tab-admin" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 glass-card p-5 rounded-2xl">
                 <div>
-                    <h2 class="text-lg sm:text-2xl font-black text-zinc-900 dark:text-white flex items-center gap-2"><i class="fa-solid fa-chart-line text-gold"></i> Gestão Admin</h2>
-                    <p class="text-[11px] sm:text-xs text-zinc-600 dark:text-zinc-300">Controle total de Estoque, Vendas, Rastreios e IA.</p>
+                    <h2 class="text-lg sm:text-2xl font-black text-white flex items-center gap-2"><i class="fa-solid fa-chart-line text-gold"></i> Painel de Gestão Fênix</h2>
+                    <p class="text-[11px] sm:text-xs text-zinc-300 mt-0.5">Controle de estoque, pagamentos Mercado Pago e Mega IA Online.</p>
                 </div>
-                <div class="flex flex-wrap gap-1.5 w-full md:w-auto bg-zinc-200 dark:bg-zinc-950 p-1 rounded-xl border border-zinc-300 dark:border-zinc-800">
-                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-zinc-800 text-white">Estoque</button>
-                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-600 dark:text-zinc-400">Vendas</button>
-                    <button onclick="switchAdminSubTab('crm')" id="subnav-crm" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-600 dark:text-zinc-400">CRM</button>
-                    <button onclick="switchAdminSubTab('analytics')" id="subnav-analytics" class="flex-1 px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-600 dark:text-zinc-400">Mega IA</button>
+                <div class="flex flex-wrap gap-1.5 w-full md:w-auto bg-zinc-950 p-1 rounded-xl border border-zinc-800">
+                    <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-3 py-1.5 rounded-lg text-xs font-bold bg-zinc-800 text-white transition cursor-pointer">Estoque</button>
+                    <button onclick="switchAdminSubTab('orders')" id="subnav-orders" class="flex-1 md:flex-none px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-400 transition cursor-pointer">Vendas</button>
+                    <button onclick="switchAdminSubTab('crm')" id="subnav-crm" class="flex-1 md:flex-none px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-400 transition cursor-pointer">CRM VIP</button>
+                    <button onclick="switchAdminSubTab('analytics')" id="subnav-analytics" class="flex-1 md:flex-none px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-400 transition cursor-pointer">IA & Giro</button>
+                </div>
+            </div>
+
+            <!-- Toggle Switch Notificações -->
+            <div class="bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 p-3.5 rounded-2xl border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400 text-base shrink-0">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-white">Notificações Push de Vendas</h4>
+                        <p class="text-[10px] text-zinc-400">Som de caixa registradora e alerta no telemóvel ao vender.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2.5 shrink-0">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="push-toggle-checkbox" onchange="togglePushNotifications(this)" class="sr-only peer" checked>
+                        <div class="w-9 h-5 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gold"></div>
+                    </label>
+                    <button onclick="testNotificationSound()" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-2.5 py-1.5 rounded-lg text-xs font-bold border border-zinc-700 flex items-center gap-1 cursor-pointer">
+                        <i class="fa-solid fa-volume-high"></i> Testar
+                    </button>
                 </div>
             </div>
 
@@ -168,502 +318,1437 @@
             <div id="admin-subtab-products" class="space-y-3">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-bold text-zinc-900 dark:text-white"><i class="fa-solid fa-boxes-stacked text-zinc-500"></i> Produtos</h3>
-                        <button onclick="deleteSelectedProducts()" class="bg-red-100 dark:bg-red-600/20 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-500/40 px-2.5 py-1 rounded-lg text-[10px] font-bold">Excluir</button>
+                        <h3 class="text-sm sm:text-base font-bold text-white"><i class="fa-solid fa-boxes-stacked text-zinc-400"></i> Produtos</h3>
+                        <button onclick="deleteSelectedProducts()" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer"><i class="fa-solid fa-trash-can"></i> Excluir Selecionados</button>
                     </div>
-                    <div class="flex flex-wrap gap-1.5 w-full sm:w-auto">
-                        <button onclick="openJsonImportModal()" class="flex-1 bg-indigo-600 text-white font-bold px-3 py-2 rounded-xl text-xs flex justify-center items-center gap-1.5 shadow-md"><i class="fa-solid fa-file-code"></i> JSON</button>
-                        <button onclick="openSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold px-3 py-2 rounded-xl text-xs flex justify-center items-center gap-1.5 shadow-md"><i class="fa-solid fa-sliders"></i> Configs</button>
-                        <button onclick="openProductModal()" class="flex-1 gold-btn-gradient text-black font-black px-3 py-2 rounded-xl text-xs flex justify-center items-center gap-1.5 shadow-md"><i class="fa-solid fa-plus"></i> Novo</button>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-md cursor-pointer"><i class="fa-solid fa-file-code"></i> JSON</button>
+                        <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-3 py-2 rounded-xl text-xs border border-zinc-700 flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-sliders"></i> Configs</button>
+                        <button onclick="openProductModal()" class="gold-btn-gradient px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-md cursor-pointer"><i class="fa-solid fa-plus"></i> Novo</button>
                     </div>
                 </div>
-                <div class="glass-card rounded-2xl overflow-hidden border border-zinc-300 dark:border-zinc-800 shadow-sm">
+                <div class="glass-card rounded-2xl overflow-hidden border border-zinc-800">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
-                                <tr class="border-b border-zinc-300 dark:border-zinc-800 text-[10px] text-zinc-600 dark:text-zinc-400 uppercase bg-zinc-200 dark:bg-zinc-950/60">
-                                    <th class="p-3 w-8 text-center"><input type="checkbox" onchange="toggleSelectAllProducts(this)" class="rounded bg-white dark:bg-zinc-900 border-zinc-400"></th>
+                                <tr class="border-b border-zinc-800 text-[10px] text-zinc-400 uppercase bg-zinc-950/60">
+                                    <th class="p-3 w-8 text-center"><input type="checkbox" id="select-all-checkbox" onchange="toggleSelectAllProducts(this)" class="rounded bg-zinc-900 border-zinc-700 cursor-pointer accent-amber-500"></th>
                                     <th class="p-3">Foto</th>
-                                    <th class="p-3 min-w-[120px]">Produto</th>
-                                    <th class="p-3">Status</th>
+                                    <th class="p-3">Produto</th>
+                                    <th class="p-3">Tipo</th>
                                     <th class="p-3">Stock</th>
                                     <th class="p-3">Custo</th>
                                     <th class="p-3">Venda</th>
                                     <th class="p-3 text-right">Ações</th>
                                 </tr>
                             </thead>
-                            <tbody id="admin-product-table" class="divide-y divide-zinc-200 dark:divide-zinc-800/60"></tbody>
+                            <tbody id="admin-product-table" class="divide-y divide-zinc-800/60"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Subtab Vendas -->
+            <!-- Subtab Pedidos -->
             <div id="admin-subtab-orders" class="hidden space-y-4">
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                    <div class="glass-card p-3 rounded-2xl shadow-sm"><p class="text-[9px] font-bold text-zinc-500 uppercase">Receita</p><h4 id="dash-revenue" class="text-lg font-black text-zinc-900 dark:text-white">R$ 0,00</h4></div>
-                    <div class="glass-card p-3 rounded-2xl border-green-500/30 shadow-sm"><p class="text-[9px] font-bold text-green-600 uppercase">Lucro</p><h4 id="dash-profit" class="text-lg font-black text-green-600">R$ 0,00</h4></div>
-                    <div class="glass-card p-3 rounded-2xl shadow-sm col-span-2 sm:col-span-1"><p class="text-[9px] font-bold text-zinc-500 uppercase">Vendas</p><h4 id="dash-sales-count" class="text-lg font-black text-zinc-900 dark:text-white">0</h4></div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="glass-card p-4 rounded-2xl relative overflow-hidden"><p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Faturamento Confirmado</p><h4 id="dash-revenue" class="text-xl sm:text-2xl font-black text-white">R$ 0,00</h4></div>
+                    <div class="glass-card p-4 rounded-2xl relative overflow-hidden border-green-500/30"><p class="text-[10px] font-bold text-green-400 uppercase tracking-wider mb-1">Lucro Estimado</p><h4 id="dash-profit" class="text-xl sm:text-2xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[9px] text-green-400/80 mt-1 font-bold bg-green-500/10 inline-block px-1.5 py-0.5 rounded">Margem: 0%</p></div>
+                    <div class="glass-card p-4 rounded-2xl relative overflow-hidden"><p class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-xl sm:text-2xl font-black text-white">0</h4></div>
                 </div>
-                <div class="glass-card rounded-2xl overflow-hidden border border-zinc-300 dark:border-zinc-800 shadow-sm">
+                <div class="glass-card rounded-2xl overflow-hidden border border-zinc-800">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="border-b border-zinc-300 dark:border-zinc-800 text-[10px] text-zinc-600 dark:text-zinc-400 uppercase bg-zinc-200 dark:bg-zinc-950/60">
-                                    <th class="p-3">Cliente</th><th class="p-3">Itens</th><th class="p-3">Status</th><th class="p-3 text-right">Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-orders-table" class="divide-y divide-zinc-200 dark:divide-zinc-800/60"></tbody>
+                            <thead><tr class="border-b border-zinc-800 text-[10px] text-zinc-400 uppercase bg-zinc-950/60"><th class="p-3">Cliente/Envio</th><th class="p-3">Itens/Total</th><th class="p-3">Status & Rastreio</th><th class="p-3 text-right">Ação</th></tr></thead>
+                            <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Subtab CRM -->
+            <!-- Subtab CRM VIP -->
             <div id="admin-subtab-crm" class="hidden space-y-4">
-                <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-                    <div><h3 class="text-sm font-bold text-zinc-900 dark:text-white"><i class="fa-solid fa-crown text-gold"></i> Clientes VIP</h3><p class="text-[10px] text-zinc-600 dark:text-zinc-300">Histórico de compras consolidado.</p></div>
-                    <button onclick="sendBulkWhatsappToAll()" class="bg-green-600 text-white font-black px-4 py-2 rounded-xl text-xs flex justify-center items-center gap-1.5 shadow-md"><i class="fa-brands fa-whatsapp text-sm"></i> Disparo em Massa</button>
+                <div class="glass-card p-5 rounded-2xl space-y-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div>
+                        <h3 class="text-sm font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-crown text-gold"></i> Clientes Recorrentes & CRM VIP</h3>
+                        <p class="text-[11px] text-zinc-300">Lista consolidada dos seus compradores calculada automaticamente.</p>
+                    </div>
+                    <button onclick="sendBulkWhatsappToAll()" class="bg-green-600 hover:bg-green-500 text-white font-black px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md transition shrink-0 cursor-pointer">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> Enviar para Todos no WhatsApp
+                    </button>
                 </div>
-                <div class="glass-card rounded-2xl overflow-hidden border border-zinc-300 dark:border-zinc-800 shadow-sm">
+                <div class="glass-card rounded-2xl overflow-hidden border border-zinc-800">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="border-b border-zinc-300 dark:border-zinc-800 text-[10px] text-zinc-600 dark:text-zinc-400 uppercase bg-zinc-200 dark:bg-zinc-950/60">
-                                    <th class="p-3">Cliente</th><th class="p-3">WhatsApp</th><th class="p-3">Gasto</th><th class="p-3">Pedidos</th><th class="p-3 text-right">Ação</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-crm-table" class="divide-y divide-zinc-200 dark:divide-zinc-800/60"></tbody>
+                            <thead><tr class="border-b border-zinc-800 text-[10px] text-zinc-400 uppercase bg-zinc-950/60"><th class="p-3">Cliente</th><th class="p-3">WhatsApp</th><th class="p-3">Total Gasto</th><th class="p-3">Pedidos</th><th class="p-3 text-right">Ação VIP</th></tr></thead>
+                            <tbody id="admin-crm-table" class="divide-y divide-zinc-800/60"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Subtab IA -->
+            <!-- Subtab IA & Giro -->
             <div id="admin-subtab-analytics" class="hidden space-y-4">
-                <div class="glass-card p-4 rounded-2xl space-y-3 shadow-sm">
-                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
-                        <div><h3 class="text-sm font-bold text-zinc-900 dark:text-white"><i class="fa-solid fa-robot text-gold"></i> Mega IA Estoque</h3><p class="text-[10px] text-zinc-600 dark:text-zinc-300">Análise de giro e diagnóstico financeiro.</p></div>
-                        <button onclick="runAiStockAudit()" class="gold-btn-gradient text-black px-4 py-2 rounded-xl text-xs font-black flex justify-center items-center gap-1.5 shadow-md"><i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Diagnóstico</button>
+                <div class="glass-card p-5 rounded-2xl space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div>
+                            <h3 class="text-sm font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-robot text-gold"></i> Auditoria de Giro e Reposição via Mega IA</h3>
+                            <p class="text-[11px] text-zinc-300">Análise de stock, margem de lucro e giro de vendas.</p>
+                        </div>
+                        <button onclick="runAiStockAudit()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer shadow-md"><i class="fa-solid fa-wand-magic-sparkles"></i> Executar Auditoria IA</button>
                     </div>
-                    <div id="ai-audit-result" class="bg-zinc-100 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 p-3.5 rounded-xl text-xs text-zinc-800 dark:text-zinc-200 hidden"></div>
+                    <div id="ai-audit-result" class="bg-zinc-950 border border-zinc-800 p-4 rounded-xl text-xs text-zinc-200 leading-relaxed hidden"></div>
+                </div>
+
+                <div class="glass-card p-5 rounded-2xl space-y-3">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Alerta de Estoque Crítico</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead><tr class="border-b border-zinc-800 text-[10px] text-zinc-400 uppercase bg-zinc-950/60"><th class="p-3">Produto</th><th class="p-3">Stock Atual</th><th class="p-3">Margem</th><th class="p-3">Status</th></tr></thead>
+                            <tbody id="admin-stock-alerts-table" class="divide-y divide-zinc-800/60"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Barra Inferior Mobile -->
-    <div class="md:hidden fixed bottom-0 left-0 right-0 glass-nav border-t border-zinc-300 dark:border-zinc-800 pt-2 pb-safe px-2 flex items-center justify-around z-40">
-        <button onclick="switchTab('catalog')" class="flex flex-col items-center text-amber-600 dark:text-gold text-[10px] font-bold gap-0.5 p-1"><i class="fa-solid fa-store text-lg"></i> Catálogo</button>
-        <button onclick="openTrackingModal()" class="flex flex-col items-center text-zinc-600 dark:text-zinc-400 text-[10px] font-bold gap-0.5 p-1"><i class="fa-solid fa-route text-lg"></i> Rastrear</button>
-        <button onclick="toggleCartDrawer(true)" class="flex flex-col items-center text-zinc-600 dark:text-zinc-400 text-[10px] font-bold gap-0.5 relative p-1">
-            <i class="fa-solid fa-bag-shopping text-lg"></i> Carrinho
-            <span id="cart-counter-mobile" class="absolute -top-1 right-1 bg-gold text-black text-[9px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center">0</span>
-        </button>
-        <a id="btn-mobile-support-bottom" href="#" target="_blank" class="flex flex-col items-center text-green-600 dark:text-green-500 text-[10px] font-bold gap-0.5 p-1"><i class="fa-brands fa-whatsapp text-lg"></i> Suporte</a>
+    <!-- Barra Inferior Fixa para Telemóvel (Novo) -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 glass-nav border-t border-zinc-800 p-2.5 flex items-center justify-around z-40">
+        <button onclick="switchTab('catalog')" class="flex flex-col items-center text-gold text-[10px] font-bold gap-0.5"><i class="fa-solid fa-store text-sm"></i> Catálogo</button>
+        <button onclick="openTrackingModal()" class="flex flex-col items-center text-zinc-400 text-[10px] font-bold gap-0.5"><i class="fa-solid fa-route text-sm"></i> Rastrear</button>
+        <button onclick="toggleCartDrawer(true)" class="flex flex-col items-center text-zinc-400 text-[10px] font-bold gap-0.5 relative"><i class="fa-solid fa-bag-shopping text-sm"></i> Carrinho</button>
+        <a id="btn-mobile-support" href="#" target="_blank" class="flex flex-col items-center text-green-500 text-[10px] font-bold gap-0.5"><i class="fa-brands fa-whatsapp text-sm"></i> Suporte</a>
     </div>
 
-    <!-- Botões Flutuantes -->
-    <div class="fixed bottom-20 md:bottom-6 right-3 md:right-6 flex flex-col gap-2.5 z-40">
-        <button onclick="toggleAIChat()" class="bg-zinc-100 dark:bg-zinc-900 border border-amber-500/50 text-amber-600 dark:text-gold w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg relative">
-            <i class="fa-solid fa-robot text-xl sm:text-2xl"></i>
-            <span class="absolute -top-1 -right-1 bg-emerald-500 text-white text-[8px] font-black px-1.5 py-0.5 rounded-full animate-pulse">ON</span>
+    <!-- Flutuantes -->
+    <div class="fixed bottom-16 md:bottom-6 right-4 md:right-6 flex flex-col gap-2.5 z-40">
+        <button onclick="toggleAIChat()" class="bg-zinc-900 border border-gold/60 text-gold w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(212,160,23,0.35)] hover:scale-110 transition-all relative cursor-pointer">
+            <i class="fa-solid fa-robot text-lg sm:text-2xl"></i>
+            <span class="absolute -top-1 -right-1 bg-emerald-500 text-black text-[8px] font-black px-1 py-0.5 rounded-full border border-darkBg animate-pulse">ON</span>
         </button>
-        <a id="btn-floating-support" href="#" target="_blank" class="bg-green-600 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-lg">
-            <i class="fa-brands fa-whatsapp text-2xl sm:text-3xl"></i>
+        <a id="btn-floating-support" href="#" target="_blank" class="bg-green-500 text-white w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)] hover:scale-110 transition-all">
+            <i class="fa-brands fa-whatsapp text-xl sm:text-2xl"></i>
         </a>
     </div>
 
-    <!-- IA Chatbot Online -->
-    <div id="ai-chat-window" class="fixed bottom-24 right-3 md:right-6 w-[calc(100vw-24px)] md:w-96 glass-card rounded-2xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-[420px] border border-zinc-300 dark:border-zinc-700/60">
-        <div class="bg-zinc-100 dark:bg-zinc-950/90 p-3.5 border-b border-zinc-300 dark:border-zinc-800 flex justify-between items-center">
+    <!-- IA Chat Online -->
+    <div id="ai-chat-window" class="fixed bottom-20 right-4 w-[92vw] sm:w-96 glass-card rounded-2xl sm:rounded-3xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-[400px] border border-zinc-700/60">
+        <div class="bg-zinc-950/90 p-3.5 border-b border-zinc-800 flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <i class="fa-solid fa-robot text-amber-600 dark:text-gold text-lg"></i>
-                <div><span class="font-bold text-xs text-zinc-900 dark:text-white block">Consultor IA</span><span class="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold">100% Online</span></div>
+                <i class="fa-solid fa-robot text-gold text-base"></i> 
+                <div>
+                    <span id="ai-bot-title" class="font-bold text-xs text-white block leading-none">Consultor Fênix IA</span>
+                    <span class="text-[9px] text-emerald-400 font-bold flex items-center gap-1 mt-0.5"><i class="fa-solid fa-circle text-[5px]"></i> 100% Online • Pesquisa Direta</span>
+                </div>
             </div>
-            <button onclick="toggleAIChat()" class="text-zinc-500 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-base"></i></button>
         </div>
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-3.5 flex flex-col gap-2">
-            <div class="chat-bubble chat-bot">Olá! Digite a sigla ou nome de um produto (ex: <b>TG</b>) e procuro no estoque para comprar agora!</div>
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-3.5 flex flex-col gap-2 scroll-smooth">
+            <div class="chat-bubble chat-bot">Olá! Digite o nome ou sigla (ex: <b>TG</b>, <b>Tirzepatida</b>) e busco o produto no estoque para comprar na hora!</div>
         </div>
-        <div class="p-2.5 bg-zinc-100 dark:bg-zinc-950/90 border-t border-zinc-300 dark:border-zinc-800 flex gap-2">
-            <input type="text" id="chat-input" placeholder="Ex: Tem TG Tirzepatida?" onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-900 dark:text-white outline-none focus:border-gold">
-            <button onclick="sendChatMessage()" class="gold-btn-gradient text-black rounded-xl px-3.5 py-2 text-xs font-bold"><i class="fa-solid fa-paper-plane"></i></button>
+        <div class="p-2.5 bg-zinc-950/90 border-t border-zinc-800 flex gap-2">
+            <input type="text" id="chat-input" placeholder="Ex: Tem TG Tirzepatida?" onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
+            <button onclick="sendChatMessage()" class="gold-btn-gradient rounded-xl px-3 py-2 transition text-xs cursor-pointer"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <!-- MODAL JSON -->
+    <!-- Modal JSON -->
     <div id="json-import-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeJsonImportModal()"></div>
-        <div class="relative glass-card border border-zinc-300 dark:border-zinc-700/60 rounded-2xl max-w-sm sm:max-w-lg w-full p-5 space-y-3 shadow-2xl z-10">
-            <div class="flex items-center justify-between"><h3 class="text-sm font-black text-zinc-900 dark:text-white"><i class="fa-solid fa-file-code text-gold"></i> JSON Catálogo</h3><button onclick="exportCatalogJson()" class="bg-zinc-200 dark:bg-zinc-800 text-amber-700 dark:text-gold px-2 py-1 rounded-lg text-[9px] font-bold"><i class="fa-solid fa-download"></i> Backup</button></div>
-            <textarea id="json-text-area" rows="5" placeholder='[{"name": "Produto", "costPrice": 100, "price": 180}]' class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl p-2 text-[10px] font-mono outline-none"></textarea>
-            <div class="flex gap-2"><button onclick="closeJsonImportModal()" class="flex-1 bg-zinc-200 dark:bg-zinc-800 text-zinc-800 dark:text-white font-bold py-2 rounded-xl text-xs">Fechar</button><button onclick="processJsonImport()" class="flex-1 gold-btn-gradient text-black font-black py-2 rounded-xl text-xs">Importar</button></div>
+        <div class="relative glass-card border border-zinc-700/60 rounded-2xl max-w-lg w-full p-5 sm:p-7 space-y-3.5 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-black text-white flex items-center gap-1.5"><i class="fa-solid fa-file-code text-gold"></i> Gestão de Catálogo JSON</h3>
+                <button type="button" onclick="exportCatalogJson()" class="bg-zinc-800 hover:bg-zinc-700 text-gold border border-gold/30 px-2.5 py-1 rounded-xl text-[10px] font-bold flex items-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-download"></i> Exportar Backup
+                </button>
+            </div>
+            <p class="text-[11px] text-zinc-300">Cole a estrutura JSON contendo os seus produtos para importar em lote.</p>
+            <div class="grid grid-cols-2 gap-2">
+                <div>
+                    <label class="text-[9px] text-zinc-400 block mb-1">Multiplicador Lucro</label>
+                    <input type="number" step="0.1" id="json-default-markup" value="1.8" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-1.5 text-xs text-white">
+                </div>
+                <div>
+                    <label class="text-[9px] text-zinc-400 block mb-1">Estoque Padrão</label>
+                    <input type="number" id="json-default-stock" value="10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-1.5 text-xs text-white">
+                </div>
+            </div>
+            <div>
+                <label class="text-[9px] text-zinc-400 block mb-1">Arquivo JSON</label>
+                <input type="file" id="json-file-input" accept=".json" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2.5 py-1.5 text-xs text-zinc-300 cursor-pointer">
+            </div>
+            <div>
+                <label class="text-[9px] text-zinc-400 block mb-1">Código JSON:</label>
+                <textarea id="json-text-area" rows="5" placeholder='[{"name": "Produto", "costPrice": 100, "price": 180}]' class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-2.5 text-xs font-mono text-white outline-none focus:border-gold"></textarea>
+            </div>
+            <div class="flex gap-2 pt-1">
+                <button type="button" onclick="closeJsonImportModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Fechar</button>
+                <button type="button" onclick="processJsonImport()" class="flex-1 gold-btn-gradient py-2 rounded-xl text-xs cursor-pointer">Importar & Salvar</button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL RASTREIO -->
+    <!-- Modal Rastreio -->
     <div id="tracking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeTrackingModal()"></div>
-        <div class="relative glass-card border border-zinc-300 dark:border-zinc-700/60 rounded-2xl max-w-sm w-full p-5 space-y-4 shadow-2xl z-10 text-center">
-            <i class="fa-solid fa-route text-3xl text-gold mb-0.5"></i><h3 class="text-base font-extrabold text-zinc-900 dark:text-white">Rastrear Entrega</h3>
-            <input type="text" id="track-phone" placeholder="Seu WhatsApp (Ex: 21999999999)" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-3.5 py-2.5 text-center text-xs outline-none">
-            <button onclick="trackOrder()" class="w-full gold-btn-gradient text-black font-black py-2.5 rounded-xl text-xs shadow-md">Consultar</button>
+        <div class="relative glass-card border border-zinc-700/60 rounded-2xl max-w-md w-full p-5 sm:p-7 space-y-4 shadow-2xl z-10 text-center">
+            <i class="fa-solid fa-route text-3xl text-gold mb-0.5"></i>
+            <h3 class="text-lg font-extrabold text-white">Rastrear Entrega</h3>
+            <input type="text" id="track-phone" placeholder="Digite seu WhatsApp (Ex: 21999999999)" class="w-full bg-zinc-900/90 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-center text-xs sm:text-sm text-white focus:border-gold outline-none">
+            <button onclick="trackOrder()" class="w-full gold-btn-gradient py-2.5 rounded-xl text-xs sm:text-sm cursor-pointer">Consultar Status</button>
             <div id="track-result" class="mt-3 text-xs text-left space-y-2 hidden"></div>
-            <button onclick="closeTrackingModal()" class="absolute top-3 right-3 p-2 text-zinc-500"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <button onclick="closeTrackingModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-base"></i></button>
         </div>
     </div>
 
-    <!-- MODAL CARRINHO -->
+    <!-- Carrinho -->
     <div id="cart-drawer" class="fixed inset-0 z-50 overflow-hidden hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="toggleCartDrawer(false)"></div>
-        <div class="absolute inset-y-0 right-0 w-full max-w-[320px] sm:max-w-md glass-card border-l border-zinc-300 dark:border-zinc-800 flex flex-col shadow-2xl">
-            <div class="p-4 border-b border-zinc-300 dark:border-zinc-800 flex justify-between items-center"><h3 class="text-sm font-extrabold text-zinc-900 dark:text-white flex gap-2 items-center"><i class="fa-solid fa-bag-shopping text-gold"></i> Carrinho</h3><button onclick="toggleCartDrawer(false)" class="text-zinc-500"><i class="fa-solid fa-xmark text-lg"></i></button></div>
-            <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-2.5 divide-y divide-zinc-200 dark:divide-zinc-800/60"></div>
-            <div class="p-4 border-t border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-950/80 space-y-2.5 pb-safe">
-                <div class="flex gap-2"><input type="text" id="coupon-code" placeholder="CUPOM" class="flex-1 bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-3 py-1.5 text-xs uppercase outline-none"><button onclick="applyCoupon()" class="bg-zinc-800 text-white text-xs font-bold px-3 rounded-xl">Aplicar</button></div>
-                <div class="space-y-1 text-xs text-zinc-600 dark:text-zinc-400"><div class="flex justify-between"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div><div class="flex justify-between font-black text-sm text-zinc-900 dark:text-white pt-1 border-t border-zinc-300 dark:border-zinc-800"><span>Total</span><span id="cart-total" class="text-gold">R$ 0,00</span></div></div>
-                <button onclick="proceedToCheckout()" class="w-full gold-btn-gradient text-black py-3 rounded-xl text-xs font-black uppercase"><i class="fa-solid fa-lock"></i> Finalizar Compra</button>
+        <div class="absolute inset-y-0 right-0 max-w-full flex pl-8">
+            <div class="w-screen max-w-md glass-card border-l border-zinc-800 flex flex-col shadow-2xl">
+                <div class="p-4 border-b border-zinc-800 flex justify-between bg-zinc-950/80">
+                    <h3 class="text-base font-extrabold text-white flex gap-2 items-center"><i class="fa-solid fa-bag-shopping text-gold"></i> Seu Carrinho</h3>
+                    <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-base"></i></button>
+                </div>
+                <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-2.5 divide-y divide-zinc-800/60"></div>
+                <div class="p-4 border-t border-zinc-800 bg-zinc-950/80 space-y-2.5">
+                    <div class="bg-amber-500/10 border border-amber-500/30 p-2 rounded-xl text-[10px] text-amber-400 font-bold text-center flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-stopwatch"></i> Produtos reservados no carrinho por tempo limitado!
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="coupon-code" placeholder="CUPOM DE DESCONTO" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-white uppercase outline-none focus:border-gold">
+                        <button onclick="applyCoupon()" class="bg-zinc-800 hover:bg-gold hover:text-black text-white text-xs font-bold px-3 rounded-xl transition cursor-pointer">Aplicar</button>
+                    </div>
+                    <div class="space-y-1 pt-1">
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
+                        <div id="cart-discount-row" class="flex justify-between text-xs text-green-400 hidden"><span>Desconto</span><span id="cart-discount">- R$ 0,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 0,00</span></div>
+                        <div class="flex justify-between text-sm font-black text-white pt-1.5 border-t border-zinc-800"><span>Total</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
+                    </div>
+                    <button onclick="proceedToCheckout()" class="w-full gold-btn-gradient py-3 rounded-xl flex justify-center items-center gap-2 text-xs sm:text-sm tracking-wider uppercase cursor-pointer">
+                        <i class="fa-solid fa-lock"></i> Finalizar Compra (Pix ou Cartão)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL CHECKOUT -->
+    <!-- Checkout Modal (PIX + CARTÃO 12X) -->
     <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeCheckoutModal()"></div>
-        <div class="relative glass-card border border-zinc-300 dark:border-zinc-700/60 rounded-2xl max-w-lg w-full p-5 shadow-2xl z-10 overflow-y-auto max-h-[92vh]">
-            <div class="flex justify-between items-center border-b border-zinc-300 dark:border-zinc-800 pb-2 mb-3"><h3 class="text-sm font-extrabold text-zinc-900 dark:text-white flex gap-1.5 items-center"><i class="fa-solid fa-shield-halved text-gold"></i> Checkout Seguro</h3><button onclick="closeCheckoutModal()" class="text-zinc-500"><i class="fa-solid fa-xmark text-lg"></i></button></div>
-            <div id="checkout-step-1" class="space-y-2.5">
-                <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-3.5 py-2 text-xs outline-none">
-                <input type="text" id="cust-whatsapp" placeholder="WhatsApp c/ DDD" oninput="maskPhone(this)" maxlength="15" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-3.5 py-2 text-xs outline-none">
-                <div class="grid grid-cols-3 gap-2"><input type="text" id="cust-cep" placeholder="CEP" oninput="maskCEP(this)" onblur="buscarCEP()" maxlength="9" class="col-span-1 w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2.5 py-2 text-xs outline-none"><input type="text" id="cust-address" placeholder="Endereço Completo" class="col-span-2 w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs outline-none"></div>
-                <div class="pt-2 space-y-2">
-                    <button onclick="startAutomaticPayment('pix')" class="w-full gold-btn-gradient text-black py-3 rounded-xl text-xs font-black uppercase"><i class="fa-brands fa-pix"></i> Pagar com PIX Imediato</button>
-                    <button onclick="startAutomaticPayment('card')" class="w-full mp-btn-gradient text-white py-3 rounded-xl text-xs font-black uppercase"><i class="fa-solid fa-credit-card"></i> Cartão de Crédito 12x</button>
+        <div class="relative glass-card border border-zinc-700/60 rounded-2xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-7 shadow-2xl z-10 overflow-y-auto max-h-[92vh]">
+            <div class="flex justify-between border-b border-zinc-800 pb-3 mb-3">
+                <h3 class="text-base sm:text-lg font-extrabold text-white flex gap-2 items-center"><i class="fa-solid fa-shield-halved text-gold"></i> Checkout Seguro</h3>
+                <button onclick="closeCheckoutModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            
+            <div id="checkout-step-1" class="space-y-3">
+                <input type="text" id="cust-name" placeholder="Seu Nome Completo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                <input type="text" id="cust-whatsapp" placeholder="WhatsApp (Ex: 21999999999)" oninput="maskPhone(this)" maxlength="15" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="cust-cep" placeholder="CEP" oninput="maskCEP(this)" onblur="buscarCEP()" maxlength="9" class="col-span-1 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                    <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                </div>
+                <input type="text" id="cust-number" placeholder="Número, Casa/Apto e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                
+                <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+                    <div id="shipping-method-badge" class="text-xs text-zinc-300 flex items-center justify-between">
+                        <span id="shipping-type-text"><i class="fa-solid fa-truck-fast text-gold"></i> Envio Expresso (Nacional)</span>
+                        <span id="shipping-price-text" class="font-bold text-gold">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <div class="pt-1 space-y-2">
+                    <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block text-center">Escolha a forma de pagamento:</label>
+                    <button onclick="startAutomaticPayment('pix')" id="btn-pay-pix" class="w-full gold-btn-gradient py-3 rounded-xl text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-brands fa-pix text-sm"></i> Pagar com PIX Imediato
+                    </button>
+                    <button onclick="startAutomaticPayment('card')" id="btn-pay-card" class="w-full mp-btn-gradient py-3 rounded-xl text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-credit-card text-sm"></i> Cartão de Crédito até 12x (Mercado Pago)
+                    </button>
+                </div>
+                <div class="text-center pt-1">
+                    <span class="text-[9px] text-zinc-500"><i class="fa-solid fa-lock text-emerald-400"></i> Ambiente 100% Criptografado & Seguro</span>
                 </div>
             </div>
-            <div id="checkout-step-2" class="space-y-3 hidden mt-1">
-                <p class="text-xs font-semibold text-center text-zinc-900 dark:text-white">Total: <span id="pix-exact-value" class="text-gold font-black"></span></p>
-                <div id="pix-payment-box" class="bg-zinc-100 dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-800 rounded-2xl p-3 text-center space-y-2">
-                    <div id="dynamic-qrcode" class="w-32 h-32 mx-auto bg-white p-2 rounded-xl flex items-center justify-center"></div>
-                    <div class="flex gap-1.5 bg-white dark:bg-zinc-900 p-1.5 rounded-xl border border-zinc-300 dark:border-zinc-800"><input type="text" readonly id="pix-emv-input" class="bg-transparent text-[10px] font-mono text-green-600 w-full outline-none"><button onclick="copyPixEMV()" class="bg-green-600 text-white font-bold text-[10px] px-2.5 py-1 rounded-lg">Copiar</button></div>
+
+            <div id="checkout-step-2" class="space-y-3.5 hidden mt-1">
+                <div id="auto-status-banner" class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 text-center">
+                    <span class="text-[11px] font-bold text-amber-400 flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-rotate animate-spin"></i> Aguardando aprovação automática...
+                    </span>
                 </div>
-                <button onclick="confirmOrderWhatsapp()" class="w-full bg-green-600 text-white font-black py-2.5 rounded-xl text-xs uppercase"><i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp</button>
+
+                <p class="text-xs font-semibold text-zinc-300 text-center">Total: <span id="pix-exact-value" class="text-gold font-black text-sm"></span></p>
+                
+                <div id="pix-payment-box" class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3 text-center space-y-2.5">
+                    <div id="dynamic-qrcode" class="w-36 h-36 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-md"></div>
+                    <div class="space-y-1">
+                        <span class="text-[10px] text-zinc-400 block">Pix Copia e Cola</span>
+                        <div class="flex items-center gap-1.5 bg-zinc-900 p-1.5 rounded-xl border border-zinc-800">
+                            <input type="text" readonly id="pix-emv-input" class="bg-transparent text-[11px] font-mono text-green-400 w-full focus:outline-none text-ellipsis whitespace-nowrap">
+                            <button onclick="copyPixEMV()" class="bg-green-600 hover:bg-green-500 text-white font-bold text-[11px] px-2.5 py-1 rounded-lg transition shrink-0 cursor-pointer"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="card-payment-box" class="bg-zinc-950 border border-sky-500/40 rounded-2xl p-4 text-center space-y-3 hidden">
+                    <i class="fa-solid fa-credit-card text-3xl text-sky-400"></i>
+                    <h4 class="text-xs font-black text-white">Checkout Seguro Mercado Pago</h4>
+                    <p class="text-[11px] text-zinc-300">Pague em até 12x no cartão com segurança total.</p>
+                    <a id="mp-checkout-link" href="#" target="_blank" class="w-full mp-btn-gradient py-3 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md">
+                        <i class="fa-solid fa-up-right-from-square"></i> Abrir Checkout de Cartão
+                    </a>
+                </div>
+
+                <button onclick="confirmOrderWhatsapp()" id="btn-finish-order" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-xs uppercase cursor-pointer">
+                    <i class="fa-brands fa-whatsapp text-base"></i> Acompanhar no WhatsApp
+                </button>
+                <button onclick="backToStep1()" class="w-full text-zinc-500 hover:text-white text-xs underline text-center cursor-pointer">Voltar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL PRODUTO ADMIN -->
+    <!-- Modal Produto -->
     <div id="product-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeProductModal()"></div>
-        <div class="relative glass-card border border-zinc-300 dark:border-zinc-700/60 rounded-2xl max-w-sm w-full p-4 space-y-2 shadow-2xl z-10">
-            <h3 class="text-sm font-black text-zinc-900 dark:text-white">Salvar Produto</h3>
-            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-2 text-xs">
-                <input type="hidden" id="prod-id"><input type="hidden" id="prod-imageUrl">
-                <input type="file" id="prod-file-input" accept="image/*" onchange="uploadImageToGallery(event)" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-lg p-1 text-[9px]">
-                <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2.5 py-1.5">
+        <div class="relative glass-card border border-zinc-700/60 rounded-2xl max-w-md w-full p-5 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-base font-black text-white mb-3">Adicionar / Editar Produto</h3>
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-2.5 text-xs">
+                <input type="hidden" id="prod-id">
+                <div>
+                    <label class="text-[9px] text-zinc-400 block mb-1">Foto do Produto</label>
+                    <input type="text" id="prod-imageUrl" placeholder="Link da foto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-white outline-none">
+                    <input type="file" id="prod-file-input" accept="image/*" onchange="uploadImageToGallery(event)" class="mt-1.5 w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2.5 py-1 text-[11px] text-zinc-300 cursor-pointer">
+                    <div id="upload-status" class="text-[9px] text-gold mt-0.5 hidden">Processando...</div>
+                </div>
+                <div class="flex items-center gap-2 bg-zinc-950 p-2.5 rounded-xl border border-zinc-800">
+                    <input type="checkbox" id="prod-isFeatured" class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-gold cursor-pointer accent-amber-500">
+                    <label for="prod-isFeatured" class="text-xs font-bold text-white cursor-pointer flex items-center gap-1"><i class="fa-solid fa-star text-gold"></i> Fixar em Destaque</label>
+                </div>
+                <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
                 <div class="grid grid-cols-2 gap-2">
-                    <input type="number" step="0.01" id="prod-cost-price" required placeholder="Custo R$" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2.5 py-1.5">
-                    <input type="number" step="0.01" id="prod-price" required placeholder="Venda R$" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2.5 py-1.5">
+                    <select id="prod-availability" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                        <option value="pronta_entrega">🟢 Pronta Entrega</option>
+                        <option value="encomenda">🟠 Sob Encomenda</option>
+                    </select>
+                    <input type="text" id="prod-delivery-days" placeholder="Prazo (Ex: 1-3 dias)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-xs text-white">
                 </div>
                 <div class="grid grid-cols-2 gap-2">
-                    <select id="prod-category" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2 py-1.5"><option value="Peptídeos">Peptídeos</option><option value="Insumos & Soluções">Insumos</option><option value="Estética Avançada">Estética</option><option value="Hormônios">Hormônios</option><option value="Performance">Performance</option><option value="Outros">Outros</option></select>
-                    <input type="number" id="prod-stock" required value="10" placeholder="Estoque" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2.5 py-1.5">
+                    <input type="number" step="0.01" id="prod-cost-price" required oninput="calculatePriceFromMargin()" placeholder="Custo R$" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                    <input type="number" step="0.1" id="prod-margin-pct" oninput="calculatePriceFromMargin()" placeholder="Margem %" class="w-full bg-zinc-900 border border-gold/40 rounded-xl px-2.5 py-2 text-xs text-white">
                 </div>
-                <textarea id="prod-desc" rows="2" placeholder="Descrição rápida" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2.5 py-1.5"></textarea>
-                <div class="flex gap-2 pt-1"><button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-200 dark:bg-zinc-800 font-bold py-2 rounded-xl text-xs">Cancelar</button><button type="submit" class="flex-1 gold-btn-gradient text-black font-black py-2 rounded-xl text-xs">Salvar</button></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" step="0.01" id="prod-price" required placeholder="Venda R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                    <input type="number" step="0.01" id="prod-promo-price" placeholder="Promo R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="prod-category" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                        <option value="Peptídeos">Peptídeos</option>
+                        <option value="Insumos & Soluções">Insumos & Soluções</option>
+                        <option value="Estética Avançada">Estética Avançada</option>
+                        <option value="Hormônios">Hormônios</option>
+                        <option value="Performance">Performance</option>
+                        <option value="Outros">Outros</option>
+                    </select>
+                    <input type="number" id="prod-stock" required value="10" placeholder="Stock" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-2.5 py-2 text-xs text-white">
+                </div>
+                <textarea id="prod-desc" rows="2" required placeholder="Descrição..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white"></textarea>
+                <div class="flex gap-2 pt-1">
+                    <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2 rounded-xl text-xs cursor-pointer">Cancelar</button>
+                    <button type="submit" class="flex-1 gold-btn-gradient py-2 rounded-xl text-xs cursor-pointer">Salvar</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL CONFIGS -->
+    <!-- Modal Configs -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeSettingsModal()"></div>
-        <div class="relative glass-card border border-zinc-300 dark:border-zinc-700/60 rounded-2xl max-w-sm w-full p-4 space-y-2.5 shadow-2xl z-10 text-xs">
-            <h3 class="text-sm font-black text-zinc-900 dark:text-white">Configurações Blindadas</h3>
-            <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-2">
-                <input type="text" id="set-store-name" required placeholder="Nome da Loja" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2.5 py-1.5">
-                <input type="password" id="set-mp-token" placeholder="Mercado Pago Token (APP_USR-...)" class="w-full bg-white dark:bg-zinc-900 border border-sky-400 rounded-xl px-2.5 py-1.5">
-                <input type="text" id="set-wpp-sales" required placeholder="WhatsApp Vendas (Ex: 21999999999)" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2.5 py-1.5">
-                <input type="text" id="set-pix" required placeholder="Chave PIX Direta" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-2.5 py-1.5">
-                <div class="flex gap-2 pt-1"><button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-200 dark:bg-zinc-800 font-bold py-2 rounded-xl">Cancelar</button><button type="submit" class="flex-1 gold-btn-gradient text-black font-black py-2 rounded-xl">Salvar</button></div>
+        <div class="relative glass-card border border-zinc-700/60 rounded-2xl max-w-md w-full p-5 sm:p-7 space-y-3.5 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
+            <h3 class="text-base font-black text-white mb-2 flex items-center gap-1.5"><i class="fa-solid fa-sliders text-gold"></i> Configurações & Pagamentos</h3>
+            <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-2.5 text-xs">
+                <input type="text" id="set-store-name" required placeholder="Nome da Loja" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                <input type="text" id="set-store-logo" placeholder="URL da Logo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                
+                <div class="bg-sky-950/30 border border-sky-500/40 p-3 rounded-xl space-y-1.5">
+                    <label class="text-[10px] text-sky-400 font-black uppercase tracking-wider block"><i class="fa-solid fa-credit-card"></i> Mercado Pago Access Token</label>
+                    <input type="text" id="set-mp-token" placeholder="APP_USR-..." class="w-full bg-zinc-900 border border-sky-500/30 rounded-xl px-3 py-2 text-sky-200">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" step="0.01" id="set-ship-express" required placeholder="Frete R$" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                    <input type="text" id="set-wpp-sales" required placeholder="WhatsApp Vendas" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                </div>
+                <input type="text" id="set-pix" required placeholder="Chave PIX Direta" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="set-pix-name" required placeholder="Nome Titular" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                    <input type="text" id="set-pix-city" required placeholder="Cidade" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                </div>
+                <input type="text" id="set-gemini" placeholder="Chave Gemini (Opcional)" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2 text-blue-300">
+                
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2 rounded-xl cursor-pointer">Cancelar</button>
+                    <button type="submit" class="flex-1 gold-btn-gradient py-2 rounded-xl cursor-pointer">Salvar</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL LOGIN ADMIN -->
+    <!-- Modal Login -->
     <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeLoginModal()"></div>
-        <div class="relative glass-card border border-zinc-300 dark:border-zinc-700/60 rounded-2xl w-full max-w-xs p-5 shadow-2xl z-10 text-center space-y-3">
-            <h3 class="text-sm font-bold text-zinc-900 dark:text-white">Acesso Restrito Admin</h3>
+        <div class="relative glass-card border border-zinc-700/60 rounded-2xl w-full max-w-xs p-5 shadow-2xl z-10 text-center space-y-3">
+            <h3 class="text-sm font-bold text-white">Acesso Administrativo</h3>
             <form onsubmit="handleAdminLogin(event)" class="space-y-2.5">
-                <input type="email" id="login-email" required placeholder="E-mail" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs">
-                <input type="password" id="login-password" required placeholder="Senha" class="w-full bg-white dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-800 rounded-xl px-3 py-2 text-xs">
-                <button type="submit" id="btn-login-submit" class="w-full gold-btn-gradient text-black font-black py-2.5 rounded-xl text-xs uppercase">Entrar no Painel</button>
+                <input type="email" id="login-email" required placeholder="E-mail Admin" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="password" id="login-password" required placeholder="Senha Secreta" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
+                <button type="submit" class="w-full gold-btn-gradient py-2 rounded-xl text-xs cursor-pointer">Aceder</button>
             </form>
         </div>
     </div>
 
-    <!-- FIREBASE SDKs -->
+    <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
-        const firebaseConfig = { apiKey: "AIzaSyBJS8BmQipFFG9qjgML4VTVJnIQVClXiNo", authDomain: "fenix-importes.firebaseapp.com", projectId: "fenix-importes", storageBucket: "fenix-importes.firebasestorage.app", messagingSenderId: "169461327461", appId: "1:169461327461:web:cf43022c8f04915666c88c" };
-        const app = initializeApp(firebaseConfig);
-        window.auth = getAuth(app);
-        window.db = getFirestore(app);
-        window.firebaseFns = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, onSnapshot, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence };
+        const firebaseConfig = { 
+            apiKey: "AIzaSyBJS8BmQipFFG9qjgML4VTVJnIQVClXiNo", 
+            authDomain: "fenix-importes.firebaseapp.com", 
+            projectId: "fenix-importes", 
+            storageBucket: "fenix-importes.firebasestorage.app", 
+            messagingSenderId: "169461327461", 
+            appId: "1:169461327461:web:cf43022c8f04915666c88c" 
+        };
         
-        window.initApp();
+        const app = initializeApp(firebaseConfig); 
+        const auth = getAuth(app); 
+        const db = getFirestore(app);
+        
+        window.db = db; 
+        window.auth = auth; 
+        window.firebaseFns = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, onSnapshot, signInWithEmailAndPassword, signOut, onAuthStateChanged };
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => window.initApp());
+        } else {
+            window.initApp();
+        }
     </script>
 
-    <!-- SCRIPT GERAL UNIFICADO -->
+    <!-- App Main Script -->
     <script>
-        let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null, calculatedShippingCost = 25, activeOrderId = null, autoPayInterval = null, currentWhatsappOrderMsg = "";
-        let storeSettings = { storeName: "FÊNIX IMPORTS", logoUrl: "", pixKey: "", pixName: "Fenix Imports", pixCity: "Rio de Janeiro", whatsappSales: "5521999999999", shippingExpress: 25, pushNotificationsEnabled: true };
-        let privateKeys = { mpAccessToken: "" };
+        let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
+        let activeDiscount = 0;
+        let calculatedShippingCost = 25;
+        let shippingType = 'Envio Expresso';
+        let isFirstLoadOrders = true;
+        let activeOrderId = null;
+        let autoPayInterval = null;
+        let currentWhatsappOrderMsg = "";
 
-        function showToast(msg, type = 'info') { const c = document.getElementById('toast-container'), t = document.createElement('div'); t.className = `toast toast-${type}`; t.innerHTML = `<span>${msg}</span>`; c.appendChild(t); setTimeout(() => t.remove(), 3000); }
-        function formatMoney(val) { return Number(val || 0).toFixed(2).replace('.', ','); }
-        function formatWhatsappNumber(phone) { let c = String(phone||'').replace(/\D/g, ''); return (c.length===10||c.length===11) ? '55'+c : c; }
+        let storeSettings = { 
+            storeName: "FÊNIX IMPORTS", 
+            logoUrl: "",
+            themeColor: "#d4a017", 
+            pixKey: "", 
+            pixName: "Fenix Imports", 
+            pixCity: "Rio de Janeiro", 
+            whatsappSales: "5521999999999", 
+            shippingExpress: 25,
+            mpAccessToken: "",
+            geminiKey: "", 
+            removeBgKey: "",
+            pushNotificationsEnabled: true
+        };
 
-        function toggleTheme() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('fenix_theme', isDark ? 'dark' : 'light'); updateThemeIcon(isDark); }
-        function updateThemeIcon(isDark) { const icon = document.getElementById('theme-toggle-icon'); if (icon) icon.className = isDark ? 'fa-solid fa-moon text-gold' : 'fa-solid fa-sun text-amber-500'; }
+        function playSaleBeep() {
+            if (storeSettings.pushNotificationsEnabled === false) return;
+            try {
+                const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                audio.play().catch(() => {});
+            } catch(e) {}
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 400]);
+        }
 
-        async function initApp() {
-            const st = localStorage.getItem('fenix_theme') || 'dark'; if (st === 'light') { document.documentElement.classList.remove('dark'); updateThemeIcon(false); }
-            const savedCart = localStorage.getItem('fenix_cart'); if (savedCart) cart = JSON.parse(savedCart);
-            updateCartUI();
-            
-            if (window.auth && window.firebaseFns) {
-                window.firebaseFns.onAuthStateChanged(window.auth, (user) => { currentUser = user; updateAuthUI(); });
-                await loadSettings();
-                await loadProductsFromFirebase();
+        function testNotificationSound() {
+            playSaleBeep();
+            sendNativeNotification("💰 Teste de Venda!", "Notificações e som de caixa registradora ativos!");
+            showToast("Alerta sonoro testado com sucesso!", "success");
+        }
+        window.testNotificationSound = testNotificationSound;
+
+        function togglePushNotifications(el) {
+            storeSettings.pushNotificationsEnabled = el.checked;
+            localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
+            if(el.checked) {
+                requestPushPermission();
+                showToast("Notificações ativadas!", "success");
+            } else {
+                showToast("Notificações desativadas.", "info");
+            }
+        }
+        window.togglePushNotifications = togglePushNotifications;
+
+        function requestPushPermission() {
+            if (!("Notification" in window)) return;
+            Notification.requestPermission().then(permission => {
+                if (permission === "granted") showToast("Push ativo!", "success");
+            });
+        }
+        window.requestPushPermission = requestPushPermission;
+
+        function sendNativeNotification(title, body) {
+            if (storeSettings.pushNotificationsEnabled === false) return;
+            playSaleBeep();
+            if ("Notification" in window && Notification.permission === "granted") {
+                const options = {
+                    body: body,
+                    icon: storeSettings.logoUrl || 'https://cdn-icons-png.flaticon.com/512/3119/3119338.png',
+                    badge: 'https://cdn-icons-png.flaticon.com/512/3119/3119338.png',
+                    vibrate: [200, 100, 200, 100, 400],
+                    requireInteraction: true
+                };
+                if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.ready.then(reg => reg.showNotification(title, options));
+                } else {
+                    new Notification(title, options);
+                }
             }
         }
 
-        async function loadSettings() {
-            const local = localStorage.getItem('fenix_store_settings'), keys = localStorage.getItem('fenix_private_keys');
-            if (local) storeSettings = { ...storeSettings, ...JSON.parse(local) };
-            if (keys) privateKeys = { ...privateKeys, ...JSON.parse(keys) };
-            try { const snap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config")); if (snap.exists()) storeSettings = { ...storeSettings, ...snap.data() }; } catch(e){}
-            document.getElementById('header-store-name').innerText = storeSettings.storeName.toUpperCase();
-            const wpp = formatWhatsappNumber(storeSettings.whatsappSales);
-            document.getElementById('btn-floating-support').href = `https://wa.me/${wpp}`;
-            document.getElementById('btn-mobile-support-bottom').href = `https://wa.me/${wpp}`;
+        function initTheme() {
+            const savedTheme = localStorage.getItem('fenix_theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                updateThemeIcon(false);
+            } else {
+                document.documentElement.classList.add('dark');
+                updateThemeIcon(true);
+            }
         }
 
-        async function saveSettings(e) {
-            e.preventDefault();
-            storeSettings.storeName = document.getElementById('set-store-name').value.trim();
-            storeSettings.whatsappSales = formatWhatsappNumber(document.getElementById('set-wpp-sales').value.trim());
-            storeSettings.pixKey = document.getElementById('set-pix').value.trim();
-            privateKeys.mpAccessToken = document.getElementById('set-mp-token').value.trim();
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('fenix_theme', isDark ? 'dark' : 'light');
+            updateThemeIcon(isDark);
+            showToast(`Modo ${isDark ? 'Escuro' : 'Claro'} ativado!`, 'info');
+        }
+
+        function updateThemeIcon(isDark) {
+            const icon = document.getElementById('theme-toggle-icon');
+            if (icon) {
+                icon.className = isDark ? 'fa-solid fa-moon text-sm sm:text-base text-gold' : 'fa-solid fa-sun text-sm sm:text-base text-amber-500';
+            }
+        }
+
+        const formatMoney = (val) => Number(val || 0).toFixed(2).replace('.', ',');
+
+        function formatWhatsappNumber(phone) {
+            if (!phone) return '';
+            let cleaned = String(phone).replace(/\D/g, '');
+            if (cleaned.length === 10 || cleaned.length === 11) cleaned = '55' + cleaned;
+            return cleaned;
+        }
+
+        function applyStoreBranding() {
+            const name = storeSettings.storeName || "FÊNIX IMPORTS";
+            document.getElementById('header-store-name').innerHTML = `${name.toUpperCase()}`;
+            document.getElementById('page-title').innerText = `${name} | Exclusividade & Alta Performance`;
+            document.getElementById('ai-bot-title').innerText = `Consultor ${name} IA`;
+
+            const logoImg = document.getElementById('header-logo-img');
+            const logoIcon = document.getElementById('header-logo-icon');
+            if (storeSettings.logoUrl && storeSettings.logoUrl.trim() !== '') {
+                logoImg.src = storeSettings.logoUrl.trim();
+                logoImg.classList.remove('hidden');
+                logoIcon.classList.add('hidden');
+            } else {
+                logoImg.classList.add('hidden');
+                logoIcon.classList.remove('hidden');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            const icon = type === 'success' ? 'fa-circle-check' : type === 'error' ? 'fa-circle-xmark' : 'fa-circle-info';
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
+
+        async function initApp() {
+            initTheme();
+            if (window.auth && window.firebaseFns) {
+                window.firebaseFns.onAuthStateChanged(window.auth, (user) => { 
+                    currentUser = user; 
+                    updateAuthUI(); 
+                });
+                await loadSettings(); 
+                await loadProductsFromFirebase();
+            }
+        }
+        window.initApp = initApp;
+
+        async function loadSettings() {
+            const local = localStorage.getItem('fenix_store_settings');
+            if (local) storeSettings = { ...storeSettings, ...JSON.parse(local) };
+            try { 
+                const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
+                if (docSnap.exists()) {
+                    storeSettings = { ...storeSettings, ...docSnap.data() };
+                }
+            } catch (e) {}
+            
+            if (storeSettings.pushNotificationsEnabled === undefined) {
+                storeSettings.pushNotificationsEnabled = true;
+            }
             localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
-            localStorage.setItem('fenix_private_keys', JSON.stringify(privateKeys));
-            try { await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); } catch(err){}
-            showToast('Configurações Salvas!', 'success');
-            closeSettingsModal();
+
+            const pushCb = document.getElementById('push-toggle-checkbox');
+            if(pushCb) pushCb.checked = storeSettings.pushNotificationsEnabled;
+
+            applyStoreBranding();
+            calculatedShippingCost = Number(storeSettings.shippingExpress || 25);
+            const cleanSalesWpp = formatWhatsappNumber(storeSettings.whatsappSales);
+            document.getElementById('btn-floating-support').href = `https://wa.me/${cleanSalesWpp}?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida.`;
+            document.getElementById('btn-mobile-support').href = `https://wa.me/${cleanSalesWpp}?text=Olá!%20Gostaria%20de%20tirar%20uma%20dúvida.`;
+            updateCartUI();
         }
 
         async function loadProductsFromFirebase() {
             try {
-                const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
-                products = []; snap.forEach(d => products.push({ id: d.id, ...d.data() }));
-            } catch(e) {}
-            renderProducts();
+                const snapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
+                products = []; 
+                snapshot.forEach(doc => products.push({ id: doc.id, ...doc.data() }));
+                localStorage.setItem('fenix_products', JSON.stringify(products));
+            } catch (e) {
+                const local = localStorage.getItem('fenix_products');
+                if (local) products = JSON.parse(local);
+            } 
+            renderProducts(); 
             renderAdminTable();
         }
 
+        function updateAuthUI() {
+            if (currentUser) { 
+                document.getElementById('nav-login').classList.add('hidden'); 
+                document.getElementById('nav-admin').classList.remove('hidden'); 
+                document.getElementById('nav-admin').classList.add('flex'); 
+                document.getElementById('mobile-nav-login')?.classList.add('hidden');
+                document.getElementById('mobile-nav-admin')?.classList.remove('hidden');
+                document.getElementById('user-status-container').classList.remove('hidden'); 
+                document.getElementById('user-status-container').classList.add('flex'); 
+                document.getElementById('logged-user-email').innerText = currentUser.email || 'admin';
+                listenOrdersRealtime(); 
+            } else { 
+                document.getElementById('nav-login').classList.remove('hidden'); 
+                document.getElementById('nav-admin').classList.add('hidden'); 
+                document.getElementById('user-status-container').classList.add('hidden'); 
+            }
+        }
+
+        function listenOrdersRealtime() {
+            if (!currentUser) return;
+            window.firebaseFns.onSnapshot(window.firebaseFns.collection(window.db, "orders"), (snapshot) => {
+                let newOrdersList = [];
+                snapshot.forEach(doc => newOrdersList.push({ id: doc.id, ...doc.data() }));
+                
+                if (!isFirstLoadOrders && newOrdersList.length > orders.length) {
+                    const latest = newOrdersList.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+                    if (latest && latest.client) {
+                        sendNativeNotification(
+                            `💰 NOVA VENDA: R$ ${formatMoney(latest.financials?.total || 0)}`,
+                            `Cliente: ${latest.client.name}`
+                        );
+                    }
+                }
+                isFirstLoadOrders = false;
+                orders = newOrdersList.sort((a, b) => new Date(b.date) - new Date(a.date));
+                renderOrdersTable();
+                renderCrmTable();
+            });
+        }
+
+        async function updateOrderStatus(id, st) { 
+            try {
+                const target = orders.find(o => o.id === id);
+                await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { status: st }); 
+                
+                if (st === 'pago' && target && target.status === 'aguardando' && Array.isArray(target.items)) {
+                    for (const item of target.items) {
+                        const prod = products.find(p => p.id === item.id || p.name === item.name);
+                        if (prod && prod.stock !== undefined) {
+                            const newStock = Math.max(0, Number(prod.stock) - Number(item.qty || 1));
+                            prod.stock = newStock;
+                            await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", prod.id), { stock: newStock }).catch(() => {});
+                        }
+                    }
+                    renderAdminTable();
+                    renderProducts();
+                }
+
+                showToast(st === 'pago' ? 'Venda Aprovada e Estoque Atualizado!' : 'Status Atualizado!', 'success');
+                if(target) target.status = st;
+                renderOrdersTable();
+            } catch(err) {
+                showToast('Erro ao atualizar status do pedido.', 'error');
+            }
+        }
+        window.updateOrderStatus = updateOrderStatus;
+
+        async function deleteOrder(id) {
+            if(confirm('Excluir pedido permanentemente?')) {
+                try {
+                    await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'orders', id));
+                    showToast('Pedido excluído.', 'info');
+                    orders = orders.filter(o => o.id !== id);
+                    renderOrdersTable();
+                } catch(e) {
+                    showToast('Erro ao excluir pedido.', 'error');
+                }
+            }
+        }
+        window.deleteOrder = deleteOrder;
+
+        function renderOrdersTable() {
+            const tb = document.getElementById('admin-orders-table'); 
+            if(!tb) return;
+            tb.innerHTML = '';
+            let rev = 0, prof = 0, count = 0;
+
+            if(orders.length === 0) {
+                tb.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-zinc-500 text-xs">Nenhum pedido recebido ainda.</td></tr>`;
+            }
+
+            orders.forEach(o => {
+                const total = Number(o.financials?.total || o.financials?.subtotal || 0);
+                const profit = Number(o.financials?.estimatedProfit || 0);
+
+                if(o.status === 'pago' || o.status === 'enviado'){ 
+                    rev += total; 
+                    prof += profit; 
+                    count++; 
+                }
+
+                const d = o.date ? new Date(o.date) : new Date(); 
+                const ds = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+                
+                const itemsSummary = Array.isArray(o.items) && o.items.length > 0
+                    ? o.items.map(i => `${i.qty}x ${i.name}`).join(', ')
+                    : 'Itens do pedido';
+
+                let stBadge = o.status === 'aguardando' 
+                    ? '<span class="text-amber-400 font-bold text-[9px] uppercase bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">AGUARD.</span>' 
+                    : (o.status === 'pago' 
+                        ? '<span class="text-emerald-400 font-bold text-[9px] uppercase bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">PAGO</span>' 
+                        : '<span class="text-blue-400 font-bold text-[9px] uppercase bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">ENVIADO</span>');
+                
+                let actButtons = o.status === 'aguardando' 
+                    ? `<button onclick="window.updateOrderStatus('${o.id}', 'pago')" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/40 p-2 rounded-xl transition cursor-pointer" title="Aprovar"><i class="fa-solid fa-check text-xs"></i></button>` 
+                    : `<button onclick="window.updateOrderStatus('${o.id}', 'enviado')" class="bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white border border-blue-500/40 p-2 rounded-xl transition cursor-pointer" title="Marcar Enviado"><i class="fa-solid fa-truck text-xs"></i></button>`;
+                
+                const trackCode = o.trackingCode || '';
+                const trackInput = (o.status === 'pago' || o.status === 'enviado') ? `
+                    <div class="flex gap-1 mt-1">
+                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="Rastreio" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-1 rounded-lg w-24 outline-none text-white">
+                        <button onclick="window.saveAndSendTrack('${o.id}', '${o.client?.phone || ''}', '${o.client?.name || ''}')" class="bg-green-600 text-white px-2 py-1 rounded-lg text-[10px]"><i class="fa-brands fa-whatsapp"></i></button>
+                    </div>` : '';
+
+                const clientPhoneClean = formatWhatsappNumber(o.client?.phone || '');
+                const payMethodBadge = o.paymentMethod === 'card' ? '<span class="text-[9px] text-sky-400 font-bold block"><i class="fa-solid fa-credit-card"></i> Cartão</span>' : '<span class="text-[9px] text-emerald-400 font-bold block"><i class="fa-brands fa-pix"></i> PIX</span>';
+
+                tb.innerHTML += `
+                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40 transition">
+                        <td class="p-3 text-xs">
+                            <div class="flex items-center gap-1.5">
+                                <b class="text-white">${o.client?.name || 'Cliente'}</b>
+                                ${clientPhoneClean ? `<a href="https://wa.me/${clientPhoneClean}" target="_blank" class="text-green-400 text-xs"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
+                            </div>
+                            <span class="text-[9px] text-zinc-400 block">${o.shippingType || 'Envio Expresso'}</span>
+                            <span class="text-[8px] text-zinc-500">${ds}</span>
+                        </td>
+                        <td class="p-3 text-xs">
+                            <span class="font-bold text-gold block">R$ ${formatMoney(total)}</span>
+                            ${payMethodBadge}
+                            <span class="text-[9px] text-zinc-400 line-clamp-1 max-w-[150px]" title="${itemsSummary}">${itemsSummary}</span>
+                        </td>
+                        <td class="p-3">${stBadge}${trackInput}</td>
+                        <td class="p-3 text-right">
+                            <div class="flex items-center justify-end gap-1">
+                                ${actButtons} 
+                                <button onclick="window.deleteOrder('${o.id}')" class="bg-red-600/20 text-red-400 p-2 rounded-xl"><i class="fa-solid fa-trash text-xs"></i></button>
+                            </div>
+                        </td>
+                    </tr>`;
+            });
+
+            document.getElementById('dash-revenue').innerText = `R$ ${formatMoney(rev)}`; 
+            document.getElementById('dash-profit').innerText = `R$ ${formatMoney(prof)}`; 
+            document.getElementById('dash-sales-count').innerText = count; 
+            document.getElementById('dash-margin').innerText = `Margem: ${rev > 0 ? ((prof / rev) * 100).toFixed(1) : 0}%`;
+        }
+
+        async function saveAndSendTrack(id, phone, name) {
+            const code = document.getElementById(`track-${id}`).value.trim(); 
+            if(!code) return showToast("Digite o código de rastreio.", "error");
+            await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
+            if(phone) {
+                window.open(`https://wa.me/${formatWhatsappNumber(phone)}?text=${encodeURIComponent(`Olá ${name}, seu pedido na ${storeSettings.storeName || 'Fênix Imports'} foi enviado! Rastreio: ${code}`)}`, '_blank');
+            }
+            showToast('Rastreio salvo!', 'success');
+        }
+        window.saveAndSendTrack = saveAndSendTrack;
+
+        function switchTab(tab) {
+            document.getElementById('tab-catalog').classList.add('hidden'); 
+            document.getElementById('tab-admin').classList.add('hidden');
+            if (tab === 'catalog') document.getElementById('tab-catalog').classList.remove('hidden');
+            if (tab === 'admin') { 
+                if(!currentUser) return openLoginModal(); 
+                document.getElementById('tab-admin').classList.remove('hidden'); 
+                renderAdminTable(); 
+            }
+        }
+
+        function switchAdminSubTab(sub) {
+            ['products', 'orders', 'crm', 'analytics'].forEach(s => {
+                document.getElementById(`admin-subtab-${s}`).classList.add('hidden');
+                const btn = document.getElementById(`subnav-${s}`);
+                if(btn) btn.className = "flex-1 md:flex-none px-3 py-1.5 rounded-lg text-xs font-bold text-zinc-400 transition cursor-pointer";
+            });
+            document.getElementById(`admin-subtab-${sub}`).classList.remove('hidden');
+            document.getElementById(`subnav-${sub}`).className = "flex-1 md:flex-none px-3 py-1.5 rounded-lg text-xs font-bold bg-zinc-800 text-white transition cursor-pointer";
+            
+            if(sub === 'crm') renderCrmTable();
+            if(sub === 'analytics') renderStockAlertsTable();
+        }
+
+        function shareProductWhatsapp(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+            const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+            const text = `🔥 *${p.name}* na *${storeSettings.storeName || 'Fênix Imports'}* por *R$ ${formatMoney(price)}* (Pix ou Cartão 12x)!\n👉 Garanta em: ${window.location.origin}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+        window.shareProductWhatsapp = shareProductWhatsapp;
+
         function renderProducts() {
-            const grid = document.getElementById('product-grid'), searchVal = document.getElementById('search-input').value.toLowerCase().trim();
+            const grid = document.getElementById('product-grid'); 
+            const featuredGrid = document.getElementById('featured-grid');
+            const featuredSection = document.getElementById('featured-section');
+            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            
             grid.innerHTML = '';
-            const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && p.name.toLowerCase().includes(searchVal));
-            if (!filtered.length) { grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500 text-xs">Nenhum produto cadastrado.</div>`; return; }
+            if (featuredGrid) featuredGrid.innerHTML = '';
+
+            const featuredProducts = products.filter(p => p.promoPrice || p.isFeatured);
+
+            if (featuredGrid && featuredSection) {
+                if (featuredProducts.length > 0 && currentFilter === 'all' && !searchVal) {
+                    featuredSection.classList.remove('hidden');
+                    featuredProducts.forEach(p => {
+                        const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+                        const oldPrice = p.promoPrice ? `<span class="text-[9px] text-zinc-400 line-through">R$ ${formatMoney(p.price)}</span>` : '';
+                        
+                        featuredGrid.innerHTML += `
+                            <div class="min-w-[220px] sm:min-w-[260px] max-w-[260px] glass-card rounded-2xl p-3 flex flex-col justify-between shrink-0 snap-start border-amber-500/40 glow-gold-lg relative overflow-hidden">
+                                <span class="absolute top-2.5 left-2.5 bg-amber-500 text-black text-[8px] font-black px-2 py-0.5 rounded uppercase z-10"><i class="fa-solid fa-star"></i> Destaque</span>
+                                <div>
+                                    ${p.imageUrl ? `<div class="w-full h-28 sm:h-32 bg-zinc-950/60 rounded-xl mb-2 p-1.5 flex items-center justify-center overflow-hidden border border-zinc-800"><img src="${p.imageUrl}" class="max-h-full max-w-full object-contain"></div>` : ''}
+                                    <h3 class="text-xs font-extrabold text-white truncate">${p.name}</h3>
+                                </div>
+                                <div class="pt-2 mt-2 border-t border-zinc-800 flex items-center justify-between gap-1">
+                                    <div>
+                                        ${oldPrice}
+                                        <span class="text-xs sm:text-sm font-black text-amber-400 block">R$ ${formatMoney(price)}</span>
+                                    </div>
+                                    <button onclick="addToCart('${p.id}')" class="gold-btn-gradient text-[11px] px-3 py-1.5 rounded-xl font-bold cursor-pointer">Comprar</button>
+                                </div>
+                            </div>`;
+                    });
+                } else {
+                    featuredSection.classList.add('hidden');
+                }
+            }
+
+            const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal) || p.category.toLowerCase().includes(searchVal)));
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-zinc-500 text-xs font-semibold">Nenhum produto encontrado.</div>`;
+                return;
+            }
+
             filtered.forEach(p => {
+                const st = p.stock !== undefined ? Number(p.stock) : 10; 
+                const out = st <= 0;
+                const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+                const promo = p.promoPrice ? `<div class="absolute top-2.5 left-2.5 bg-red-600 text-white text-[8px] font-black px-2 py-0.5 rounded uppercase z-10"><i class="fa-solid fa-fire"></i> Promo</div>` : '';
+                const isEncomenda = p.availability === 'encomenda';
+                const availBadge = isEncomenda 
+                    ? `<span class="text-[8px] font-bold text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">Sob Encomenda</span>`
+                    : `<span class="text-[8px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded">Pronta Entrega</span>`;
+
+                const img = p.imageUrl 
+                    ? `<div class="w-full h-36 sm:h-40 bg-zinc-100/50 dark:bg-zinc-950/60 rounded-xl mb-2.5 border border-zinc-200 dark:border-zinc-800 p-2 flex items-center justify-center overflow-hidden relative">
+                        <img src="${p.imageUrl}" class="max-h-full max-w-full object-contain">
+                        <button onclick="shareProductWhatsapp('${p.id}')" class="absolute top-2 right-2 bg-zinc-900/80 hover:bg-green-600 text-zinc-300 hover:text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] cursor-pointer"><i class="fa-solid fa-share-nodes"></i></button>
+                       </div>` 
+                    : `<div class="w-full h-36 sm:h-40 bg-zinc-100 dark:bg-zinc-900 rounded-xl mb-2.5 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-400 text-xl"></i></div>`;
+                
                 grid.innerHTML += `
-                    <div class="glass-card rounded-2xl p-3 flex flex-col justify-between">
-                        <div>
-                            ${p.imageUrl ? `<img src="${p.imageUrl}" class="w-full h-32 object-contain mb-2 rounded-xl">` : `<div class="w-full h-32 bg-zinc-200 dark:bg-zinc-800 rounded-xl mb-2 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-400"></i></div>`}
-                            <span class="text-[8px] font-bold text-amber-500 uppercase">${p.category}</span>
-                            <h3 class="text-xs font-bold text-zinc-900 dark:text-white line-clamp-1">${p.name}</h3>
+                    <div class="glass-card rounded-2xl p-3 flex flex-col justify-between relative overflow-hidden group h-full">
+                        ${promo}
+                        <div class="flex-1 flex flex-col">
+                            ${img}
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-[9px] font-extrabold text-amber-500 uppercase">${p.category || 'Geral'}</span>
+                                ${availBadge}
+                            </div>
+                            <h3 class="text-xs font-extrabold text-zinc-900 dark:text-white line-clamp-2 leading-tight min-h-[2rem]">${p.name}</h3>
+                            <p class="text-zinc-500 dark:text-zinc-400 text-[10px] line-clamp-1 mt-0.5">${p.description}</p>
                         </div>
-                        <div class="mt-2 pt-2 border-t border-zinc-200 dark:border-zinc-800 flex justify-between items-center">
-                            <span class="text-xs font-black text-amber-600 dark:text-gold">R$ ${formatMoney(p.price)}</span>
-                            <button onclick="addToCart('${p.id}')" class="gold-btn-gradient text-[10px] px-3 py-1.5 rounded-xl font-bold cursor-pointer">Comprar</button>
+                        <div class="pt-2.5 mt-2.5 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-1 shrink-0">
+                            <div>
+                                <span class="text-[8px] text-zinc-400 uppercase font-bold block">Pix / Cartão</span>
+                                <span class="text-xs sm:text-sm font-black ${p.promoPrice ? 'text-green-600 dark:text-green-400' : 'text-amber-500'}">R$ ${formatMoney(price)}</span>
+                            </div>
+                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed' : 'gold-btn-gradient'} text-[11px] px-3 py-1.5 rounded-xl transition flex items-center justify-center gap-1 font-bold cursor-pointer shrink-0">
+                                <span>${out ? 'Esgotado' : 'Comprar'}</span>
+                            </button>
                         </div>
                     </div>`;
             });
         }
 
-        function setCategoryFilter(cat) { currentFilter = cat; renderProducts(); }
-        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
-        function switchTab(tab) {
-            document.getElementById('tab-catalog').classList.toggle('hidden', tab !== 'catalog');
-            document.getElementById('tab-admin').classList.toggle('hidden', tab !== 'admin');
-            if (tab === 'admin' && !currentUser) openLoginModal();
+        function setCategoryFilter(cat) { 
+            currentFilter = cat; 
+            document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition whitespace-nowrap cursor-pointer"); 
+            const activeBtn = cat === 'all' ? document.getElementById('filter-btn-all') : document.querySelector(`.filter-btn[data-cat="${cat}"]`); 
+            if(activeBtn) activeBtn.className = "filter-btn px-3 py-1.5 rounded-xl text-xs font-bold gold-btn-gradient whitespace-nowrap cursor-pointer"; 
+            renderProducts(); 
         }
 
-        function toggleCartDrawer(open) { document.getElementById('cart-drawer').classList.toggle('hidden', !open); }
+        function filterProducts() { renderProducts(); }
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+
         function addToCart(id) {
-            const p = products.find(x => x.id === id); if (!p) return;
-            const ex = cart.find(x => x.id === id);
-            if (ex) ex.qty++; else cart.push({ ...p, qty: 1 });
-            updateCartUI();
+            const p = products.find(x => x.id === id); 
+            if (!p) return;
+            const ex = cart.find(i => i.id === id);
+            const basePrice = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+            if (ex) { ex.qty++; } 
+            else { 
+                cart.push({ ...p, activePrice: basePrice, costPrice: Number(p.costPrice) || 0, qty: 1 }); 
+            }
+            showToast(`${p.name} adicionado!`, 'success');
+            updateCartUI(); 
             toggleCartDrawer(true);
-            showToast('Adicionado ao carrinho!', 'success');
+        }
+        window.addToCart = addToCart;
+
+        function applyCoupon() {
+            const code = document.getElementById('coupon-code').value.trim().toUpperCase();
+            if (code === 'FENIX10') {
+                activeDiscount = 0.10;
+                showToast('Cupom de 10% aplicado!', 'success');
+            } else if (code === 'FRETEGRATIS') {
+                calculatedShippingCost = 0;
+                showToast('Frete grátis liberado!', 'success');
+            } else {
+                showToast('Cupom inválido.', 'error');
+            }
+            updateCartUI();
+        }
+
+        function calculateOrderTotals() {
+            const subtotal = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0);
+            const discountVal = subtotal * activeDiscount;
+            const total = (subtotal - discountVal) + calculatedShippingCost;
+            return { subtotal, discountVal, shipping: calculatedShippingCost, total };
         }
 
         function updateCartUI() {
-            const c = document.getElementById('cart-items-container');
-            const totalQty = cart.reduce((s, i) => s + i.qty, 0);
-            const totalVal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-            document.getElementById('cart-counter').innerText = totalQty;
-            document.getElementById('cart-counter-mobile').innerText = totalQty;
-            localStorage.setItem('fenix_cart', JSON.stringify(cart));
-            if (!cart.length) { c.innerHTML = '<div class="py-12 text-center text-xs text-zinc-500">Carrinho vazio</div>'; document.getElementById('cart-total').innerText = 'R$ 0,00'; return; }
-            c.innerHTML = '';
-            cart.forEach(i => {
-                c.innerHTML += `<div class="flex justify-between items-center py-2 text-xs"><div><b>${i.name}</b><br><span class="text-gold">R$ ${formatMoney(i.price)}</span></div><div>${i.qty}x</div></div>`;
+            const cont = document.getElementById('cart-items-container'); 
+            const totals = calculateOrderTotals();
+            document.getElementById('cart-counter').innerText = cart.reduce((s, i) => s + i.qty, 0);
+            if (cart.length === 0) { 
+                cont.innerHTML = `<div class="py-12 text-center text-zinc-500 text-xs">Seu carrinho está vazio</div>`; 
+                document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
+                document.getElementById('cart-shipping-cost').innerText = 'R$ 0,00';
+                document.getElementById('cart-total').innerText = 'R$ 0,00'; 
+                return; 
+            }
+            cont.innerHTML = ''; 
+            cart.forEach(i => { 
+                cont.innerHTML += `
+                    <div class="py-2.5 flex items-center justify-between gap-2 border-b border-zinc-800/60 text-xs">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-white truncate">${i.name}</h4>
+                            <span class="text-gold font-bold">R$ ${formatMoney(i.activePrice)}</span>
+                        </div>
+                        <div class="flex gap-1.5 items-center bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-0.5">
+                            <button onclick="decreaseCartQty('${i.id}')" class="text-zinc-400 px-1 cursor-pointer">-</button>
+                            <span class="w-3 text-center font-bold text-white">${i.qty}</span>
+                            <button onclick="increaseCartQty('${i.id}')" class="text-zinc-400 px-1 cursor-pointer">+</button>
+                        </div>
+                    </div>`; 
             });
-            document.getElementById('cart-total').innerText = `R$ ${formatMoney(totalVal)}`;
+            document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`; 
+            if (totals.discountVal > 0) {
+                document.getElementById('cart-discount-row').classList.remove('hidden');
+                document.getElementById('cart-discount').innerText = `- R$ ${formatMoney(totals.discountVal)}`;
+            } else {
+                document.getElementById('cart-discount-row').classList.add('hidden');
+            }
+            document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(totals.shipping)}`; 
+            document.getElementById('cart-total').innerText = `R$ ${formatMoney(totals.total)}`;
         }
 
-        function proceedToCheckout() {
-            if (!cart.length) return showToast('Carrinho vazio!', 'error');
-            toggleCartDrawer(false);
-            document.getElementById('checkout-step-1').classList.remove('hidden');
-            document.getElementById('checkout-step-2').classList.add('hidden');
-            document.getElementById('checkout-modal').classList.remove('hidden');
+        function decreaseCartQty(id) {
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                item.qty--;
+                if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+                updateCartUI();
+            }
         }
-        function closeCheckoutModal() { document.getElementById('checkout-modal').classList.add('hidden'); }
+
+        function increaseCartQty(id) {
+            const item = cart.find(x => x.id === id);
+            if (item) { item.qty++; updateCartUI(); }
+        }
+
+        function toggleCartDrawer(op) { document.getElementById('cart-drawer').classList.toggle('hidden', !op); }
+        
+        function proceedToCheckout() { 
+            if(cart.length === 0) return showToast('Adicione produtos.', 'error'); 
+            toggleCartDrawer(false); 
+            document.getElementById('checkout-step-1').classList.remove('hidden'); 
+            document.getElementById('checkout-step-2').classList.add('hidden'); 
+            document.getElementById('checkout-modal').classList.remove('hidden'); 
+            updateCheckoutSummary();
+        }
+
+        function closeCheckoutModal() { 
+            document.getElementById('checkout-modal').classList.add('hidden'); 
+            if (autoPayInterval) clearInterval(autoPayInterval);
+        }
+        function backToStep1() { 
+            document.getElementById('checkout-step-2').classList.add('hidden'); 
+            document.getElementById('checkout-step-1').classList.remove('hidden'); 
+            if (autoPayInterval) clearInterval(autoPayInterval);
+        }
+
+        function updateCheckoutSummary() {
+            const totals = calculateOrderTotals();
+            document.getElementById('shipping-price-text').innerText = `R$ ${formatMoney(totals.shipping)}`;
+        }
 
         async function startAutomaticPayment(method) {
-            const n = document.getElementById('cust-name').value.trim(), w = formatWhatsappNumber(document.getElementById('cust-whatsapp').value);
-            if (!n || !w) return showToast('Preencha seu Nome e WhatsApp', 'error');
-            const totalVal = cart.reduce((s, i) => s + (i.price * i.qty), 0);
-            const orderData = { client: { name: n, phone: w }, items: cart, total: totalVal, status: 'aguardando', date: new Date().toISOString() };
-            try { await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), orderData); } catch(e){}
-            
-            currentWhatsappOrderMsg = `*NOVO PEDIDO - ${storeSettings.storeName}*\nCliente: ${n}\nWhatsApp: ${w}\nForma: ${method.toUpperCase()}\nTotal: R$ ${formatMoney(totalVal)}`;
-            document.getElementById('checkout-step-1').classList.add('hidden');
-            document.getElementById('checkout-step-2').classList.remove('hidden');
-            document.getElementById('pix-exact-value').innerText = `R$ ${formatMoney(totalVal)}`;
+            const n = document.getElementById('cust-name').value.trim(); 
+            const rawW = document.getElementById('cust-whatsapp').value.trim(); 
+            const c = document.getElementById('cust-cep').value.trim();
+            if(!n || !rawW || !c) return showToast("Preencha Nome, WhatsApp e CEP.", "error");
 
-            if (storeSettings.pixKey) {
-                const emv = "00020126580014BR.GOV.BCB.PIX0136" + storeSettings.pixKey + "5204000053039865404" + totalVal.toFixed(2) + "5802BR5913" + storeSettings.storeName + "6009SAO PAULO62070503***6304";
-                document.getElementById('pix-emv-input').value = emv;
-                document.getElementById('dynamic-qrcode').innerHTML = '';
-                new QRCode(document.getElementById('dynamic-qrcode'), { text: emv, width: 120, height: 120 });
+            const w = formatWhatsappNumber(rawW);
+            const ad = document.getElementById('cust-address').value + ", N: " + document.getElementById('cust-number').value;
+            const totals = calculateOrderTotals();
+            
+            let cst = 0; 
+            let items = [];
+            for (const i of cart) { 
+                cst += (i.costPrice || 0) * i.qty; 
+                items.push({ id: i.id, name: i.name, qty: i.qty, price: i.activePrice });
             }
+
+            const storeTitle = storeSettings.storeName || 'FÊNIX IMPORTS';
+            const extRef = "FENIX_" + Date.now();
+
+            const orderData = { 
+                externalRef: extRef,
+                paymentMethod: method,
+                client: { name: n, phone: w, address: ad }, 
+                items, 
+                shippingType,
+                financials: { subtotal: totals.subtotal, shipping: totals.shipping, total: totals.total, estimatedProfit: (totals.subtotal - cst) }, 
+                status: 'aguardando', 
+                date: new Date().toISOString() 
+            };
+
+            playSaleBeep();
+            sendNativeNotification(`🔔 NOVO PEDIDO (${method.toUpperCase()}): R$ ${formatMoney(totals.total)}`, `Cliente: ${n}`);
+
+            try {
+                const docRef = await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), orderData);
+                activeOrderId = docRef.id;
+            } catch(e) {}
+
+            const methodLabel = method === 'card' ? 'Cartão de Crédito (Mercado Pago)' : 'PIX Imediato';
+            currentWhatsappOrderMsg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n💳 *Pagamento:* ${methodLabel}\n🚚 *Envio:* ${shippingType}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(totals.total)}`;
+
+            document.getElementById('pix-exact-value').innerText = `R$ ${formatMoney(totals.total)}`;
+            document.getElementById('checkout-step-1').classList.add('hidden'); 
+            document.getElementById('checkout-step-2').classList.remove('hidden');
+
+            const mpToken = (storeSettings.mpAccessToken || '').trim();
+
+            if (method === 'card') {
+                document.getElementById('pix-payment-box').classList.add('hidden');
+                document.getElementById('card-payment-box').classList.remove('hidden');
+
+                if (mpToken) {
+                    try {
+                        const prefRes = await fetch('https://api.mercadopago.com/checkout/preferences', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${mpToken}`
+                            },
+                            body: JSON.stringify({
+                                items: [
+                                    ...items.map(i => ({ title: i.name, quantity: Number(i.qty), currency_id: 'BRL', unit_price: Number(i.price) })),
+                                    ...(totals.shipping > 0 ? [{ title: 'Frete Expresso', quantity: 1, currency_id: 'BRL', unit_price: Number(totals.shipping) }] : [])
+                                ],
+                                payer: { name: n },
+                                external_reference: extRef,
+                                back_urls: { success: window.location.origin, pending: window.location.origin, failure: window.location.origin },
+                                auto_return: "approved"
+                            })
+                        });
+                        const prefData = await prefRes.json();
+                        if (prefData.init_point) {
+                            document.getElementById('mp-checkout-link').href = prefData.init_point;
+                            window.open(prefData.init_point, '_blank');
+                            startMercadoPagoAutoPoller(extRef, activeOrderId);
+                            return;
+                        }
+                    } catch (err) {}
+                }
+                const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
+                document.getElementById('mp-checkout-link').href = `https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(currentWhatsappOrderMsg + "\n\n👉 *Solicito o Link do Mercado Pago para Cartão!*")}`;
+            } else {
+                document.getElementById('card-payment-box').classList.add('hidden');
+                document.getElementById('pix-payment-box').classList.remove('hidden');
+
+                if (storeSettings.pixKey) {
+                    currentPixPayload = generatePixEMV(storeSettings.pixKey, totals.total, storeSettings.pixName, storeSettings.pixCity);
+                    document.getElementById('pix-emv-input').value = currentPixPayload;
+                    document.getElementById('dynamic-qrcode').innerHTML = '';
+                    new QRCode(document.getElementById('dynamic-qrcode'), { text: currentPixPayload, width: 140, height: 140, colorDark: "#000000", colorLight: "#ffffff" });
+                }
+
+                if (mpToken) startMercadoPagoAutoPoller(extRef, activeOrderId);
+            }
+        }
+        window.startAutomaticPayment = startAutomaticPayment;
+
+        function startMercadoPagoAutoPoller(extRef, orderDocId) {
+            if (autoPayInterval) clearInterval(autoPayInterval);
+            const mpToken = (storeSettings.mpAccessToken || '').trim();
+            if (!mpToken || !orderDocId) return;
+
+            autoPayInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`https://api.mercadopago.com/v1/payments/search?external_reference=${extRef}`, {
+                        headers: { 'Authorization': `Bearer ${mpToken}` }
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        const approvedPayment = (data.results || []).find(p => p.status === 'approved');
+                        if (approvedPayment) {
+                            clearInterval(autoPayInterval);
+                            await window.updateOrderStatus(orderDocId, 'pago');
+                            playSaleBeep();
+                            document.getElementById('auto-status-banner').className = "bg-emerald-500/20 border border-emerald-500 p-3 rounded-xl text-center";
+                            document.getElementById('auto-status-banner').innerHTML = `<span class="text-xs font-black text-emerald-400"><i class="fa-solid fa-circle-check"></i> PAGAMENTO APROVADO AUTOMATICAMENTE!</span>`;
+                            cart = [];
+                            updateCartUI();
+                        }
+                    }
+                } catch (e) {}
+            }, 5000);
         }
 
         function confirmOrderWhatsapp() {
-            window.open(`https://wa.me/${formatWhatsappNumber(storeSettings.whatsappSales)}?text=${encodeURIComponent(currentWhatsappOrderMsg)}`, '_blank');
-            cart = []; updateCartUI(); closeCheckoutModal(); showToast('Pedido enviado!', 'success');
+            const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
+            window.open(`https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(currentWhatsappOrderMsg)}`, '_blank');
+            cart = [];
+            updateCartUI();
+            closeCheckoutModal();
+            showToast('Pedido enviado!', 'success');
+        }
+        window.confirmOrderWhatsapp = confirmOrderWhatsapp;
+
+        // Busca Inteligente tolerante a siglas curtas (ex: "Tg")
+        function findMatchingProductsSmart(userQuery) {
+            const cleanQ = userQuery.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+            if (!cleanQ) return [];
+            const stopWords = ['tem', 'qual', 'valor', 'preco', 'quanto', 'custa', 'quero', 'comprar', 'como', 'funciona', 'para', 'que', 'serve', 'vcs', 'voces'];
+            const tokens = cleanQ.split(/\s+/).filter(w => w.length >= 1 && !stopWords.includes(w));
+
+            return products.filter(p => {
+                const pName = (p.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const pCat = (p.category || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                if (pName.includes(cleanQ) || pCat.includes(cleanQ)) return true;
+                return tokens.some(tk => pName.includes(tk) || pCat.includes(tk));
+            });
         }
 
-        function copyPixEMV() {
-            const i = document.getElementById('pix-emv-input'); i.select(); navigator.clipboard.writeText(i.value); showToast('Pix Copiado!', 'success');
+        async function askRealOnlineAI(systemPrompt, userPrompt) {
+            try {
+                const res = await fetch('https://text.pollinations.ai/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: userPrompt }
+                        ],
+                        model: 'openai',
+                        private: true
+                    })
+                });
+                if (res.ok) {
+                    const text = await res.text();
+                    if (text && text.trim().length > 3) return text.trim();
+                }
+            } catch (e) {}
+            return null;
         }
 
-        // Admin & Login
+        function toggleAIChat() { document.getElementById('ai-chat-window').classList.toggle('hidden'); }
+        window.toggleAIChat = toggleAIChat;
+
+        function typeWriterEffect(text, containerElement) {
+            const bubble = document.createElement('div');
+            bubble.className = "chat-bubble chat-bot typing-cursor";
+            containerElement.appendChild(bubble);
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    bubble.innerHTML = text.substring(0, i + 1).replace(/\n/g, '<br>');
+                    i++;
+                    containerElement.scrollTop = containerElement.scrollHeight;
+                    setTimeout(type, 10);
+                } else {
+                    bubble.classList.remove('typing-cursor');
+                }
+            }
+            type();
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input'); 
+            const msg = input.value.trim(); 
+            if(!msg) return;
+            
+            const chatBody = document.getElementById('chat-messages');
+            chatBody.innerHTML += `<div class="chat-bubble chat-user">${msg}</div>`;
+            input.value = ''; 
+            chatBody.scrollTop = chatBody.scrollHeight;
+            
+            const matchedProducts = findMatchingProductsSmart(msg);
+            const catalogContext = (matchedProducts.length > 0 ? matchedProducts : products.slice(0, 15))
+                .map(p => `${p.name} - R$${formatMoney(p.promoPrice || p.price)}`).join(' | ');
+
+            const systemPrompt = `Você é o consultor especialista da loja ${storeSettings.storeName || 'Fênix Imports'}. Seja direto e prestativo em português. Aceitamos PIX e Cartão até 12x (Mercado Pago). Catálogo encontrado: ${catalogContext}`;
+
+            const typingId = "typing-" + Date.now();
+            chatBody.innerHTML += `<div id="${typingId}" class="text-xs text-zinc-400 italic mt-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Buscando...</div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            let aiReply = await askRealOnlineAI(systemPrompt, msg);
+            document.getElementById(typingId)?.remove();
+
+            if (!aiReply) {
+                aiReply = matchedProducts.length > 0 ? `Encontrei ${matchedProducts.length} opção(ões):` : `Temos diversos itens de alta performance com Pix ou Cartão em até 12x!`;
+            }
+
+            const botBubble = document.createElement('div');
+            botBubble.className = "chat-bubble chat-bot";
+            botBubble.innerHTML = aiReply.replace(/\*/g, '').replace(/\n/g, '<br>');
+
+            if (matchedProducts.length > 0) {
+                let cardsHtml = `<div class="mt-2.5 space-y-2 border-t border-gold/20 pt-2">`;
+                matchedProducts.slice(0, 3).forEach(p => {
+                    const pr = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+                    cardsHtml += `
+                        <div class="bg-zinc-950/90 p-2 rounded-xl border border-zinc-800 flex items-center justify-between gap-2">
+                            <div class="min-w-0">
+                                <div class="text-[11px] font-extrabold text-white truncate">${p.name}</div>
+                                <div class="text-[11px] font-black text-gold">R$ ${formatMoney(pr)}</div>
+                            </div>
+                            <button onclick="addToCart('${p.id}')" class="gold-btn-gradient px-2.5 py-1 rounded-lg text-[10px] font-black shrink-0 cursor-pointer">+ Comprar</button>
+                        </div>`;
+                });
+                cardsHtml += `</div>`;
+                botBubble.innerHTML += cardsHtml;
+            }
+
+            chatBody.appendChild(botBubble);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        window.sendChatMessage = sendChatMessage;
+
+        async function runAiStockAudit() {
+            const resultEl = document.getElementById('ai-audit-result');
+            resultEl.classList.remove('hidden');
+            resultEl.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Analisando estoque...';
+            const localReport = generateLocalStockAuditReport();
+            resultEl.innerHTML = `<div class="mb-2 flex items-center justify-between border-b border-zinc-800 pb-2"><b class="text-gold text-xs">Diagnóstico Fênix Mega IA</b></div>${localReport}`;
+            renderStockAlertsTable();
+        }
+        window.runAiStockAudit = runAiStockAudit;
+
+        function renderStockAlertsTable() {
+            const tb = document.getElementById('admin-stock-alerts-table');
+            if(!tb) return;
+            tb.innerHTML = '';
+            const lowStock = products.filter(p => (p.stock !== undefined ? Number(p.stock) : 10) <= 5);
+            const listToShow = lowStock.length > 0 ? lowStock : products.slice(0, 5);
+            listToShow.forEach(p => {
+                const st = p.stock !== undefined ? Number(p.stock) : 10;
+                const profit = Number(p.promoPrice || p.price || 0) - Number(p.costPrice || 0);
+                tb.innerHTML += `
+                    <tr class="border-b border-zinc-800/60">
+                        <td class="p-3 font-bold text-white">${p.name}</td>
+                        <td class="p-3">${st} un</td>
+                        <td class="p-3 text-gold font-bold">+ R$ ${formatMoney(profit)}</td>
+                        <td class="p-3 text-emerald-400 font-bold">Saudável</td>
+                    </tr>`;
+            });
+        }
+        window.renderStockAlertsTable = renderStockAlertsTable;
+
+        function openJsonImportModal() { document.getElementById('json-import-modal').classList.remove('hidden'); }
+        function closeJsonImportModal() { document.getElementById('json-import-modal').classList.add('hidden'); }
+        window.openJsonImportModal = openJsonImportModal;
+        window.closeJsonImportModal = closeJsonImportModal;
+
+        function exportCatalogJson() {
+            const cleanExport = products.map(({ id, ...rest }) => rest);
+            const jsonStr = JSON.stringify(cleanExport, null, 2);
+            document.getElementById('json-text-area').value = jsonStr;
+            navigator.clipboard.writeText(jsonStr).catch(() => {});
+            showToast("Backup exportado!", "success");
+        }
+        window.exportCatalogJson = exportCatalogJson;
+
+        async function processJsonImport() {
+            const textAreaVal = document.getElementById('json-text-area').value.trim();
+            const fileInput = document.getElementById('json-file-input');
+            const markup = parseFloat(document.getElementById('json-default-markup').value) || 1.8;
+            const defaultStock = parseInt(document.getElementById('json-default-stock').value) || 10;
+
+            let jsonContent = fileInput.files.length > 0 ? await fileInput.files[0].text() : textAreaVal;
+            if (!jsonContent) return showToast("Cole o JSON.", "error");
+
+            try {
+                const parsed = JSON.parse(jsonContent);
+                const itemsToImport = Array.isArray(parsed) ? parsed : [parsed];
+                for (const item of itemsToImport) {
+                    const costPrice = parseFloat(item.costPrice || item.custo || 0);
+                    const sellingPrice = parseFloat(item.price || item.preco || (costPrice > 0 ? costPrice * markup : 0));
+                    await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), {
+                        name: item.name || item.nome || "Produto",
+                        category: item.category || item.categoria || "Outros",
+                        price: sellingPrice,
+                        costPrice: costPrice,
+                        promoPrice: item.promoPrice ? parseFloat(item.promoPrice) : null,
+                        stock: item.stock !== undefined ? parseInt(item.stock) : defaultStock,
+                        availability: item.availability || "pronta_entrega",
+                        deliveryDays: item.deliveryDays || "",
+                        description: item.description || item.descricao || "",
+                        imageUrl: item.imageUrl || item.foto || "",
+                        isFeatured: !!item.isFeatured
+                    });
+                }
+                showToast("Produtos importados!", "success");
+                closeJsonImportModal();
+                loadProductsFromFirebase();
+            } catch (err) {
+                showToast("Erro no JSON.", "error");
+            }
+        }
+        window.processJsonImport = processJsonImport;
+
+        function openSettingsModal() {
+            document.getElementById('set-store-name').value = storeSettings.storeName || 'FÊNIX IMPORTS';
+            document.getElementById('set-store-logo').value = storeSettings.logoUrl || '';
+            document.getElementById('set-mp-token').value = storeSettings.mpAccessToken || '';
+            document.getElementById('set-removebg').value = storeSettings.removeBgKey || '';
+            document.getElementById('set-ship-express').value = storeSettings.shippingExpress || 25;
+            document.getElementById('set-pix').value = storeSettings.pixKey || '';
+            document.getElementById('set-pix-name').value = storeSettings.pixName || '';
+            document.getElementById('set-pix-city').value = storeSettings.pixCity || '';
+            document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || '';
+            document.getElementById('set-gemini').value = storeSettings.geminiKey || '';
+            document.getElementById('settings-modal').classList.remove('hidden');
+        }
+        window.openSettingsModal = openSettingsModal;
+
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
+        window.closeSettingsModal = closeSettingsModal;
+
+        async function saveSettings(e) {
+            e.preventDefault();
+            storeSettings = {
+                ...storeSettings,
+                storeName: document.getElementById('set-store-name').value.trim(),
+                logoUrl: document.getElementById('set-store-logo').value.trim(),
+                mpAccessToken: document.getElementById('set-mp-token').value.trim(),
+                removeBgKey: document.getElementById('set-removebg').value.trim(),
+                shippingExpress: parseFloat(document.getElementById('set-ship-express').value),
+                pixKey: document.getElementById('set-pix').value.trim(),
+                pixName: document.getElementById('set-pix-name').value.trim(),
+                pixCity: document.getElementById('set-pix-city').value.trim(),
+                whatsappSales: formatWhatsappNumber(document.getElementById('set-wpp-sales').value.trim()),
+                geminiKey: document.getElementById('set-gemini').value.trim()
+            };
+            localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
+            try { await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); } catch(err) {}
+            showToast('Configurações salvas!', 'success');
+            applyStoreBranding();
+            closeSettingsModal();
+        }
+
         function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
         function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+        window.openLoginModal = openLoginModal;
+        window.closeLoginModal = closeLoginModal;
+
         async function handleAdminLogin(e) {
             e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-password').value;
             try {
-                await window.firebaseFns.signInWithEmailAndPassword(window.auth, document.getElementById('login-email').value.trim(), document.getElementById('login-password').value);
+                await window.firebaseFns.signInWithEmailAndPassword(window.auth, email, pass);
                 showToast('Acesso concedido!', 'success');
                 closeLoginModal();
                 switchTab('admin');
-            } catch(err) { showToast('Credenciais incorretas.', 'error'); }
-        }
-        async function logoutAdmin() { await window.firebaseFns.signOut(window.auth); switchTab('catalog'); }
-
-        function updateAuthUI() {
-            const logged = !!currentUser;
-            document.getElementById('nav-login').classList.toggle('hidden', logged);
-            document.getElementById('nav-admin').classList.toggle('hidden', !logged);
-            document.getElementById('user-status-container').classList.toggle('hidden', !logged);
-            if (logged) listenOrdersRealtime();
-        }
-
-        function listenOrdersRealtime() {
-            window.firebaseFns.onSnapshot(window.firebaseFns.collection(window.db, "orders"), snap => {
-                orders = []; snap.forEach(d => orders.push({ id: d.id, ...d.data() }));
-                renderOrdersTable();
-            });
-        }
-
-        function renderOrdersTable() {
-            const tb = document.getElementById('admin-orders-table');
-            tb.innerHTML = '';
-            orders.forEach(o => {
-                tb.innerHTML += `<tr class="border-b border-zinc-200 dark:border-zinc-800"><td class="p-2">${o.client?.name}</td><td class="p-2">R$ ${formatMoney(o.total)}</td><td class="p-2 uppercase text-gold font-bold">${o.status}</td><td class="p-2 text-right"><button onclick="updateOrderStatus('${o.id}', 'pago')" class="bg-green-600 text-white px-2 py-1 rounded">Aprovar</button></td></tr>`;
-            });
-        }
-
-        async function updateOrderStatus(id, st) {
-            await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { status: st });
-            showToast('Pedido atualizado!', 'success');
-        }
-
-        function switchAdminSubTab(sub) {
-            ['products', 'orders', 'crm', 'analytics'].forEach(s => {
-                document.getElementById(`admin-subtab-${s}`)?.classList.toggle('hidden', s !== sub);
-            });
-        }
-
-        function openProductModal() { document.getElementById('product-modal').classList.remove('hidden'); }
-        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
-        async function saveProduct(e) {
-            e.preventDefault();
-            const data = {
-                name: document.getElementById('prod-name').value.trim(),
-                price: parseFloat(document.getElementById('prod-price').value),
-                costPrice: parseFloat(document.getElementById('prod-cost-price').value),
-                stock: parseInt(document.getElementById('prod-stock').value),
-                category: document.getElementById('prod-category').value,
-                description: document.getElementById('prod-desc').value.trim(),
-                imageUrl: document.getElementById('prod-imageUrl').value
-            };
-            await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), data);
-            showToast('Produto Salvo!', 'success');
-            closeProductModal();
-            loadProductsFromFirebase();
-        }
-
-        function openSettingsModal() { document.getElementById('settings-modal').classList.remove('hidden'); }
-        function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
-        function openTrackingModal() { document.getElementById('tracking-modal').classList.remove('hidden'); }
-        function closeTrackingModal() { document.getElementById('tracking-modal').classList.add('hidden'); }
-        function openJsonImportModal() { document.getElementById('json-import-modal').classList.remove('hidden'); }
-        function closeJsonImportModal() { document.getElementById('json-import-modal').classList.add('hidden'); }
-
-        function toggleAIChat() { document.getElementById('ai-chat-window').classList.toggle('hidden'); }
-        async function sendChatMessage() {
-            const input = document.getElementById('chat-input'), msg = input.value.trim(), box = document.getElementById('chat-messages');
-            if (!msg) return;
-            box.innerHTML += `<div class="chat-bubble chat-user">${msg}</div>`;
-            input.value = '';
-            const match = products.find(p => p.name.toLowerCase().includes(msg.toLowerCase()));
-            if (match) {
-                box.innerHTML += `<div class="chat-bubble chat-bot">Encontrei <b>${match.name}</b> por R$ ${formatMoney(match.price)}!<br><button onclick="addToCart('${match.id}')" class="gold-btn-gradient px-2 py-1 rounded mt-1 font-bold">+ Adicionar</button></div>`;
-            } else {
-                box.innerHTML += `<div class="chat-bubble chat-bot">Temos diversos peptídeos e soluções com frete expresso. Como posso te orientar?</div>`;
+                requestPushPermission();
+            } catch(err) {
+                showToast('Credenciais incorretas.', 'error');
             }
-            box.scrollTop = box.scrollHeight;
         }
 
-        function uploadImageToGallery(event) {
-            const file = event.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = e => document.getElementById('prod-imageUrl').value = e.target.result;
-            reader.readAsDataURL(file);
+        async function logoutAdmin() {
+            try {
+                await window.firebaseFns.signOut(window.auth);
+                showToast('Sessão encerrada.', 'info');
+                switchTab('catalog');
+            } catch(err) {}
         }
+        window.logoutAdmin = logoutAdmin;
     </script>
 </body>
 </html>
