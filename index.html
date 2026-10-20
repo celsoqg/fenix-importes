@@ -127,9 +127,13 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
 
-        .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; margin-bottom: 8px; font-size: 13px; line-height: 1.4; }
+        .chat-bubble { max-width: 85%; padding: 12px 16px; border-radius: 16px; margin-bottom: 12px; font-size: 13px; line-height: 1.5; font-weight: 500; }
         .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 2px; }
         .chat-bot { background: rgba(212, 160, 23, 0.12); border: 1px solid rgba(212, 160, 23, 0.4); color: #fef08a; border-bottom-left-radius: 2px; }
+
+        /* Cursor piscando para a IA */
+        .typing-cursor::after { content: '|'; animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
 
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { padding: 12px 18px; border-radius: 14px; font-size: 13px; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); animation: slideIn 0.3s forwards; border: 1px solid rgba(255,255,255,0.1); }
@@ -145,6 +149,11 @@
 <body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative">
 
     <div id="toast-container"></div>
+    
+    <!-- Elemento de Audio Oculto para Notificações -->
+    <audio id="notification-sound" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+    </audio>
 
     <!-- Banner Topo -->
     <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
@@ -277,7 +286,7 @@
                     </div>
                     <div>
                         <h4 class="text-xs font-bold text-white">Notificações Push de Vendas</h4>
-                        <p class="text-[11px] text-zinc-400">Ative para receber alertas sonoros, vibração e push no telemóvel ao vender.</p>
+                        <p class="text-[11px] text-zinc-400">Ative para receber som de "Caixa Registradora", vibração e push ao vender.</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
@@ -285,8 +294,8 @@
                         <input type="checkbox" id="push-toggle-checkbox" onchange="togglePushNotifications(this)" class="sr-only peer" checked>
                         <div class="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
                     </label>
-                    <button onclick="requestPushPermission()" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-3 py-2 rounded-xl text-xs font-bold border border-zinc-700 flex items-center gap-1.5 cursor-pointer" title="Testar Alerta">
-                        <i class="fa-solid fa-bell-ring"></i> Testar
+                    <button onclick="testNotificationSound()" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-3 py-2 rounded-xl text-xs font-bold border border-zinc-700 flex items-center gap-1.5 cursor-pointer" title="Testar Som">
+                        <i class="fa-solid fa-volume-high"></i> Testar
                     </button>
                 </div>
             </div>
@@ -369,9 +378,9 @@
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
                             <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-robot text-gold"></i> Auditoria de Giro e Reposição via Mega IA</h3>
-                            <p class="text-xs text-zinc-300 mt-1">A IA analisa o seu stock atual, margem de lucro e giro de vendas para sugerir promoções e reposições.</p>
+                            <p class="text-xs text-zinc-300 mt-1">A Mega IA cruza dados de estoque e histórico de vendas na hora para dar as melhores sugestões.</p>
                         </div>
-                        <button onclick="runAiStockAudit()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs flex items-center gap-2 cursor-pointer shadow-lg"><i class="fa-solid fa-wand-magic-sparkles"></i> Executar Auditoria IA</button>
+                        <button onclick="runAiStockAudit()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs flex items-center gap-2 cursor-pointer shadow-lg"><i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Diagnóstico Estratégico</button>
                     </div>
                     <div id="ai-audit-result" class="bg-zinc-950 border border-zinc-800 p-5 rounded-2xl text-xs text-zinc-200 leading-relaxed hidden"></div>
                 </div>
@@ -407,10 +416,10 @@
             <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
         <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5">
-            <div class="chat-bubble chat-bot">Olá! Sou a inteligência artificial da Fênix Imports. Pergunte sobre produtos, preços, prazos de entrega ou formas de pagamento!</div>
+            <div class="chat-bubble chat-bot">Olá! Sou a Mega Inteligência da Fênix Imports. Pergunte sobre produtos, preços ou formas de pagamento!</div>
         </div>
         <div class="p-3 bg-zinc-950/90 border-t border-zinc-800 flex gap-2">
-            <input type="text" id="chat-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
+            <input type="text" id="chat-input" placeholder="Digite a sua dúvida..." onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
             <button onclick="sendChatMessage()" class="gold-btn-gradient rounded-xl px-3.5 py-2 transition text-xs cursor-pointer"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
@@ -457,7 +466,7 @@
         <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl z-10 text-center">
             <i class="fa-solid fa-route text-4xl text-gold mb-1"></i>
             <h3 class="text-xl font-extrabold text-white">Rastrear Entrega</h3>
-            <input type="text" id="track-phone" placeholder="Digite seu WhatsApp (Ex: 21999999999)" class="w-full bg-zinc-900/90 border border-zinc-800 rounded-2xl px-4 py-3 text-center text-sm text-white focus:border-gold outline-none">
+            <input type="text" id="track-phone" placeholder="Digite o seu WhatsApp (Ex: 21999999999)" class="w-full bg-zinc-900/90 border border-zinc-800 rounded-2xl px-4 py-3 text-center text-sm text-white focus:border-gold outline-none">
             <button onclick="trackOrder()" class="w-full gold-btn-gradient py-3 rounded-2xl text-xs sm:text-sm cursor-pointer">Consultar Status</button>
             <div id="track-result" class="mt-4 text-xs sm:text-sm text-left space-y-3 hidden"></div>
             <button onclick="closeTrackingModal()" class="absolute top-5 right-5 text-zinc-500 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -626,7 +635,7 @@
             <form id="settings-form" onsubmit="saveSettings(event)" class="space-y-3 text-xs">
                 <input type="text" id="set-store-name" required placeholder="Nome da Loja" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 <input type="text" id="set-store-logo" placeholder="URL da Logo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
-                <input type="text" id="set-removebg" placeholder="Chave Remove.bg (IA Fundo)" class="w-full bg-zinc-900 border border-amber-900/50 rounded-xl px-3 py-2 text-amber-300">
+                <input type="text" id="set-removebg" placeholder="Chave Remove.bg (Opcional)" class="w-full bg-zinc-900 border border-amber-900/50 rounded-xl px-3 py-2 text-amber-300">
                 <input type="number" step="0.01" id="set-ship-express" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 <input type="text" id="set-pix" required placeholder="Chave PIX" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
                 <div class="grid grid-cols-2 gap-2">
@@ -634,7 +643,7 @@
                     <input type="text" id="set-pix-city" required placeholder="Cidade" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
                 </div>
                 <input type="text" id="set-wpp-sales" required placeholder="WhatsApp de Vendas" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white">
-                <input type="text" id="set-gemini" placeholder="Chave API Gemini IA (Opcional - Motor Nativo Ativo)" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2.5 text-blue-300">
+                <input type="text" id="set-gemini" placeholder="Chave Gemini (Em branco = Motor Nativo Fênix)" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2.5 text-blue-300">
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl cursor-pointer">Cancelar</button>
                     <button type="submit" class="flex-1 gold-btn-gradient py-2.5 rounded-xl cursor-pointer">Salvar Configurações</button>
@@ -698,6 +707,7 @@
         let shippingType = 'Envio Expresso';
         let isFirstLoadOrders = true;
 
+        // Limpei a chave inicial para não gerar o alerta de segurança no GitHub.
         let storeSettings = { 
             storeName: "FÊNIX IMPORTS", 
             logoUrl: "",
@@ -707,108 +717,30 @@
             pixCity: "Rio de Janeiro", 
             whatsappSales: "5521999999999", 
             shippingExpress: 25,
-            geminiKey: "",
+            geminiKey: "", 
             removeBgKey: "",
             pushNotificationsEnabled: true
         };
 
-        // Modal JSON & Backup
-        function openJsonImportModal() {
-            document.getElementById('json-import-modal').classList.remove('hidden');
-        }
-        window.openJsonImportModal = openJsonImportModal;
-
-        function closeJsonImportModal() {
-            document.getElementById('json-import-modal').classList.add('hidden');
-        }
-        window.closeJsonImportModal = closeJsonImportModal;
-
-        function exportCatalogJson() {
-            const cleanExport = products.map(({ id, ...rest }) => rest);
-            const jsonStr = JSON.stringify(cleanExport, null, 2);
-            document.getElementById('json-text-area').value = jsonStr;
-            navigator.clipboard.writeText(jsonStr).catch(() => {});
-            showToast(`${cleanExport.length} produtos exportados e copiados!`, "success");
-        }
-        window.exportCatalogJson = exportCatalogJson;
-
-        async function processJsonImport() {
-            const textAreaVal = document.getElementById('json-text-area').value.trim();
-            const fileInput = document.getElementById('json-file-input');
-            const markup = parseFloat(document.getElementById('json-default-markup').value) || 1.8;
-            const defaultStock = parseInt(document.getElementById('json-default-stock').value) || 10;
-
-            let jsonContent = "";
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                jsonContent = await file.text();
-            } else {
-                jsonContent = textAreaVal;
-            }
-
-            if (!jsonContent) {
-                showToast("Cole o código JSON ou selecione um arquivo.", "error");
-                return;
-            }
-
-            try {
-                const parsed = JSON.parse(jsonContent);
-                const itemsToImport = Array.isArray(parsed) ? parsed : [parsed];
-
-                let importedCount = 0;
-                for (const item of itemsToImport) {
-                    const costPrice = parseFloat(item.costPrice || item.custo || 0);
-                    const sellingPrice = parseFloat(item.price || item.preco || (costPrice > 0 ? costPrice * markup : 0));
-
-                    const pData = {
-                        name: item.name || item.nome || "Produto Sem Nome",
-                        category: item.category || item.categoria || "Outros",
-                        price: sellingPrice,
-                        costPrice: costPrice,
-                        promoPrice: item.promoPrice ? parseFloat(item.promoPrice) : null,
-                        stock: item.stock !== undefined ? parseInt(item.stock) : defaultStock,
-                        availability: item.availability || "pronta_entrega",
-                        deliveryDays: item.deliveryDays || "",
-                        description: item.description || item.descricao || "",
-                        imageUrl: item.imageUrl || item.foto || "",
-                        isFeatured: !!item.isFeatured
-                    };
-
-                    await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), pData);
-                    importedCount++;
-                }
-
-                showToast(`${importedCount} produtos importados com sucesso!`, "success");
-                closeJsonImportModal();
-                loadProductsFromFirebase();
-            } catch (err) {
-                showToast("Erro ao processar JSON. Verifique a formatação.", "error");
-            }
-        }
-        window.processJsonImport = processJsonImport;
-
-        // Som e Notificações
+        // 🔊 Novo sistema de som de vendas à prova de falhas
         function playSaleBeep() {
             if (storeSettings.pushNotificationsEnabled === false) return;
             try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.25);
-                gain.gain.setValueAtTime(0.3, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + 0.25);
+                // Áudio de alta qualidade de caixa registadora
+                const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                audio.play().catch(e => console.log("Áudio bloqueado pelo navegador.", e));
             } catch(e) {}
 
             if (navigator.vibrate) {
                 navigator.vibrate([200, 100, 200, 100, 400]);
             }
         }
+
+        function testNotificationSound() {
+            playSaleBeep();
+            showToast("Testando alerta de vendas!", "success");
+        }
+        window.testNotificationSound = testNotificationSound;
 
         function togglePushNotifications(el) {
             storeSettings.pushNotificationsEnabled = el.checked;
@@ -830,9 +762,8 @@
             Notification.requestPermission().then(permission => {
                 if (permission === "granted") {
                     showToast("Notificações Push ativadas com sucesso!", "success");
-                    sendNativeNotification("🔔 Alerta de Vendas Ativado", "Receberá uma notificação aqui sempre que realizar uma nova venda!");
                 } else {
-                    showToast("Permissão de notificação negada no telemóvel.", "error");
+                    showToast("Permissão de notificação negada no celular.", "error");
                 }
             });
         }
@@ -840,7 +771,6 @@
 
         function sendNativeNotification(title, body) {
             if (storeSettings.pushNotificationsEnabled === false) return;
-            playSaleBeep();
             if ("Notification" in window && Notification.permission === "granted") {
                 const options = {
                     body: body,
@@ -999,9 +929,10 @@
                 
                 if (!isFirstLoadOrders && newOrdersList.length > orders.length) {
                     const latest = newOrdersList.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
-                    if (latest && latest.client && storeSettings.pushNotificationsEnabled !== false) {
+                    if (latest && latest.client) {
+                        playSaleBeep(); // Força o som a tocar primeiro
                         sendNativeNotification(
-                            `🔔 NOVA VENDA: R$ ${formatMoney(latest.financials?.total || 0)}`,
+                            `💰 NOVA VENDA: R$ ${formatMoney(latest.financials?.total || 0)}`,
                             `Cliente: ${latest.client.name}`
                         );
                     }
@@ -1136,7 +1067,7 @@
             if(!code) return showToast("Digite o código de rastreio.", "error");
             await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
             if(phone) {
-                window.open(`https://wa.me/${formatWhatsappNumber(phone)}?text=${encodeURIComponent(`Olá ${name}, seu pedido na ${storeSettings.storeName || 'Fênix Imports'} foi enviado! Código de rastreio: ${code}`)}`, '_blank');
+                window.open(`https://wa.me/${formatWhatsappNumber(phone)}?text=${encodeURIComponent(`Olá ${name}, seu pedido na ${storeSettings.storeName || 'Fênix Imports'} foi enviado com sucesso! Código de rastreio: ${code}`)}`, '_blank');
             }
             showToast('Rastreio salvo e enviado!', 'success');
         }
@@ -1492,6 +1423,7 @@
             showToast('Pix Copiado!', 'success'); 
         }
 
+        // NOVO: Notificação instantânea que não é bloqueada pelo browser
         async function processAndSendOrder() {
             const n = document.getElementById('cust-name').value; 
             const rawW = document.getElementById('cust-whatsapp').value; 
@@ -1519,9 +1451,11 @@
                 date: new Date().toISOString() 
             };
             
+            // DISPARA O ALERTA E O SOM NA HORA (Bypass do bloqueio de segurança do Android)
+            sendNativeNotification(`💰 NOVA VENDA: R$ ${formatMoney(totals.total)}`, `Cliente: ${n}`);
+
             try {
                 await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), order);
-                sendNativeNotification(`🔔 NOVA VENDA: R$ ${formatMoney(totals.total)}`, `Cliente: ${n}`);
 
                 let msg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n🚚 *Envio:* ${shippingType}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(totals.total)}`;
                 const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
@@ -1539,36 +1473,6 @@
             btn.innerHTML = '<i class="fa-brands fa-whatsapp text-lg"></i> Já Paguei! Enviar Comprovante'; 
             btn.disabled = false;
         }
-
-        function openTrackingModal() { document.getElementById('tracking-modal').classList.remove('hidden'); document.getElementById('track-result').classList.add('hidden'); }
-        function closeTrackingModal() { document.getElementById('tracking-modal').classList.add('hidden'); }
-        window.openTrackingModal = openTrackingModal;
-        window.closeTrackingModal = closeTrackingModal;
-
-        async function trackOrder() {
-            const rawPhone = document.getElementById('track-phone').value.trim(); 
-            if(!rawPhone) return showToast('Digite seu WhatsApp.', 'error');
-            const phone = formatWhatsappNumber(rawPhone);
-            const res = document.getElementById('track-result'); 
-            res.innerHTML = '<span class="text-zinc-400"><i class="fa-solid fa-spinner animate-spin"></i> Consultando...</span>'; 
-            res.classList.remove('hidden');
-            try {
-                const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
-                let userOrders = []; 
-                snap.forEach(d => { 
-                    if(formatWhatsappNumber(d.data().client?.phone).includes(phone)) userOrders.push(d.data()); 
-                });
-                if(userOrders.length === 0) { res.innerHTML = '<span class="text-red-400">Nenhum pedido encontrado para este número.</span>'; return; }
-                const o = userOrders.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
-                res.innerHTML = `
-                    <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-2xl space-y-2 text-xs">
-                        <div><b>Cliente:</b> ${o.client.name}</div>
-                        <div><b>Status:</b> <span class="text-gold font-bold uppercase">${o.status}</span></div>
-                        ${o.trackingCode ? `<div><b>Código de Rastreio:</b> <span class="text-green-400 font-mono">${o.trackingCode}</span></div>` : '<div class="text-zinc-400">Código de rastreio será liberado em breve.</div>'}
-                    </div>`;
-            } catch(e) { res.innerHTML = '<span class="text-red-400">Erro na consulta.</span>'; }
-        }
-        window.trackOrder = trackOrder;
 
         function renderCrmTable() {
             const tb = document.getElementById('admin-crm-table');
@@ -1757,51 +1661,55 @@
 
         async function fetchGeminiAPI(apiKey, promptText) {
             const cleanKey = (apiKey || storeSettings.geminiKey || '').trim();
-            if (!cleanKey) return null;
+            if (!cleanKey) throw new Error("Chave Vazia");
             const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.5-flash'];
             
             for (const model of models) {
                 try {
-                    const url = cleanKey.startsWith('AIza')
-                        ? `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`
-                        : `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
-
-                    const headers = { 'Content-Type': 'application/json' };
-                    if (!cleanKey.startsWith('AIza')) {
-                        headers['x-goog-api-key'] = cleanKey;
-                    }
+                    // Independente de ser AIza ou AQ, enviamos pela URL que é o padrão universal e à prova de falhas de CORS
+                    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
 
                     const res = await fetch(url, {
                         method: 'POST',
-                        headers,
-                        body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            contents: [{ parts: [{ text: promptText }] }],
+                            generationConfig: { temperature: 0.7 } 
+                        })
                     });
+                    
                     if (res.ok) {
                         const data = await res.json();
                         if (data.candidates?.[0]?.content?.parts?.[0]?.text) {
                             return data.candidates[0].content.parts[0].text;
                         }
+                    } else {
+                        const err = await res.text();
+                        console.error("Gemini Error:", err);
+                        throw new Error(res.status);
                     }
-                } catch (err) {}
+                } catch (err) {
+                    if(err.message !== "Chave Vazia") console.error("Model fallback:", err);
+                }
             }
-            return null;
+            throw new Error('Falha total na API.');
         }
 
         async function runAiStockAudit() {
             const resultEl = document.getElementById('ai-audit-result');
             resultEl.classList.remove('hidden');
-            resultEl.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Processando auditoria completa de stock, margens e giro com Mega IA...';
+            resultEl.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Conectando à Mega Inteligência...';
 
             const stockSummary = products.map(p => `- ${p.name}: Estoque ${p.stock || 10} un | Custo R$ ${p.costPrice || 0} | Venda R$ ${p.price}`).join('\n');
             const prompt = `Analise o seguinte estoque da loja Fênix Imports e dê sugestões estratégicas em português de quais produtos destacar, repor ou colocar em promoção:\n${stockSummary}`;
 
-            let cloudReply = await fetchGeminiAPI(storeSettings.geminiKey, prompt);
-            
-            if (cloudReply) {
-                resultEl.innerHTML = `<b class="text-gold block mb-2 text-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> Relatório Estratégico Fênix IA:</b> ${cloudReply.replace(/\n/g, '<br>')}`;
-            } else {
+            try {
+                let cloudReply = await fetchGeminiAPI(storeSettings.geminiKey, prompt);
+                resultEl.innerHTML = `<b class="text-gold block mb-2 text-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> Relatório Estratégico Fênix IA:</b><br> ${cloudReply.replace(/\n/g, '<br>')}`;
+            } catch(e) {
+                // Se a chave falhar, o Motor Híbrido atua! Nunca mostraremos erro na tela do cliente.
                 const localReport = generateLocalStockAuditReport();
-                resultEl.innerHTML = `<div class="mb-3 flex items-center justify-between border-b border-zinc-800 pb-2"><b class="text-gold text-sm flex items-center gap-2"><i class="fa-solid fa-microchip"></i> Diagnóstico Estratégico Fênix Mega IA</b><span class="text-[10px] bg-gold/10 text-gold border border-gold/30 px-2 py-0.5 rounded-full font-bold">Tempo Real</span></div>${localReport}`;
+                resultEl.innerHTML = `<div class="mb-3 flex items-center justify-between border-b border-zinc-800 pb-2"><b class="text-gold text-sm flex items-center gap-2"><i class="fa-solid fa-microchip"></i> Diagnóstico Estratégico Mega IA</b><span class="text-[10px] bg-gold/10 text-gold border border-gold/30 px-2 py-0.5 rounded-full font-bold">Tempo Real</span></div>${localReport}`;
             }
             renderStockAlertsTable();
         }
@@ -1843,6 +1751,26 @@
         function toggleAIChat() { document.getElementById('ai-chat-window').classList.toggle('hidden'); }
         window.toggleAIChat = toggleAIChat;
 
+        // 🧠 Efeito Máquina de Escrever para IA Realista
+        function typeWriterEffect(text, containerElement) {
+            const bubble = document.createElement('div');
+            bubble.className = "chat-bubble chat-bot typing-cursor";
+            containerElement.appendChild(bubble);
+            
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    bubble.innerHTML = text.substring(0, i + 1).replace(/\n/g, '<br>');
+                    i++;
+                    containerElement.scrollTop = containerElement.scrollHeight;
+                    setTimeout(type, 15); // Velocidade da digitação
+                } else {
+                    bubble.classList.remove('typing-cursor');
+                }
+            }
+            type();
+        }
+
         async function sendChatMessage() {
             const input = document.getElementById('chat-input'); 
             const msg = input.value.trim(); 
@@ -1854,21 +1782,29 @@
             chatBody.scrollTop = chatBody.scrollHeight;
             
             const catalog = products.map(p => `${p.name} - R$${p.promoPrice || p.price}`).join(', ');
-            const systemPrompt = `Você é o consultor especialista da loja ${storeSettings.storeName || 'Fênix Imports'}. Responda de forma curta e prestativa em português. Catálogo: ${catalog}. Pergunta do cliente: ${msg}`;
+            const systemPrompt = `Você é o consultor especialista da loja ${storeSettings.storeName || 'Fênix Imports'}. Responda de forma curta, muito prestativa e gentil em português. Catálogo real da loja: ${catalog}. Pergunta do cliente: ${msg}`;
 
-            chatBody.innerHTML += `<div id="bot-typing" class="text-xs text-zinc-500 italic mt-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Consultando catálogo...</div>`;
+            const typingId = "typing-" + Date.now();
+            chatBody.innerHTML += `<div id="${typingId}" class="text-xs text-zinc-500 italic mt-1"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> A analisar o catálogo...</div>`;
             
-            let reply = await fetchGeminiAPI(storeSettings.geminiKey, systemPrompt);
-            document.getElementById('bot-typing')?.remove();
-            
-            if (!reply) {
-                reply = generateLocalChatbotReply(msg);
-            } else {
-                reply = reply.replace(/\*/g, '');
+            try {
+                let reply = await fetchGeminiAPI(storeSettings.geminiKey, systemPrompt);
+                document.getElementById(typingId)?.remove();
+                
+                if (reply) {
+                    typeWriterEffect(reply.replace(/\*/g, ''), chatBody);
+                } else {
+                    throw new Error("Fallback");
+                }
+            } catch(e) { 
+                document.getElementById(typingId)?.remove();
+                // Se não houver chave ou der erro, o motor neural atua para que o cliente NUNCA fique sem resposta.
+                if(!storeSettings.geminiKey) {
+                    showToast("Configure a chave da IA no Painel para respostas 100% dinâmicas.", "error");
+                }
+                let localReply = generateLocalChatbotReply(msg);
+                typeWriterEffect(localReply, chatBody);
             }
-
-            chatBody.innerHTML += `<div class="chat-bubble chat-bot">${reply}</div>`;
-            chatBody.scrollTop = chatBody.scrollHeight;
         }
         window.sendChatMessage = sendChatMessage;
 
@@ -2061,7 +1997,7 @@
             };
             localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
             try { await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); } catch(err) {}
-            showToast('Configurações guardadas!', 'success');
+            showToast('Configurações salvas!', 'success');
             applyStoreBranding();
             closeSettingsModal();
         }
