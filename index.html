@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
@@ -110,7 +108,7 @@
 
         .gold-btn-gradient {
             background: linear-gradient(135deg, #fef08a 0%, #d4a017 50%, #b78103 100%);
-            color: #000;
+            color: #000 !important;
             font-weight: 800;
             box-shadow: 0 4px 20px rgba(212, 160, 23, 0.3);
             transition: all 0.3s ease;
@@ -123,7 +121,7 @@
 
         .mp-btn-gradient {
             background: linear-gradient(135deg, #009ee3 0%, #007eb5 100%);
-            color: #fff;
+            color: #fff !important;
             font-weight: 800;
             box-shadow: 0 4px 20px rgba(0, 158, 227, 0.35);
             transition: all 0.3s ease;
@@ -135,7 +133,7 @@
         }
 
         .glow-gold-lg {
-            box-shadow: 0 0 35px rgba(212, 160, 23, 0.2);
+            box-shadow: 0 0 35px rgba(212, 160, 23, 0.18);
         }
 
         ::-webkit-scrollbar { width: 5px; height: 5px; }
@@ -143,11 +141,9 @@
         ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; }
 
         .chat-bubble { max-width: 88%; padding: 12px 15px; border-radius: 16px; margin-bottom: 10px; font-size: 13px; line-height: 1.5; font-weight: 500; }
-        .chat-user { background: #27272a; color: #fff; margin-left: auto; border-bottom-right-radius: 2px; }
+        .chat-user { background: #27272a; color: #fff !important; margin-left: auto; border-bottom-right-radius: 2px; }
         .chat-bot { background: rgba(212, 160, 23, 0.12); border: 1px solid rgba(212, 160, 23, 0.4); color: #fef08a; border-bottom-left-radius: 2px; }
-
-        .typing-cursor::after { content: '|'; animation: blink 1s step-end infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        html:not(.dark) .chat-bot { color: #713f12; background: rgba(212, 160, 23, 0.18); }
 
         #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .toast { padding: 12px 18px; border-radius: 14px; font-size: 13px; font-weight: 700; color: white; display: flex; align-items: center; gap: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); animation: slideIn 0.3s forwards; border: 1px solid rgba(255,255,255,0.1); }
@@ -171,11 +167,11 @@
     <!-- Banner Topo -->
     <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
         <i class="fa-solid fa-bolt text-sm"></i> 
-        <span>PIX & CARTÃO EM ATÉ 12X (MERCADO PAGO) • ENVIO EXPRESSO BRASIL</span>
+        <span id="top-promo-banner-text">PIX IMEDIATO & CARTÃO EM ATÉ 12X (MERCADO PAGO) • ENVIO EXPRESSO BRASIL</span>
     </div>
 
     <!-- Header Glassmorphism -->
-    <header class="sticky top-0 z-50 glass-nav transition-all duration-300">
+    <header class="sticky top-0 z-40 glass-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
             <div class="flex items-center gap-3 cursor-pointer group" onclick="switchTab('catalog')">
@@ -235,19 +231,27 @@
                 <div class="absolute -right-20 -bottom-20 w-80 h-80 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="relative z-10 max-w-2xl space-y-4">
                     <div class="flex flex-wrap gap-2">
-                        <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-check"></i> Produtos Originais</span>
+                        <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-halved"></i> Produtos Originais</span>
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30"><i class="fa-solid fa-credit-card"></i> Pix & Cartão Mercado Pago</span>
                     </div>
                     <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
-                    <p class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Aprovação 100% automática via Pix ou Cartão de Crédito e envio expresso discreto para todo o Brasil.</p>
+                    <p class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Aprovação 100% automática via Pix ou Cartão de Crédito em até 12x e envio expresso discreto para todo o Brasil.</p>
                 </div>
             </div>
 
-            <!-- Filtros & Pesquisa -->
+            <!-- Filtros, Ordenação & Pesquisa -->
             <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 glass-card p-4 rounded-2xl">
-                <div class="relative w-full xl:w-96 shrink-0">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Pesquisar por nome, sigla (ex: TG) ou categoria..." class="w-full bg-zinc-900/90 border border-zinc-800 rounded-xl pl-11 pr-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none transition shadow-inner">
+                <div class="flex flex-col sm:flex-row gap-2 w-full xl:w-auto shrink-0">
+                    <div class="relative w-full sm:w-80">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
+                        <input type="text" id="search-input" oninput="filterProducts()" placeholder="Buscar nome, sigla (ex: TG) ou efeito..." class="w-full bg-zinc-900/90 border border-zinc-800 rounded-xl pl-11 pr-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none transition shadow-inner">
+                    </div>
+                    <select id="sort-select" onchange="filterProducts()" class="bg-zinc-900/90 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-zinc-300 focus:border-gold outline-none cursor-pointer">
+                        <option value="featured">⭐ Destaques Primeiro</option>
+                        <option value="price-asc">💰 Menor Preço</option>
+                        <option value="price-desc">💎 Maior Preço</option>
+                        <option value="name-asc">🔤 Nome (A-Z)</option>
+                    </select>
                 </div>
                 
                 <div class="flex items-center gap-2 overflow-x-auto w-full pb-1 xl:pb-0 scroll-smooth">
@@ -267,7 +271,7 @@
                     <h2 class="text-base sm:text-xl font-black text-white flex items-center gap-2">
                         <i class="fa-solid fa-fire text-amber-500 animate-bounce"></i> Destaques & Ofertas Imperdíveis
                     </h2>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/30">Oportunidade</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/30">Alta Procura</span>
                 </div>
                 <div id="featured-grid" class="flex gap-4 overflow-x-auto pb-4 scroll-smooth snap-x"></div>
             </div>
@@ -284,7 +288,7 @@
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 rounded-3xl">
                 <div>
                     <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-chart-line text-gold"></i> Painel de Gestão Fênix</h2>
-                    <p class="text-xs text-zinc-300 mt-1">Automação Mercado Pago (Pix & Cartão), controle de estoque e Mega IA Online.</p>
+                    <p class="text-xs text-zinc-300 mt-1">Automação Mercado Pago (Pix & Cartão), compressor de imagens, estoque e Mega IA Online.</p>
                 </div>
                 <div class="flex flex-wrap gap-2 w-full md:w-auto bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800">
                     <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 text-white transition cursor-pointer">Estoque</button>
@@ -324,9 +328,9 @@
                         <button onclick="deleteSelectedProducts()" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-trash-can"></i> Excluir Selecionados</button>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-file-code"></i> JSON</button>
+                        <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-file-code"></i> JSON / Backup</button>
                         <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-sliders"></i> Configs & Mercado Pago</button>
-                        <button onclick="openProductModal()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-plus"></i> Novo</button>
+                        <button onclick="openProductModal()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-plus"></i> Novo Produto</button>
                     </div>
                 </div>
                 <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
@@ -360,7 +364,7 @@
                 <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse text-xs sm:text-sm">
-                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Cliente/Envio</th><th class="p-4">Itens/Total</th><th class="p-4">Status & Rastreio</th><th class="p-4 text-right">Ação</th></tr></thead>
+                            <thead><tr class="border-b border-zinc-800 text-[10px] sm:text-xs text-zinc-400 uppercase bg-zinc-950/60"><th class="p-4">Cliente & Endereço</th><th class="p-4">Itens & Total</th><th class="p-4">Status & Rastreio</th><th class="p-4 text-right">Ação</th></tr></thead>
                             <tbody id="admin-orders-table" class="divide-y divide-zinc-800/60"></tbody>
                         </table>
                     </div>
@@ -375,7 +379,7 @@
                         <p class="text-xs text-zinc-300 mt-1">Lista consolidada dos seus compradores calculada automaticamente pelo histórico de pedidos.</p>
                     </div>
                     <button onclick="sendBulkWhatsappToAll()" class="bg-green-600 hover:bg-green-500 text-white font-black px-5 py-3 rounded-2xl text-xs flex items-center gap-2 shadow-lg transition shrink-0 cursor-pointer">
-                        <i class="fa-brands fa-whatsapp text-base"></i> Enviar para Todos no WhatsApp
+                        <i class="fa-brands fa-whatsapp text-base"></i> Enviar Oferta para Todos
                     </button>
                 </div>
                 <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
@@ -416,17 +420,17 @@
 
     <!-- Flutuantes -->
     <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
-        <button onclick="toggleAIChat()" class="bg-zinc-900 border border-gold/60 text-gold w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(212,160,23,0.35)] hover:scale-110 transition-all relative cursor-pointer">
+        <button onclick="toggleAIChat()" class="bg-zinc-900 border border-gold/60 text-gold w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(212,160,23,0.35)] hover:scale-110 transition-all relative cursor-pointer" title="Consultor IA Online">
             <i class="fa-solid fa-robot text-xl sm:text-2xl"></i>
             <span class="absolute -top-1 -right-1 bg-emerald-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded-full border border-darkBg animate-pulse">ON</span>
         </button>
-        <a id="btn-floating-support" href="#" target="_blank" class="bg-green-500 text-white w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(34,197,94,0.4)] hover:scale-110 transition-all">
+        <a id="btn-floating-support" href="#" target="_blank" class="bg-green-500 text-white w-13 h-13 sm:w-14 sm:h-14 rounded-full flex items-center justify-center shadow-[0_0_25px_rgba(34,197,94,0.4)] hover:scale-110 transition-all" title="Suporte WhatsApp">
             <i class="fa-brands fa-whatsapp text-2xl sm:text-3xl"></i>
         </a>
     </div>
 
     <!-- IA Chat Online -->
-    <div id="ai-chat-window" class="fixed bottom-24 right-6 w-[92vw] sm:w-96 glass-card rounded-3xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-[430px] border border-zinc-700/60">
+    <div id="ai-chat-window" class="fixed bottom-24 right-6 w-[92vw] sm:w-96 glass-card rounded-3xl shadow-2xl z-50 flex flex-col hidden overflow-hidden h-[440px] border border-zinc-700/60">
         <div class="bg-zinc-950/90 p-4 border-b border-zinc-800 flex justify-between items-center">
             <div class="flex items-center gap-2.5">
                 <i class="fa-solid fa-robot text-gold text-lg"></i> 
@@ -438,12 +442,18 @@
             <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
         <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5 scroll-smooth">
-            <div class="chat-bubble chat-bot">Olá! Sou a Inteligência Online da Fênix Imports. Digite o nome ou sigla de qualquer produto (ex: <b>TG</b>, <b>Tirzepatida</b>, <b>Masteron</b>, <b>Susobolic</b>) e eu busco no estoque para você comprar na hora!</div>
+            <div class="chat-bubble chat-bot">Olá! Sou a Inteligência Online da Fênix Imports. Digite o nome ou sigla de qualquer produto (ex: <b>TG</b>, <b>Tirzepatida</b>, <b>Retatrutida</b>, <b>BPC</b>) e eu busco no estoque para você comprar na hora!</div>
         </div>
         <div class="p-3 bg-zinc-950/90 border-t border-zinc-800 flex gap-2">
             <input type="text" id="chat-input" placeholder="Ex: Tem TG Tirzepatida? Qual o valor?" onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
             <button onclick="sendChatMessage()" class="gold-btn-gradient rounded-xl px-3.5 py-2 transition text-xs cursor-pointer"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
+    </div>
+
+    <!-- Modal Detalhes do Produto (Quick View) -->
+    <div id="product-detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeProductDetailModal()"></div>
+        <div id="product-detail-content" class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-lg w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]"></div>
     </div>
 
     <!-- Modal Importar / Exportar JSON -->
@@ -504,16 +514,25 @@
                     <h3 class="text-lg font-extrabold text-white flex gap-2.5 items-center"><i class="fa-solid fa-bag-shopping text-gold"></i> Seu Carrinho</h3>
                     <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
                 </div>
+
+                <!-- Barra de Frete Grátis Inteligente -->
+                <div id="free-shipping-bar-container" class="px-5 py-2.5 bg-zinc-900/90 border-b border-zinc-800">
+                    <p id="free-shipping-text" class="text-[11px] font-bold text-zinc-300 text-center mb-1.5"></p>
+                    <div class="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                        <div id="free-shipping-progress" class="bg-gradient-to-r from-amber-500 to-emerald-400 h-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
                 <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3 divide-y divide-zinc-800/60"></div>
                 <div class="p-5 border-t border-zinc-800 bg-zinc-950/80 space-y-3">
                     <div class="flex gap-2">
-                        <input type="text" id="coupon-code" placeholder="CUPOM DE DESCONTO" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white uppercase outline-none focus:border-gold">
+                        <input type="text" id="coupon-code" placeholder="CUPOM (EX: FENIX10)" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white uppercase outline-none focus:border-gold">
                         <button onclick="applyCoupon()" class="bg-zinc-800 hover:bg-gold hover:text-black text-white text-xs font-bold px-4 rounded-xl transition cursor-pointer">Aplicar</button>
                     </div>
                     <div class="space-y-1.5 pt-2">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
                         <div id="cart-discount-row" class="flex justify-between text-xs text-green-400 hidden"><span>Desconto</span><span id="cart-discount">- R$ 0,00</span></div>
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete</span><span id="cart-shipping-cost">R$ 0,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete Expresso</span><span id="cart-shipping-cost">R$ 0,00</span></div>
                         <div class="flex justify-between text-base font-black text-white pt-2 border-t border-zinc-800"><span>Total</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
                     <button onclick="proceedToCheckout()" class="w-full gold-btn-gradient py-3.5 rounded-2xl flex justify-center items-center gap-2 text-xs sm:text-sm tracking-wider uppercase cursor-pointer">
@@ -541,23 +560,23 @@
                     <input type="text" id="cust-cep" placeholder="CEP" oninput="maskCEP(this)" onblur="buscarCEP()" maxlength="9" class="col-span-1 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
                     <input type="text" id="cust-address" placeholder="Rua, Bairro, Cidade - UF" class="col-span-2 w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
                 </div>
-                <input type="text" id="cust-number" placeholder="Número, Casa/Apto e Complemento" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
+                <input type="text" id="cust-number" placeholder="Número, Casa/Apto e Ponto de Referência" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
                 
                 <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 space-y-2">
                     <div id="shipping-method-badge" class="text-xs text-zinc-300 flex items-center justify-between bg-zinc-900 p-2.5 rounded-xl border border-zinc-800">
-                        <span id="shipping-type-text"><i class="fa-solid fa-truck-fast text-gold"></i> Envio Expresso (Nacional)</span>
+                        <span id="shipping-type-text"><i class="fa-solid fa-truck-fast text-gold"></i> Envio Expresso Segurado</span>
                         <span id="shipping-price-text" class="font-bold text-gold">R$ 0,00</span>
                     </div>
                 </div>
 
-                <!-- Botões de Escolha: PIX vs CARTÃO MERCADO LIVRE -->
+                <!-- Botões de Escolha: PIX vs CARTÃO MERCADO PAGO -->
                 <div class="pt-2 space-y-2.5">
                     <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block text-center">Escolha como deseja pagar:</label>
                     <button onclick="startAutomaticPayment('pix')" id="btn-pay-pix" class="w-full gold-btn-gradient py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
                         <i class="fa-brands fa-pix text-base"></i> Pagar com PIX Imediato
                     </button>
                     <button onclick="startAutomaticPayment('card')" id="btn-pay-card" class="w-full mp-btn-gradient py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fa-solid fa-credit-card text-base"></i> Cartão de Crédito até 12x / Mercado Livre
+                        <i class="fa-solid fa-credit-card text-base"></i> Cartão de Crédito até 12x (Mercado Pago)
                     </button>
                 </div>
             </div>
@@ -595,7 +614,7 @@
                 </div>
 
                 <button onclick="confirmOrderWhatsapp()" id="btn-finish-order" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-xs sm:text-sm uppercase cursor-pointer">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> Já Paguei! Acompanhar no WhatsApp
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Já Paguei! Enviar Comprovante no WhatsApp
                 </button>
                 <button onclick="backToStep1()" class="w-full text-zinc-500 hover:text-white text-xs underline text-center cursor-pointer">Voltar para os dados</button>
             </div>
@@ -611,10 +630,10 @@
                 <input type="hidden" id="prod-id">
                 
                 <div>
-                    <label class="text-[10px] text-zinc-400 block mb-1">Foto do Produto (IA Remove o Fundo)</label>
-                    <input type="text" id="prod-imageUrl" placeholder="Link da foto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
+                    <label class="text-[10px] text-zinc-400 block mb-1">Foto do Produto (Compressão Automática + IA Remove.bg)</label>
+                    <input type="text" id="prod-imageUrl" placeholder="Link da foto ou envie arquivo abaixo" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none">
                     <input type="file" id="prod-file-input" accept="image/*" onchange="uploadImageToGallery(event)" class="mt-2 w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-zinc-300 cursor-pointer">
-                    <div id="upload-status" class="text-[10px] text-gold mt-1 hidden">Enviando foto...</div>
+                    <div id="upload-status" class="text-[10px] text-gold mt-1 hidden">Processando foto...</div>
                 </div>
 
                 <div class="flex items-center gap-2 bg-zinc-950 p-3 rounded-2xl border border-zinc-800">
@@ -624,7 +643,7 @@
                     </label>
                 </div>
 
-                <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="prod-name" required placeholder="Nome do Produto (Ex: TG Tirzepatida 15mg)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
                 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -674,7 +693,7 @@
                     <input type="number" id="prod-stock" required value="10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
 
-                <textarea id="prod-desc" rows="2" required placeholder="Descrição..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white"></textarea>
+                <textarea id="prod-desc" rows="2" required placeholder="Descrição e especificações do produto..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white"></textarea>
                 
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">Cancelar</button>
@@ -684,7 +703,7 @@
         </div>
     </div>
 
-    <!-- Modal Configs (Com Mercado Pago) -->
+    <!-- Modal Configs (Com Mercado Pago & Frete Grátis) -->
     <div id="settings-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeSettingsModal()"></div>
         <div class="relative glass-card border border-zinc-700/60 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 overflow-y-auto max-h-[90vh]">
@@ -702,7 +721,7 @@
                         <i class="fa-solid fa-credit-card"></i> Mercado Livre / Mercado Pago (100% Automático)
                     </label>
                     <input type="text" id="set-mp-token" placeholder="Access Token (APP_USR-...) para Pix e Cartão" class="w-full bg-zinc-900 border border-sky-500/30 rounded-xl px-3 py-2 text-sky-200">
-                    <p class="text-[10px] text-zinc-400 leading-tight">Ao preencher o Access Token do Mercado Pago, o site gera Cartão em até 12x e Pix com aprovação e baixa de estoque 100% automática.</p>
+                    <p class="text-[10px] text-zinc-400 leading-tight">Gera PIX Dinâmico e Cartão em até 12x com confirmação e baixa de estoque 100% automática.</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
@@ -711,18 +730,23 @@
                         <input type="number" step="0.01" id="set-ship-express" required class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                     </div>
                     <div>
-                        <label class="text-[10px] text-zinc-400 block mb-1">WhatsApp Vendas</label>
-                        <input type="text" id="set-wpp-sales" required placeholder="5521999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                        <label class="text-[10px] text-emerald-400 font-bold block mb-1">Frete Grátis acima de R$</label>
+                        <input type="number" step="1" id="set-free-ship-min" value="600" class="w-full bg-zinc-900 border border-emerald-500/30 rounded-xl px-3 py-2 text-white">
                     </div>
                 </div>
 
-                <input type="text" id="set-pix" required placeholder="Chave PIX Direta (Reserva)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                <div>
+                    <label class="text-[10px] text-zinc-400 block mb-1">WhatsApp de Vendas (Com DDD)</label>
+                    <input type="text" id="set-wpp-sales" required placeholder="5521999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                </div>
+
+                <input type="text" id="set-pix" required placeholder="Chave PIX Direta (Reserva / Fallback)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 <div class="grid grid-cols-2 gap-2">
                     <input type="text" id="set-pix-name" required placeholder="Nome Titular Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                     <input type="text" id="set-pix-city" required placeholder="Cidade Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 </div>
 
-                <input type="text" id="set-removebg" placeholder="Chave Remove.bg (Opcional)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-amber-300">
+                <input type="text" id="set-removebg" placeholder="Chave API Remove.bg (Para recortar fundo ao subir foto)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-amber-300">
                 <input type="text" id="set-gemini" placeholder="Chave Gemini (Opcional - IA Online Já Ativa)" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2 text-blue-300">
                 
                 <div class="flex gap-2 pt-2">
@@ -770,7 +794,7 @@
         window.firebaseFns = { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, onSnapshot, signInWithEmailAndPassword, signOut, onAuthStateChanged };
 
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').catch(err => console.log("SW Error:", err));
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
         }
 
         if (document.readyState === 'loading') {
@@ -784,6 +808,7 @@
     <script>
         let products = [], orders = [], cart = [], currentFilter = 'all', currentUser = null;
         let activeDiscount = 0;
+        let couponFreeShipping = false;
         let calculatedShippingCost = 25;
         let shippingType = 'Envio Expresso';
         let isFirstLoadOrders = true;
@@ -800,11 +825,22 @@
             pixCity: "Rio de Janeiro", 
             whatsappSales: "5521999999999", 
             shippingExpress: 25,
+            freeShippingThreshold: 600,
             mpAccessToken: "",
             geminiKey: "", 
             removeBgKey: "",
             pushNotificationsEnabled: true
         };
+
+        // Carregar carrinho salvo no navegador
+        try {
+            const savedCart = localStorage.getItem('fenix_saved_cart');
+            if (savedCart) cart = JSON.parse(savedCart);
+        } catch(e) { cart = []; }
+
+        function saveCartToLocal() {
+            try { localStorage.setItem('fenix_saved_cart', JSON.stringify(cart)); } catch(e) {}
+        }
 
         // Som de Caixa Registradora + Vibração
         function playSaleBeep() {
@@ -1060,6 +1096,13 @@
         }
         window.deleteOrder = deleteOrder;
 
+        function copyOrderAddress(address, name) {
+            const text = `Destinatário: ${name}\nEndereço: ${address}`;
+            navigator.clipboard.writeText(text).catch(() => {});
+            showToast('Endereço copiado para envio!', 'success');
+        }
+        window.copyOrderAddress = copyOrderAddress;
+
         function renderOrdersTable() {
             const tb = document.getElementById('admin-orders-table'); 
             if(!tb) return;
@@ -1106,6 +1149,7 @@
 
                 const clientPhoneClean = formatWhatsappNumber(o.client?.phone || '');
                 const payMethodBadge = o.paymentMethod === 'card' ? '<span class="text-[9px] text-sky-400 font-bold block"><i class="fa-solid fa-credit-card"></i> Cartão MP</span>' : '<span class="text-[9px] text-emerald-400 font-bold block"><i class="fa-brands fa-pix"></i> PIX</span>';
+                const safeAddress = (o.client?.address || 'Endereço não informado').replace(/'/g, "");
 
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40 transition">
@@ -1113,9 +1157,10 @@
                             <div class="flex items-center gap-1.5">
                                 <b class="text-white">${o.client?.name || 'Cliente'}</b>
                                 ${clientPhoneClean ? `<a href="https://wa.me/${clientPhoneClean}" target="_blank" class="text-green-400 hover:text-green-300 text-xs" title="Chamar Cliente"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
+                                <button onclick="copyOrderAddress('${safeAddress}', '${o.client?.name || ''}')" class="text-zinc-400 hover:text-gold text-[10px] ml-1 cursor-pointer" title="Copiar Endereço"><i class="fa-regular fa-copy"></i></button>
                             </div>
-                            <span class="text-[10px] text-zinc-400 block">${o.shippingType || 'Envio Expresso'}</span>
-                            <span class="text-[9px] text-zinc-500">${ds}</span>
+                            <span class="text-[10px] text-zinc-400 block max-w-[220px] truncate" title="${safeAddress}">${safeAddress}</span>
+                            <span class="text-[9px] text-zinc-500">${ds} • ${o.shippingType || 'Expresso'}</span>
                         </td>
                         <td class="p-4 text-xs">
                             <span class="font-bold text-gold block">R$ ${formatMoney(total)}</span>
@@ -1143,7 +1188,7 @@
             if(!code) return showToast("Digite o código de rastreio.", "error");
             await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
             if(phone) {
-                window.open(`https://wa.me/${formatWhatsappNumber(phone)}?text=${encodeURIComponent(`Olá ${name}, seu pedido na ${storeSettings.storeName || 'Fênix Imports'} foi enviado com sucesso! Código de rastreio: ${code}`)}`, '_blank');
+                window.open(`https://wa.me/${formatWhatsappNumber(phone)}?text=${encodeURIComponent(`Olá ${name}, seu pedido na ${storeSettings.storeName || 'Fênix Imports'} foi enviado com sucesso! 📦\n\nCódigo de rastreio: *${code}*`)}`, '_blank');
             }
             showToast('Rastreio salvo e enviado!', 'success');
         }
@@ -1182,7 +1227,7 @@
             const p = products.find(x => x.id === id);
             if (!p) return;
             const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
-            const text = `🔥 Confira *${p.name}* na *${storeSettings.storeName || 'Fênix Imports'}* por apenas *R$ ${formatMoney(price)}*!\n⚡ Pix ou Cartão em até 12x\n👉 Garanta já em: ${window.location.origin}`;
+            const text = `🔥 Confira *${p.name}* na *${storeSettings.storeName || 'Fênix Imports'}* por apenas *R$ ${formatMoney(price)}*!\n⚡ Pix Imediato ou Cartão em até 12x\n👉 Garanta já em: ${window.location.origin}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
         window.shareProductWhatsapp = shareProductWhatsapp;
@@ -1198,11 +1243,56 @@
         }
         window.generateProductPromoCopy = generateProductPromoCopy;
 
+        // Modal Quick-View de Detalhes do Produto
+        function openProductDetailModal(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+            const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+            const installment = formatMoney((price * 1.15) / 12);
+            const st = p.stock !== undefined ? Number(p.stock) : 10;
+            const out = st <= 0;
+
+            const content = document.getElementById('product-detail-content');
+            content.innerHTML = `
+                <button onclick="closeProductDetailModal()" class="absolute top-5 right-5 text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <div class="space-y-4">
+                    <div class="w-full h-56 bg-zinc-950/80 rounded-2xl p-4 flex items-center justify-center border border-zinc-800">
+                        ${p.imageUrl ? `<img src="${p.imageUrl}" class="max-h-full max-w-full object-contain">` : `<i class="fa-solid fa-image text-4xl text-zinc-700"></i>`}
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-gold/10 text-gold border border-gold/30 uppercase">${p.category || 'Geral'}</span>
+                        <span class="text-[10px] font-bold ${p.availability === 'encomenda' ? 'text-amber-400' : 'text-emerald-400'}">${p.availability === 'encomenda' ? '🟠 Sob Encomenda' : '🟢 Pronta Entrega'}</span>
+                    </div>
+                    <h3 class="text-lg sm:text-xl font-black text-white">${p.name}</h3>
+                    <p class="text-xs sm:text-sm text-zinc-300 leading-relaxed">${p.description || 'Produto original de alta pureza e desempenho.'}</p>
+                    ${p.deliveryDays ? `<div class="text-xs text-zinc-400"><i class="fa-solid fa-truck-fast text-gold"></i> Prazo estimado: <b class="text-white">${p.deliveryDays}</b></div>` : ''}
+                    <div class="bg-zinc-950 p-4 rounded-2xl border border-zinc-800 flex items-center justify-between">
+                        <div>
+                            ${p.promoPrice ? `<span class="text-xs text-zinc-500 line-through block">R$ ${formatMoney(p.price)}</span>` : ''}
+                            <span class="text-xl font-black text-gold">R$ ${formatMoney(price)} <span class="text-[10px] text-emerald-400 font-bold">no PIX</span></span>
+                            <span class="text-[11px] text-zinc-400 block">ou até 12x de R$ ${installment} no cartão</span>
+                        </div>
+                        <button onclick="addToCart('${p.id}'); closeProductDetailModal();" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-800 text-zinc-500' : 'gold-btn-gradient'} px-5 py-3 rounded-xl text-xs font-black uppercase cursor-pointer">
+                            <i class="fa-solid fa-bag-shopping"></i> ${out ? 'Esgotado' : 'Adicionar'}
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('product-detail-modal').classList.remove('hidden');
+        }
+        window.openProductDetailModal = openProductDetailModal;
+
+        function closeProductDetailModal() {
+            document.getElementById('product-detail-modal').classList.add('hidden');
+        }
+        window.closeProductDetailModal = closeProductDetailModal;
+
         function renderProducts() {
             const grid = document.getElementById('product-grid'); 
             const featuredGrid = document.getElementById('featured-grid');
             const featuredSection = document.getElementById('featured-section');
-            const searchVal = document.getElementById('search-input').value.toLowerCase();
+            const searchVal = (document.getElementById('search-input')?.value || '').toLowerCase();
+            const sortVal = document.getElementById('sort-select')?.value || 'featured';
             
             grid.innerHTML = '';
             if (featuredGrid) featuredGrid.innerHTML = '';
@@ -1220,8 +1310,8 @@
                             <div class="min-w-[240px] sm:min-w-[280px] max-w-[280px] glass-card rounded-3xl p-4 flex flex-col justify-between shrink-0 snap-start border-amber-500/40 glow-gold-lg relative overflow-hidden">
                                 <span class="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-black text-[9px] font-black px-2.5 py-0.5 rounded-lg uppercase z-10 shadow-md flex items-center gap-1"><i class="fa-solid fa-star"></i> Destaque</span>
                                 
-                                <div>
-                                    ${p.imageUrl ? `<div class="w-full h-36 bg-zinc-950/60 rounded-2xl mb-3 p-2 flex items-center justify-center overflow-hidden border border-zinc-800/80"><img src="${p.imageUrl}" class="max-h-full max-w-full object-contain"></div>` : `<div class="w-full h-36 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-700 text-2xl"></i></div>`}
+                                <div onclick="openProductDetailModal('${p.id}')" class="cursor-pointer">
+                                    ${p.imageUrl ? `<div class="w-full h-36 bg-zinc-950/60 rounded-2xl mb-3 p-2 flex items-center justify-center overflow-hidden border border-zinc-800/80"><img src="${p.imageUrl}" class="max-h-full max-w-full object-contain hover:scale-105 transition"></div>` : `<div class="w-full h-36 bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center"><i class="fa-solid fa-image text-zinc-700 text-2xl"></i></div>`}
                                     <h3 class="text-xs sm:text-sm font-extrabold text-white truncate">${p.name}</h3>
                                     <p class="text-zinc-400 text-[10px] line-clamp-1 mt-0.5">${p.description}</p>
                                 </div>
@@ -1242,10 +1332,24 @@
                 }
             }
 
-            const filtered = products.filter(p => (currentFilter === 'all' || p.category === currentFilter) && (p.name.toLowerCase().includes(searchVal)));
+            let filtered = products.filter(p => {
+                const matchCat = currentFilter === 'all' || p.category === currentFilter;
+                const matchSearch = (p.name || '').toLowerCase().includes(searchVal) || (p.description || '').toLowerCase().includes(searchVal) || (p.category || '').toLowerCase().includes(searchVal);
+                return matchCat && matchSearch;
+            });
+
+            // Ordenação Inteligente
+            filtered.sort((a, b) => {
+                const priceA = Number(a.promoPrice || a.price || 0);
+                const priceB = Number(b.promoPrice || b.price || 0);
+                if (sortVal === 'price-asc') return priceA - priceB;
+                if (sortVal === 'price-desc') return priceB - priceA;
+                if (sortVal === 'name-asc') return (a.name || '').localeCompare(b.name || '');
+                return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
+            });
             
             if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 text-sm font-semibold">Nenhum produto encontrado.</div>`;
+                grid.innerHTML = `<div class="col-span-full py-16 text-center text-zinc-500 text-sm font-semibold">Nenhum produto encontrado para esta busca.</div>`;
                 return;
             }
 
@@ -1253,24 +1357,25 @@
                 const st = p.stock !== undefined ? Number(p.stock) : 10; 
                 const out = st <= 0;
                 const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+                const installment = formatMoney((price * 1.15) / 12);
                 
-                const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600/90 backdrop-blur-md text-white text-[9px] font-black px-2.5 py-1 rounded-lg uppercase z-10 tracking-wider shadow-md"><i class="fa-solid fa-fire"></i> Promoção</div>` : '';
+                const promo = p.promoPrice ? `<div class="absolute top-3 left-3 bg-red-600/90 backdrop-blur-md text-white text-[9px] font-black px-2.5 py-1 rounded-lg uppercase z-10 tracking-wider shadow-md"><i class="fa-solid fa-fire"></i> Oferta</div>` : '';
                 
                 const isEncomenda = p.availability === 'encomenda';
                 const availBadge = isEncomenda 
-                    ? `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-md"><i class="fa-solid fa-clock text-[8px]"></i> Sob Encomenda</span>`
+                    ? `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-md"><i class="fa-solid fa-clock text-[8px]"></i> Encomenda</span>`
                     : `<span class="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-md"><i class="fa-solid fa-bolt text-[8px]"></i> Pronta Entrega</span>`;
 
                 const deliveryText = p.deliveryDays 
-                    ? `<div class="text-[10px] text-zinc-500 dark:text-zinc-400 mt-1 flex items-center gap-1 font-medium"><i class="fa-solid fa-truck-ramp-box text-gold text-[9px]"></i> Entrega em: <b class="text-zinc-800 dark:text-zinc-200">${p.deliveryDays}</b></div>` 
+                    ? `<div class="text-[10px] text-zinc-500 dark:text-zinc-400 mt-1 flex items-center gap-1 font-medium"><i class="fa-solid fa-truck-ramp-box text-gold text-[9px]"></i> Entrega: <b class="text-zinc-800 dark:text-zinc-200">${p.deliveryDays}</b></div>` 
                     : '';
 
                 const img = p.imageUrl 
-                    ? `<div class="w-full h-44 sm:h-48 bg-zinc-100/50 dark:bg-zinc-950/60 rounded-2xl mb-3 border border-zinc-200 dark:border-zinc-800/80 p-3 flex items-center justify-center overflow-hidden relative">
+                    ? `<div class="w-full h-44 sm:h-48 bg-zinc-100/50 dark:bg-zinc-950/60 rounded-2xl mb-3 border border-zinc-200 dark:border-zinc-800/80 p-3 flex items-center justify-center overflow-hidden relative cursor-pointer" onclick="openProductDetailModal('${p.id}')">
                         <img src="${p.imageUrl}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition duration-500">
-                        <button onclick="shareProductWhatsapp('${p.id}')" class="absolute top-2 right-2 bg-zinc-900/80 hover:bg-green-600 text-zinc-300 hover:text-white w-7 h-7 rounded-full flex items-center justify-center text-xs transition cursor-pointer" title="Compartilhar no WhatsApp"><i class="fa-solid fa-share-nodes"></i></button>
+                        <button onclick="event.stopPropagation(); shareProductWhatsapp('${p.id}')" class="absolute top-2 right-2 bg-zinc-900/80 hover:bg-green-600 text-zinc-300 hover:text-white w-7 h-7 rounded-full flex items-center justify-center text-xs transition cursor-pointer" title="Compartilhar no WhatsApp"><i class="fa-solid fa-share-nodes"></i></button>
                        </div>` 
-                    : `<div class="w-full h-44 sm:h-48 bg-zinc-100 dark:bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center border border-zinc-200 dark:border-zinc-800"><i class="fa-solid fa-image text-zinc-400 dark:text-zinc-700 text-3xl"></i></div>`;
+                    : `<div onclick="openProductDetailModal('${p.id}')" class="w-full h-44 sm:h-48 bg-zinc-100 dark:bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center border border-zinc-200 dark:border-zinc-800 cursor-pointer"><i class="fa-solid fa-image text-zinc-400 dark:text-zinc-700 text-3xl"></i></div>`;
                 
                 grid.innerHTML += `
                     <div class="glass-card rounded-3xl p-4 flex flex-col justify-between relative overflow-hidden group h-full">
@@ -1281,7 +1386,7 @@
                                 <span class="px-2.5 py-0.5 rounded-full text-[9px] font-black bg-amber-500/10 text-amber-700 dark:text-gold border border-amber-500/20 uppercase tracking-wider">${p.category || 'Geral'}</span>
                                 ${availBadge}
                             </div>
-                            <div class="flex-1 flex flex-col justify-start">
+                            <div class="flex-1 flex flex-col justify-start cursor-pointer" onclick="openProductDetailModal('${p.id}')">
                                 <h3 class="text-xs sm:text-sm font-extrabold text-zinc-900 dark:text-white group-hover:text-gold transition line-clamp-2 leading-snug min-h-[2.25rem]">${p.name}</h3>
                                 <p class="text-zinc-600 dark:text-zinc-300 text-[11px] leading-relaxed line-clamp-2 mt-1 font-medium">${p.description}</p>
                                 ${deliveryText}
@@ -1289,8 +1394,9 @@
                         </div>
                         <div class="pt-3 mt-3 border-t border-zinc-200 dark:border-zinc-800/80 flex items-center justify-between gap-2 shrink-0">
                             <div>
-                                <span class="text-[9px] text-zinc-400 uppercase font-bold block leading-none">Pix ou Cartão</span>
+                                ${p.promoPrice ? `<span class="text-[10px] text-zinc-400 line-through block leading-none">R$ ${formatMoney(p.price)}</span>` : ''}
                                 <span class="text-sm sm:text-base font-black ${p.promoPrice ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-gold'}">R$ ${formatMoney(price)}</span>
+                                <span class="text-[9px] text-zinc-400 block leading-tight">12x R$ ${installment}</span>
                             </div>
                             <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed' : 'gold-btn-gradient'} text-xs px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shrink-0 font-bold cursor-pointer">
                                 <i class="fa-solid fa-bag-shopping"></i> <span>${out ? 'Esgotado' : 'Comprar'}</span>
@@ -1320,6 +1426,7 @@
             else { 
                 cart.push({ ...p, activePrice: basePrice, costPrice: Number(p.costPrice) || 0, qty: 1 }); 
             }
+            saveCartToLocal();
             showToast(`${p.name} adicionado ao carrinho!`, 'success');
             updateCartUI(); 
             toggleCartDrawer(true);
@@ -1328,11 +1435,11 @@
 
         function applyCoupon() {
             const code = document.getElementById('coupon-code').value.trim().toUpperCase();
-            if (code === 'FENIX10') {
+            if (code === 'FENIX10' || code === 'VIP10') {
                 activeDiscount = 0.10;
                 showToast('Cupom de 10% aplicado!', 'success');
             } else if (code === 'FRETEGRATIS') {
-                calculatedShippingCost = 0;
+                couponFreeShipping = true;
                 showToast('Frete grátis liberado!', 'success');
             } else {
                 showToast('Cupom inválido.', 'error');
@@ -1343,14 +1450,35 @@
         function calculateOrderTotals() {
             const subtotal = cart.reduce((s, i) => s + (i.activePrice * i.qty), 0);
             const discountVal = subtotal * activeDiscount;
-            const total = (subtotal - discountVal) + calculatedShippingCost;
-            return { subtotal, discountVal, shipping: calculatedShippingCost, total };
+            const netSubtotal = subtotal - discountVal;
+            const freeMin = Number(storeSettings.freeShippingThreshold || 600);
+            const baseShip = Number(storeSettings.shippingExpress || 25);
+
+            const shipping = (couponFreeShipping || (freeMin > 0 && netSubtotal >= freeMin) || cart.length === 0) ? 0 : baseShip;
+            const total = netSubtotal + shipping;
+            return { subtotal, discountVal, shipping, total, freeMin, netSubtotal };
         }
 
         function updateCartUI() {
             const cont = document.getElementById('cart-items-container'); 
             const totals = calculateOrderTotals();
             document.getElementById('cart-counter').innerText = cart.reduce((s, i) => s + i.qty, 0);
+
+            // Atualiza Barra de Frete Grátis
+            const freeTextEl = document.getElementById('free-shipping-text');
+            const freeProgEl = document.getElementById('free-shipping-progress');
+            if (freeTextEl && freeProgEl) {
+                if (totals.shipping === 0 && cart.length > 0) {
+                    freeTextEl.innerHTML = `<span class="text-emerald-400"><i class="fa-solid fa-circle-check"></i> Parabéns! Você ganhou <b>FRETE EXPRESSO GRÁTIS!</b></span>`;
+                    freeProgEl.style.width = '100%';
+                } else {
+                    const missing = Math.max(0, totals.freeMin - totals.netSubtotal);
+                    const pct = Math.min(100, (totals.netSubtotal / totals.freeMin) * 100);
+                    freeTextEl.innerHTML = `Faltam <b class="text-gold">R$ ${formatMoney(missing)}</b> para <b>Frete Expresso Grátis</b>`;
+                    freeProgEl.style.width = `${pct}%`;
+                }
+            }
+
             if (cart.length === 0) { 
                 cont.innerHTML = `<div class="py-16 text-center text-zinc-500 text-xs sm:text-sm">Seu carrinho está vazio</div>`; 
                 document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
@@ -1380,7 +1508,7 @@
             } else {
                 document.getElementById('cart-discount-row').classList.add('hidden');
             }
-            document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(totals.shipping)}`; 
+            document.getElementById('cart-shipping-cost').innerText = totals.shipping === 0 ? 'GRÁTIS' : `R$ ${formatMoney(totals.shipping)}`; 
             document.getElementById('cart-total').innerText = `R$ ${formatMoney(totals.total)}`;
         }
 
@@ -1389,13 +1517,14 @@
             if (item) {
                 item.qty--;
                 if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
+                saveCartToLocal();
                 updateCartUI();
             }
         }
 
         function increaseCartQty(id) {
             const item = cart.find(x => x.id === id);
-            if (item) { item.qty++; updateCartUI(); }
+            if (item) { item.qty++; saveCartToLocal(); updateCartUI(); }
         }
 
         function toggleCartDrawer(op) { document.getElementById('cart-drawer').classList.toggle('hidden', !op); }
@@ -1421,7 +1550,7 @@
 
         function updateCheckoutSummary() {
             const totals = calculateOrderTotals();
-            document.getElementById('shipping-price-text').innerText = `R$ ${formatMoney(totals.shipping)}`;
+            document.getElementById('shipping-price-text').innerText = totals.shipping === 0 ? 'GRÁTIS' : `R$ ${formatMoney(totals.shipping)}`;
         }
 
         function maskPhone(input) {
@@ -1448,768 +1577,21 @@
                 let data = await res.json();
                 if(!data.erro) {
                     document.getElementById('cust-address').value = `${data.logradouro}, ${data.bairro}, ${data.localidade} - ${data.uf}`;
-                    calculatedShippingCost = Number(storeSettings.shippingExpress || 25);
                     updateCheckoutSummary();
                 }
             } catch(e) {}
         }
 
+        // Gerador PIX EMV Blindado (Remove acentos para 100% de compatibilidade bancária)
         let currentPixPayload = "";
-        function generatePixEMV(key, amount, name, city, txid="PEDIDO") {
-            const format = (id, val) => { const v = String(val); return id + v.length.toString().padStart(2,'0') + v; };
-            const p = [ 
-                format('00','01'), 
-                format('26', format('00','BR.GOV.BCB.PIX') + format('01', key)), 
-                format('52','0000'), 
-                format('53','986'), 
-                format('54', amount.toFixed(2)), 
-                format('58','BR'), 
-                format('59', name.substring(0,25)), 
-                format('60', city.substring(0,15)), 
-                format('62', format('05', txid)) 
-            ].join('');
-            const crcPayload = p + '6304'; 
-            let result = 0xFFFF;
-            for (let i = 0; i < crcPayload.length; i++) {
-                result ^= crcPayload.charCodeAt(i) << 8;
-                for (let j = 0; j < 8; j++) { 
-                    if ((result & 0x8000) !== 0) result = ((result << 1) ^ 0x1021) & 0xFFFF; 
-                    else result = (result << 1) & 0xFFFF; 
-                }
-            }
-            return crcPayload + (result & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        function sanitizePixString(str, maxLen) {
+            return String(str || '')
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-zA-Z0-9 ]/g, "")
+                .trim()
+                .toUpperCase()
+                .substring(0, maxLen) || "LOJA";
         }
 
-        function copyPixEMV() { 
-            const i = document.getElementById('pix-emv-input'); 
-            i.select(); 
-            navigator.clipboard.writeText(i.value); 
-            showToast('Código Pix Copiado!', 'success'); 
-        }
-
-        /* 💳 MOTOR DE PAGAMENTO 100% AUTOMÁTICO (PIX + CARTÃO MERCADO PAGO) */
-        async function startAutomaticPayment(method) {
-            const n = document.getElementById('cust-name').value.trim(); 
-            const rawW = document.getElementById('cust-whatsapp').value.trim(); 
-            const c = document.getElementById('cust-cep').value.trim();
-            if(!n || !rawW || !c) return showToast("Preencha Nome, WhatsApp e CEP.", "error");
-
-            const w = formatWhatsappNumber(rawW);
-            const ad = document.getElementById('cust-address').value + ", N: " + document.getElementById('cust-number').value;
-            const totals = calculateOrderTotals();
-            
-            let cst = 0; 
-            let items = [];
-            for (const i of cart) { 
-                cst += (i.costPrice || 0) * i.qty; 
-                items.push({ id: i.id, name: i.name, qty: i.qty, price: i.activePrice });
-            }
-
-            const storeTitle = storeSettings.storeName || 'FÊNIX IMPORTS';
-            const extRef = "FENIX_" + Date.now();
-
-            // 1. Cria o pedido automaticamente no Firebase e dispara notificação imediata
-            const orderData = { 
-                externalRef: extRef,
-                paymentMethod: method,
-                client: { name: n, phone: w, address: ad }, 
-                items, 
-                shippingType,
-                financials: { subtotal: totals.subtotal, shipping: totals.shipping, total: totals.total, estimatedProfit: (totals.subtotal - cst) }, 
-                status: 'aguardando', 
-                date: new Date().toISOString() 
-            };
-
-            playSaleBeep();
-            sendNativeNotification(`🔔 NOVO PEDIDO (${method.toUpperCase()}): R$ ${formatMoney(totals.total)}`, `Cliente: ${n}`);
-
-            try {
-                const docRef = await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), orderData);
-                activeOrderId = docRef.id;
-            } catch(e) {}
-
-            const methodLabel = method === 'card' ? 'Cartão de Crédito (Mercado Pago)' : 'PIX Imediato';
-            currentWhatsappOrderMsg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n💳 *Pagamento:* ${methodLabel}\n🚚 *Envio:* ${shippingType}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(totals.total)}`;
-
-            document.getElementById('pix-exact-value').innerText = `R$ ${formatMoney(totals.total)}`;
-            document.getElementById('checkout-step-1').classList.add('hidden'); 
-            document.getElementById('checkout-step-2').classList.remove('hidden');
-
-            const mpToken = (storeSettings.mpAccessToken || '').trim();
-
-            if (method === 'card') {
-                document.getElementById('pix-payment-box').classList.add('hidden');
-                document.getElementById('card-payment-box').classList.remove('hidden');
-
-                if (mpToken) {
-                    try {
-                        const prefRes = await fetch('https://api.mercadopago.com/checkout/preferences', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${mpToken}`
-                            },
-                            body: JSON.stringify({
-                                items: [
-                                    ...items.map(i => ({ title: i.name, quantity: Number(i.qty), currency_id: 'BRL', unit_price: Number(i.price) })),
-                                    ...(totals.shipping > 0 ? [{ title: 'Frete Expresso', quantity: 1, currency_id: 'BRL', unit_price: Number(totals.shipping) }] : [])
-                                ],
-                                payer: { name: n },
-                                external_reference: extRef,
-                                back_urls: {
-                                    success: window.location.origin,
-                                    pending: window.location.origin,
-                                    failure: window.location.origin
-                                },
-                                auto_return: "approved"
-                            })
-                        });
-                        const prefData = await prefRes.json();
-                        if (prefData.init_point) {
-                            document.getElementById('mp-checkout-link').href = prefData.init_point;
-                            window.open(prefData.init_point, '_blank');
-                            startMercadoPagoAutoPoller(extRef, activeOrderId);
-                            return;
-                        }
-                    } catch (err) {
-                        console.error("Erro MP Preference:", err);
-                    }
-                }
-                // Caso ainda não tenha colocado o Token APP_USR, abre link direto no WhatsApp solicitando link de cartão MP
-                const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
-                const wppCardLink = `https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(currentWhatsappOrderMsg + "\n\n👉 *Solicito o Link do Mercado Pago para pagar no Cartão de Crédito!*")}`;
-                document.getElementById('mp-checkout-link').href = wppCardLink;
-            } else {
-                // Método PIX
-                document.getElementById('card-payment-box').classList.add('hidden');
-                document.getElementById('pix-payment-box').classList.remove('hidden');
-
-                if (storeSettings.pixKey) {
-                    currentPixPayload = generatePixEMV(storeSettings.pixKey, totals.total, storeSettings.pixName, storeSettings.pixCity);
-                    document.getElementById('pix-emv-input').value = currentPixPayload;
-                    document.getElementById('dynamic-qrcode').innerHTML = '';
-                    new QRCode(document.getElementById('dynamic-qrcode'), { text: currentPixPayload, width: 150, height: 150, colorDark: "#000000", colorLight: "#ffffff" });
-                } else {
-                    showToast("Configure sua Chave Pix ou Token Mercado Pago em Configs.", "info");
-                }
-
-                if (mpToken) {
-                    startMercadoPagoAutoPoller(extRef, activeOrderId);
-                }
-            }
-        }
-        window.startAutomaticPayment = startAutomaticPayment;
-
-        // Robô que verifica no Mercado Pago a cada 5s se foi pago e aprova 100% no automático
-        function startMercadoPagoAutoPoller(extRef, orderDocId) {
-            if (autoPayInterval) clearInterval(autoPayInterval);
-            const mpToken = (storeSettings.mpAccessToken || '').trim();
-            if (!mpToken || !orderDocId) return;
-
-            autoPayInterval = setInterval(async () => {
-                try {
-                    const res = await fetch(`https://api.mercadopago.com/v1/payments/search?external_reference=${extRef}`, {
-                        headers: { 'Authorization': `Bearer ${mpToken}` }
-                    });
-                    if (res.ok) {
-                        const data = await res.json();
-                        const approvedPayment = (data.results || []).find(p => p.status === 'approved');
-                        if (approvedPayment) {
-                            clearInterval(autoPayInterval);
-                            await window.updateOrderStatus(orderDocId, 'pago');
-                            playSaleBeep();
-                            document.getElementById('auto-status-banner').className = "bg-emerald-500/20 border border-emerald-500 p-4 rounded-2xl text-center";
-                            document.getElementById('auto-status-banner').innerHTML = `<span class="text-sm font-black text-emerald-400 flex items-center justify-center gap-2"><i class="fa-solid fa-circle-check"></i> PAGAMENTO APROVADO AUTOMATICAMENTE!</span>`;
-                            cart = [];
-                            updateCartUI();
-                        }
-                    }
-                } catch (e) {}
-            }, 5000);
-        }
-
-        function confirmOrderWhatsapp() {
-            const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
-            window.open(`https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(currentWhatsappOrderMsg)}`, '_blank');
-            cart = [];
-            updateCartUI();
-            closeCheckoutModal();
-            showToast('Pedido enviado com sucesso!', 'success');
-        }
-        window.confirmOrderWhatsapp = confirmOrderWhatsapp;
-
-        /* 🧠 BUSCA INTELIGENTE TOLERANTE A ERROS + IA 100% ONLINE REAL */
-        function findMatchingProductsSmart(userQuery) {
-            const cleanQ = userQuery.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-            if (!cleanQ) return [];
-
-            // Remove palavras comuns de pergunta
-            const stopWords = ['tem', 'qual', 'valor', 'preco', 'quanto', 'custa', 'quero', 'comprar', 'como', 'funciona', 'para', 'que', 'serve', 'vcs', 'voces', 'estoque', 'entrega'];
-            const tokens = cleanQ.split(/\s+/).filter(w => w.length >= 2 && !stopWords.includes(w));
-
-            if (tokens.length === 0 && cleanQ.length >= 2) tokens.push(cleanQ);
-
-            return products.filter(p => {
-                const pName = (p.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                const pCat = (p.category || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                const pDesc = (p.description || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
-                // 1. Nome contém a busca direta (ex: "tg" acha "tg tirzepatida 15mg")
-                if (pName.includes(cleanQ)) return true;
-
-                // 2. Verifica cada palavra digitada ou prefixo (ex: "tirzec" -> "tirze" acha "tirzepatida")
-                return tokens.some(tk => {
-                    if (pName.includes(tk) || pCat.includes(tk) || pDesc.includes(tk)) return true;
-                    if (tk.length >= 4) {
-                        const prefix = tk.substring(0, 4); // "tirz" de "tirzec"
-                        if (pName.includes(prefix)) return true;
-                    }
-                    return false;
-                });
-            });
-        }
-
-        // Conecta na IA Online Real (Tenta Gemini -> Se falhar, usa Cloud AI OpenAI/Pollinations 100% Online sem chave!)
-        async function askRealOnlineAI(systemPrompt, userPrompt) {
-            const cleanKey = (storeSettings.geminiKey || '').trim();
-            
-            // Tentativa 1: Google Gemini API (se houver chave válida)
-            if (cleanKey && cleanKey.startsWith('AIza')) {
-                try {
-                    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${cleanKey}`;
-                    const res = await fetch(url, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt + "\n\n" + userPrompt }] }] })
-                    });
-                    if (res.ok) {
-                        const data = await res.json();
-                        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (text) return text;
-                    }
-                } catch (e) {}
-            }
-
-            // Tentativa 2: Cloud AI Aberta 100% Online (Zero-Key, CORS liberado, GPT-4o-mini em tempo real)
-            try {
-                const res = await fetch('https://text.pollinations.ai/', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        messages: [
-                            { role: 'system', content: systemPrompt },
-                            { role: 'user', content: userPrompt }
-                        ],
-                        model: 'openai',
-                        private: true
-                    })
-                });
-                if (res.ok) {
-                    const text = await res.text();
-                    if (text && text.trim().length > 5) return text.trim();
-                }
-            } catch (e) {}
-
-            return null;
-        }
-
-        function toggleAIChat() { document.getElementById('ai-chat-window').classList.toggle('hidden'); }
-        window.toggleAIChat = toggleAIChat;
-
-        async function sendChatMessage() {
-            const input = document.getElementById('chat-input'); 
-            const msg = input.value.trim(); 
-            if(!msg) return;
-            
-            const chatBody = document.getElementById('chat-messages');
-            chatBody.innerHTML += `<div class="chat-bubble chat-user">${msg}</div>`;
-            input.value = ''; 
-            chatBody.scrollTop = chatBody.scrollHeight;
-            
-            const typingId = "typing-" + Date.now();
-            chatBody.innerHTML += `<div id="${typingId}" class="text-xs text-zinc-400 italic mt-1 flex items-center gap-1.5"><i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Consultando estoque e IA online...</div>`;
-            chatBody.scrollTop = chatBody.scrollHeight;
-
-            // 1. Busca inteligente no estoque (acha "Tg", "Tirzec", etc.)
-            const matchedProducts = findMatchingProductsSmart(msg);
-
-            // 2. Monta contexto para a IA Online
-            const catalogContext = (matchedProducts.length > 0 ? matchedProducts : products.slice(0, 20))
-                .map(p => `${p.name}: R$ ${formatMoney(p.promoPrice || p.price)} (${p.availability === 'encomenda' ? 'Sob Encomenda' : 'Pronta Entrega'})`)
-                .join(' | ');
-
-            const systemPrompt = `Você é o vendedor especialista da loja ${storeSettings.storeName || 'Fênix Imports'}. Responda em português de forma direta, persuasiva e curta (máximo 3 frases). Aceitamos PIX imediato e Cartão de Crédito em até 12x pelo Mercado Pago. Frete expresso R$ ${formatMoney(storeSettings.shippingExpress || 25)}. Produtos no estoque: ${catalogContext}`;
-
-            let aiReply = await askRealOnlineAI(systemPrompt, msg);
-            document.getElementById(typingId)?.remove();
-
-            if (!aiReply) {
-                if (matchedProducts.length > 0) {
-                    aiReply = `Sim! Encontrei ${matchedProducts.length} opção(ões) em nosso catálogo para "${msg}". Você pode pagar no PIX imediato ou no Cartão em até 12x pelo Mercado Pago:`;
-                } else {
-                    aiReply = `Temos toda a linha de alta performance disponível com pagamento via PIX ou Cartão em até 12x pelo Mercado Pago! Confira nossos destaques abaixo:`;
-                }
-            }
-
-            // Exibe a resposta da IA
-            const botBubble = document.createElement('div');
-            botBubble.className = "chat-bubble chat-bot";
-            botBubble.innerHTML = aiReply.replace(/\*/g, '').replace(/\n/g, '<br>');
-
-            // Se encontrou produtos (ex: "Tg" ou "Tirzec"), mostra os cards com botão de Comprar direto no chat!
-            if (matchedProducts.length > 0) {
-                let cardsHtml = `<div class="mt-3 space-y-2 border-t border-gold/20 pt-2">`;
-                matchedProducts.slice(0, 3).forEach(p => {
-                    const pr = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
-                    cardsHtml += `
-                        <div class="bg-zinc-950/90 p-2.5 rounded-xl border border-zinc-800 flex items-center justify-between gap-2">
-                            <div class="min-w-0">
-                                <div class="text-xs font-extrabold text-white truncate">${p.name}</div>
-                                <div class="text-xs font-black text-gold">R$ ${formatMoney(pr)}</div>
-                            </div>
-                            <button onclick="addToCart('${p.id}')" class="gold-btn-gradient px-3 py-1.5 rounded-lg text-[11px] font-black shrink-0 cursor-pointer">
-                                + Comprar
-                            </button>
-                        </div>`;
-                });
-                cardsHtml += `</div>`;
-                botBubble.innerHTML += cardsHtml;
-            }
-
-            chatBody.appendChild(botBubble);
-            chatBody.scrollTop = chatBody.scrollHeight;
-        }
-        window.sendChatMessage = sendChatMessage;
-
-        // Auditoria de Estoque IA 100% Online + Diagnóstico Financeiro
-        async function runAiStockAudit() {
-            const resultEl = document.getElementById('ai-audit-result');
-            resultEl.classList.remove('hidden');
-            resultEl.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Conectando à IA Online e analisando giro de estoque...';
-
-            const stockSummary = products.slice(0, 25).map(p => `${p.name} (Estoque: ${p.stock || 10}, Custo: R$${p.costPrice || 0}, Venda: R$${p.price})`).join('; ');
-            const aiInsight = await askRealOnlineAI(
-                "Você é um consultor financeiro de e-commerce. Seja direto e fale em português.",
-                `Analise este estoque e dê 3 dicas práticas e curtas para aumentar as vendas esta semana: ${stockSummary}`
-            );
-
-            const localReport = generateLocalStockAuditReport();
-            const aiBlock = aiInsight 
-                ? `<div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-xl mb-4"><b class="text-gold block mb-1 text-xs uppercase"><i class="fa-solid fa-wand-magic-sparkles"></i> Recomendação da IA Online ao Vivo:</b><p class="text-zinc-200 text-xs">${aiInsight.replace(/\n/g, '<br>')}</p></div>` 
-                : '';
-
-            resultEl.innerHTML = `
-                <div class="mb-3 flex items-center justify-between border-b border-zinc-800 pb-2">
-                    <b class="text-gold text-sm flex items-center gap-2"><i class="fa-solid fa-microchip"></i> Diagnóstico Estratégico Mega IA</b>
-                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-2.5 py-0.5 rounded-full font-bold">● 100% Online</span>
-                </div>
-                ${aiBlock}
-                ${localReport}
-            `;
-            renderStockAlertsTable();
-        }
-        window.runAiStockAudit = runAiStockAudit;
-
-        function generateLocalStockAuditReport() {
-            if (products.length === 0) return "Adicione produtos na aba Estoque para gerar a análise.";
-
-            let totalUnits = 0, totalCostVal = 0, totalSaleVal = 0;
-            let highMarginItems = [];
-
-            products.forEach(p => {
-                const st = p.stock !== undefined ? Number(p.stock) : 10;
-                const cost = Number(p.costPrice || 0);
-                const sell = Number(p.promoPrice || p.price || 0);
-                totalUnits += st;
-                totalCostVal += (cost * st);
-                totalSaleVal += (sell * st);
-                highMarginItems.push({ name: p.name, profitUnit: (sell - cost) });
-            });
-
-            highMarginItems.sort((a, b) => b.profitUnit - a.profitUnit);
-            const top3Profit = highMarginItems.slice(0, 3);
-            const projectedProfit = totalSaleVal - totalCostVal;
-
-            return `
-                <div class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div class="bg-zinc-900/90 p-3.5 rounded-xl border border-zinc-800">
-                            <span class="text-[10px] text-zinc-400 uppercase font-bold block">Capital em Estoque (Custo)</span>
-                            <span class="text-base font-black text-white">R$ ${formatMoney(totalCostVal)}</span>
-                            <span class="text-[10px] text-zinc-500 block mt-0.5">${products.length} SKUs | ${totalUnits} unid.</span>
-                        </div>
-                        <div class="bg-zinc-900/90 p-3.5 rounded-xl border border-zinc-800">
-                            <span class="text-[10px] text-zinc-400 uppercase font-bold block">Potencial de Venda</span>
-                            <span class="text-base font-black text-gold">R$ ${formatMoney(totalSaleVal)}</span>
-                        </div>
-                        <div class="bg-zinc-900/90 p-3.5 rounded-xl border border-emerald-500/30">
-                            <span class="text-[10px] text-emerald-400 uppercase font-bold block">Lucro Líquido Projetado</span>
-                            <span class="text-base font-black text-emerald-400">+ R$ ${formatMoney(projectedProfit)}</span>
-                        </div>
-                    </div>
-                    <div class="space-y-1.5 pt-1">
-                        <h4 class="text-gold font-extrabold text-xs uppercase tracking-wider"><i class="fa-solid fa-crown"></i> Top 3 Maior Lucro por Unidade</h4>
-                        <ul class="list-disc pl-5 space-y-1 text-zinc-200">
-                            ${top3Profit.map(item => `<li><b>${item.name}</b> — Lucro de <span class="text-emerald-400 font-bold">R$ ${formatMoney(item.profitUnit)}</span>/un.</li>`).join('')}
-                        </ul>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderStockAlertsTable() {
-            const tb = document.getElementById('admin-stock-alerts-table');
-            if(!tb) return;
-            tb.innerHTML = '';
-            const lowStock = products.filter(p => (p.stock !== undefined ? Number(p.stock) : 10) <= 5);
-            const listToShow = lowStock.length > 0 ? lowStock : products.slice(0, 5);
-
-            listToShow.forEach(p => {
-                const st = p.stock !== undefined ? Number(p.stock) : 10;
-                const profit = Number(p.promoPrice || p.price || 0) - Number(p.costPrice || 0);
-                const statusBadge = st <= 3 
-                    ? `<span class="text-red-400 font-bold">Reposição Urgente</span>`
-                    : `<span class="text-emerald-400 font-bold">Estoque Saudável</span>`;
-
-                tb.innerHTML += `
-                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
-                        <td class="p-4 text-xs font-bold text-white">${p.name}</td>
-                        <td class="p-4 text-xs font-bold">${st} unidades</td>
-                        <td class="p-4 text-xs text-gold font-bold">+ R$ ${formatMoney(profit)} / un</td>
-                        <td class="p-4 text-xs">${statusBadge}</td>
-                    </tr>`;
-            });
-        }
-        window.renderStockAlertsTable = renderStockAlertsTable;
-
-        // Modal JSON & Backup
-        function openJsonImportModal() { document.getElementById('json-import-modal').classList.remove('hidden'); }
-        function closeJsonImportModal() { document.getElementById('json-import-modal').classList.add('hidden'); }
-        window.openJsonImportModal = openJsonImportModal;
-        window.closeJsonImportModal = closeJsonImportModal;
-
-        function exportCatalogJson() {
-            const cleanExport = products.map(({ id, ...rest }) => rest);
-            const jsonStr = JSON.stringify(cleanExport, null, 2);
-            document.getElementById('json-text-area').value = jsonStr;
-            navigator.clipboard.writeText(jsonStr).catch(() => {});
-            showToast(`${cleanExport.length} produtos exportados e copiados!`, "success");
-        }
-        window.exportCatalogJson = exportCatalogJson;
-
-        async function processJsonImport() {
-            const textAreaVal = document.getElementById('json-text-area').value.trim();
-            const fileInput = document.getElementById('json-file-input');
-            const markup = parseFloat(document.getElementById('json-default-markup').value) || 1.8;
-            const defaultStock = parseInt(document.getElementById('json-default-stock').value) || 10;
-
-            let jsonContent = fileInput.files.length > 0 ? await fileInput.files[0].text() : textAreaVal;
-            if (!jsonContent) return showToast("Cole o código JSON ou selecione um arquivo.", "error");
-
-            try {
-                const parsed = JSON.parse(jsonContent);
-                const itemsToImport = Array.isArray(parsed) ? parsed : [parsed];
-                let importedCount = 0;
-                for (const item of itemsToImport) {
-                    const costPrice = parseFloat(item.costPrice || item.custo || 0);
-                    const sellingPrice = parseFloat(item.price || item.preco || (costPrice > 0 ? costPrice * markup : 0));
-                    await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), {
-                        name: item.name || item.nome || "Produto",
-                        category: item.category || item.categoria || "Outros",
-                        price: sellingPrice,
-                        costPrice: costPrice,
-                        promoPrice: item.promoPrice ? parseFloat(item.promoPrice) : null,
-                        stock: item.stock !== undefined ? parseInt(item.stock) : defaultStock,
-                        availability: item.availability || "pronta_entrega",
-                        deliveryDays: item.deliveryDays || "",
-                        description: item.description || item.descricao || "",
-                        imageUrl: item.imageUrl || item.foto || "",
-                        isFeatured: !!item.isFeatured
-                    });
-                    importedCount++;
-                }
-                showToast(`${importedCount} produtos importados!`, "success");
-                closeJsonImportModal();
-                loadProductsFromFirebase();
-            } catch (err) {
-                showToast("Erro ao processar JSON.", "error");
-            }
-        }
-        window.processJsonImport = processJsonImport;
-
-        function renderCrmTable() {
-            const tb = document.getElementById('admin-crm-table');
-            if(!tb) return;
-            tb.innerHTML = '';
-            let clientMap = {};
-            orders.forEach(o => {
-                if(!o.client || !o.client.phone) return;
-                let phoneKey = o.client.phone.replace(/\D/g, '');
-                if(!clientMap[phoneKey]) clientMap[phoneKey] = { name: o.client.name, phone: o.client.phone, totalSpent: 0, count: 0 };
-                clientMap[phoneKey].totalSpent += Number(o.financials?.total || 0);
-                clientMap[phoneKey].count += 1;
-            });
-            let clients = Object.values(clientMap).sort((a,b) => b.totalSpent - a.totalSpent);
-            if(clients.length === 0) {
-                tb.innerHTML = `<tr><td colspan="5" class="py-12 text-center text-zinc-500 text-xs">Nenhum cliente registrado.</td></tr>`;
-                return;
-            }
-            clients.forEach(c => {
-                tb.innerHTML += `
-                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
-                        <td class="p-4 text-xs font-bold text-white">${c.name}</td>
-                        <td class="p-4 text-xs text-zinc-300">${c.phone}</td>
-                        <td class="p-4 text-xs text-gold font-bold">R$ ${formatMoney(c.totalSpent)}</td>
-                        <td class="p-4 text-xs">${c.count} pedido(s)</td>
-                        <td class="p-4 text-right">
-                            <a href="https://wa.me/${formatWhatsappNumber(c.phone)}?text=${encodeURIComponent('Olá ' + c.name + '! Temos novidades exclusivas na ' + (storeSettings.storeName || 'Fênix Imports') + '.')}" target="_blank" class="bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-whatsapp"></i> Oferta VIP</a>
-                        </td>
-                    </tr>`;
-            });
-        }
-
-        function sendBulkWhatsappToAll() {
-            let clientMap = {};
-            orders.forEach(o => {
-                if(!o.client || !o.client.phone) return;
-                let phoneKey = o.client.phone.replace(/\D/g, '');
-                if(!clientMap[phoneKey]) clientMap[phoneKey] = { name: o.client.name, phone: o.client.phone };
-            });
-            let clients = Object.values(clientMap);
-            if(clients.length === 0) return showToast("Nenhum cliente cadastrado.", "error");
-            let promoMsg = prompt("Mensagem VIP para TODOS os clientes:", `Olá! Temos ofertas exclusivas na ${storeSettings.storeName || 'Fênix Imports'}, agora aceitando Pix e Cartão em até 12x!`);
-            if(!promoMsg || !promoMsg.trim()) return;
-            clients.forEach((c, idx) => {
-                setTimeout(() => {
-                    window.open(`https://wa.me/${formatWhatsappNumber(c.phone)}?text=${encodeURIComponent(`Olá *${c.name}*!\n\n${promoMsg}`)}`, '_blank');
-                }, idx * 1500);
-            });
-        }
-        window.sendBulkWhatsappToAll = sendBulkWhatsappToAll;
-
-        async function uploadImageToGallery(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const statusEl = document.getElementById('upload-status');
-            statusEl.classList.remove('hidden');
-            statusEl.innerText = '🤖 Processando imagem...';
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('prod-imageUrl').value = e.target.result;
-                statusEl.innerText = '🖼️ Imagem anexada com sucesso!';
-                statusEl.className = 'text-[10px] text-green-400 font-bold mt-1';
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function calculatePriceFromMargin() {
-            const cost = parseFloat(document.getElementById('prod-cost-price').value) || 0;
-            const margin = parseFloat(document.getElementById('prod-margin-pct').value);
-            if (!isNaN(margin) && cost > 0) {
-                document.getElementById('prod-price').value = (cost * (1 + (margin / 100))).toFixed(2);
-            }
-        }
-
-        function openProductModal(id = null) {
-            document.getElementById('product-form').reset(); 
-            document.getElementById('prod-id').value = '';
-            document.getElementById('prod-margin-pct').value = '';
-            document.getElementById('prod-isFeatured').checked = false;
-            document.getElementById('upload-status').classList.add('hidden');
-            if(id) { 
-                const p = products.find(x => x.id === id); 
-                if(p) { 
-                    document.getElementById('prod-id').value = p.id; 
-                    document.getElementById('prod-imageUrl').value = p.imageUrl || ''; 
-                    document.getElementById('prod-name').value = p.name; 
-                    document.getElementById('prod-cost-price').value = p.costPrice || ''; 
-                    document.getElementById('prod-stock').value = p.stock !== undefined ? p.stock : 10; 
-                    document.getElementById('prod-price').value = p.price; 
-                    document.getElementById('prod-promo-price').value = p.promoPrice || ''; 
-                    document.getElementById('prod-category').value = p.category; 
-                    document.getElementById('prod-desc').value = p.description; 
-                    document.getElementById('prod-availability').value = p.availability || 'pronta_entrega';
-                    document.getElementById('prod-delivery-days').value = p.deliveryDays || '';
-                    document.getElementById('prod-isFeatured').checked = !!p.isFeatured;
-                } 
-            }
-            document.getElementById('product-modal').classList.remove('hidden');
-        }
-        window.openProductModal = openProductModal;
-
-        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
-        window.closeProductModal = closeProductModal;
-
-        async function saveProduct(e) {
-            e.preventDefault(); 
-            const id = document.getElementById('prod-id').value;
-            const data = { 
-                name: document.getElementById('prod-name').value, 
-                category: document.getElementById('prod-category').value, 
-                price: parseFloat(document.getElementById('prod-price').value), 
-                promoPrice: document.getElementById('prod-promo-price').value ? parseFloat(document.getElementById('prod-promo-price').value) : null, 
-                costPrice: parseFloat(document.getElementById('prod-cost-price').value), 
-                stock: parseInt(document.getElementById('prod-stock').value), 
-                availability: document.getElementById('prod-availability').value,
-                deliveryDays: document.getElementById('prod-delivery-days').value.trim(),
-                description: document.getElementById('prod-desc').value, 
-                imageUrl: document.getElementById('prod-imageUrl').value,
-                isFeatured: document.getElementById('prod-isFeatured').checked
-            };
-            try {
-                if(id) await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", id), data); 
-                else await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "products"), data);
-                showToast('Salvo com sucesso!', 'success');
-                closeProductModal(); 
-                loadProductsFromFirebase();
-            } catch(err) { showToast('Erro ao salvar.', 'error'); }
-        }
-
-        function toggleSelectAllProducts(source) {
-            document.querySelectorAll('.product-checkbox').forEach(cb => cb.checked = source.checked);
-        }
-
-        function renderAdminTable() {
-            const tb = document.getElementById('admin-product-table'); 
-            tb.innerHTML = '';
-            document.getElementById('select-all-checkbox').checked = false;
-            products.forEach(p => {
-                tb.innerHTML += `
-                    <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
-                        <td class="p-4 text-center"><input type="checkbox" value="${p.id}" class="product-checkbox rounded bg-zinc-900 border-zinc-700 cursor-pointer accent-amber-500"></td>
-                        <td class="p-3">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-8 h-8 rounded-lg object-cover">` : '-'}</td>
-                        <td class="p-3 truncate max-w-[150px] font-bold text-white">${p.name} ${p.isFeatured ? '<i class="fa-solid fa-star text-gold text-[10px]"></i>' : ''}</td>
-                        <td class="p-3 text-xs">${p.availability}</td>
-                        <td class="p-3">${p.stock}</td>
-                        <td class="p-3 text-red-400 font-bold">R$ ${formatMoney(p.costPrice || 0)}</td>
-                        <td class="p-3 text-green-400 font-bold">R$ ${formatMoney(p.promoPrice || p.price)}</td>
-                        <td class="p-3 text-right">
-                            <button onclick="generateProductPromoCopy('${p.id}')" class="text-emerald-400 hover:text-emerald-300 mx-1 cursor-pointer" title="Gerar Anúncio WhatsApp"><i class="fa-solid fa-bullhorn"></i></button>
-                            <button onclick="openProductModal('${p.id}')" class="text-gold hover:text-yellow-300 mx-1.5 cursor-pointer" title="Editar"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteProduct('${p.id}')" class="text-red-400 hover:text-red-300 cursor-pointer" title="Excluir"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>`;
-            });
-        }
-
-        async function deleteSelectedProducts() {
-            const selected = document.querySelectorAll('.product-checkbox:checked');
-            if (selected.length === 0) return showToast('Selecione ao menos um.', 'error');
-            if (!confirm(`Excluir ${selected.length} produtos?`)) return;
-            for (const cb of selected) {
-                await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', cb.value));
-            }
-            showToast('Excluídos!', 'success');
-            loadProductsFromFirebase();
-        }
-
-        async function deleteProduct(id) {
-            if(confirm('Remover produto?')) {
-                await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'products', id));
-                showToast('Removido.', 'success');
-                loadProductsFromFirebase();
-            }
-        }
-        window.deleteProduct = deleteProduct;
-
-        function openTrackingModal() { document.getElementById('tracking-modal').classList.remove('hidden'); document.getElementById('track-result').classList.add('hidden'); }
-        function closeTrackingModal() { document.getElementById('tracking-modal').classList.add('hidden'); }
-        window.openTrackingModal = openTrackingModal;
-        window.closeTrackingModal = closeTrackingModal;
-
-        async function trackOrder() {
-            const rawPhone = document.getElementById('track-phone').value.trim(); 
-            if(!rawPhone) return showToast('Digite seu WhatsApp.', 'error');
-            const phone = formatWhatsappNumber(rawPhone);
-            const res = document.getElementById('track-result'); 
-            res.innerHTML = '<span class="text-zinc-400"><i class="fa-solid fa-spinner animate-spin"></i> Consultando...</span>'; 
-            res.classList.remove('hidden');
-            try {
-                const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
-                let userOrders = []; 
-                snap.forEach(d => { 
-                    if(formatWhatsappNumber(d.data().client?.phone).includes(phone)) userOrders.push(d.data()); 
-                });
-                if(userOrders.length === 0) { res.innerHTML = '<span class="text-red-400">Nenhum pedido encontrado.</span>'; return; }
-                const o = userOrders.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
-                res.innerHTML = `
-                    <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-2xl space-y-2 text-xs">
-                        <div><b>Cliente:</b> ${o.client.name}</div>
-                        <div><b>Status:</b> <span class="text-gold font-bold uppercase">${o.status}</span></div>
-                        ${o.trackingCode ? `<div><b>Código de Rastreio:</b> <span class="text-green-400 font-mono">${o.trackingCode}</span></div>` : '<div class="text-zinc-400">Código de rastreio será liberado em breve.</div>'}
-                    </div>`;
-            } catch(e) { res.innerHTML = '<span class="text-red-400">Erro na consulta.</span>'; }
-        }
-        window.trackOrder = trackOrder;
-
-        function openSettingsModal() {
-            document.getElementById('set-store-name').value = storeSettings.storeName || 'FÊNIX IMPORTS';
-            document.getElementById('set-store-logo').value = storeSettings.logoUrl || '';
-            document.getElementById('set-mp-token').value = storeSettings.mpAccessToken || '';
-            document.getElementById('set-removebg').value = storeSettings.removeBgKey || '';
-            document.getElementById('set-ship-express').value = storeSettings.shippingExpress || 25;
-            document.getElementById('set-pix').value = storeSettings.pixKey || '';
-            document.getElementById('set-pix-name').value = storeSettings.pixName || '';
-            document.getElementById('set-pix-city').value = storeSettings.pixCity || '';
-            document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || '';
-            document.getElementById('set-gemini').value = storeSettings.geminiKey || '';
-            document.getElementById('settings-modal').classList.remove('hidden');
-        }
-        window.openSettingsModal = openSettingsModal;
-
-        function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
-        window.closeSettingsModal = closeSettingsModal;
-
-        async function saveSettings(e) {
-            e.preventDefault();
-            storeSettings = {
-                ...storeSettings,
-                storeName: document.getElementById('set-store-name').value.trim(),
-                logoUrl: document.getElementById('set-store-logo').value.trim(),
-                mpAccessToken: document.getElementById('set-mp-token').value.trim(),
-                removeBgKey: document.getElementById('set-removebg').value.trim(),
-                shippingExpress: parseFloat(document.getElementById('set-ship-express').value),
-                pixKey: document.getElementById('set-pix').value.trim(),
-                pixName: document.getElementById('set-pix-name').value.trim(),
-                pixCity: document.getElementById('set-pix-city').value.trim(),
-                whatsappSales: formatWhatsappNumber(document.getElementById('set-wpp-sales').value.trim()),
-                geminiKey: document.getElementById('set-gemini').value.trim()
-            };
-            localStorage.setItem('fenix_store_settings', JSON.stringify(storeSettings));
-            try { await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); } catch(err) {}
-            showToast('Configurações e Mercado Pago salvos!', 'success');
-            applyStoreBranding();
-            closeSettingsModal();
-        }
-
-        function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
-        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
-        window.openLoginModal = openLoginModal;
-        window.closeLoginModal = closeLoginModal;
-
-        async function handleAdminLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value.trim();
-            const pass = document.getElementById('login-password').value;
-            try {
-                await window.firebaseFns.signInWithEmailAndPassword(window.auth, email, pass);
-                showToast('Acesso concedido!', 'success');
-                closeLoginModal();
-                switchTab('admin');
-                requestPushPermission();
-            } catch(err) {
-                showToast('Credenciais incorretas.', 'error');
-            }
-        }
-
-        async function logoutAdmin() {
-            try {
-                await window.firebaseFns.signOut(window.auth);
-                showToast('Sessão encerrada.', 'info');
-                switchTab('catalog');
-            } catch(err) {}
-        }
-        window.logoutAdmin = logoutAdmin;
-    </script>
-</body>
-</html>
+        function generatePixEMV(key, amount, name, city, txid="FEN
