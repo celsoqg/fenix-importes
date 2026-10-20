@@ -268,7 +268,7 @@
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 rounded-3xl">
                 <div>
                     <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-3"><i class="fa-solid fa-chart-line text-gold"></i> Painel de Gestão Fênix</h2>
-                    <p class="text-xs text-zinc-300 mt-1">Controlo de stock, notificações em tempo real e análise estratégica com Mega IA.</p>
+                    <p class="text-xs text-zinc-300 mt-1">Controle de estoque, notificações em tempo real e análise estratégica com Mega IA.</p>
                 </div>
                 <div class="flex flex-wrap gap-2 w-full md:w-auto bg-zinc-950 p-1.5 rounded-2xl border border-zinc-800">
                     <button onclick="switchAdminSubTab('products')" id="subnav-products" class="flex-1 md:flex-none px-4 py-2 rounded-xl text-xs font-bold bg-zinc-800 text-white transition cursor-pointer">Estoque</button>
@@ -278,7 +278,7 @@
                 </div>
             </div>
 
-            <!-- Toggle Switch de Notificações -->
+            <!-- Toggle Switch de Notificações com Caixinha Ativa/Inativa -->
             <div class="bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 p-4 rounded-2xl border border-amber-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400 text-lg shrink-0">
@@ -286,7 +286,7 @@
                     </div>
                     <div>
                         <h4 class="text-xs font-bold text-white">Notificações Push de Vendas</h4>
-                        <p class="text-[11px] text-zinc-400">Ative para receber som de "Caixa Registradora", vibração e push ao vender.</p>
+                        <p class="text-[11px] text-zinc-400">Ative para receber som de "Caixa Registradora", vibração e alerta no celular ao vender.</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 shrink-0">
@@ -294,13 +294,13 @@
                         <input type="checkbox" id="push-toggle-checkbox" onchange="togglePushNotifications(this)" class="sr-only peer" checked>
                         <div class="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold"></div>
                     </label>
-                    <button onclick="testNotificationSound()" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-3 py-2 rounded-xl text-xs font-bold border border-zinc-700 flex items-center gap-1.5 cursor-pointer" title="Testar Som">
+                    <button onclick="testNotificationSound()" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-3 py-2 rounded-xl text-xs font-bold border border-zinc-700 flex items-center gap-1.5 cursor-pointer" title="Testar Alerta">
                         <i class="fa-solid fa-volume-high"></i> Testar
                     </button>
                 </div>
             </div>
 
-            <!-- Subtab Estoque -->
+            <!-- Subtab Estoque (Apenas Botão JSON Mantido) -->
             <div id="admin-subtab-products" class="space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <div class="flex items-center gap-3">
@@ -378,9 +378,9 @@
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                         <div>
                             <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-robot text-gold"></i> Auditoria de Giro e Reposição via Mega IA</h3>
-                            <p class="text-xs text-zinc-300 mt-1">A Mega IA cruza dados de estoque e histórico de vendas na hora para dar as melhores sugestões.</p>
+                            <p class="text-xs text-zinc-300 mt-1">A IA analisa seu estoque atual, margem de lucro e giro de vendas para sugerir promoções e reposições.</p>
                         </div>
-                        <button onclick="runAiStockAudit()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs flex items-center gap-2 cursor-pointer shadow-lg"><i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Diagnóstico Estratégico</button>
+                        <button onclick="runAiStockAudit()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs flex items-center gap-2 cursor-pointer shadow-lg"><i class="fa-solid fa-wand-magic-sparkles"></i> Executar Auditoria IA</button>
                     </div>
                     <div id="ai-audit-result" class="bg-zinc-950 border border-zinc-800 p-5 rounded-2xl text-xs text-zinc-200 leading-relaxed hidden"></div>
                 </div>
@@ -415,7 +415,7 @@
             <div class="flex items-center gap-2.5"><i class="fa-solid fa-robot text-gold text-lg"></i> <span id="ai-bot-title" class="font-bold text-xs sm:text-sm text-white">Consultor Fênix IA</span></div>
             <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
-        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5">
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5 scroll-smooth">
             <div class="chat-bubble chat-bot">Olá! Sou a Mega Inteligência da Fênix Imports. Pergunte sobre produtos, preços ou formas de pagamento!</div>
         </div>
         <div class="p-3 bg-zinc-950/90 border-t border-zinc-800 flex gap-2">
@@ -722,18 +722,13 @@
             pushNotificationsEnabled: true
         };
 
-        // 🔊 Novo sistema de som de vendas à prova de falhas
         function playSaleBeep() {
             if (storeSettings.pushNotificationsEnabled === false) return;
             try {
-                // Áudio de alta qualidade de caixa registadora
                 const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-                audio.play().catch(e => console.log("Áudio bloqueado pelo navegador.", e));
+                audio.play().catch(e => console.log("Áudio bloqueado:", e));
             } catch(e) {}
-
-            if (navigator.vibrate) {
-                navigator.vibrate([200, 100, 200, 100, 400]);
-            }
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 400]);
         }
 
         function testNotificationSound() {
@@ -944,7 +939,7 @@
             });
         }
 
-        // Aprovar pedido com baixa automática de stock
+        // Aprovar pedido com baixa automática de estoque
         async function updateOrderStatus(id, st) { 
             try {
                 const target = orders.find(o => o.id === id);
@@ -1423,7 +1418,7 @@
             showToast('Pix Copiado!', 'success'); 
         }
 
-        // NOVO: Notificação instantânea que não é bloqueada pelo browser
+        // Bypass final de áudio direto no checkout
         async function processAndSendOrder() {
             const n = document.getElementById('cust-name').value; 
             const rawW = document.getElementById('cust-whatsapp').value; 
@@ -1451,7 +1446,7 @@
                 date: new Date().toISOString() 
             };
             
-            // DISPARA O ALERTA E O SOM NA HORA (Bypass do bloqueio de segurança do Android)
+            // Dispara na hora!
             sendNativeNotification(`💰 NOVA VENDA: R$ ${formatMoney(totals.total)}`, `Cliente: ${n}`);
 
             try {
@@ -1534,7 +1529,6 @@
         }
         window.sendBulkWhatsappToAll = sendBulkWhatsappToAll;
 
-        /* 🧠 MOTOR HÍBRIDO DE MEGA INTELIGÊNCIA FÊNIX (CLOUD + NEURAL NATIVO) */
         function generateLocalStockAuditReport() {
             if (products.length === 0) {
                 return "Nenhum produto registado no stock no momento. Adicione produtos na aba Estoque para gerar a análise.";
@@ -1595,31 +1589,19 @@
                     </div>
 
                     <div class="space-y-2.5 pt-2">
-                        <h4 class="text-gold font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-crown"></i> 1. Campeões de Lucro Unitário (Prioridade de Impulso)</h4>
-                        <p class="text-zinc-300">Estes itens geram o maior retorno financeiro por venda. Recomendação: marque a opção <b>"Fixar em Destaque"</b> neles para acelerar o giro:</p>
+                        <h4 class="text-gold font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-crown"></i> 1. Campeões de Lucro Unitário</h4>
+                        <p class="text-zinc-300">Recomendação: marque a opção <b>"Fixar em Destaque"</b> neles para acelerar o giro:</p>
                         <ul class="list-disc pl-5 space-y-1 text-zinc-200">
-                            ${top3Profit.map(item => `<li><b>${item.name}</b> — Lucro líquido de <span class="text-emerald-400 font-bold">R$ ${formatMoney(item.profitUnit)}</span> por unidade (${item.marginPct.toFixed(0)}% de margem).</li>`).join('')}
+                            ${top3Profit.map(item => `<li><b>${item.name}</b> — Lucro de <span class="text-emerald-400 font-bold">R$ ${formatMoney(item.profitUnit)}</span>/un.</li>`).join('')}
                         </ul>
                     </div>
 
                     <div class="space-y-2.5 pt-1">
-                        <h4 class="text-amber-400 font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-bolt"></i> 2. Estratégia de Giro Rápido & Promoções</h4>
+                        <h4 class="text-amber-400 font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-bolt"></i> 2. Estratégia de Giro Rápido</h4>
                         <p class="text-zinc-300">
                             ${overStockItems.length > 0 
-                                ? `Identificámos <b>${overStockItems.length} produtos</b> com stock cheio sem promoção ativa (ex: <b>${overStockItems.slice(0, 3).map(x => x.name).join(', ')}</b>). Aplicar um desconto promocional de 5% a 8% colocará esses itens em destaque no topo e libertará capital rapidamente.`
-                                : `Todos os itens com alto volume já estão otimizados ou em destaque.`}
-                        </p>
-                    </div>
-
-                    <div class="space-y-2.5 pt-1">
-                        <h4 class="text-blue-400 font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-chart-pie"></i> 3. Procura Real & Reposição</h4>
-                        <p class="text-zinc-300">
-                            ${topSellers.length > 0 
-                                ? `Produtos mais vendidos até agora: <b>${topSellers.map(s => `${s[0]} (${s[1]} un)`).join(', ')}</b>. Mantenha stock de segurança destes itens.`
-                                : `À medida que novos pedidos entrarem, os itens mais vendidos serão listados aqui automaticamente.`}
-                            ${lowStockItems.length > 0 
-                                ? `<br><span class="text-red-400 font-bold">⚠️ Atenção à baixa de stock:</span> ${lowStockItems.join(', ')}.`
-                                : `<br><span class="text-emerald-400 font-bold">✅ Nível de stock saudável:</span> Nenhum item com risco imediato de rutura.`}
+                                ? `<b>${overStockItems.length} produtos</b> com stock cheio sem promoção (ex: <b>${overStockItems.slice(0, 3).map(x => x.name).join(', ')}</b>). Aplicar desconto promocional colocará em destaque.`
+                                : `Todos os itens com alto volume já estão otimizados.`}
                         </p>
                     </div>
                 </div>
@@ -1655,20 +1637,18 @@
                 return `Encontrei estas opções no nosso catálogo para si:<br>${list}<br><br>Basta clicar em "Comprar" no produto desejado para adicionar ao carrinho!`;
             }
 
-            const highlights = products.slice(0, 3).map(p => `${p.name} (R$ ${formatMoney(p.promoPrice || p.price)})`).join(', ');
-            return `Temos uma linha completa de alta performance! Alguns dos nossos destaques atuais são: ${highlights}. Procura algum produto específico ou quer ajuda com o envio?`;
+            return `Temos uma linha completa de alta performance! Procura algum produto específico ou quer ajuda com o envio?`;
         }
 
+        // Requisição oficial à API do Gemini
         async function fetchGeminiAPI(apiKey, promptText) {
             const cleanKey = (apiKey || storeSettings.geminiKey || '').trim();
             if (!cleanKey) throw new Error("Chave Vazia");
-            const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-2.5-flash'];
+            const models = ['gemini-1.5-flash', 'gemini-2.0-flash'];
             
             for (const model of models) {
                 try {
-                    // Independente de ser AIza ou AQ, enviamos pela URL que é o padrão universal e à prova de falhas de CORS
                     const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
-
                     const res = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1684,32 +1664,29 @@
                             return data.candidates[0].content.parts[0].text;
                         }
                     } else {
-                        const err = await res.text();
-                        console.error("Gemini Error:", err);
-                        throw new Error(res.status);
+                        throw new Error(`Erro HTTP ${res.status}`);
                     }
-                } catch (err) {
-                    if(err.message !== "Chave Vazia") console.error("Model fallback:", err);
-                }
+                } catch (err) {}
             }
-            throw new Error('Falha total na API.');
+            throw new Error('Falha de conexão com a API do Google.');
         }
 
+        // Função do Botão "Executar Auditoria"
         async function runAiStockAudit() {
             const resultEl = document.getElementById('ai-audit-result');
             resultEl.classList.remove('hidden');
-            resultEl.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Conectando à Mega Inteligência...';
+            resultEl.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin text-gold"></i> Processando auditoria completa de stock e vendas com IA...';
 
             const stockSummary = products.map(p => `- ${p.name}: Estoque ${p.stock || 10} un | Custo R$ ${p.costPrice || 0} | Venda R$ ${p.price}`).join('\n');
-            const prompt = `Analise o seguinte estoque da loja Fênix Imports e dê sugestões estratégicas em português de quais produtos destacar, repor ou colocar em promoção:\n${stockSummary}`;
+            const prompt = `Analise o seguinte estoque da loja Fênix Imports e dê sugestões financeiras breves em português de quais produtos destacar, repor ou colocar em promoção:\n${stockSummary}`;
 
             try {
                 let cloudReply = await fetchGeminiAPI(storeSettings.geminiKey, prompt);
                 resultEl.innerHTML = `<b class="text-gold block mb-2 text-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> Relatório Estratégico Fênix IA:</b><br> ${cloudReply.replace(/\n/g, '<br>')}`;
             } catch(e) {
-                // Se a chave falhar, o Motor Híbrido atua! Nunca mostraremos erro na tela do cliente.
+                // Caso a chave ainda não esteja correta, puxa o sistema offline da Fênix sem mostrar erros vermelhos
                 const localReport = generateLocalStockAuditReport();
-                resultEl.innerHTML = `<div class="mb-3 flex items-center justify-between border-b border-zinc-800 pb-2"><b class="text-gold text-sm flex items-center gap-2"><i class="fa-solid fa-microchip"></i> Diagnóstico Estratégico Mega IA</b><span class="text-[10px] bg-gold/10 text-gold border border-gold/30 px-2 py-0.5 rounded-full font-bold">Tempo Real</span></div>${localReport}`;
+                resultEl.innerHTML = `<div class="mb-3 flex items-center justify-between border-b border-zinc-800 pb-2"><b class="text-gold text-sm flex items-center gap-2"><i class="fa-solid fa-microchip"></i> Diagnóstico Estratégico Mega IA</b><span class="text-[10px] bg-gold/10 text-gold border border-gold/30 px-2 py-0.5 rounded-full font-bold">Modo Híbrido</span></div>${localReport}`;
             }
             renderStockAlertsTable();
         }
@@ -1751,7 +1728,6 @@
         function toggleAIChat() { document.getElementById('ai-chat-window').classList.toggle('hidden'); }
         window.toggleAIChat = toggleAIChat;
 
-        // 🧠 Efeito Máquina de Escrever para IA Realista
         function typeWriterEffect(text, containerElement) {
             const bubble = document.createElement('div');
             bubble.className = "chat-bubble chat-bot typing-cursor";
@@ -1763,7 +1739,7 @@
                     bubble.innerHTML = text.substring(0, i + 1).replace(/\n/g, '<br>');
                     i++;
                     containerElement.scrollTop = containerElement.scrollHeight;
-                    setTimeout(type, 15); // Velocidade da digitação
+                    setTimeout(type, 10); 
                 } else {
                     bubble.classList.remove('typing-cursor');
                 }
@@ -1798,10 +1774,6 @@
                 }
             } catch(e) { 
                 document.getElementById(typingId)?.remove();
-                // Se não houver chave ou der erro, o motor neural atua para que o cliente NUNCA fique sem resposta.
-                if(!storeSettings.geminiKey) {
-                    showToast("Configure a chave da IA no Painel para respostas 100% dinâmicas.", "error");
-                }
                 let localReply = generateLocalChatbotReply(msg);
                 typeWriterEffect(localReply, chatBody);
             }
