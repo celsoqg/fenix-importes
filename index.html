@@ -1102,7 +1102,7 @@
             if(!code) return showToast("Digite o código de rastreio.", "error");
             await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, status: 'enviado' });
             if(phone) {
-                window.open(`https://wa.me/${formatWhatsappNumber(phone)}?text=${encodeURIComponent(`Olá ${name}, seu pedido na${storeSettings.storeName || 'Fênix Imports'} foi enviado! Rastreio: ${code}`)}`, '_blank');
+                window.open(`https://wa.me/${formatWhatsappNumber(phone)}?text=${encodeURIComponent(`Olá ${name}, seu pedido na ${storeSettings.storeName || 'Fênix Imports'} foi enviado! Rastreio: ${code}`)}`, '_blank');
             }
             showToast('Rastreio salvo!', 'success');
         }
@@ -1393,7 +1393,7 @@
             } catch(e) {}
 
             const methodLabel = method === 'card' ? 'Cartão de Crédito (Mercado Pago)' : 'PIX Imediato';
-            currentWhatsappOrderMsg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n💳 *Pagamento:* ${methodLabel}\n🚚 *Envio:* ${shippingType}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(totals.total)}`;
+            currentWhatsappOrderMsg = `*NOVO PEDIDO - ${storeTitle.toUpperCase()}*\n👤 ${n}\n📱 ${w}\n📍 ${ad}\n💳 *Pagamento:* ${methodLabel}\n🚚 *Envio:* ${shippingType}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name}`).join('\n')}\n💰 *Total:* R$ ${formatMoney(totals.total)}`;
 
             document.getElementById('pix-exact-value').innerText = `R$ ${formatMoney(totals.total)}`;
             document.getElementById('checkout-step-1').classList.add('hidden'); 
