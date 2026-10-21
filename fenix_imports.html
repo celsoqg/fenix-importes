@@ -176,7 +176,7 @@
     <!-- Banner Topo -->
     <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
         <i class="fa-solid fa-bolt text-sm"></i> 
-        <span>PIX & CARTÃO EM ATÉ 12X (MERCADO PAGO) • ENVIO EXPRESSO BRASIL</span>
+        <span>APROVAÇÃO 100% AUTOMÁTICA • PIX & CARTÃO EM ATÉ 12X • ENVIO EXPRESSO SIGILOSO</span>
     </div>
 
     <!-- Header Glassmorphism -->
@@ -198,6 +198,7 @@
 
             <nav class="hidden md:flex items-center gap-5 lg:gap-7 text-xs lg:text-sm font-semibold">
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-1.5 hover:text-yellow-300 transition cursor-pointer"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
+                <button onclick="openProductAdvisorModal()" class="text-amber-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer font-bold"><i class="fa-solid fa-compass text-gold text-xs"></i> Qual Escolher? (IA)</button>
                 <button onclick="openReconstitutionModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-syringe text-gold text-xs"></i> Calculadora UI</button>
                 <button onclick="openLabVerifyModal()" class="text-zinc-300 hover:text-emerald-400 transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400 text-xs"></i> Laudos HPLC</button>
                 <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
@@ -228,6 +229,7 @@
 
         <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-zinc-800 px-5 py-4 space-y-3">
             <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-store"></i> Catálogo de Produtos</button>
+            <button onclick="openProductAdvisorModal(); toggleMobileMenu();" class="w-full text-left text-amber-300 font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-compass text-gold"></i> Consultor IA: Qual Produto Escolher?</button>
             <button onclick="openReconstitutionModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-syringe text-gold"></i> Calculadora de Reconstituição (UI)</button>
             <button onclick="openLabVerifyModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400"></i> Verificar Lote & Laudos HPLC</button>
             <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
@@ -240,6 +242,26 @@
 
         <!-- TAB CATÁLOGO -->
         <div id="tab-catalog" class="space-y-8">
+            <!-- Barra Inteligente de Reconhecimento Automático do Cliente (Compra em 1 Clique) -->
+            <div id="returning-customer-banner" class="hidden glass-card border border-emerald-500/40 rounded-2xl p-3.5 sm:px-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <span id="returning-cust-greeting" class="text-xs font-black text-white block">Bem-vindo de volta!</span>
+                        <span id="returning-cust-sub" class="text-[11px] text-zinc-400 block">Seus dados de entrega já estão preenchidos automaticamente no checkout.</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+                    <button type="button" onclick="repeatLastCustomerOrder()" id="btn-repeat-last-order" class="hidden flex-1 sm:flex-initial gold-btn-gradient px-3.5 py-2 rounded-xl text-[11px] font-black flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-rotate-right"></i> Repetir Meu Último Pedido (1-Clique)
+                    </button>
+                    <button type="button" onclick="openTrackingModal()" class="flex-1 sm:flex-initial bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 px-3 py-2 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fa-solid fa-route text-gold"></i> Rastrear
+                    </button>
+                </div>
+            </div>
             <div class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-10 glow-gold-lg">
                 <div class="absolute -right-20 -bottom-20 w-80 h-80 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
@@ -250,13 +272,16 @@
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"><i class="fa-solid fa-box-open"></i> Envio Expresso Sigiloso</span>
                         </div>
                         <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
-                        <p class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Pagamento seguro com confirmação via Mercado Pago (Pix ou Cartão em até 12x) ou Pix Chave Direta mediante comprovante, com envio expresso discreto para todo o Brasil.</p>
+                        <p class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Pagamento 100% automático e discreto: gere seu PIX ou Link de Cartão em até 12x na hora, o sistema reconhece seu pagamento automaticamente em segundos e já libera seu pedido para envio expresso.</p>
                         <div class="flex flex-wrap gap-2.5 pt-1">
-                            <button onclick="openReconstitutionModal()" class="gold-btn-gradient px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 cursor-pointer">
+                            <button onclick="openProductAdvisorModal()" class="gold-btn-gradient px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 cursor-pointer shadow-lg">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Não sabe qual escolher? Consultor IA (15s)
+                            </button>
+                            <button onclick="openReconstitutionModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-gold border border-gold/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
                                 <i class="fa-solid fa-syringe"></i> Calculadora de Dosagem (UI)
                             </button>
                             <button onclick="openLabVerifyModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-emerald-400 border border-emerald-500/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
-                                <i class="fa-solid fa-microscope"></i> Consultar Laudos HPLC & Lote
+                                <i class="fa-solid fa-microscope"></i> Laudos HPLC 99.8%
                             </button>
                         </div>
                     </div>
@@ -339,6 +364,39 @@
                 <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div></div>
                 <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div></div>
             </div>
+
+            <!-- Guia Rápido para Iniciantes & Perguntas Frequentes (Ajuda a Decidir e Comprar) -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8 border border-gold/30 space-y-5 mt-8">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800 pb-4">
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-gold bg-gold/10 px-2.5 py-1 rounded-full border border-gold/30"><i class="fa-solid fa-lightbulb"></i> Guia Rápido de Compra</span>
+                        <h2 class="text-lg sm:text-2xl font-black text-white mt-2">Dúvidas sobre para que serve cada produto?</h2>
+                        <p class="text-xs text-zinc-400">Entenda de forma simples antes de escolher o seu protocolo ou use nosso Consultor IA gratuito.</p>
+                    </div>
+                    <button onclick="openProductAdvisorModal()" class="gold-btn-gradient px-4 py-3 rounded-2xl text-xs font-black flex items-center gap-2 shrink-0 cursor-pointer self-start sm:self-auto">
+                        <i class="fa-solid fa-compass"></i> Descobrir Meu Produto Ideal (IA)
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs">
+                    <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
+                        <div class="text-amber-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-fire"></i> Tirzepatida vs Retatrutida</div>
+                        <p class="text-zinc-300 text-[11px] leading-relaxed">Ambos servem para <b>emagrecimento rápido e bloqueio da fome</b>. A <b>Tirzepatida (TG)</b> age em 2 receptores (saciedade forte). A <b>Retatrutida</b> age em 3 receptores (inclui Glucagon, acelerando ainda mais a queima de gordura parada).</p>
+                    </div>
+                    <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
+                        <div class="text-sky-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-certificate"></i> Qualidade & Pronta Entrega</div>
+                        <p class="text-zinc-300 text-[11px] leading-relaxed">Trabalhamos apenas com linhas originais de alta pureza certificada (como <b>Tirzec, Tirsedral, TG e Retatrutida</b>). Verifique na descrição de cada produto a apresentação exata do seu protocolo.</p>
+                    </div>
+                    <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
+                        <div class="text-emerald-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-dna"></i> Recuperação vs Ganho Muscular</div>
+                        <p class="text-zinc-300 text-[11px] leading-relaxed">Para curar dores no ombro, joelho ou tendinite rapidamente, escolha o <b>BPC-157 + TB-500</b>. Já para ganhar massa muscular densa, força e estética seca, escolha <b>Susobolic</b> ou <b>Masteron</b>.</p>
+                    </div>
+                    <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
+                        <div class="text-gold font-black flex items-center gap-1.5"><i class="fa-solid fa-shield-halved"></i> Compra & Aprovação 100% Automática</div>
+                        <p class="text-zinc-300 text-[11px] leading-relaxed">Você gera seu <b>PIX imediato</b> ou <b>Link Seguro de Cartão em até 12x</b> na hora. Nossa IA reconhece o pagamento automaticamente, reserva seu estoque na mesma hora e libera o envio em <b>embalagem 100% sigilosa</b>.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- TAB ADMIN -->
@@ -404,6 +462,7 @@
                         <button onclick="deleteSelectedProducts()" class="bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-trash-can"></i> Excluir Selecionados</button>
                     </div>
                     <div class="flex flex-wrap gap-2">
+                        <button onclick="upgradeAllDescriptionsWithAI()" class="bg-amber-500/20 hover:bg-amber-500 text-gold hover:text-black font-black px-3.5 py-2.5 rounded-xl text-xs border border-gold/40 flex items-center gap-1.5 cursor-pointer transition" title="Usar IA para enriquecer as descrições de todos os produtos explicando para que servem"><i class="fa-solid fa-wand-magic-sparkles"></i> Descrições IA</button>
                         <button onclick="restoreDefaultCatalog()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-1.5 cursor-pointer" title="Restaurar produtos de exemplo"><i class="fa-solid fa-rotate-left"></i> Catálogo Padrão</button>
                         <button onclick="downloadCleanIndexHtml()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-lg cursor-pointer" title="Baixar arquivo index.html pronto para hospedagem"><i class="fa-solid fa-file-arrow-down"></i> Baixar index.html</button>
                         <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-file-code"></i> JSON</button>
@@ -439,6 +498,50 @@
                     <div class="glass-card p-5 rounded-3xl relative overflow-hidden border-green-500/30"><p class="text-[11px] font-bold text-green-400 uppercase tracking-wider mb-1">Lucro Líquido Real</p><h4 id="dash-profit" class="text-2xl font-black text-green-400">R$ 0,00</h4><p id="dash-margin" class="text-[10px] text-green-400/80 mt-1 font-bold bg-green-500/10 inline-block px-2 py-0.5 rounded">Margem: 0%</p></div>
                     <div class="glass-card p-5 rounded-3xl relative overflow-hidden"><p class="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mb-1">Vendas Concluídas</p><h4 id="dash-sales-count" class="text-2xl font-black text-white">0</h4><span id="dash-pending-count" class="text-[10px] text-amber-400 font-bold mt-1 block">0 aguardando</span></div>
                     <div class="glass-card p-5 rounded-3xl relative overflow-hidden"><p class="text-[11px] font-bold text-sky-400 uppercase tracking-wider mb-1">Conversão PIX vs Cartão</p><div id="dash-pay-split" class="text-xs font-bold text-white mt-2 space-y-1"></div></div>
+                </div>
+
+                <!-- 🤖 SENTINELA IA 24H DE PAGAMENTOS + BANCADA DE SEPARAÇÃO AUTOMÁTICA (PARA QUEM TRABALHA SOZINHO) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    <div class="lg:col-span-7 glass-card p-5 rounded-3xl border border-emerald-500/40 space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800 pb-3">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-9 h-9 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-base">
+                                    <i class="fa-solid fa-robot"></i>
+                                </span>
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Sentinela IA: Acompanhamento Automático</h4>
+                                        <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[9px] font-black px-2 py-0.5 rounded-full animate-pulse">ATIVO 24H</span>
+                                    </div>
+                                    <p id="ai-sentinel-status-text" class="text-[11px] text-zinc-400">Monitorando pagamentos em segundo plano (Modo Camuflado Anti-Bloqueio ativo).</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 shrink-0">
+                                <label class="inline-flex items-center gap-1.5 bg-zinc-950 border border-emerald-500/40 px-2.5 py-1.5 rounded-xl cursor-pointer" title="Quando ativado, assim que o cliente anexa um comprovante PIX válido com titular, a IA já aprova o pedido e baixa o estoque sozinha!">
+                                    <input type="checkbox" id="auto-approve-receipt-toggle" onchange="toggleAutoApproveReceipts(this)" class="accent-emerald-500 cursor-pointer" checked>
+                                    <span class="text-[10px] font-black text-emerald-400 uppercase">Auto-Baixa IA</span>
+                                </label>
+                                <button type="button" onclick="runAiPaymentSentinelScan(true)" id="btn-run-sentinel" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-[11px] font-black flex items-center gap-1.5 shrink-0 cursor-pointer shadow-lg">
+                                    <i class="fa-solid fa-bolt"></i> Varredura IA
+                                </button>
+                            </div>
+                        </div>
+                        <div id="ai-sentinel-feed" class="text-xs text-zinc-300 space-y-1.5 max-h-28 overflow-y-auto"></div>
+                    </div>
+
+                    <div class="lg:col-span-5 glass-card p-5 rounded-3xl border border-gold/40 space-y-3">
+                        <div class="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-box-open text-gold"></i>
+                                <h4 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Fila de Bancada (O Que Separar Hoje)</h4>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" onclick="copyPickingList()" class="text-[10px] font-bold text-gold hover:underline cursor-pointer"><i class="fa-regular fa-copy"></i> Copiar</button>
+                                <button type="button" onclick="dispatchAllPaidOrdersOneClick()" class="bg-gold/20 hover:bg-gold text-gold hover:text-black border border-gold/40 px-2 py-1 rounded-lg text-[10px] font-black transition cursor-pointer"><i class="fa-solid fa-truck-fast"></i> Despachar Fila</button>
+                            </div>
+                        </div>
+                        <div id="admin-picking-list" class="text-xs text-zinc-300 space-y-1.5 max-h-28 overflow-y-auto"></div>
+                    </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 glass-card p-4 rounded-2xl">
@@ -517,7 +620,7 @@
             <span>© 2026 <b id="footer-store-name" class="text-zinc-400">FÊNIX IMPORTS</b> • Exclusividade & Alta Performance</span>
             <span class="flex items-center gap-3 text-[11px]">
                 <span><i class="fa-solid fa-lock text-gold"></i> Ambiente Criptografado</span>
-                <span><i class="fa-brands fa-pix text-emerald-400"></i> Pix & Mercado Pago 12x</span>
+                <span><i class="fa-brands fa-pix text-emerald-400"></i> Pix Imediato & Cartão até 12x</span>
             </span>
         </div>
     </footer>
@@ -547,6 +650,12 @@
         </div>
         <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5 scroll-smooth">
             <div class="chat-bubble chat-bot">Olá! Sou a Inteligência Online da Fênix Imports. Digite o nome ou sigla de qualquer produto (ex: <b>TG</b>, <b>Tirzepatida</b>, <b>Masteron</b>, <b>Susobolic</b>) e eu busco no estoque para você comprar na hora!</div>
+        </div>
+        <div class="px-3 py-2 bg-zinc-950/95 border-t border-zinc-800/80 flex gap-1.5 overflow-x-auto scroll-smooth">
+            <button type="button" onclick="askQuickChatQuestion('Qual o melhor produto para emagrecer rápido e tirar a fome?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-amber-300 border border-amber-500/30 whitespace-nowrap cursor-pointer shrink-0">🔥 Melhor p/ Emagrecer</button>
+            <button type="button" onclick="askQuickChatQuestion('Qual a diferença entre TG Tirzepatida e Retatrutida?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-sky-300 border border-sky-500/30 whitespace-nowrap cursor-pointer shrink-0">🤔 Tirze vs Retatrutida</button>
+            <button type="button" onclick="askQuickChatQuestion('Como funciona o envio expresso e o prazo de entrega?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-emerald-300 border border-emerald-500/30 whitespace-nowrap cursor-pointer shrink-0">🚚 Prazo & Envio Sigiloso</button>
+            <button type="button" onclick="askQuickChatQuestion('Qual produto serve para ganhar massa muscular seca e força?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-purple-300 border border-purple-500/30 whitespace-nowrap cursor-pointer shrink-0">💪 Ganhar Massa Seca</button>
         </div>
         <div class="p-3 bg-zinc-950/90 border-t border-zinc-800 flex gap-2">
             <input type="text" id="chat-input" placeholder="Ex: Tem TG Tirzepatida? Qual o valor?" onkeypress="if(event.key === 'Enter') sendChatMessage()" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-gold">
@@ -703,6 +812,109 @@
         </div>
     </div>
 
+    <!-- Modal Admin: Gerar & Enviar Link de Cartão Blindado (Modo Camuflado Anti-Bloqueio) -->
+    <div id="admin-card-link-modal" class="fixed inset-0 z-[65] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeAdminCardLinkModal()"></div>
+        <div class="relative glass-card border border-sky-500/40 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 space-y-4">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+                <div>
+                    <h3 class="text-sm font-black text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-sky-400"></i> Enviar Link de Cartão Blindado</h3>
+                    <p class="text-[10px] text-zinc-400 mt-0.5">Protege sua conta: nunca envia o nome real dos produtos para a operadora</p>
+                </div>
+                <button onclick="closeAdminCardLinkModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div id="admin-card-link-order-info" class="bg-zinc-950 p-3 rounded-2xl border border-zinc-800 text-xs space-y-1"></div>
+
+            <div class="space-y-2">
+                <label class="text-[10px] font-black uppercase text-gold block">1. Descrição Camuflada (O que aparece na operadora do cartão):</label>
+                <select id="stealth-link-title" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white outline-none focus:border-gold">
+                    <option value="Consultoria Esportiva & Bem-Estar">Consultoria Esportiva & Bem-Estar</option>
+                    <option value="Suplementos Alimentares & Vitaminas">Suplementos Alimentares & Vitaminas</option>
+                    <option value="Kit Cosméticos & Cuidados Pessoais">Kit Cosméticos & Cuidados Pessoais</option>
+                    <option value="Assessoria de Treino Individual">Assessoria de Treino Individual</option>
+                </select>
+                <button type="button" onclick="generateStealthCardLink()" id="btn-gen-stealth-link" class="w-full bg-sky-600/25 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-500/40 py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition cursor-pointer">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Link Camuflado Automático (Sem Nomes de Produtos)
+                </button>
+            </div>
+
+            <div class="space-y-1.5">
+                <label class="text-[10px] font-bold text-zinc-400 block">2. Ou cole abaixo o link da sua maquininha (InfinityPay, Ton, PagBank, MP):</label>
+                <input type="text" id="admin-card-custom-url" placeholder="https://link.mercadopago.com.br/... ou link da maquininha" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-emerald-400 font-mono outline-none focus:border-sky-400">
+            </div>
+
+            <div class="flex gap-2 pt-1">
+                <button type="button" onclick="closeAdminCardLinkModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">Cancelar</button>
+                <button type="button" onclick="sendStealthCardLinkWhatsapp()" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg cursor-pointer">
+                    <i class="fa-brands fa-whatsapp text-sm"></i> Enviar p/ Cliente
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Consultor IA: Descubra Seu Produto Ideal -->
+    <div id="product-advisor-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeProductAdvisorModal()"></div>
+        <div class="relative glass-card border border-gold/50 rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl z-10 overflow-y-auto max-h-[92vh] space-y-5">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gold/15 border border-gold/40 flex items-center justify-center text-gold text-lg">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-black text-white">Consultor IA: Qual Produto Escolher?</h3>
+                        <p class="text-[11px] text-zinc-400">Toque no seu objetivo principal e veja para que serve a melhor opção para você</p>
+                    </div>
+                </div>
+                <button onclick="closeProductAdvisorModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <div class="space-y-2">
+                <label class="text-[11px] font-black uppercase tracking-wider text-gold block">1. Qual resultado você quer alcançar mais rápido?</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <button type="button" onclick="selectAdvisorGoal('emagrecer_intenso')" class="advisor-goal-btn bg-zinc-950 hover:border-gold border border-zinc-800 p-3.5 rounded-2xl text-left transition cursor-pointer flex items-start gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-fire-flame-curved"></i></span>
+                        <div>
+                            <div class="text-xs font-black text-white">Secar Rápido & Tirar a Fome</div>
+                            <div class="text-[10px] text-zinc-400 leading-snug mt-0.5">Perder peso rápido, destravar o metabolismo e controlar a ansiedade por comida.</div>
+                        </div>
+                    </button>
+                    <button type="button" onclick="selectAdvisorGoal('queima_localizada')" class="advisor-goal-btn bg-zinc-950 hover:border-gold border border-zinc-800 p-3.5 rounded-2xl text-left transition cursor-pointer flex items-start gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-orange-500/15 text-orange-400 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-bolt"></i></span>
+                        <div>
+                            <div class="text-xs font-black text-white">Queimar Gordura & Dar Energia</div>
+                            <div class="text-[10px] text-zinc-400 leading-snug mt-0.5">Eliminar gordura abdominal nos treinos mantendo pique e resistência física.</div>
+                        </div>
+                    </button>
+                    <button type="button" onclick="selectAdvisorGoal('curar_lesao')" class="advisor-goal-btn bg-zinc-950 hover:border-gold border border-zinc-800 p-3.5 rounded-2xl text-left transition cursor-pointer flex items-start gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-kit-medical"></i></span>
+                        <div>
+                            <div class="text-xs font-black text-white">Curar Lesão, Tendão ou Articulação</div>
+                            <div class="text-[10px] text-zinc-400 leading-snug mt-0.5">Recuperar dores no ombro, joelho, cotovelo ou lesões musculares rapidamente.</div>
+                        </div>
+                    </button>
+                    <button type="button" onclick="selectAdvisorGoal('massa_seca')" class="advisor-goal-btn bg-zinc-950 hover:border-gold border border-zinc-800 p-3.5 rounded-2xl text-left transition cursor-pointer flex items-start gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-dumbbell"></i></span>
+                        <div>
+                            <div class="text-xs font-black text-white">Ganhar Massa Muscular & Definição</div>
+                            <div class="text-[10px] text-zinc-400 leading-snug mt-0.5">Aumentar volume muscular limpo, força bruta, vascularização e densidade.</div>
+                        </div>
+                    </button>
+                    <button type="button" onclick="selectAdvisorGoal('rejuvenescimento_gh')" class="advisor-goal-btn sm:col-span-2 bg-zinc-950 hover:border-gold border border-zinc-800 p-3.5 rounded-2xl text-left transition cursor-pointer flex items-start gap-3">
+                        <span class="w-8 h-8 rounded-xl bg-purple-500/15 text-purple-400 flex items-center justify-center shrink-0 mt-0.5"><i class="fa-solid fa-crown"></i></span>
+                        <div>
+                            <div class="text-xs font-black text-white">Protocolo Elite Completo: Definição + Sono Profundo + Anti-Aging (GH)</div>
+                            <div class="text-[10px] text-zinc-400 leading-snug mt-0.5">Lipólise avançada, qualidade da pele, regeneração celular e ganho de massa magra.</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div id="advisor-recommendation-box" class="hidden bg-zinc-950 border border-gold/40 rounded-2xl p-4 sm:p-5 space-y-3"></div>
+        </div>
+    </div>
+
     <!-- Modal Detalhes do Produto (Quick View) -->
     <div id="product-detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeProductDetailModal()"></div>
@@ -834,24 +1046,24 @@
                         <span id="shipping-price-text" class="font-bold text-gold">R$ 0,00</span>
                     </div>
                     <div class="flex justify-between items-center text-xs px-1 pt-1">
-                        <span class="text-zinc-400">Total a Pagar (Pix ou Mercado Pago):</span>
+                        <span class="text-zinc-400">Total do Pedido:</span>
                         <span id="checkout-step1-total" class="font-black text-sm text-gold">R$ 0,00</span>
                     </div>
                 </div>
 
-                <!-- Botões de Escolha: PIX vs CARTÃO MERCADO PAGO -->
+                <!-- Botões de Escolha: PIX Automático ou Link de Cartão Automático Camuflado -->
                 <div class="pt-2 space-y-2.5">
-                    <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block text-center">Escolha como deseja pagar (Mesmo Valor Final):</label>
+                    <label class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block text-center">Escolha como pagar (Reconhecimento Automático na Hora):</label>
                     <button onclick="startAutomaticPayment('pix')" id="btn-pay-pix" class="w-full gold-btn-gradient py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fa-brands fa-pix text-base"></i> Pagar com PIX Imediato
+                        <i class="fa-brands fa-pix text-base"></i> Pagar com PIX Imediato (QR Code Automático)
                     </button>
                     <button onclick="startAutomaticPayment('card')" id="btn-pay-card" class="w-full mp-btn-gradient py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fa-solid fa-credit-card text-base"></i> Mercado Pago (Pix ou Cartão até 12x)
+                        <i class="fa-solid fa-credit-card text-base"></i> Pagar no Cartão em até 12x (Link Automático)
                     </button>
                 </div>
             </div>
 
-            <!-- Etapa 2: Tela de Pagamento com Trava Anti-Fraude (Mercado Pago API ou Comprovante PIX) -->
+            <!-- Etapa 2: Tela de Pagamento PIX Direto ou Solicitação de Link de Cartão via WhatsApp -->
             <div id="checkout-step-2" class="space-y-3.5 hidden mt-2">
                 <div class="flex items-center justify-between bg-zinc-950 border border-zinc-800 px-3.5 py-2 rounded-xl text-[11px]">
                     <span class="text-zinc-300 font-semibold flex items-center gap-1.5"><i class="fa-solid fa-Stopwatch text-gold"></i> Estoque reservado por:</span>
@@ -864,12 +1076,12 @@
                     </span>
                 </div>
 
-                <p class="text-xs font-semibold text-zinc-300 text-center">Valor Exato a Pagar: <span id="pix-exact-value" class="text-gold font-black text-base"></span></p>
+                <p class="text-xs font-semibold text-zinc-300 text-center">Valor do Pedido: <span id="pix-exact-value" class="text-gold font-black text-base"></span></p>
                 
-                <!-- Bloco PIX -->
+                <!-- Bloco PIX Direto na Chave (100% Seguro e Discreto) -->
                 <div id="pix-payment-box" class="bg-zinc-950 border border-zinc-800 rounded-2xl p-4 text-center space-y-3">
                     <div id="dynamic-qrcode" class="w-40 h-40 mx-auto bg-white p-2 rounded-xl flex items-center justify-center shadow-lg"></div>
-                    <p id="pix-provider-badge" class="text-[10px] text-emerald-400 font-bold"><i class="fa-solid fa-shield-halved"></i> QR Code Oficial Banco Central (BR Code)</p>
+                    <p id="pix-provider-badge" class="text-[10px] text-emerald-400 font-bold"><i class="fa-solid fa-shield-halved"></i> QR Code Oficial Banco Central (BR Code Sigiloso)</p>
                     <div class="space-y-1">
                         <span class="text-[10px] text-zinc-400 block">Código Pix Copia e Cola (Valor Exato Incluso)</span>
                         <div class="flex items-center gap-2 bg-zinc-900 p-2 rounded-xl border border-zinc-800">
@@ -879,29 +1091,36 @@
                     </div>
                 </div>
 
-                <!-- Bloco Cartão / Checkout Mercado Pago -->
+                <!-- Bloco Link de Cartão 100% Automático & Camuflado (Zero Risco de Bloqueio + Reconhecimento Automático) -->
                 <div id="card-payment-box" class="bg-zinc-950 border border-sky-500/40 rounded-2xl p-5 text-center space-y-3 hidden">
-                    <i class="fa-solid fa-credit-card text-4xl text-sky-400"></i>
-                    <h4 class="text-sm font-black text-white">Checkout Seguro Mercado Pago</h4>
-                    <p class="text-xs text-zinc-300">Pague o valor exato do pedido com Cartão em até 12x, Saldo Mercado Pago ou Pix no ambiente oficial.</p>
+                    <div class="w-11 h-11 rounded-2xl bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400 text-xl mx-auto">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-black text-white">Link Automático de Cartão Gerado!</h4>
+                        <p class="text-[11px] text-zinc-300 mt-0.5 leading-relaxed">Para sua total discrição, na tela do cartão aparecerá uma descrição neutra (<b class="text-sky-300" id="stealth-desc-preview">Suplementos & Bem-Estar</b>). Assim que você pagar, <b>nosso sistema reconhece o pagamento sozinho em segundos!</b></p>
+                    </div>
                     <a id="mp-checkout-link" href="https://www.mercadopago.com.br" target="_blank" rel="noopener noreferrer" class="w-full mp-btn-gradient py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg">
-                        <i class="fa-solid fa-up-right-from-square"></i> Abrir Pagamento no Mercado Pago
+                        <i class="fa-solid fa-lock"></i> Abrir Link Seguro para Pagar no Cartão
                     </a>
-                </div>
-
-                <!-- Botão de Checagem Imediata Mercado Pago (aparece quando usa API do Mercado Pago) -->
-                <div id="mp-verify-box" class="hidden bg-sky-950/30 border border-sky-500/30 rounded-2xl p-3 text-center space-y-2">
-                    <p class="text-[11px] text-sky-200">O botão abaixo será liberado <b>automaticamente</b> assim que o Mercado Pago aprovar a transação.</p>
-                    <button type="button" onclick="verifyMercadoPagoNow()" id="btn-verify-mp-now" class="bg-sky-600/30 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-500/40 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer inline-flex items-center gap-1.5">
-                        <i class="fa-solid fa-rotate"></i> Verificar Status no Mercado Pago Agora
+                    <button type="button" onclick="copyMercadoPagoLink()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-sky-300 border border-sky-500/30 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition cursor-pointer">
+                        <i class="fa-regular fa-copy"></i> Copiar Link de Pagamento
                     </button>
                 </div>
 
-                <!-- Bloco de Envio Obrigatório de Comprovante + Nome do Titular (Anti-Fraude) -->
+                <!-- Monitor IA de Reconhecimento Automático do Pagamento -->
+                <div id="mp-verify-box" class="hidden bg-sky-950/30 border border-sky-500/30 rounded-2xl p-3 text-center space-y-2">
+                    <p class="text-[11px] text-sky-200"><i class="fa-solid fa-robot text-gold"></i> <b>IA Monitorando em Tempo Real:</b> Assim que o pagamento for concluído, seu pedido será aprovado e liberado automaticamente abaixo!</p>
+                    <button type="button" onclick="verifyMercadoPagoNow()" id="btn-verify-mp-now" class="bg-sky-600/30 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-500/40 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer inline-flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate"></i> Já Paguei! Conferir Aprovação Agora
+                    </button>
+                </div>
+
+                <!-- Bloco de Envio Obrigatório de Comprovante + Nome do Titular (Exibido apenas para PIX) -->
                 <div id="pix-receipt-upload-box" class="bg-zinc-900/90 border border-amber-500/40 rounded-2xl p-4 text-left space-y-2.5">
                     <div class="flex items-center justify-between">
                         <label class="text-[11px] font-black text-amber-400 uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-shield-halved"></i> Validação Obrigatória de Pagamento:
+                            <i class="fa-solid fa-shield-halved"></i> Validação Obrigatória do PIX:
                         </label>
                         <span id="receipt-status-pill" class="text-[9px] font-black uppercase bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded">Bloqueado</span>
                     </div>
@@ -949,7 +1168,17 @@
                     </label>
                 </div>
 
-                <input type="text" id="prod-name" required placeholder="Nome do Produto" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label class="text-[10px] text-gold font-black uppercase"><i class="fa-solid fa-wand-magic-sparkles"></i> Nome do Produto (Digite e clique em Autopreencher IA)</label>
+                    </div>
+                    <div class="flex gap-1.5">
+                        <input type="text" id="prod-name" required placeholder="Ex: Tirzec 15mg, Tirsedral, Durateston..." class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:border-gold outline-none">
+                        <button type="button" onclick="magicAutoFillProductWithAI()" id="btn-magic-autofill" class="gold-btn-gradient px-3 py-2 rounded-xl text-[10px] font-black flex items-center gap-1 shrink-0 cursor-pointer shadow-md" title="Preenche sozinho Categoria, Preço, Margem, Prazo, Arte e Descrição Vendedora!">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Autopreencher IA
+                        </button>
+                    </div>
+                </div>
                 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -964,6 +1193,8 @@
                         <input type="text" id="prod-delivery-days" placeholder="Ex: 1 a 3 dias" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
                     </div>
                 </div>
+
+
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -999,7 +1230,15 @@
                     <input type="number" id="prod-stock" required value="10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white">
                 </div>
 
-                <textarea id="prod-desc" rows="2" required placeholder="Descrição..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white"></textarea>
+                <div class="space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <label class="text-[10px] text-zinc-400 font-bold">Descrição ("Para que serve + Benefícios")</label>
+                        <button type="button" onclick="generateAiDescriptionForModal()" id="btn-ai-gen-desc" class="bg-amber-500/20 hover:bg-amber-500 text-gold hover:text-black border border-gold/40 px-2.5 py-1 rounded-lg text-[10px] font-black flex items-center gap-1 transition cursor-pointer">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Descrição Vendedora com IA
+                        </button>
+                    </div>
+                    <textarea id="prod-desc" rows="4" required placeholder="Clique em 'Gerar Descrição Vendedora com IA' acima ou descreva para que serve o produto..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white focus:border-gold outline-none leading-relaxed"></textarea>
+                </div>
                 
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeProductModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">Cancelar</button>
@@ -1024,13 +1263,13 @@
                     <input type="text" id="set-store-logo" placeholder="URL da Logo (opcional)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 </div>
 
-                <!-- Integração Mercado Livre / Mercado Pago -->
+                <!-- Automação Camuflada Anti-Bloqueio (Gera Link & PIX Sozinho + Reconhece Pagamento) -->
                 <div class="bg-sky-950/30 border border-sky-500/40 p-3 rounded-2xl space-y-2">
                     <label class="text-[10px] text-sky-400 font-black uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-credit-card"></i> Mercado Livre / Mercado Pago (100% Automático)
+                        <i class="fa-solid fa-robot"></i> Automação 100% Camuflada (Anti-Bloqueio + Baixa Automática)
                     </label>
-                    <input type="text" id="set-mp-token" placeholder="Access Token (APP_USR-...) para Pix e Cartão" class="w-full bg-zinc-900 border border-sky-500/30 rounded-xl px-3 py-2 text-sky-200">
-                    <p class="text-[10px] text-zinc-400 leading-tight">Ao preencher o Access Token do Mercado Pago, o site gera Cartão em até 12x e QR Code Pix dinâmico com aprovação e baixa de estoque 100% automática.</p>
+                    <input type="text" id="set-mp-token" placeholder="Access Token (APP_USR-...) do Mercado Pago" class="w-full bg-zinc-900 border border-sky-500/30 rounded-xl px-3 py-2 text-sky-200">
+                    <p class="text-[10px] text-zinc-400 leading-tight"><b>100% Automático e Blindado:</b> O site gera o Link de Cartão e PIX sozinho para o cliente, mas <b>camufla automaticamente o nome dos produtos</b> (envia apenas <i>"Suplementos & Vitaminas #Ref"</i> e oculta a URL do site) e reconhece o pagamento sozinho dando baixa no estoque!</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
@@ -1221,7 +1460,7 @@
         const DEFAULT_CATALOG = [
             {
                 id: "seed-tg-15",
-                name: "TG Tirzepatida 15mg (Liofilizado)",
+                name: "TG Tirzepatida 15mg",
                 category: "Peptídeos",
                 price: 590.00,
                 promoPrice: 489.90,
@@ -1229,7 +1468,7 @@
                 stock: 14,
                 availability: "pronta_entrega",
                 deliveryDays: "1 a 3 dias úteis",
-                description: "Peptídeo de dupla ação GIP/GLP-1 de altíssima pureza (99.8% HPLC). Acompanha guia de reconstituição e conservação térmica.",
+                description: "🎯 PARA QUE SERVE: Emagrecimento rápido, redução drástica da fome e da vontade de doces já na 1ª semana. Age em 2 receptores (GIP + GLP-1) para queimar gordura preservando a massa magra com altíssima eficácia.",
                 imageUrl: makeProductSvgDataUri("TG TIRZE", "15 MG • VIAL", "#d4a017"),
                 isFeatured: true
             },
@@ -1243,7 +1482,7 @@
                 stock: 9,
                 availability: "pronta_entrega",
                 deliveryDays: "1 a 3 dias úteis",
-                description: "Fórmula avançada de última geração (GLP-1 + GIP + Glucagon) voltada para definição metabólica extrema e performance.",
+                description: "🎯 PARA QUE SERVE: O mais potente queimador metabólico da atualidade (Triplo Agonista: GLP-1 + GIP + Glucagon). Ideal para quem quer secar gordura abdominal resistente, destravar o metabolismo lento e controlar totalmente o apetite sem perder energia.",
                 imageUrl: makeProductSvgDataUri("RETATRUTIDA", "10 MG • ELITE", "#f59e0b"),
                 isFeatured: true
             },
@@ -1257,7 +1496,7 @@
                 stock: 12,
                 availability: "pronta_entrega",
                 deliveryDays: "1 a 3 dias úteis",
-                description: "Sinergia regenerativa para recuperação acelerada de tendões, articulações e tecidos musculares em atletas de alto rendimento.",
+                description: "🎯 PARA QUE SERVE: Recuperação acelerada de lesões, tendinites, dores no ombro, joelho, cotovelo e microlesões musculares. Desinflama os tecidos e acelera em até 3x a cicatrização articular para você voltar a treinar pesado sem dor.",
                 imageUrl: makeProductSvgDataUri("BPC + TB500", "10 MG BLEND", "#10b981"),
                 isFeatured: false
             },
@@ -1271,7 +1510,7 @@
                 stock: 35,
                 availability: "pronta_entrega",
                 deliveryDays: "Imediato (1 a 2 dias)",
-                description: "Solução bacteriostática padrão USP para reconstituição segura e preservação prolongada de peptídeos liofilizados.",
+                description: "🎯 PARA QUE SERVE: Item obrigatório para diluir e ativar peptídeos em pó liofilizado (como Tirzepatida, Retatrutida, BPC-157 e GH). Contém 0.9% de Álcool Benzílico que mantém o produto estéril e conservado na geladeira por até 30 dias.",
                 imageUrl: makeProductSvgDataUri("ÁGUA BAC", "10 ML USP", "#38bdf8"),
                 isFeatured: true
             },
@@ -1285,7 +1524,7 @@
                 stock: 6,
                 availability: "pronta_entrega",
                 deliveryDays: "1 a 3 dias úteis",
-                description: "Somatropina recombinante 191 aminoácidos para hiperplasia muscular, lipólise avançada, rejuvenescimento e qualidade do sono.",
+                description: "🎯 PARA QUE SERVE: Queima profunda de gordura visceral, definição muscular com pele fina, rejuvenescimento (colágeno/anti-aging) e sono reparador. Hormônio do crescimento puro (191 aminoácidos) para transformação estética completa.",
                 imageUrl: makeProductSvgDataUri("GH 100 UI", "SOMATROPINA", "#a855f7"),
                 isFeatured: true
             },
@@ -1299,7 +1538,7 @@
                 stock: 15,
                 availability: "pronta_entrega",
                 deliveryDays: "2 a 4 dias úteis",
-                description: "Drostanolona Propionato de grau farmacêutico. Densidade muscular superior, efeito estético seco e ganho de força limpa.",
+                description: "🎯 PARA QUE SERVE: Estética muscular seca, densa e empedrada, sem retenção de líquidos (zero inchaço). Aumenta a força limpa, melhora a vascularização e destaca os cortes musculares rapidamente. Pronto para uso (10ml).",
                 imageUrl: makeProductSvgDataUri("MASTERON", "100 MG/ML", "#d4a017"),
                 isFeatured: false
             },
@@ -1313,7 +1552,7 @@
                 stock: 18,
                 availability: "pronta_entrega",
                 deliveryDays: "2 a 4 dias úteis",
-                description: "Combinação estratégica de 4 ésteres de testosterona para liberação imediata e sustentada com estabilidade plasmática.",
+                description: "🎯 PARA QUE SERVE: Ganho acelerado de massa muscular, aumento expressivo de força, libido, disposição diária e recuperação pós-treino. Combina 4 ésteres de testosterona para efeito rápido e prolongado. Pronto para uso (10ml).",
                 imageUrl: makeProductSvgDataUri("SUSOBOLIC", "250 MG/ML", "#ef4444"),
                 isFeatured: false
             },
@@ -1327,7 +1566,7 @@
                 stock: 11,
                 availability: "pronta_entrega",
                 deliveryDays: "1 a 3 dias úteis",
-                description: "Alta biodisponibilidade mitocondrial para oxidação de gordura localizada, resistência cardiovascular e sensibilidade insulínica.",
+                description: "🎯 PARA QUE SERVE: Transforma a gordura acumulada em energia pura durante o treino (sem estimulantes que tiram o sono). Acelera a perda de gordura localizada, aumenta o fôlego cardiovascular e melhora a definição. Frasco de 30ml pronto para uso.",
                 imageUrl: makeProductSvgDataUri("L-CARNITINA", "600 MG/ML", "#f97316"),
                 isFeatured: false
             }
@@ -1372,7 +1611,8 @@
             mpAccessToken: "",
             geminiKey: "", 
             removeBgKey: "",
-            pushNotificationsEnabled: true
+            pushNotificationsEnabled: true,
+            autoApproveReceipts: true
         };
 
         // Modal customizado de Confirmação / Prompt (substitui confirm() e prompt() nativos)
@@ -1599,8 +1839,57 @@
                     if (Array.isArray(parsedWish)) wishlist = parsedWish;
                 }
                 updateWishlistBadge();
+                renderReturningCustomerBanner();
             } catch (e) {}
         }
+
+        function renderReturningCustomerBanner() {
+            const banner = document.getElementById('returning-customer-banner');
+            if (!banner) return;
+            try {
+                const savedCust = safeGetStorage('fenix_customer_info');
+                const c = savedCust ? JSON.parse(savedCust) : null;
+                if (c && c.name && c.cep) {
+                    const firstName = c.name.trim().split(' ')[0];
+                    document.getElementById('returning-cust-greeting').innerHTML = `👋 Olá de volta, <span class="text-gold">${firstName}</span>! Checkout Rápido 1-Clique Ativo`;
+                    document.getElementById('returning-cust-sub').innerText = `Entrega salva para CEP ${c.cep}${c.address ? ' (' + c.address + ')' : ''}.`;
+                    banner.classList.remove('hidden');
+                    const repeatBtn = document.getElementById('btn-repeat-last-order');
+                    if (repeatBtn && orders && orders.length > 0 && Array.isArray(orders[0].items) && orders[0].items.length > 0) {
+                        repeatBtn.classList.remove('hidden');
+                    }
+                } else {
+                    banner.classList.add('hidden');
+                }
+            } catch (e) {}
+        }
+
+        function repeatLastCustomerOrder() {
+            if (!orders || orders.length === 0 || !Array.isArray(orders[0].items)) {
+                return showToast("Nenhum pedido anterior encontrado neste aparelho.", "info");
+            }
+            const lastOrder = orders[0];
+            let added = 0;
+            lastOrder.items.forEach(it => {
+                const p = products.find(x => x.id === it.id || x.name === it.name);
+                if (p) {
+                    const basePrice = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+                    const ex = cart.find(c => c.id === p.id);
+                    if (ex) ex.qty += Number(it.qty || 1);
+                    else cart.push({ ...p, activePrice: basePrice, costPrice: Number(p.costPrice) || 0, qty: Number(it.qty || 1) });
+                    added++;
+                }
+            });
+            if (added > 0) {
+                saveCartToStorage();
+                updateCartUI();
+                proceedToCheckout();
+                showToast("Último pedido carregado direto no Checkout!", "success");
+            } else {
+                showToast("Os itens do último pedido não estão mais no catálogo atual.", "info");
+            }
+        }
+        window.repeatLastCustomerOrder = repeatLastCustomerOrder;
 
         function saveCartToStorage() {
             safeSetStorage('fenix_cart', JSON.stringify(cart));
@@ -1652,6 +1941,8 @@
 
             const pushCb = document.getElementById('push-toggle-checkbox');
             if(pushCb) pushCb.checked = storeSettings.pushNotificationsEnabled;
+            const autoAppCb = document.getElementById('auto-approve-receipt-toggle');
+            if(autoAppCb) autoAppCb.checked = storeSettings.autoApproveReceipts !== false;
 
             applyStoreBranding();
             if (!freeShippingApplied) {
@@ -1695,6 +1986,19 @@
             // Se ainda não houver produtos no banco nem no cache local, carrega o catálogo padrão de elite
             if (!products || products.length === 0) {
                 products = JSON.parse(JSON.stringify(DEFAULT_CATALOG));
+                safeSetStorage('fenix_products', JSON.stringify(products));
+            }
+
+            // Atualiza automaticamente descrições antigas curtas do catálogo padrão para as novas fichas explicativas ("🎯 PARA QUE SERVE")
+            let updatedAnySeed = false;
+            products.forEach(p => {
+                const seedMatch = DEFAULT_CATALOG.find(d => d.id === p.id || d.name === p.name);
+                if (seedMatch && (!p.description || !p.description.includes("PARA QUE SERVE"))) {
+                    p.description = seedMatch.description;
+                    updatedAnySeed = true;
+                }
+            });
+            if (updatedAnySeed) {
                 safeSetStorage('fenix_products', JSON.stringify(products));
             }
 
@@ -1985,6 +2289,10 @@
                 return matchStatus && matchSearch;
             });
 
+            if (typeof renderPickingAndSentinelPanels === 'function') {
+                renderPickingAndSentinelPanels();
+            }
+
             if(filteredOrders.length === 0) {
                 tb.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-zinc-500 text-xs">Nenhum pedido encontrado para este filtro.</td></tr>`;
                 return;
@@ -2021,9 +2329,12 @@
                     </div>` : '';
 
                 const clientPhoneClean = formatWhatsappNumber(o.client?.phone || '');
+                const aiBadge = o.aiVerifiedNote
+                    ? `<span class="text-[9px] text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.5 rounded font-bold inline-block mt-0.5"><i class="fa-solid fa-robot"></i> ${o.aiVerifiedNote}</span>`
+                    : '';
                 const payMethodBadge = o.paymentMethod === 'card'
-                    ? '<span class="text-[9px] text-sky-400 font-bold block"><i class="fa-solid fa-credit-card"></i> Cartão MP</span>'
-                    : '<span class="text-[9px] text-emerald-400 font-bold block"><i class="fa-brands fa-pix"></i> PIX</span>';
+                    ? `<span class="text-[9px] text-sky-400 font-bold block"><i class="fa-solid fa-credit-card"></i> Cartão Camuflado</span>${aiBadge}`
+                    : `<span class="text-[9px] text-emerald-400 font-bold block"><i class="fa-brands fa-pix"></i> PIX</span>${aiBadge}`;
 
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40 transition">
@@ -2047,7 +2358,8 @@
                         </td>
                         <td class="p-4">${stBadge}${trackInput}</td>
                         <td class="p-4 text-right">
-                            <div class="flex items-center justify-end gap-1.5">
+                            <div class="flex items-center justify-end gap-1.5 flex-wrap">
+                                <button onclick="window.openAdminCardLinkModal('${o.id}')" class="bg-sky-500/20 hover:bg-sky-500 text-sky-300 hover:text-white border border-sky-500/40 px-2.5 py-2 rounded-xl transition cursor-pointer text-[10px] font-black flex items-center gap-1" title="Gerar/Enviar Link de Cartão Camuflado no WhatsApp"><i class="fa-solid fa-link"></i> Enviar Link</button>
                                 ${o.receiptUrl ? `<button onclick="window.viewOrderReceipt('${o.id}')" class="bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-black border border-emerald-500/40 px-2.5 py-2 rounded-xl transition cursor-pointer text-[10px] font-black flex items-center gap-1" title="Ver Comprovante Anexado"><i class="fa-solid fa-receipt"></i> Comprovante</button>` : ''}
                                 ${actButtons}
                                 <button onclick="window.openShippingLabelModal('${o.id}')" class="bg-zinc-800 hover:bg-zinc-700 text-gold border border-zinc-700 p-2 rounded-xl transition cursor-pointer" title="Gerar Etiqueta de Envio Discreto"><i class="fa-solid fa-print text-xs"></i></button>
@@ -2143,6 +2455,209 @@
         }
         window.generateProductPromoCopy = generateProductPromoCopy;
 
+        // 🧠 MOTOR DE FICHA EXPLICATIVA INTELIGENTE ("PARA QUE SERVE & BENEFÍCIOS")
+        function getProductSmartGuide(p) {
+            const nameLow = (p.name || '').toLowerCase();
+            const catLow = (p.category || '').toLowerCase();
+            const mgMatch = (p.name || '').match(/(\d+(?:[.,]\d+)?)\s*mg/i);
+            const extractedMg = mgMatch ? parseFloat(mgMatch[1].replace(',', '.')) : 15;
+
+            if (nameLow.includes('tirze') || nameLow.includes('tirzec') || nameLow.includes('tirsedral') || nameLow.includes('tg ')) {
+                return {
+                    badge: "🔥 Seca Rápida & Controle da Fome",
+                    forWhom: "Pessoas que desejam perder peso rápido, cortar a compulsão por doces/carboidratos e secar gordura abdominal sem perder músculos.",
+                    benefits: [
+                        "Reduz drasticamente a fome e a ansiedade alimentar logo nos primeiros dias",
+                        "Dupla ação (GIP + GLP-1): queima gordura visceral preservando massa magra",
+                        "Protocolo prático de aplicação apenas 1 vez por semana"
+                    ],
+                    howToUse: "Aplicação subcutânea apenas 1 vez por semana, seguindo a dosagem do seu protocolo. Manter conservado conforme orientação da embalagem.",
+                    needsWaterBac: false,
+                    vialMg: extractedMg || 15,
+                    suggestedDoseMg: 2.5
+                };
+            }
+            if (nameLow.includes('reta')) {
+                return {
+                    badge: "⚡ Definição Extrema (Triplo Agonista)",
+                    forWhom: "Quem busca a evolução mais potente do mercado para queima de gordura resistente e aceleração do gasto calórico em repouso.",
+                    benefits: [
+                        "Tripla ação (GLP-1 + GIP + Glucagon): acelera a queima de gordura mesmo em repouso",
+                        "Destrava platôs de emagrecimento para quem já tentou outros protocolos",
+                        "Mantém níveis altos de disposição e definição muscular"
+                    ],
+                    howToUse: "Aplicação subcutânea 1 vez por semana, seguindo a dosagem recomendada para o seu objetivo.",
+                    needsWaterBac: false,
+                    vialMg: extractedMg || 10,
+                    suggestedDoseMg: 2.0
+                };
+            }
+            if (nameLow.includes('bpc') || nameLow.includes('tb-500') || nameLow.includes('tb500')) {
+                return {
+                    badge: "🧬 Cura de Lesões, Tendões e Articulações",
+                    forWhom: "Atletas e praticantes que sofrem com dores no ombro, joelho, cotovelo (tendinite/bursite) ou querem recuperar lesões musculares 3x mais rápido.",
+                    benefits: [
+                        "Regenera tendões, ligamentos e articulações inflamadas rapidamente",
+                        "Alivia dores crônicas de treino e acelera a recuperação pós-esforço",
+                        "Alta biodisponibilidade para recuperação tecidual acelerada"
+                    ],
+                    howToUse: "Aplicação subcutânea conforme protocolo de recuperação articular/muscular.",
+                    needsWaterBac: false,
+                    vialMg: extractedMg || 10,
+                    suggestedDoseMg: 0.5
+                };
+            }
+            if (nameLow.includes('bacteriost') || nameLow.includes('agua') || nameLow.includes('água') || catLow.includes('insumo')) {
+                return {
+                    badge: "💧 Solução Estéril USP",
+                    forWhom: "Indicada exclusivamente quando o seu protocolo específico exigir diluição prévia.",
+                    benefits: [
+                        "Grau de pureza estéril padrão farmacêutico USP",
+                        "Conservação segura e livre de contaminação",
+                        "Frasco de 10ml de alto rendimento"
+                    ],
+                    howToUse: "Utilizar apenas em protocolos que necessitem reconstituição.",
+                    needsWaterBac: false,
+                    vialMg: 0,
+                    suggestedDoseMg: 0
+                };
+            }
+            if (nameLow.includes('gh') || nameLow.includes('somatropina')) {
+                return {
+                    badge: "👑 Lipólise, Sono Profundo & Anti-Aging",
+                    forWhom: "Quem busca qualidade muscular de elite, queima de gordura fina abdominal, rejuvenescimento da pele e recuperação noturna.",
+                    benefits: [
+                        "Queima gordura localizada mantendo músculos cheios e desenhados",
+                        "Melhora profunda na qualidade do sono, pele, cabelo e colágeno",
+                        "Somatropina pura 191 aminoácidos com altíssima biodisponibilidade"
+                    ],
+                    howToUse: "Aplicação subcutânea conforme orientação do seu protocolo (geralmente em jejum ou antes de dormir).",
+                    needsWaterBac: false,
+                    vialMg: 33.3,
+                    suggestedDoseMg: 1.0
+                };
+            }
+            if (nameLow.includes('masteron') || nameLow.includes('drostanolona')) {
+                return {
+                    badge: "💎 Densidade Muscular & Efeito Seco",
+                    forWhom: "Praticantes que buscam aspecto muscular empedrado, seco, vascularizado e ganho de força sem nenhuma retenção de líquidos.",
+                    benefits: [
+                        "Zero retenção hídrica: deixa a pele fina e os cortes musculares aparentes",
+                        "Aumenta a força limpa, rigidez muscular e disposição nos treinos",
+                        "Ação anti-estrogênica natural que melhora o aspecto visual rapidamente"
+                    ],
+                    howToUse: "Solução pronta para uso intramuscular profundo.",
+                    needsWaterBac: false,
+                    vialMg: 0,
+                    suggestedDoseMg: 0
+                };
+            }
+            if (nameLow.includes('suso') || nameLow.includes('testo') || nameLow.includes('dura') || nameLow.includes('enantato') || nameLow.includes('cipionato')) {
+                return {
+                    badge: "💪 Ganho de Massa, Força & Libido",
+                    forWhom: "Quem busca ganho consistente de volume muscular, recuperação rápida entre treinos, alta energia vital e libido elevada.",
+                    benefits: [
+                        "Acelera a síntese proteica e o crescimento muscular desde a 1ª semana",
+                        "Combinação de ésteres para ação imediata e estabilidade prolongada",
+                        "Aumenta a força nos treinos, foco mental, disposição e vigor físico"
+                    ],
+                    howToUse: "Solução pronta para aplicação intramuscular profunda.",
+                    needsWaterBac: false,
+                    vialMg: 0,
+                    suggestedDoseMg: 0
+                };
+            }
+            if (nameLow.includes('carnitina') || catLow.includes('estética') || catLow.includes('estetica')) {
+                return {
+                    badge: "🔥 Queima de Gordura & Gás no Treino",
+                    forWhom: "Quem quer acelerar a queima de gordura localizada durante o cardio/treino sem usar estimulantes que causam taquicardia ou insônia.",
+                    benefits: [
+                        "Transporta a gordura estocada direto para ser queimada como energia",
+                        "Aumenta a resistência física e o fôlego sem afetar o sono",
+                        "Frasco pronto para uso com alta concentração"
+                    ],
+                    howToUse: "Pronto para uso. Aplicar antes do treino ou cardio para potencializar a oxidação de gordura.",
+                    needsWaterBac: false,
+                    vialMg: 0,
+                    suggestedDoseMg: 0
+                };
+            }
+
+            return {
+                badge: "⚡ Alta Performance & Resultado",
+                forWhom: p.description || "Desenvolvido para quem busca evolução física acelerada com grau de pureza certificado.",
+                benefits: [
+                    "Grau de pureza superior (99.8% verificado por laudo HPLC)",
+                    "Alta biodisponibilidade para resultados rápidos e consistentes",
+                    "Envio expresso em embalagem 100% discreta e protegida"
+                ],
+                howToUse: "Produto pronto para uso seguindo o protocolo recomendado. Armazenar em local fresco e protegido da luz.",
+                needsWaterBac: false,
+                vialMg: extractedMg || 10,
+                suggestedDoseMg: 2.5
+            };
+        }
+
+        function openCalculatorForProduct(vialMg, doseMg) {
+            closeProductDetailModal();
+            openReconstitutionModal();
+            if (vialMg && vialMg > 0) document.getElementById('calc-vial-mg').value = vialMg;
+            document.getElementById('calc-water-ml').value = 2;
+            if (doseMg && doseMg > 0) document.getElementById('calc-dose-mg').value = doseMg;
+            updatePeptideCalculator();
+            showToast(`Calculadora ajustada para o frasco de ${vialMg}mg!`, "info");
+        }
+        window.openCalculatorForProduct = openCalculatorForProduct;
+
+        function addProductWithWaterBac(prodId) {
+            const mainProd = products.find(x => x.id === prodId);
+            const waterProd = products.find(x => x.id === 'seed-agua-bac' || (x.name || '').toLowerCase().includes('bacteriost'));
+            if (mainProd) addToCart(mainProd.id, true);
+            if (waterProd && waterProd.id !== prodId) {
+                const alreadyInCart = cart.some(i => i.id === waterProd.id);
+                if (!alreadyInCart) addToCart(waterProd.id, true);
+            }
+            closeProductDetailModal();
+            toggleCartDrawer(true);
+            showToast("Kit Produto + Água Bacteriostática adicionado ao carrinho!", "success");
+        }
+        window.addProductWithWaterBac = addProductWithWaterBac;
+
+        async function explainProductWithAI(prodId) {
+            const p = products.find(x => x.id === prodId);
+            if (!p) return;
+            const box = document.getElementById('modal-ai-explain-box');
+            if (!box) return;
+            box.classList.remove('hidden');
+            box.innerHTML = `<div class="flex items-center gap-2 text-gold text-xs"><i class="fa-solid fa-circle-notch animate-spin"></i> A Inteligência Artificial está preparando um resumo simples sobre <b>${p.name}</b>...</div>`;
+
+            const guide = getProductSmartGuide(p);
+            const prompt = `Explique em linguagem muito simples, amigável e persuasiva para um cliente iniciante (em no máximo 4 tópicos curtos): 1) Para que serve o produto ${p.name}, 2) Quando começam os resultados, 3) Como usar/conservar, 4) Por que vale a pena comprar na ${storeSettings.storeName || 'Fênix Imports'}. Dados do produto: ${p.description}`;
+            const aiText = await askRealOnlineAI("Você é um consultor especialista em saúde estética e performance. Fale de forma simples, clara e confiante em português.", prompt);
+
+            if (aiText) {
+                box.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-gold/20 pb-1.5 mb-2">
+                        <span class="text-[10px] font-black uppercase text-gold flex items-center gap-1.5"><i class="fa-solid fa-robot"></i> Explicação Personalizada da IA</span>
+                        <span class="text-[9px] text-emerald-400 font-bold">Linguagem Simples</span>
+                    </div>
+                    <div class="text-xs text-zinc-200 leading-relaxed space-y-1">${aiText.replace(/\*\*/g, '').replace(/\*/g, '•').replace(/\n/g, '<br>')}</div>
+                `;
+            } else {
+                box.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-gold/20 pb-1.5 mb-2">
+                        <span class="text-[10px] font-black uppercase text-gold flex items-center gap-1.5"><i class="fa-solid fa-robot"></i> Resumo Rápido p/ Iniciantes</span>
+                    </div>
+                    <div class="text-xs text-zinc-200 leading-relaxed space-y-1.5">
+                        <p>🎯 <b>Em resumo:</b> ${guide.forWhom}</p>
+                        <p>⚡ <b>Como age:</b> ${guide.benefits.join(' • ')}.</p>
+                        <p>💉 <b>Uso prático:</b> ${guide.howToUse}</p>
+                    </div>
+                `;
+            }
+        }
+        window.explainProductWithAI = explainProductWithAI;
+
         function openProductDetailModal(id) {
             const p = products.find(x => x.id === id);
             if (!p) return;
@@ -2151,15 +2666,20 @@
             const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
             const installment = price / 12;
             const isEncomenda = p.availability === 'encomenda';
+            const guide = getProductSmartGuide(p);
+            const waterProd = products.find(x => x.id === 'seed-agua-bac' || (x.name || '').toLowerCase().includes('bacteriost'));
+            const waterPrice = waterProd ? Number(waterProd.promoPrice || waterProd.price || 49.90) : 49.90;
 
             const content = document.getElementById('product-detail-content');
             content.innerHTML = `
-                <div class="w-full h-52 bg-zinc-950/80 rounded-2xl p-4 flex items-center justify-center border border-zinc-800 relative">
+                <div class="w-full h-48 bg-zinc-950/80 rounded-2xl p-4 flex items-center justify-center border border-zinc-800 relative">
                     ${p.imageUrl ? `<img src="${p.imageUrl}" class="max-h-full max-w-full object-contain" alt="${p.name}">` : `<i class="fa-solid fa-image text-4xl text-zinc-700"></i>`}
+                    <span class="absolute top-3 left-3 bg-zinc-900/95 border border-gold/40 text-gold text-[10px] font-black px-2.5 py-1 rounded-lg">${guide.badge}</span>
                     <button onclick="closeProductDetailModal(); openLabVerifyModal();" class="absolute bottom-3 right-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded-lg text-[10px] font-black flex items-center gap-1 cursor-pointer">
                         <i class="fa-solid fa-flask-vial"></i> Laudo HPLC 99.8%
                     </button>
                 </div>
+
                 <div class="space-y-2">
                     <div class="flex flex-wrap items-center gap-2">
                         <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-amber-500/10 text-gold border border-amber-500/20 uppercase">${p.category || 'Geral'}</span>
@@ -2167,7 +2687,44 @@
                         <span class="text-[10px] font-bold ${isEncomenda ? 'text-amber-400' : 'text-emerald-400'}">${isEncomenda ? '🟠 Sob Encomenda' : `🟢 Pronta Entrega (${st} un.)`}</span>
                     </div>
                     <h3 class="text-lg font-black text-white">${p.name}</h3>
-                    <p class="text-xs text-zinc-300 leading-relaxed">${p.description || 'Produto de alta performance com qualidade certificada.'}</p>
+                    <p class="text-xs text-zinc-200 leading-relaxed bg-zinc-950/70 p-3 rounded-xl border border-zinc-800">${p.description || 'Produto de alta performance com qualidade certificada.'}</p>
+                </div>
+
+                <!-- Ficha Didática: Para que serve, Benefícios e Como Usar -->
+                <div class="bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 border border-gold/30 rounded-2xl p-4 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-black uppercase tracking-wider text-gold flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-info"></i> Guia Rápido: Para Que Serve & Como Usar
+                        </span>
+                        <button type="button" onclick="explainProductWithAI('${p.id}')" class="bg-gold/15 hover:bg-gold hover:text-black text-gold border border-gold/40 px-2.5 py-1 rounded-lg text-[10px] font-black flex items-center gap-1 transition cursor-pointer">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Explicar com IA
+                        </button>
+                    </div>
+
+                    <div id="modal-ai-explain-box" class="hidden bg-amber-500/10 border border-gold/40 rounded-xl p-3"></div>
+
+                    <div class="space-y-1.5 text-xs">
+                        <div class="text-zinc-300"><b class="text-emerald-400">🎯 Indicado para:</b> ${guide.forWhom}</div>
+                        <div class="space-y-1 pt-1">
+                            <b class="text-gold text-[11px] uppercase block">✅ Principais Benefícios:</b>
+                            <ul class="space-y-1 text-[11px] text-zinc-300">
+                                ${guide.benefits.map(b => `<li class="flex items-start gap-1.5"><i class="fa-solid fa-check text-emerald-400 mt-0.5 shrink-0"></i> <span>${b}</span></li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="pt-1.5 border-t border-zinc-800/80 text-[11px] text-zinc-300">
+                            <b class="text-sky-400"><i class="fa-solid fa-syringe"></i> Como usar / Preparar:</b> ${guide.howToUse}
+                        </div>
+                    </div>
+
+                    ${guide.needsWaterBac ? `
+                    <div class="pt-2 border-t border-zinc-800 flex flex-col sm:flex-row gap-2">
+                        <button type="button" onclick="openCalculatorForProduct(${guide.vialMg}, ${guide.suggestedDoseMg})" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-gold border border-gold/40 py-2 px-3 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-calculator"></i> Calcular UI na Seringa (${guide.vialMg}mg)
+                        </button>
+                        <button type="button" onclick="addProductWithWaterBac('${p.id}')" class="flex-1 bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 py-2 px-3 rounded-xl text-[11px] font-black flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-droplet"></i> + Levar c/ Água Bac (R$ ${formatMoney(price + waterPrice)})
+                        </button>
+                    </div>` : ''}
                 </div>
 
                 <!-- Seleção Rápida de Quantidade (Valor Integral Protegido) -->
@@ -2190,15 +2747,6 @@
                             <span class="text-[9px] text-zinc-400 block">3x R$ ${formatMoney(price)}</span>
                         </button>
                     </div>
-                </div>
-
-                <!-- Avaliações Verificadas -->
-                <div class="bg-zinc-950/60 border border-zinc-800/80 rounded-2xl p-3 space-y-2">
-                    <div class="flex items-center justify-between text-[10px]">
-                        <span class="font-bold text-zinc-300"><i class="fa-solid fa-circle-check text-emerald-400"></i> Relatos de Clientes Verificados</span>
-                        <span class="text-gold font-bold">★★★★★ 4.9/5</span>
-                    </div>
-                    <div class="text-[11px] text-zinc-400 italic">"Entrega super discreta em 48h, produto lacrado com QR Code de lote validado e resultado visível já na primeira semana!" — <b class="text-zinc-300 not-italic">Dr. Marcelo V. (RJ)</b></div>
                 </div>
 
                 <div class="bg-zinc-950 p-4 rounded-2xl border border-zinc-800 flex items-center justify-between">
@@ -2351,7 +2899,13 @@
                             </div>
                             <div class="flex-1 flex flex-col justify-start cursor-pointer" onclick="openProductDetailModal('${p.id}')">
                                 <h3 class="text-xs sm:text-sm font-extrabold text-zinc-900 dark:text-white group-hover:text-gold transition line-clamp-2 leading-snug min-h-[2.25rem]">${p.name}</h3>
-                                <p class="text-zinc-600 dark:text-zinc-300 text-[11px] leading-relaxed line-clamp-2 mt-1 font-medium">${p.description}</p>
+                                <div class="mt-1 mb-1">
+                                    <span class="inline-block text-[10px] font-extrabold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-lg">${getProductSmartGuide(p).badge}</span>
+                                </div>
+                                <p class="text-zinc-600 dark:text-zinc-300 text-[11px] leading-relaxed line-clamp-3 mt-0.5 font-medium">${p.description}</p>
+                                <button type="button" onclick="event.stopPropagation(); openProductDetailModal('${p.id}'); setTimeout(() => explainProductWithAI('${p.id}'), 150);" class="mt-2 self-start text-[10px] font-bold text-gold hover:underline flex items-center gap-1 cursor-pointer">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i> Para que serve e como usar? (Ver Guia IA)
+                                </button>
                                 ${deliveryText}
                             </div>
                         </div>
@@ -2396,13 +2950,15 @@
                 }
                 ex.qty++;
             } else { 
-                if (maxStock <= 0) return showToast('Produto esgotado.', 'error');
+                if (maxStock <= 0) {
+                    return showToast('Produto esgotado.', 'error');
+                }
                 cart.push({ ...p, activePrice: basePrice, costPrice: Number(p.costPrice) || 0, qty: 1 }); 
             }
             saveCartToStorage();
-            showToast(`${p.name} adicionado ao carrinho!`, 'success');
             updateCartUI(); 
             toggleCartDrawer(true);
+            showToast(`${p.name} adicionado ao carrinho!`, 'success');
         }
         window.addToCart = addToCart;
 
@@ -2507,18 +3063,15 @@
                 bumpBox.classList.add('hidden');
                 return;
             }
-            const hasAguaBac = cart.some(i => i.id === 'seed-agua-bac' || (i.name || '').toLowerCase().includes('bacteriost'));
-            const bumpProd = !hasAguaBac
-                ? products.find(p => p.id === 'seed-agua-bac' || (p.name || '').toLowerCase().includes('bacteriost'))
-                : products.find(p => !cart.some(c => c.id === p.id));
-
+            const bumpProd = products.find(p => !cart.some(c => c.id === p.id) && !(p.name || '').toLowerCase().includes('bacteriost'));
             if (bumpProd) {
                 const bPrice = bumpProd.promoPrice ? Number(bumpProd.promoPrice) : Number(bumpProd.price);
+                bumpBox.className = "mx-5 mb-2 p-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 border border-gold/40";
                 bumpBox.classList.remove('hidden');
                 bumpBox.innerHTML = `
                     <div class="flex items-center justify-between gap-2">
                         <div class="min-w-0">
-                            <span class="text-[9px] font-black uppercase text-gold block"><i class="fa-solid fa-bolt"></i> Compre Junto (Item Complementar):</span>
+                            <span class="text-[9px] font-black uppercase text-gold block"><i class="fa-solid fa-bolt"></i> Compre Junto (Sugestão p/ seu Protocolo):</span>
                             <span class="text-xs font-extrabold text-white truncate block">${bumpProd.name}</span>
                             <span class="text-xs font-black text-emerald-400">R$ ${formatMoney(bPrice)}</span>
                         </div>
@@ -2729,7 +3282,7 @@
         }
         window.closeReceiptViewerModal = closeReceiptViewerModal;
 
-        async function persistConfirmedOrReceiptOrder(statusToSave) {
+        async function persistConfirmedOrReceiptOrder(statusToSave, silentPreSave = false) {
             if (!pendingOrderDraft) return null;
             if (activeOrderId) {
                 const existing = orders.find(x => x.id === activeOrderId);
@@ -2742,6 +3295,23 @@
                             status: statusToSave,
                             receiptUrl: currentReceiptDataUrl || ""
                         }).catch(() => {});
+                    }
+                    if (statusToSave === 'pago' && Array.isArray(existing.items)) {
+                        for (const item of existing.items) {
+                            const prod = products.find(p => p.id === item.id || p.name === item.name);
+                            if (prod && prod.stock !== undefined) {
+                                const newStock = Math.max(0, Number(prod.stock) - Number(item.qty || 1));
+                                prod.stock = newStock;
+                                if (window.db && window.firebaseFns) {
+                                    await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", prod.id), { stock: newStock }).catch(() => {});
+                                }
+                            }
+                        }
+                        safeSetStorage('fenix_products', JSON.stringify(products));
+                        renderAdminTable();
+                        renderProducts();
+                        playSaleBeep();
+                        sendNativeNotification(`💰 VENDA APROVADA AUTOMATICAMENTE: R$ ${formatMoney(existing.financials?.total || 0)}`, `Cliente: ${existing.client?.name || ''}`);
                     }
                     renderOrdersTable();
                     renderCrmTable();
@@ -2798,11 +3368,13 @@
                 renderProducts();
             }
 
-            playSaleBeep();
-            sendNativeNotification(
-                `💰 PEDIDO ${statusToSave === 'pago' ? 'PAGO (MP)' : 'COM COMPROVANTE'}: R$ ${formatMoney(orderData.financials.total)}`,
-                `Cliente: ${orderData.client.name}`
-            );
+            if (!silentPreSave) {
+                playSaleBeep();
+                sendNativeNotification(
+                    `💰 PEDIDO ${statusToSave === 'pago' ? 'APROVADO AUTOMÁTICO' : 'RECEBIDO'}: R$ ${formatMoney(orderData.financials.total)}`,
+                    `Cliente: ${orderData.client.name}`
+                );
+            }
             renderOrdersTable();
             renderCrmTable();
             return activeOrderId;
@@ -2908,7 +3480,25 @@
         }
         window.copyPixEMV = copyPixEMV;
 
-        /* 💳 MOTOR DE PAGAMENTO COM VALOR UNIFICADO E TRAVA ANTI-FRAUDE */
+        /* 🤖 MOTOR 100% AUTOMÁTICO & CAMUFLADO ANTI-BLOQUEIO + SENTINELA IA 24H DE VENDAS */
+        let currentPaymentMethodSelected = 'pix';
+        let activeAdminCardOrderId = null;
+        let sentinelBackgroundTimer = null;
+
+        const STEALTH_NEUTRAL_TITLES = [
+            "Kit Suplementos & Vitaminas",
+            "Consultoria Nutricional & Bem-Estar",
+            "Combo Aminoacidos & Hidratacao",
+            "Assessoria Esportiva Individual",
+            "Kit Cuidados Pessoais & Saude"
+        ];
+
+        function getStealthDisguiseTitle(extRef) {
+            const shortCode = String(extRef || Date.now()).slice(-5);
+            const pick = STEALTH_NEUTRAL_TITLES[Math.floor(Math.random() * STEALTH_NEUTRAL_TITLES.length)];
+            return `${pick} #${shortCode}`;
+        }
+
         async function startAutomaticPayment(method) {
             const n = document.getElementById('cust-name').value.trim(); 
             const rawW = document.getElementById('cust-whatsapp').value.trim(); 
@@ -2923,6 +3513,7 @@
                 name: n, whatsapp: rawW, cep: c, address: street, number: num
             }));
 
+            currentPaymentMethodSelected = method;
             const w = formatWhatsappNumber(rawW);
             const ad = `${street || 'Endereço informado'}, CEP: ${c}${num ? ', Nº: ' + num : ''}`;
             const baseTotals = calculateOrderTotals();
@@ -2944,10 +3535,12 @@
 
             const storeTitle = storeSettings.storeName || 'FÊNIX IMPORTS';
             const extRef = "FENIX_" + Date.now();
+            const stealthTitle = getStealthDisguiseTitle(extRef);
             currentExtRef = extRef;
             activeOrderId = null;
             currentReceiptDataUrl = "";
             currentReceiptFileName = "";
+            isWaitingMercadoPagoApi = false;
 
             const receiptInput = document.getElementById('pix-receipt-input');
             if (receiptInput) receiptInput.value = "";
@@ -2959,20 +3552,21 @@
                 pill.innerText = "Pendente";
             }
 
-            // Rascunho do pedido (só será gravado na aba Vendas quando o Mercado Pago aprovar OU quando o cliente anexar o comprovante!)
             pendingOrderDraft = { 
                 id: "ord_" + Date.now(),
                 externalRef: extRef,
+                stealthTitle: stealthTitle,
                 paymentMethod: method,
                 client: { name: n, phone: w, address: ad }, 
                 items, 
                 shippingType,
                 financials: { subtotal: totals.subtotal, shipping: totals.shipping, total: totals.total, estimatedProfit: +(totals.subtotal - cst).toFixed(2) }, 
                 status: 'aguardando', 
+                aiVerifiedNote: 'Monitorado pela IA',
                 date: new Date().toISOString() 
             };
 
-            const methodLabel = method === 'card' ? 'Mercado Pago (Pix / Cartão)' : 'PIX Imediato';
+            const methodLabel = method === 'card' ? 'Cartão de Crédito (Link Automático Camuflado)' : 'PIX Imediato';
             currentWhatsappOrderMsg = `*PEDIDO CONFIRMADO - ${storeTitle.toUpperCase()}*\n📦 *Ref:* ${extRef}\n👤 *Cliente:* ${n}\n📱 *WhatsApp:* ${w}\n📍 *Entrega:* ${ad}\n💳 *Pagamento:* ${methodLabel}\n🚚 *Frete Expresso:* R$ ${formatMoney(totals.shipping)}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name} (R$ ${formatMoney(i.price)})`).join('\n')}\n💰 *Valor Total Pago:* R$ ${formatMoney(totals.total)}`;
 
             const holderEl = document.getElementById('pix-payer-holder');
@@ -2985,6 +3579,8 @@
             const mpToken = (storeSettings.mpAccessToken || '').trim();
             const mpVerifyBox = document.getElementById('mp-verify-box');
             const receiptBox = document.getElementById('pix-receipt-upload-box');
+            const stealthPrev = document.getElementById('stealth-desc-preview');
+            if (stealthPrev) stealthPrev.innerText = stealthTitle;
 
             if (method === 'card') {
                 document.getElementById('pix-payment-box').classList.add('hidden');
@@ -2992,40 +3588,40 @@
 
                 if (mpToken) {
                     try {
-                        // Envia exatamente os itens + frete sem divergência para cobrar o mesmo totals.total da Chave PIX!
+                        // 🛡️ BLINDAGEM ANTI-BLOQUEIO: Envia para o Mercado Pago APENAS o nome camuflado (Ex: "Kit Suplementos & Vitaminas #83910") e NÃO envia a URL do site!
+                        const prefPayload = {
+                            items: [
+                                {
+                                    id: "SUP-" + extRef.slice(-5),
+                                    title: stealthTitle,
+                                    quantity: 1,
+                                    currency_id: 'BRL',
+                                    unit_price: Number(totals.total.toFixed(2))
+                                }
+                            ],
+                            external_reference: extRef,
+                            statement_descriptor: "SUPLEMENTOS"
+                        };
                         const prefRes = await fetch('https://api.mercadopago.com/checkout/preferences', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${mpToken}`
                             },
-                            body: JSON.stringify({
-                                items: [
-                                    {
-                                        title: `Pedido ${storeTitle} (${items.map(i => i.qty + 'x ' + i.name).join(', ')})`,
-                                        quantity: 1,
-                                        currency_id: 'BRL',
-                                        unit_price: Number(totals.total.toFixed(2))
-                                    }
-                                ],
-                                payer: { name: n },
-                                external_reference: extRef,
-                                back_urls: {
-                                    success: window.location.href,
-                                    pending: window.location.href,
-                                    failure: window.location.href
-                                },
-                                auto_return: "approved"
-                            })
+                            body: JSON.stringify(prefPayload)
                         });
                         const prefData = await prefRes.json();
                         if (prefData.init_point) {
+                            pendingOrderDraft.customCardLink = prefData.init_point;
+                            // Salva o pedido como 'aguardando' imediatamente para o Sentinela IA 24h monitorar mesmo se o cliente fechar a aba!
+                            await persistConfirmedOrReceiptOrder('aguardando', true);
+
                             isWaitingMercadoPagoApi = true;
                             if (mpVerifyBox) mpVerifyBox.classList.remove('hidden');
                             if (receiptBox) receiptBox.classList.add('hidden');
-                            document.getElementById('auto-status-banner').className = "bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-center";
-                            document.getElementById('auto-status-banner').innerHTML = `<span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-rotate animate-spin"></i> Aguardando o Mercado Pago finalizar o pagamento de R$ ${formatMoney(totals.total)}...</span>`;
-                            setFinishButtonLockedState(true, "Bloqueado: Conclua o pagamento no Mercado Pago");
+                            document.getElementById('auto-status-banner').className = "bg-sky-500/15 border border-sky-500/40 rounded-2xl p-3 text-center";
+                            document.getElementById('auto-status-banner').innerHTML = `<span class="text-xs font-bold text-sky-300 flex items-center justify-center gap-2"><i class="fa-solid fa-rotate animate-spin"></i> Link Camuflado gerado! Aguardando confirmação automática de R$ ${formatMoney(totals.total)}...</span>`;
+                            setFinishButtonLockedState(true, "Aguardando Confirmação Automática do Pagamento...");
 
                             document.getElementById('mp-checkout-link').href = prefData.init_point;
                             window.open(prefData.init_point, '_blank');
@@ -3033,19 +3629,19 @@
                             return;
                         }
                     } catch (err) {
-                        console.warn("Fallback MP Preference:", err);
+                        console.warn("Fallback Stealth Card Link:", err);
                     }
                 }
-                // Caso não tenha Access Token configurado, exige comprovante para liberar
+                // Caso o lojista ainda não tenha colocado o Token no Admin, abre o link de solicitação + permite anexar comprovante
                 isWaitingMercadoPagoApi = false;
                 if (mpVerifyBox) mpVerifyBox.classList.add('hidden');
                 if (receiptBox) receiptBox.classList.remove('hidden');
-                setFinishButtonLockedState(true, "Anexe o Comprovante de Pagamento acima para Liberar");
+                setFinishButtonLockedState(true, "Anexe o Comprovante acima para Liberar");
                 const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales);
-                const wppCardLink = `https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(`Olá! Quero o link do Mercado Pago no valor exato de *R$ ${formatMoney(totals.total)}* referente ao pedido *${extRef}*.`)}`;
+                const wppCardLink = `https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(`Olá! Quero o link de cartão automático no valor de *R$ ${formatMoney(totals.total)}* (Ref: *${extRef}*).`)}`;
                 document.getElementById('mp-checkout-link').href = wppCardLink;
             } else {
-                // Método PIX
+                // Método PIX (Tenta criar PIX Dinâmico Camuflado c/ Reconhecimento Automático se tiver Token; senão usa Chave PIX Direta c/ Validador IA de Comprovante)
                 document.getElementById('card-payment-box').classList.add('hidden');
                 document.getElementById('pix-payment-box').classList.remove('hidden');
 
@@ -3062,11 +3658,11 @@
                             },
                             body: JSON.stringify({
                                 transaction_amount: Number(totals.total.toFixed(2)),
-                                description: `Pedido ${storeTitle} - ${extRef}`,
+                                description: stealthTitle,
                                 payment_method_id: 'pix',
                                 external_reference: extRef,
                                 payer: {
-                                    email: 'comprador@feniximports.com.br',
+                                    email: `cliente.${extRef.slice(-5)}@suplementosvip.com.br`,
                                     first_name: nameParts[0] || 'Cliente',
                                     last_name: nameParts.slice(1).join(' ') || 'VIP'
                                 }
@@ -3079,23 +3675,22 @@
                                 currentPixPayload = mpEmv;
                                 dynamicPixCreated = true;
                                 const badge = document.getElementById('pix-provider-badge');
-                                if (badge) badge.innerHTML = `<i class="fa-solid fa-bolt text-sky-400"></i> PIX Dinâmico Mercado Pago (Valor Exato: R$ ${formatMoney(totals.total)})`;
+                                if (badge) badge.innerHTML = `<i class="fa-solid fa-robot text-emerald-400"></i> PIX Automático Camuflado (${stealthTitle}) • Reconhecimento Imediato`;
                             }
                         }
                     } catch (e) {}
                 }
 
                 if (dynamicPixCreated) {
-                    // PIX Dinâmico do Mercado Pago: só libera quando o Mercado Pago der como 'approved'
+                    await persistConfirmedOrReceiptOrder('aguardando', true);
                     isWaitingMercadoPagoApi = true;
                     if (mpVerifyBox) mpVerifyBox.classList.remove('hidden');
                     if (receiptBox) receiptBox.classList.add('hidden');
-                    document.getElementById('auto-status-banner').className = "bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-center";
-                    document.getElementById('auto-status-banner').innerHTML = `<span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-rotate animate-spin"></i> Aguardando confirmação automática do PIX pelo Mercado Pago...</span>`;
-                    setFinishButtonLockedState(true, "Bloqueado: Aguardando confirmação do Mercado Pago");
+                    document.getElementById('auto-status-banner').className = "bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-3 text-center";
+                    document.getElementById('auto-status-banner').innerHTML = `<span class="text-xs font-bold text-emerald-300 flex items-center justify-center gap-2"><i class="fa-solid fa-rotate animate-spin"></i> Pague o QR Code abaixo: a IA reconhecerá seu pagamento sozinha em segundos!</span>`;
+                    setFinishButtonLockedState(true, "Aguardando Reconhecimento Automático do PIX...");
                     startMercadoPagoAutoPoller(extRef);
                 } else {
-                    // PIX por Chave Fixa: gera BR Code com o valor exato (totals.total) e exige anexar o comprovante para desbloquear o botão!
                     isWaitingMercadoPagoApi = false;
                     if (mpVerifyBox) mpVerifyBox.classList.add('hidden');
                     if (receiptBox) receiptBox.classList.remove('hidden');
@@ -3104,7 +3699,7 @@
                     const badge = document.getElementById('pix-provider-badge');
                     if (badge) badge.innerHTML = `<i class="fa-solid fa-shield-halved text-emerald-400"></i> Chave PIX Oficial (Valor Exato: R$ ${formatMoney(totals.total)})`;
                     document.getElementById('auto-status-banner').className = "bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-center";
-                    document.getElementById('auto-status-banner').innerHTML = `<span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-lock"></i> Realize o PIX de R$ ${formatMoney(totals.total)} e anexe o comprovante abaixo para liberar</span>`;
+                    document.getElementById('auto-status-banner').innerHTML = `<span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-lock"></i> Realize o PIX de R$ ${formatMoney(totals.total)} e anexe o comprovante abaixo para validação automática</span>`;
                     setFinishButtonLockedState(true, "Anexe o Comprovante PIX acima para Liberar");
                 }
 
@@ -3130,10 +3725,13 @@
                     const approvedPayment = (data.results || []).find(p => p.status === 'approved');
                     if (approvedPayment) {
                         if (autoPayInterval) clearInterval(autoPayInterval);
+                        if (pendingOrderDraft) {
+                            pendingOrderDraft.aiVerifiedNote = `Aprovado Auto MP #${approvedPayment.id || ''}`;
+                        }
                         await persistConfirmedOrReceiptOrder('pago');
                         document.getElementById('auto-status-banner').className = "bg-emerald-500/20 border border-emerald-500 p-4 rounded-2xl text-center";
-                        document.getElementById('auto-status-banner').innerHTML = `<span class="text-sm font-black text-emerald-400 flex items-center justify-center gap-2"><i class="fa-solid fa-circle-check"></i> PAGAMENTO APROVADO PELO MERCADO PAGO!</span>`;
-                        setFinishButtonLockedState(false, "", "Pagamento Aprovado! Enviar Pedido no WhatsApp");
+                        document.getElementById('auto-status-banner').innerHTML = `<span class="text-sm font-black text-emerald-400 flex items-center justify-center gap-2"><i class="fa-solid fa-circle-check"></i> PAGAMENTO RECONHECIDO AUTOMATICAMENTE! ESTOQUE RESERVADO!</span>`;
+                        setFinishButtonLockedState(false, "", "Pagamento Confirmado! Receber Rastreio no WhatsApp");
                         return true;
                     }
                 }
@@ -3143,18 +3741,17 @@
 
         async function verifyMercadoPagoNow() {
             const btn = document.getElementById('btn-verify-mp-now');
-            if (btn) btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Consultando Mercado Pago...`;
+            if (btn) btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Consultando Operadora...`;
             const ok = await checkMercadoPagoStatusOnce(currentExtRef);
-            if (btn) btn.innerHTML = `<i class="fa-solid fa-rotate"></i> Verificar Status no Mercado Pago Agora`;
+            if (btn) btn.innerHTML = `<i class="fa-solid fa-rotate"></i> Já Paguei! Conferir Aprovação Agora`;
             if (!ok) {
-                showToast("O Mercado Pago ainda não confirmou a compensação. Assim que aprovar, o botão será liberado!", "info");
+                showToast("Ainda aguardando compensação bancária. Assim que aprovar, libera sozinho na hora!", "info");
             } else {
-                showToast("Pagamento aprovado pelo Mercado Pago! Botão liberado.", "success");
+                showToast("Pagamento reconhecido automaticamente! Pedido aprovado.", "success");
             }
         }
         window.verifyMercadoPagoNow = verifyMercadoPagoNow;
 
-        // Robô que verifica no Mercado Pago a cada 5s se foi pago e só libera o botão quando 'approved'
         function startMercadoPagoAutoPoller(extRef) {
             if (autoPayInterval) clearInterval(autoPayInterval);
             const mpToken = (storeSettings.mpAccessToken || '').trim();
@@ -3162,35 +3759,261 @@
 
             autoPayInterval = setInterval(async () => {
                 await checkMercadoPagoStatusOnce(extRef);
-            }, 5000);
+            }, 4000);
         }
 
         async function confirmOrderWhatsapp() {
             if (!isPaymentUnlocked) {
                 if (isWaitingMercadoPagoApi) {
-                    return showToast("Aguarde o Mercado Pago aprovar o pagamento para liberar este botão.", "error");
+                    return showToast("Aguarde o reconhecimento automático do pagamento para liberar este botão.", "error");
                 }
-                return showToast("Anexe a foto ou PDF do comprovante PIX acima para liberar o envio do pedido!", "error");
+                return showToast("Anexe o comprovante PIX acima para a IA validar e liberar o pedido!", "error");
             }
 
             if (!activeOrderId) {
-                await persistConfirmedOrReceiptOrder('aguardando');
+                const autoApproveOn = storeSettings.autoApproveReceipts !== false;
+                if (pendingOrderDraft && currentReceiptFileName) {
+                    pendingOrderDraft.aiVerifiedNote = autoApproveOn ? "Auto-Aprovado IA (Comprovante + Titular)" : "Comprovante Validado p/ IA";
+                }
+                await persistConfirmedOrReceiptOrder(autoApproveOn ? 'pago' : 'aguardando');
             }
 
             const cleanSalesPhone = formatWhatsappNumber(storeSettings.whatsappSales || '5521999999999');
             const payerHolder = (document.getElementById('pix-payer-holder')?.value || '').trim();
             const receiptNote = currentReceiptFileName
-                ? `\n🏦 *Titular que enviou o PIX:* ${payerHolder || 'Mesmo titular'}\n🧾 *Comprovante anexado no sistema (${currentReceiptFileName}). Segue também a imagem do comprovante aqui no WhatsApp!*`
-                : `\n\n✅ *Pagamento aprovado via Mercado Pago! Aguardo código de rastreio.*`;
+                ? `\n🏦 *Titular que enviou o PIX:* ${payerHolder || 'Mesmo titular'}\n🤖 *Validado pela IA (${currentReceiptFileName}). Segue comprovante!*`
+                : `\n\n✅ *Pagamento reconhecido e aprovado automaticamente pelo sistema! Aguardo código de rastreio.*`;
 
             window.open(`https://wa.me/${cleanSalesPhone}?text=${encodeURIComponent(currentWhatsappOrderMsg + receiptNote)}`, '_blank');
             cart = [];
             saveCartToStorage();
             updateCartUI();
             closeCheckoutModal();
-            showToast('Pedido confirmado e enviado para o WhatsApp!', 'success');
+            showToast('Pedido confirmado e enviado para expedição!', 'success');
         }
         window.confirmOrderWhatsapp = confirmOrderWhatsapp;
+
+        // 🤖 SENTINELA IA 24H EM SEGUNDO PLANO (RECONHECE COMPRAS PAGAS E DÁ BAIXA SOZINHO NO ESTOQUE)
+        async function runAiPaymentSentinelScan(manualClick = false) {
+            const mpToken = (storeSettings.mpAccessToken || '').trim();
+            const statusText = document.getElementById('ai-sentinel-status-text');
+            const btn = document.getElementById('btn-run-sentinel');
+
+            if (btn && manualClick) {
+                btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Varrendo Pagamentos...`;
+            }
+
+            let autoApprovedCount = 0;
+            const pendingList = orders.filter(o => o.status === 'aguardando' && o.externalRef);
+
+            if (mpToken && pendingList.length > 0) {
+                for (const ord of pendingList) {
+                    try {
+                        const res = await fetch(`https://api.mercadopago.com/v1/payments/search?external_reference=${ord.externalRef}`, {
+                            headers: { 'Authorization': `Bearer ${mpToken}` }
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            const approved = (data.results || []).find(p => p.status === 'approved');
+                            if (approved) {
+                                ord.aiVerifiedNote = `Auto-Aprovado IA #${approved.id || ''}`;
+                                await updateOrderStatus(ord.id, 'pago');
+                                autoApprovedCount++;
+                            }
+                        }
+                    } catch (e) {}
+                }
+            }
+
+            const nowStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            if (statusText) {
+                statusText.innerHTML = `Última varredura automática às <b class="text-emerald-400">${nowStr}</b> • ${autoApprovedCount > 0 ? `<b class="text-gold">${autoApprovedCount} pagamento(s) aprovado(s) sozinho(s)!</b>` : 'Todos os pagamentos sincronizados.'}`;
+            }
+            if (btn && manualClick) {
+                btn.innerHTML = `<i class="fa-solid fa-bolt"></i> Conferir Pagamentos Agora`;
+                showToast(autoApprovedCount > 0 ? `🎉 ${autoApprovedCount} pedido(s) reconhecido(s) e aprovado(s) automaticamente!` : `Varredura concluída às ${nowStr}: tudo em dia!`, "success");
+            }
+            renderPickingAndSentinelPanels();
+        }
+        window.runAiPaymentSentinelScan = runAiPaymentSentinelScan;
+
+        function startAdminSentinelLoop() {
+            if (sentinelBackgroundTimer) clearInterval(sentinelBackgroundTimer);
+            sentinelBackgroundTimer = setInterval(() => {
+                if (currentUser) {
+                    runAiPaymentSentinelScan(false);
+                }
+            }, 15000);
+        }
+        startAdminSentinelLoop();
+
+        function renderPickingAndSentinelPanels() {
+            const feedEl = document.getElementById('ai-sentinel-feed');
+            const pickEl = document.getElementById('admin-picking-list');
+            if (!feedEl || !pickEl) return;
+
+            const paidOrdersToPack = orders.filter(o => o.status === 'pago');
+            const waitingOrders = orders.filter(o => o.status === 'aguardando');
+
+            // 1. Alimenta o Feed do Sentinela IA
+            let feedHtml = [];
+            feedHtml.push(`<div class="flex items-center gap-2 text-[11px] text-emerald-400 font-bold"><i class="fa-solid fa-shield-check"></i> Modo Camuflado Ativo: Nomes de produtos ocultados nas cobranças automáticas.</div>`);
+            if (paidOrdersToPack.length > 0) {
+                feedHtml.push(`<div class="text-[11px] text-amber-300 font-bold"><i class="fa-solid fa-box"></i> Você tem <b>${paidOrdersToPack.length} pedido(s) PAGO(S)</b> prontos para embalar e despachar!</div>`);
+            } else {
+                feedHtml.push(`<div class="text-[11px] text-zinc-400"><i class="fa-solid fa-check-double text-emerald-400"></i> Nenhuma pendência de envio: todos os pedidos pagos já foram despachados.</div>`);
+            }
+            if (waitingOrders.length > 0) {
+                feedHtml.push(`<div class="text-[11px] text-sky-300"><i class="fa-solid fa-clock"></i> Monitorando <b>${waitingOrders.length} pedido(s) aguardando pagamento</b> (aprovação automática assim que compensar).</div>`);
+            }
+            feedEl.innerHTML = feedHtml.join('');
+
+            // 2. Soma automaticamente todas as unidades que o lojista precisa separar na bancada hoje!
+            let itemMap = {};
+            paidOrdersToPack.forEach(o => {
+                if (Array.isArray(o.items)) {
+                    o.items.forEach(it => {
+                        const key = it.name || 'Produto';
+                        itemMap[key] = (itemMap[key] || 0) + Number(it.qty || 1);
+                    });
+                }
+            });
+
+            const entries = Object.entries(itemMap);
+            if (entries.length === 0) {
+                pickEl.innerHTML = `<div class="text-zinc-500 text-[11px] py-2">Nenhum item pendente de separação no momento. Assim que um pedido for pago, a soma exata das unidades aparecerá aqui!</div>`;
+            } else {
+                pickEl.innerHTML = entries.map(([prodName, totalQty]) => `
+                    <div class="flex items-center justify-between bg-zinc-950 px-3 py-1.5 rounded-xl border border-zinc-800">
+                        <span class="font-bold text-white truncate pr-2">${prodName}</span>
+                        <span class="bg-gold text-black font-black px-2 py-0.5 rounded-lg text-[11px] shrink-0">Separar: ${totalQty} un.</span>
+                    </div>
+                `).join('');
+            }
+        }
+        window.renderPickingAndSentinelPanels = renderPickingAndSentinelPanels;
+
+        function copyPickingList() {
+            const paidOrdersToPack = orders.filter(o => o.status === 'pago');
+            let itemMap = {};
+            paidOrdersToPack.forEach(o => {
+                if (Array.isArray(o.items)) {
+                    o.items.forEach(it => {
+                        const key = it.name || 'Produto';
+                        itemMap[key] = (itemMap[key] || 0) + Number(it.qty || 1);
+                    });
+                }
+            });
+            const entries = Object.entries(itemMap);
+            if (entries.length === 0) return showToast("Não há itens pagos pendentes de separação.", "info");
+            const text = `📦 *LISTA DE SEPARAÇÃO DE BANCADA (${paidOrdersToPack.length} Pedidos Pagos)*\n\n` + entries.map(([k, q]) => `- *${q}x* ${k}`).join('\n');
+            safeCopyText(text, "Lista de separação de estoque copiada!");
+        }
+        window.copyPickingList = copyPickingList;
+
+        // 🛡️ PAINEL ADMIN: GERADOR E ENVIADOR DE LINK DE CARTÃO 100% CAMUFLADO (CASO O CLIENTE PEÇA NO WHATSAPP)
+        function openAdminCardLinkModal(orderId) {
+            const o = orders.find(x => x.id === orderId);
+            if (!o) return;
+            activeAdminCardOrderId = orderId;
+            const infoEl = document.getElementById('admin-card-link-order-info');
+            const total = Number(o.financials?.total || o.financials?.subtotal || 0);
+            if (infoEl) {
+                infoEl.innerHTML = `
+                    <div class="flex justify-between"><span class="text-zinc-400">Cliente:</span><b class="text-white">${o.client?.name || 'Cliente'}</b></div>
+                    <div class="flex justify-between"><span class="text-zinc-400">Valor a Cobrar:</span><b class="text-gold text-sm">R$ ${formatMoney(total)}</b></div>
+                    <div class="flex justify-between"><span class="text-zinc-400">Ref Camuflada:</span><b class="text-sky-400">${o.stealthTitle || o.externalRef || ''}</b></div>
+                `;
+            }
+            const urlInput = document.getElementById('admin-card-custom-url');
+            if (urlInput) urlInput.value = o.customCardLink || '';
+            document.getElementById('admin-card-link-modal').classList.remove('hidden');
+        }
+        window.openAdminCardLinkModal = openAdminCardLinkModal;
+
+        function closeAdminCardLinkModal() {
+            document.getElementById('admin-card-link-modal').classList.add('hidden');
+            activeAdminCardOrderId = null;
+        }
+        window.closeAdminCardLinkModal = closeAdminCardLinkModal;
+
+        async function generateStealthCardLink() {
+            const o = orders.find(x => x.id === activeAdminCardOrderId);
+            if (!o) return;
+            const mpToken = (storeSettings.mpAccessToken || '').trim();
+            if (!mpToken) {
+                return showToast("Coloque seu Access Token nas Configurações para gerar links camuflados automáticos.", "info");
+            }
+            const btn = document.getElementById('btn-gen-stealth-link');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Gerando Link Camuflado Seguro...`;
+            }
+
+            const stealthCategoryTitle = document.getElementById('stealth-link-title')?.value || 'Suplementos Alimentares & Vitaminas';
+            const total = Number(o.financials?.total || o.financials?.subtotal || 0);
+            const shortCode = (o.externalRef || o.id || '').slice(-6);
+
+            try {
+                const res = await fetch('https://api.mercadopago.com/checkout/preferences', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${mpToken}`
+                    },
+                    body: JSON.stringify({
+                        items: [
+                            {
+                                id: "PED-" + shortCode,
+                                title: `${stealthCategoryTitle} #${shortCode}`,
+                                quantity: 1,
+                                currency_id: 'BRL',
+                                unit_price: Number(total.toFixed(2))
+                            }
+                        ],
+                        external_reference: o.externalRef || o.id,
+                        statement_descriptor: "SUPLEMENTOS"
+                    })
+                });
+                const data = await res.json();
+                if (data && data.init_point) {
+                    document.getElementById('admin-card-custom-url').value = data.init_point;
+                    o.customCardLink = data.init_point;
+                    safeSetStorage('fenix_orders', JSON.stringify(orders));
+                    showToast("Link Camuflado gerado! Quando o cliente pagar, o Sentinela IA aprovará sozinho.", "success");
+                } else {
+                    showToast("Não foi possível gerar pelo Token. Verifique seu Access Token.", "error");
+                }
+            } catch (e) {
+                showToast("Erro de conexão ao gerar link.", "error");
+            }
+
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Link Camuflado Automático (Sem Nomes de Produtos)`;
+            }
+        }
+        window.generateStealthCardLink = generateStealthCardLink;
+
+        function sendStealthCardLinkWhatsapp() {
+            const o = orders.find(x => x.id === activeAdminCardOrderId);
+            if (!o) return;
+            const linkUrl = (document.getElementById('admin-card-custom-url')?.value || '').trim();
+            if (!linkUrl) {
+                return showToast("Clique em Gerar Link Camuflado acima primeiro!", "error");
+            }
+            o.customCardLink = linkUrl;
+            safeSetStorage('fenix_orders', JSON.stringify(orders));
+
+            const total = Number(o.financials?.total || o.financials?.subtotal || 0);
+            const cleanPhone = formatWhatsappNumber(o.client?.phone || '');
+            const msg = `Olá *${o.client?.name || 'Cliente'}*! 👋\n\nSeu pedido na *${storeSettings.storeName || 'Fênix Imports'}* já está separado!\n💰 *Valor Total:* R$ ${formatMoney(total)}\n\n💳 *Clique no link seguro abaixo para pagar com Cartão em até 12x ou Pix:*\n${linkUrl}\n\n_(Obs: Na operadora aparecerá uma descrição neutra de suplementos/bem-estar para total sigilo do seu pedido. Assim que pagar, nosso sistema reconhece automaticamente!)_ 📦🚀`;
+
+            window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+            closeAdminCardLinkModal();
+            showToast("WhatsApp aberto com o Link Camuflado!", "success");
+        }
+        window.sendStealthCardLinkWhatsapp = sendStealthCardLinkWhatsapp;
 
         /* 🧠 BUSCA INTELIGENTE TOLERANTE A ERROS + IA 100% ONLINE REAL */
         function findMatchingProductsSmart(userQuery) {
@@ -3502,7 +4325,10 @@
             orders.forEach(o => {
                 if(!o.client || !o.client.phone) return;
                 let phoneKey = o.client.phone.replace(/\D/g, '');
-                if(!clientMap[phoneKey]) clientMap[phoneKey] = { name: o.client.name, phone: o.client.phone, totalSpent: 0, count: 0 };
+                const lastItemName = (Array.isArray(o.items) && o.items[0]?.name) ? o.items[0].name : 'seu protocolo';
+                if(!clientMap[phoneKey]) {
+                    clientMap[phoneKey] = { name: o.client.name, phone: o.client.phone, totalSpent: 0, count: 0, lastProduct: lastItemName, lastDate: o.date };
+                }
                 clientMap[phoneKey].totalSpent += Number(o.financials?.total || 0);
                 clientMap[phoneKey].count += 1;
             });
@@ -3512,14 +4338,22 @@
                 return;
             }
             clients.forEach(c => {
+                const daysSince = c.lastDate ? Math.max(0, Math.floor((Date.now() - new Date(c.lastDate).getTime()) / 86400000)) : 0;
+                const cycleBadge = daysSince >= 20
+                    ? `<span class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-black block mt-0.5">🔥 Hora de Repor (${daysSince}d)</span>`
+                    : `<span class="text-[9px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-bold block mt-0.5">🤖 Ciclo Ativo • Último: ${c.lastProduct}</span>`;
+                const aiRepurchaseMsg = `Olá *${c.name}*! Tudo bem? Passando para acompanhar seus resultados com o *${c.lastProduct}* na *${storeSettings.storeName || 'Fênix Imports'}*! 🚀\n\nSe já estiver chegando perto de renovar seu protocolo, deixamos uma unidade reservada para você com envio expresso imediato no PIX ou Cartão até 12x!`;
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
-                        <td class="p-4 text-xs font-bold text-white">${c.name}</td>
+                        <td class="p-4 text-xs">
+                            <b class="text-white">${c.name}</b>
+                            ${cycleBadge}
+                        </td>
                         <td class="p-4 text-xs text-zinc-300">${c.phone}</td>
                         <td class="p-4 text-xs text-gold font-bold">R$ ${formatMoney(c.totalSpent)}</td>
                         <td class="p-4 text-xs">${c.count} pedido(s)</td>
                         <td class="p-4 text-right">
-                            <a href="https://wa.me/${formatWhatsappNumber(c.phone)}?text=${encodeURIComponent('Olá ' + c.name + '! Temos novidades exclusivas na ' + (storeSettings.storeName || 'Fênix Imports') + ' com envio expresso!')}" target="_blank" rel="noopener noreferrer" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1.5"><i class="fa-brands fa-whatsapp"></i> Oferta VIP</a>
+                            <a href="https://wa.me/${formatWhatsappNumber(c.phone)}?text=${encodeURIComponent(aiRepurchaseMsg)}" target="_blank" rel="noopener noreferrer" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-1.5"><i class="fa-solid fa-robot"></i> Recompra IA</a>
                         </td>
                     </tr>`;
             });
@@ -3909,7 +4743,7 @@
             grid.innerHTML = [
                 card(hasCustomPix, hasCustomPix ? "Chave PIX Configurada" : "Falta sua Chave PIX Real", hasCustomPix ? `Titular: ${storeSettings.pixName}` : "Clique em Configurar para pôr seu CPF/CNPJ/Celular."),
                 card(hasCustomWpp, hasCustomWpp ? "WhatsApp Oficial Ativo" : "Falta seu WhatsApp Real", hasCustomWpp ? `Recebendo em: +${storeSettings.whatsappSales}` : "Troque o número padrão 5521999999999 pelo seu."),
-                card(hasMpToken, hasMpToken ? "Mercado Pago 100% Automático" : "Mercado Pago sem Token", hasMpToken ? "Aprovação imediata via API ativa." : "Exigindo Comprovante Obrigatório até pôr o Token."),
+                card(hasMpToken, hasMpToken ? "Automação Camuflada + Sentinela IA Ativos" : "Falta Token p/ Reconhecimento Automático", hasMpToken ? "Gera link/PIX camuflado sozinho e reconhece pagamento dando baixa no estoque!" : "Coloque seu Access Token para o site gerar link camuflado e aprovar vendas sozinho."),
                 card(true, "Lucro & Anti-Fraude Blindados", "Sem cupons/cashback • Botão Já Paguei travado até pagar.")
             ].join('');
         }
@@ -4242,10 +5076,281 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
         }
         window.copyShippingLabelText = copyShippingLabelText;
 
+        // 🧭 CONSULTOR IA DE COMPRA RÁPIDA (QUAL PRODUTO ESCOLHER EM 15 SEGUNDOS)
+        function openProductAdvisorModal() {
+            document.getElementById('product-advisor-modal').classList.remove('hidden');
+            const box = document.getElementById('advisor-recommendation-box');
+            if (box) box.classList.add('hidden');
+        }
+        window.openProductAdvisorModal = openProductAdvisorModal;
+
+        function closeProductAdvisorModal() {
+            document.getElementById('product-advisor-modal').classList.add('hidden');
+        }
+        window.closeProductAdvisorModal = closeProductAdvisorModal;
+
+        function selectAdvisorGoal(goalKey) {
+            const box = document.getElementById('advisor-recommendation-box');
+            if (!box) return;
+            box.classList.remove('hidden');
+
+            let mainProd = null;
+            let title = "";
+            let explanation = "";
+
+            if (goalKey === 'emagrecer_intenso') {
+                mainProd = products.find(p => (p.name || '').toLowerCase().includes('tirze')) || products[0];
+                title = "🔥 Protocolo Seca Rápida & Bloqueio de Apetite";
+                explanation = `O <b>${mainProd ? mainProd.name : 'Protocolo GLP-1/GIP'}</b> é a escolha nº 1 para quem quer resultados visíveis já na primeira semana: reduz drasticamente a fome, corta a ansiedade por doces e queima gordura preservando seus músculos.`;
+            } else if (goalKey === 'queima_localizada') {
+                mainProd = products.find(p => (p.name || '').toLowerCase().includes('carnitina')) || products.find(p => (p.name || '').toLowerCase().includes('reta')) || products[0];
+                title = "⚡ Protocolo Oxidação de Gordura Localizada & Energia";
+                explanation = `O <b>${mainProd ? mainProd.name : 'Queimador Metabólico'}</b> transforma a gordura acumulada em energia pura durante o treino, acelerando a definição abdominal sem causar insônia ou taquicardia.`;
+            } else if (goalKey === 'curar_lesao') {
+                mainProd = products.find(p => (p.name || '').toLowerCase().includes('bpc')) || products[0];
+                title = "🧬 Protocolo Regeneração de Tendões, Ombro e Joelho";
+                explanation = `O <b>${mainProd ? mainProd.name : 'Blend Recuperação'}</b> age diretamente desinflamando e acelerando em até 3x a regeneração de tendões, ligamentos e músculos lesionados.`;
+            } else if (goalKey === 'massa_seca') {
+                mainProd = products.find(p => (p.name || '').toLowerCase().includes('suso')) || products.find(p => (p.name || '').toLowerCase().includes('masteron')) || products[0];
+                title = "💪 Protocolo Ganho de Massa Limpa, Força e Densidade";
+                explanation = `O <b>${mainProd ? mainProd.name : 'Protocolo Hipertrofia'}</b> acelera o ganho de volume muscular limpo, força bruta e densidade estética seca sem retenção de líquidos.`;
+            } else {
+                mainProd = products.find(p => (p.name || '').toLowerCase().includes('gh')) || products[0];
+                title = "👑 Protocolo Elite: Lipólise Avançada, Sono & Rejuvenescimento";
+                explanation = `O <b>${mainProd ? mainProd.name : 'GH Somatropina'}</b> promove queima profunda de gordura visceral, melhora da qualidade da pele/colágeno, sono reparador e densidade muscular.`;
+            }
+
+            if (!mainProd) return;
+            const p1Price = Number(mainProd.promoPrice || mainProd.price || 0);
+
+            box.innerHTML = `
+                <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
+                    <span class="text-xs font-black text-gold">${title}</span>
+                    <span class="text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">Recomendação IA</span>
+                </div>
+                <p class="text-xs text-zinc-300 leading-relaxed">${explanation}</p>
+                <div class="pt-1">
+                    <div class="bg-zinc-900 p-3 rounded-xl border border-gold/40 flex items-center justify-between gap-2">
+                        <div class="min-w-0">
+                            <span class="text-[10px] text-gold font-bold uppercase block">Produto Ideal Recomendado</span>
+                            <span class="text-xs font-black text-white truncate block">${mainProd.name}</span>
+                            <span class="text-xs font-black text-emerald-400">R$ ${formatMoney(p1Price)}</span>
+                        </div>
+                        <button type="button" onclick="addToCart('${mainProd.id}'); closeProductAdvisorModal();" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs font-black shrink-0 cursor-pointer">
+                            + Adicionar ao Carrinho
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        window.selectAdvisorGoal = selectAdvisorGoal;
+
+        function askQuickChatQuestion(questionText) {
+            const input = document.getElementById('chat-input');
+            if (!input) return;
+            input.value = questionText;
+            sendChatMessage();
+        }
+        window.askQuickChatQuestion = askQuickChatQuestion;
+
+        // ✨ GERADOR DE DESCRIÇÃO VENDEDORA COM IA NO PAINEL ADMIN (INDIVIDUAL E EM LOTE)
+        async function generateAiDescriptionForModal() {
+            const nameVal = document.getElementById('prod-name')?.value?.trim();
+            const catVal = document.getElementById('prod-category')?.value || 'Peptídeos';
+            const descInput = document.getElementById('prod-desc');
+            const btn = document.getElementById('btn-ai-gen-desc');
+
+            if (!nameVal) {
+                return showToast("Digite primeiro o Nome do Produto acima para a IA gerar a descrição!", "error");
+            }
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Escrevendo com IA...`;
+            }
+
+            const guide = getProductSmartGuide({ name: nameVal, category: catVal, description: descInput?.value || '' });
+            const sysPrompt = "Você é um copywriter especialista em suplementos avançados, peptídeos e performance física. Escreva em português uma descrição persuasiva, fácil de ler para leigos, começando exatamente com '🎯 PARA QUE SERVE:' e explicando em no máximo 3 frases curtas para que serve, os principais benefícios no corpo e como usar.";
+            const usrPrompt = `Crie uma descrição vendedora e explicativa para o produto: ${nameVal} (Categoria: ${catVal}).`;
+
+            let generated = await askRealOnlineAI(sysPrompt, usrPrompt);
+            if (!generated || generated.length < 20) {
+                generated = `🎯 PARA QUE SERVE: ${guide.forWhom} Proporciona ${guide.benefits[0].toLowerCase()}, com grau de pureza 99.8% certificado. ${guide.howToUse}`;
+            } else {
+                generated = generated.replace(/\*\*/g, '').replace(/\n+/g, ' ').trim();
+                if (!generated.includes("PARA QUE SERVE")) {
+                    generated = "🎯 PARA QUE SERVE: " + generated;
+                }
+            }
+
+            if (descInput) descInput.value = generated;
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Descrição Vendedora com IA`;
+            }
+            showToast("Descrição explicativa gerada com sucesso!", "success");
+        }
+        window.generateAiDescriptionForModal = generateAiDescriptionForModal;
+
+        function toggleAutoApproveReceipts(el) {
+            storeSettings.autoApproveReceipts = !!el.checked;
+            safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
+            showToast(el.checked ? "Auto-Baixa IA ativada: comprovantes validados já aprovam e baixam o estoque sozinhos!" : "Auto-Baixa IA desativada: aprovação manual.", "success");
+        }
+        window.toggleAutoApproveReceipts = toggleAutoApproveReceipts;
+
+        async function dispatchAllPaidOrdersOneClick() {
+            const paidList = orders.filter(o => o.status === 'pago');
+            if (paidList.length === 0) {
+                return showToast("Não há pedidos pagos aguardando despacho na fila.", "info");
+            }
+            for (const o of paidList) {
+                if (!o.trackingCode) {
+                    o.trackingCode = "FX" + String(Date.now()).slice(-8) + "BR";
+                }
+                o.status = 'enviado';
+                if (window.db && window.firebaseFns) {
+                    await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", o.id), {
+                        status: 'enviado',
+                        trackingCode: o.trackingCode
+                    }).catch(() => {});
+                }
+            }
+            safeSetStorage('fenix_orders', JSON.stringify(orders));
+            renderOrdersTable();
+            renderPickingAndSentinelPanels();
+            showToast(`🚀 ${paidList.length} pedido(s) marcados como Enviados e códigos gerados!`, "success");
+        }
+        window.dispatchAllPaidOrdersOneClick = dispatchAllPaidOrdersOneClick;
+
+        async function magicAutoFillProductWithAI() {
+            const nameInput = document.getElementById('prod-name');
+            const nameVal = (nameInput?.value || '').trim();
+            if (!nameVal) {
+                return showToast("Digite primeiro o nome do produto (ex: Tirzec 15mg) para a IA preencher tudo!", "error");
+            }
+            const btn = document.getElementById('btn-magic-autofill');
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> IA Preenchendo...`;
+            }
+
+            const nLow = nameVal.toLowerCase();
+            let cat = "Peptídeos";
+            let suggestedCost = 220;
+            let suggestedMargin = 110;
+            let accent = "#d4a017";
+
+            if (nLow.includes('masteron') || nLow.includes('dura') || nLow.includes('enantato') || nLow.includes('cipionato') || nLow.includes('gh') || nLow.includes('trembo') || nLow.includes('deca') || nLow.includes('oxan')) {
+                cat = "Hormônios";
+                suggestedCost = 135;
+                suggestedMargin = 105;
+                accent = "#a855f7";
+            } else if (nLow.includes('suso') || nLow.includes('testo') || nLow.includes('stano') || nLow.includes('bold')) {
+                cat = "Performance";
+                suggestedCost = 125;
+                suggestedMargin = 110;
+                accent = "#ef4444";
+            } else if (nLow.includes('carnitina') || nLow.includes('lipostabil') || nLow.includes('enzima')) {
+                cat = "Estética Avançada";
+                suggestedCost = 90;
+                suggestedMargin = 115;
+                accent = "#f97316";
+            } else if (nLow.includes('agua') || nLow.includes('água') || nLow.includes('seringa') || nLow.includes('insumo')) {
+                cat = "Insumos & Soluções";
+                suggestedCost = 20;
+                suggestedMargin = 150;
+                accent = "#38bdf8";
+            } else if (nLow.includes('tirze') || nLow.includes('tirzec') || nLow.includes('tirsedral') || nLow.includes('reta') || nLow.includes('sema')) {
+                cat = "Peptídeos";
+                suggestedCost = 260;
+                suggestedMargin = 95;
+                accent = "#d4a017";
+            }
+
+            document.getElementById('prod-category').value = cat;
+            document.getElementById('prod-availability').value = 'pronta_entrega';
+            if (!document.getElementById('prod-delivery-days').value.trim()) {
+                document.getElementById('prod-delivery-days').value = '1 a 3 dias úteis';
+            }
+
+            const costEl = document.getElementById('prod-cost-price');
+            const currentCost = parseFloat(costEl.value) || suggestedCost;
+            costEl.value = currentCost.toFixed(2);
+            document.getElementById('prod-margin-pct').value = suggestedMargin;
+
+            const rawSell = currentCost * (1 + suggestedMargin / 100);
+            const fullPrice = Math.ceil(rawSell / 10) * 10 + 19.90;
+            const promoPrice = +(Math.ceil(rawSell / 10) * 10 - 10.10).toFixed(2);
+            document.getElementById('prod-price').value = fullPrice.toFixed(2);
+            document.getElementById('prod-promo-price').value = promoPrice.toFixed(2);
+
+            const imgInput = document.getElementById('prod-imageUrl');
+            if (!imgInput.value.trim()) {
+                const shortTitle = nameVal.substring(0, 11).toUpperCase();
+                const autoSvg = makeProductSvgDataUri(shortTitle, cat.toUpperCase(), accent);
+                imgInput.value = autoSvg;
+                updateProductModalPreview(autoSvg);
+            }
+
+            await generateAiDescriptionForModal();
+
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Autopreencher IA`;
+            }
+            showToast("🪄 Produto preenchido 100% automaticamente pela IA!", "success");
+        }
+        window.magicAutoFillProductWithAI = magicAutoFillProductWithAI;
+
+
+        async function upgradeAllDescriptionsWithAI() {
+            openConfirmModal(
+                "Melhorar Todas as Descrições com IA",
+                "Deseja atualizar automaticamente as descrições de todos os produtos do estoque para explicar claramente '🎯 PARA QUE SERVE', os benefícios e como usar?",
+                async () => {
+                    let count = 0;
+                    for (const p of products) {
+                        const seedMatch = DEFAULT_CATALOG.find(d => d.id === p.id || d.name === p.name);
+                        if (seedMatch) {
+                            p.description = seedMatch.description;
+                        } else {
+                            const guide = getProductSmartGuide(p);
+                            p.description = `🎯 PARA QUE SERVE: ${guide.forWhom} ${guide.benefits[0]}. ${guide.howToUse}`;
+                        }
+                        if (window.db && window.firebaseFns) {
+                            window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", p.id), { description: p.description }).catch(() => {});
+                        }
+                        count++;
+                    }
+                    safeSetStorage('fenix_products', JSON.stringify(products));
+                    renderProducts();
+                    renderAdminTable();
+                    showToast(`${count} descrições atualizadas com fichas 'Para que serve'!`, "success");
+                }
+            );
+        }
+        window.upgradeAllDescriptionsWithAI = upgradeAllDescriptionsWithAI;
+
+        function copyMercadoPagoLink() {
+            const linkEl = document.getElementById('mp-checkout-link');
+            const url = linkEl ? linkEl.href : '';
+            if (!url || url === 'https://www.mercadopago.com.br/') {
+                return showToast("Gere o pagamento primeiro para copiar o link.", "error");
+            }
+            safeCopyText(url, "Link do Mercado Pago copiado! Cole em uma Aba Anônima para testar.");
+        }
+        window.copyMercadoPagoLink = copyMercadoPagoLink;
+
         function getCleanHtmlSource() {
-            return typeof PRISTINE_HTML_SNAPSHOT === "string" && PRISTINE_HTML_SNAPSHOT.length > 1000
+            let raw = typeof PRISTINE_HTML_SNAPSHOT === "string" && PRISTINE_HTML_SNAPSHOT.length > 1000
                 ? PRISTINE_HTML_SNAPSHOT
                 : ("<" + "!DOCTYPE html>\n" + document.documentElement.outerHTML);
+            const endIdx = raw.indexOf("<" + "/html>");
+            if (endIdx !== -1) {
+                raw = raw.substring(0, endIdx + 7);
+            }
+            return raw;
         }
 
         function copyCleanIndexHtmlForGithub() {
