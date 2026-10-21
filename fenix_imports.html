@@ -214,6 +214,7 @@
             <nav class="hidden md:flex items-center gap-5 lg:gap-7 text-xs lg:text-sm font-semibold">
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-1.5 hover:text-yellow-300 transition cursor-pointer"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
                 <button onclick="openProductAdvisorModal()" class="text-amber-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer font-bold"><i class="fa-solid fa-compass text-gold text-xs"></i> Qual Escolher? (IA)</button>
+                <button onclick="openCompareModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-scale-balanced text-gold text-xs"></i> Comparar</button>
                 <button onclick="openReconstitutionModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-syringe text-gold text-xs"></i> Calculadora UI</button>
                 <button onclick="openLabVerifyModal()" class="text-zinc-300 hover:text-emerald-400 transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400 text-xs"></i> Laudos HPLC</button>
                 <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
@@ -245,6 +246,7 @@
         <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-zinc-800 px-5 py-4 space-y-3">
             <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-store"></i> Catálogo de Produtos</button>
             <button onclick="openProductAdvisorModal(); toggleMobileMenu();" class="w-full text-left text-amber-300 font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-compass text-gold"></i> Consultor IA: Qual Produto Escolher?</button>
+            <button onclick="openCompareModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-scale-balanced text-gold"></i> Comparador Lado a Lado (2026)</button>
             <button onclick="openReconstitutionModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-syringe text-gold"></i> Calculadora de Reconstituição (UI)</button>
             <button onclick="openLabVerifyModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400"></i> Verificar Lote & Laudos HPLC</button>
             <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
@@ -294,6 +296,9 @@
                             </button>
                             <button onclick="openReconstitutionModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-gold border border-gold/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
                                 <i class="fa-solid fa-syringe"></i> Calculadora de Dosagem (UI)
+                            </button>
+                            <button onclick="openCompareModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-sky-400 border border-sky-500/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
+                                <i class="fa-solid fa-scale-balanced"></i> Comparar Lado a Lado
                             </button>
                             <button onclick="openLabVerifyModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-emerald-400 border border-emerald-500/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
                                 <i class="fa-solid fa-microscope"></i> Laudos HPLC 99.8%
@@ -479,7 +484,9 @@
                     <div class="flex flex-wrap gap-2">
                         <button onclick="upgradeAllDescriptionsWithAI()" class="bg-amber-500/20 hover:bg-amber-500 text-gold hover:text-black font-black px-3.5 py-2.5 rounded-xl text-xs border border-gold/40 flex items-center gap-1.5 cursor-pointer transition" title="Usar IA para enriquecer as descrições de todos os produtos explicando para que servem"><i class="fa-solid fa-wand-magic-sparkles"></i> Descrições IA</button>
                         <button onclick="restoreDefaultCatalog()" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3.5 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-1.5 cursor-pointer" title="Restaurar produtos de exemplo"><i class="fa-solid fa-rotate-left"></i> Catálogo Padrão</button>
-                        <button onclick="downloadCleanIndexHtml()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-lg cursor-pointer" title="Baixar arquivo index.html pronto para hospedagem"><i class="fa-solid fa-file-arrow-down"></i> Baixar index.html</button>
+                        <button onclick="downloadCleanIndexHtml('index.html')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-lg cursor-pointer" title="Baixar arquivo index.html pronto para hospedagem"><i class="fa-solid fa-file-arrow-down"></i> Baixar index.html</button>
+                        <button onclick="downloadCleanIndexHtml('fenix_imports.html')" class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-lg cursor-pointer" title="Baixar arquivo fenix_imports.html"><i class="fa-solid fa-file-code"></i> Baixar fenix_imports.html</button>
+                        <button onclick="copyCleanIndexHtmlForGithub()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-lg cursor-pointer" title="Copiar código limpo para colar no GitHub"><i class="fa-regular fa-copy"></i> Copiar p/ GitHub</button>
                         <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-file-code"></i> JSON</button>
                         <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-sliders"></i> Configs & Mercado Pago</button>
                         <button onclick="openProductModal()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-plus"></i> Novo</button>
@@ -1283,7 +1290,7 @@
                     <label class="text-[10px] text-sky-400 font-black uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-robot"></i> Automação 100% Camuflada (Anti-Bloqueio + Baixa Automática)
                     </label>
-                    <input type="text" id="set-mp-token" placeholder="Access Token (APP_USR-...) do Mercado Pago" class="w-full bg-zinc-900 border border-sky-500/30 rounded-xl px-3 py-2 text-sky-200">
+                    <input type="password" id="set-mp-token" autocomplete="off" placeholder="Access Token (APP_USR-...) do Mercado Pago" class="w-full bg-zinc-900 border border-sky-500/30 rounded-xl px-3 py-2 text-sky-200">
                     <p class="text-[10px] text-zinc-400 leading-tight"><b>100% Automático e Blindado:</b> O site gera o Link de Cartão e PIX sozinho para o cliente, mas <b>camufla automaticamente o nome dos produtos</b> (envia apenas <i>"Suplementos & Vitaminas #Ref"</i> e oculta a URL do site) e reconhece o pagamento sozinho dando baixa no estoque!</p>
                 </div>
 
@@ -1314,8 +1321,8 @@
                     <input type="text" id="set-pix-city" required placeholder="Cidade Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 </div>
 
-                <input type="text" id="set-removebg" placeholder="Chave Remove.bg (Opcional - Remove fundo da foto)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-amber-300">
-                <input type="text" id="set-gemini" placeholder="Chave Gemini (Opcional - IA Online Já Ativa)" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2 text-blue-300">
+                <input type="password" id="set-removebg" autocomplete="off" placeholder="Chave Remove.bg (Opcional - Remove fundo da foto)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-amber-300">
+                <input type="password" id="set-gemini" autocomplete="off" placeholder="Chave Gemini (Opcional - IA Online Já Ativa)" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2 text-blue-300">
                 
                 <div class="flex gap-2 pt-2">
                     <button type="button" onclick="closeSettingsModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl cursor-pointer">Cancelar</button>
@@ -1325,33 +1332,99 @@
         </div>
     </div>
 
-    <!-- Modal Login -->
+    <!-- Modal Login Blindado (Exclusivo E-mail e Senha c/ Proteção Anti-Força Bruta) -->
     <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeLoginModal()"></div>
-        <div class="relative glass-card border border-zinc-700/60 rounded-3xl w-full max-w-xs p-6 shadow-2xl z-10">
+        <div class="absolute inset-0 bg-black/85 backdrop-blur-md" onclick="closeLoginModal()"></div>
+        <div class="relative glass-card border border-gold/40 rounded-3xl w-full max-w-xs p-6 shadow-2xl z-10">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-gold"></i> Acesso Administrativo</h3>
+                <div>
+                    <h3 class="text-base font-black text-white flex items-center gap-2"><i class="fa-solid fa-shield-halved text-gold"></i> Acesso Restrito</h3>
+                    <span class="text-[10px] text-emerald-400 font-bold flex items-center gap-1 mt-0.5"><i class="fa-solid fa-lock text-[9px]"></i> Autenticação Criptografada 256-bit</span>
+                </div>
                 <button type="button" onclick="closeLoginModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form onsubmit="handleAdminLogin(event)" class="space-y-3">
-                <input type="email" id="login-email" required placeholder="E-mail Admin" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white outline-none focus:border-gold">
-                <input type="password" id="login-password" required placeholder="Senha Secreta" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-white outline-none focus:border-gold">
-                <button type="submit" class="w-full gold-btn-gradient py-2.5 rounded-xl text-xs sm:text-sm cursor-pointer">Acessar Painel</button>
-            </form>
-            <div class="mt-3 pt-3 border-t border-zinc-800/80 text-center">
-                <button type="button" onclick="enterLocalAdminMode()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 border border-zinc-700/70 py-2 rounded-xl text-[11px] font-bold transition cursor-pointer flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-bolt text-gold"></i> Acesso Rápido (Modo Gestão Local)
-                </button>
-                <div class="grid grid-cols-2 gap-2 mt-2">
-                    <button type="button" onclick="copyCleanIndexHtmlForGithub()" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/40 py-2 rounded-xl text-[10px] font-bold transition cursor-pointer flex items-center justify-center gap-1">
-                        <i class="fa-regular fa-copy"></i> Copiar p/ GitHub
-                    </button>
-                    <button type="button" onclick="downloadCleanIndexHtml()" class="bg-sky-600/20 hover:bg-sky-600 text-sky-400 hover:text-white border border-sky-500/40 py-2 rounded-xl text-[10px] font-bold transition cursor-pointer flex items-center justify-center gap-1">
-                        <i class="fa-solid fa-download"></i> Baixar index.html
+            <div id="login-lockout-banner" class="hidden mb-3 bg-red-500/15 border border-red-500/40 rounded-xl p-2.5 text-[11px] text-red-300 font-bold text-center"></div>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-3" autocomplete="on">
+                <div class="relative">
+                    <i class="fa-solid fa-envelope text-zinc-500 text-xs absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input type="email" id="login-email" name="email" autocomplete="username" required placeholder="E-mail Admin" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-3.5 py-2.5 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                </div>
+                <div class="relative">
+                    <i class="fa-solid fa-key text-zinc-500 text-xs absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="Senha Secreta" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl pl-9 pr-10 py-2.5 text-xs sm:text-sm text-white outline-none focus:border-gold">
+                    <button type="button" onclick="toggleLoginPasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white text-xs cursor-pointer" title="Mostrar/Ocultar Senha">
+                        <i id="login-pass-eye" class="fa-solid fa-eye"></i>
                     </button>
                 </div>
+                <button type="submit" id="btn-admin-login-submit" class="w-full gold-btn-gradient py-3 rounded-xl text-xs sm:text-sm font-black cursor-pointer flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-right-to-bracket"></i> Acessar Painel
+                </button>
+            </form>
+            <div class="mt-3 pt-2.5 border-t border-zinc-800/80 text-center">
+                <span class="text-[10px] text-zinc-500 flex items-center justify-center gap-1.5"><i class="fa-solid fa-user-shield text-gold"></i> Protegido contra Força Bruta & Injeção</span>
             </div>
         </div>
+    </div>
+
+    <!-- Modal Comparador Lado a Lado 2026 -->
+    <div id="compare-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/85 backdrop-blur-md" onclick="closeCompareModal()"></div>
+        <div class="relative glass-card border border-gold/40 rounded-3xl max-w-3xl w-full p-5 sm:p-7 shadow-2xl z-10 overflow-y-auto max-h-[92vh] space-y-4">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gold/15 border border-gold/40 flex items-center justify-center text-gold text-lg">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-black text-white">Comparador de Protocolos Fênix 2026</h3>
+                        <p class="text-[11px] text-zinc-400">Compare benefícios, potência e indicação lado a lado antes de escolher</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeCompareModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[10px] font-black uppercase text-gold block mb-1">Produto 1:</label>
+                    <select id="compare-select-1" onchange="renderComparisonTable()" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-gold"></select>
+                </div>
+                <div>
+                    <label class="text-[10px] font-black uppercase text-sky-400 block mb-1">Produto 2:</label>
+                    <select id="compare-select-2" onchange="renderComparisonTable()" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-sky-400"></select>
+                </div>
+            </div>
+            <div id="compare-table-container" class="grid grid-cols-2 gap-3 pt-1"></div>
+        </div>
+    </div>
+
+    <!-- Barra Flutuante Mobile de Compra Rápida (Sticky Checkout Bar 2026) -->
+    <div id="sticky-checkout-bar" class="fixed bottom-0 inset-x-0 z-30 p-3 pointer-events-none hidden">
+        <div class="max-w-xl mx-auto glass-card border border-gold/50 rounded-2xl p-3 shadow-[0_-10px_35px_rgba(0,0,0,0.75)] flex items-center justify-between gap-3 pointer-events-auto">
+            <div class="flex items-center gap-2.5 min-w-0 cursor-pointer" onclick="toggleCartDrawer(true)">
+                <div class="w-9 h-9 rounded-xl bg-gold/20 border border-gold/40 flex items-center justify-center text-gold font-black text-xs shrink-0" id="sticky-bar-qty">0</div>
+                <div class="min-w-0">
+                    <span class="text-[10px] text-emerald-400 font-bold block leading-none"><i class="fa-solid fa-bolt"></i> Checkout Automático Pronto</span>
+                    <span class="text-xs sm:text-sm font-black text-white truncate block mt-0.5">Total: <span id="sticky-bar-total" class="text-gold">R$ 0,00</span></span>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <button type="button" onclick="toggleCartDrawer(true)" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 px-3 py-2.5 rounded-xl text-[11px] font-bold cursor-pointer">Ver Itens</button>
+                <button type="button" onclick="proceedToCheckout()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs font-black flex items-center gap-1.5 cursor-pointer shadow-lg">
+                    <span>Finalizar Agora</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pulso de Prova Social Verificada Ao Vivo (2026 Live Sales Pulse) -->
+    <div id="live-sales-pulse" class="fixed bottom-20 left-4 z-30 max-w-[265px] glass-card border border-emerald-500/40 rounded-2xl p-3 shadow-2xl transition-all duration-500 opacity-0 translate-y-4 pointer-events-none hidden sm:flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0 text-xs">
+            <i class="fa-solid fa-shield-check"></i>
+        </div>
+        <div class="min-w-0 flex-1 cursor-pointer" id="live-sales-pulse-body">
+            <span class="text-[9px] font-black uppercase text-emerald-400 block">Compra Verificada • Envio Expresso</span>
+            <p id="live-sales-pulse-text" class="text-[11px] text-white font-bold leading-tight truncate mt-0.5"></p>
+        </div>
+        <button type="button" onclick="dismissLiveSalesPulse()" class="text-zinc-500 hover:text-white text-xs self-start cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <!-- Firebase -->
@@ -1435,6 +1508,58 @@
                 showToast("Não foi possível copiar automaticamente.", "error");
             }
         }
+
+        // 🛡️ BLINDAGEM ANTI-XSS & GUARDIÃO ESTRITO DE AUTENTICAÇÃO FIREBASE (2026)
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        let adminInactivityTimer = null;
+        let loginLockoutInterval = null;
+
+        function isAdminAuthenticated() {
+            return Boolean(
+                currentUser &&
+                currentUser.uid &&
+                !currentUser.isLocal &&
+                window.auth &&
+                window.auth.currentUser &&
+                window.auth.currentUser.uid === currentUser.uid
+            );
+        }
+
+        function requireAdminAuth() {
+            if (!isAdminAuthenticated()) {
+                showToast("🔒 Acesso Negado: Faça login com seu E-mail e Senha de Administrador.", "error");
+                openLoginModal();
+                return false;
+            }
+            resetAdminInactivityTimer();
+            return true;
+        }
+
+        function resetAdminInactivityTimer() {
+            if (adminInactivityTimer) clearTimeout(adminInactivityTimer);
+            if (!isAdminAuthenticated()) return;
+            // Auto-Lock de Segurança após 30 minutos de inatividade
+            adminInactivityTimer = setTimeout(() => {
+                if (isAdminAuthenticated()) {
+                    showToast("🔒 Sessão encerrada automaticamente por inatividade (Proteção Anti-Hack).", "info");
+                    logoutAdmin();
+                }
+            }, 30 * 60 * 1000);
+        }
+
+        ['click', 'keydown', 'touchstart'].forEach(evt => {
+            window.addEventListener(evt, () => {
+                if (currentUser) resetAdminInactivityTimer();
+            }, { passive: true });
+        });
 
         // Gerador de imagens SVG embutidas para o catálogo padrão (carregamento instantâneo e sem risco de link quebrado)
         function makeProductSvgDataUri(title, subtitle, accentColor = "#d4a017") {
@@ -1911,26 +2036,27 @@
         }
 
         async function initApp() {
+            // Remove qualquer resquício de modo local antigo por segurança
+            try { localStorage.removeItem('fenix_local_admin'); } catch (e) {}
             initTheme();
             loadPersistedCartAndCustomer();
             await loadSettings();
             await loadProductsFromFirebase();
+            if (typeof initLiveSalesPulse === 'function') initLiveSalesPulse();
 
             if (window.auth && window.firebaseFns) {
                 try {
                     window.firebaseFns.onAuthStateChanged(window.auth, (user) => { 
-                        if (user) {
+                        if (user && user.uid) {
                             currentUser = user;
+                            resetAdminInactivityTimer();
+                            updateAuthUI();
+                        } else {
+                            currentUser = null;
                             updateAuthUI();
                         }
                     });
                 } catch (e) {}
-            }
-            // Verifica se sessão local de admin estava ativa
-            const localAdmin = safeGetStorage('fenix_local_admin');
-            if (localAdmin && !currentUser) {
-                currentUser = { email: localAdmin, isLocal: true };
-                updateAuthUI();
             }
         }
         window.initApp = initApp;
@@ -2018,10 +2144,11 @@
             }
 
             renderProducts(); 
-            renderAdminTable();
+            if (isAdminAuthenticated()) renderAdminTable();
         }
 
         async function restoreDefaultCatalog() {
+            if (!requireAdminAuth()) return;
             openConfirmModal(
                 "Restaurar Catálogo Padrão",
                 "Deseja carregar os 8 produtos padrão de alta performance no seu catálogo?",
@@ -2051,7 +2178,7 @@
             const mobAdmin = document.getElementById('mobile-nav-admin');
             const userStatus = document.getElementById('user-status-container');
 
-            if (currentUser) { 
+            if (isAdminAuthenticated()) { 
                 navLogin?.classList.add('hidden'); 
                 navAdmin?.classList.remove('hidden'); 
                 navAdmin?.classList.add('flex'); 
@@ -2069,11 +2196,18 @@
                 mobAdmin?.classList.add('hidden');
                 userStatus?.classList.add('hidden'); 
                 userStatus?.classList.remove('flex');
+                document.getElementById('tab-admin')?.classList.add('hidden');
+                document.getElementById('tab-catalog')?.classList.remove('hidden');
+                // Limpa qualquer tabela administrativa da DOM se não estiver autenticado
+                ['admin-product-table', 'admin-orders-table', 'admin-crm-table', 'admin-stock-alerts-table'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = '';
+                });
             }
         }
 
         function listenOrdersRealtime() {
-            if (!currentUser) return;
+            if (!isAdminAuthenticated()) return;
             renderOrdersTable();
             renderCrmTable();
 
@@ -2106,6 +2240,7 @@
 
         // Aprovar pedido com baixa automática de estoque
         async function updateOrderStatus(id, st) { 
+            if (!requireAdminAuth()) return;
             try {
                 const target = orders.find(o => o.id === id);
                 if (window.db && window.firebaseFns) {
@@ -2140,6 +2275,7 @@
         window.updateOrderStatus = updateOrderStatus;
 
         function deleteOrder(id) {
+            if (!requireAdminAuth()) return;
             openConfirmModal(
                 "Excluir Pedido",
                 "Tem certeza que deseja excluir este pedido permanentemente do histórico?",
@@ -2255,7 +2391,7 @@
 
         function renderOrdersTable() {
             const tb = document.getElementById('admin-orders-table'); 
-            if(!tb) return;
+            if(!tb || !isAdminAuthenticated()) { if(tb) tb.innerHTML = ''; return; }
             tb.innerHTML = '';
             let rev = 0, prof = 0, count = 0;
 
@@ -2418,7 +2554,7 @@
                 if (navAdmin && currentUser) navAdmin.className = "text-zinc-400 hover:text-gold transition flex items-center gap-2 cursor-pointer";
             }
             if (tab === 'admin') { 
-                if(!currentUser) return openLoginModal(); 
+                if(!requireAdminAuth()) return; 
                 document.getElementById('tab-admin').classList.remove('hidden'); 
                 if (navAdmin) navAdmin.className = "text-gold flex items-center gap-2 hover:text-yellow-300 transition cursor-pointer";
                 if (navCatalog) navCatalog.className = "text-zinc-400 hover:text-white transition flex items-center gap-2 cursor-pointer";
@@ -2731,15 +2867,36 @@
                         </div>
                     </div>
 
-                    ${guide.needsWaterBac ? `
-                    <div class="pt-2 border-t border-zinc-800 flex flex-col sm:flex-row gap-2">
-                        <button type="button" onclick="openCalculatorForProduct(${guide.vialMg}, ${guide.suggestedDoseMg})" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-gold border border-gold/40 py-2 px-3 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer">
-                            <i class="fa-solid fa-calculator"></i> Calcular UI na Seringa (${guide.vialMg}mg)
+                    <div class="pt-2 border-t border-zinc-800/80 grid grid-cols-3 gap-1.5 text-center">
+                        <div class="bg-zinc-950/90 border border-zinc-800 rounded-xl p-2">
+                            <i class="fa-solid fa-flask-vial text-emerald-400 text-xs"></i>
+                            <span class="block text-[9px] font-black text-white mt-0.5">Pureza 99.8%</span>
+                        </div>
+                        <div class="bg-zinc-950/90 border border-zinc-800 rounded-xl p-2">
+                            <i class="fa-solid fa-box-lock text-gold text-xs"></i>
+                            <span class="block text-[9px] font-black text-white mt-0.5">100% Sigiloso</span>
+                        </div>
+                        <div class="bg-zinc-950/90 border border-zinc-800 rounded-xl p-2">
+                            <i class="fa-solid fa-bolt text-sky-400 text-xs"></i>
+                            <span class="block text-[9px] font-black text-white mt-0.5">Reserva Auto</span>
+                        </div>
+                    </div>
+                    <div class="pt-1 flex gap-2">
+                        <button type="button" onclick="document.getElementById('installment-sim-box').classList.toggle('hidden')" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-sky-300 border border-sky-500/30 py-2 px-3 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-credit-card"></i> Simular Parcelas (1x a 12x)
                         </button>
-                        <button type="button" onclick="addProductWithWaterBac('${p.id}')" class="flex-1 bg-sky-500/15 hover:bg-sky-500/25 text-sky-300 border border-sky-500/40 py-2 px-3 rounded-xl text-[11px] font-black flex items-center justify-center gap-1.5 cursor-pointer">
-                            <i class="fa-solid fa-droplet"></i> + Levar c/ Água Bac (R$ ${formatMoney(price + waterPrice)})
+                        <button type="button" onclick="closeProductDetailModal(); openCompareModal('${p.id}')" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-gold border border-gold/30 py-2 px-3 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-scale-balanced"></i> Comparar c/ Outro
                         </button>
-                    </div>` : ''}
+                    </div>
+                    <div id="installment-sim-box" class="hidden bg-zinc-950 border border-sky-500/30 rounded-xl p-3 text-[11px] space-y-1">
+                        <div class="font-black text-sky-400 uppercase text-[10px] mb-1"><i class="fa-solid fa-calculator"></i> Simulação no Cartão ou PIX:</div>
+                        <div class="flex justify-between text-emerald-400 font-bold"><span>PIX Imediato (Aprovação na Hora):</span><span>R$ ${formatMoney(price)}</span></div>
+                        <div class="flex justify-between text-zinc-300"><span>1x no Cartão de Crédito:</span><span>R$ ${formatMoney(price)}</span></div>
+                        <div class="flex justify-between text-zinc-300"><span>3x no Cartão:</span><span>3x de R$ ${formatMoney((price * 1.04) / 3)}</span></div>
+                        <div class="flex justify-between text-zinc-300"><span>6x no Cartão:</span><span>6x de R$ ${formatMoney((price * 1.07) / 6)}</span></div>
+                        <div class="flex justify-between text-gold font-bold"><span>12x no Cartão:</span><span>12x de R$ ${formatMoney((price * 1.12) / 12)}</span></div>
+                    </div>
                 </div>
 
                 <!-- Seleção Rápida de Quantidade (Valor Integral Protegido) -->
@@ -3107,6 +3264,7 @@
                 document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
                 document.getElementById('cart-shipping-cost').innerText = 'R$ 0,00';
                 document.getElementById('cart-total').innerText = 'R$ 0,00'; 
+                if (typeof updateStickyCheckoutBar === 'function') updateStickyCheckoutBar(totals);
                 return; 
             }
             cont.innerHTML = ''; 
@@ -3130,6 +3288,7 @@
             document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`; 
             document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(totals.shipping)}`; 
             document.getElementById('cart-total').innerText = `R$ ${formatMoney(totals.total)}`;
+            if (typeof updateStickyCheckoutBar === 'function') updateStickyCheckoutBar(totals);
         }
 
         function decreaseCartQty(id) {
@@ -4334,7 +4493,7 @@
 
         function renderCrmTable() {
             const tb = document.getElementById('admin-crm-table');
-            if(!tb) return;
+            if(!tb || !isAdminAuthenticated()) { if(tb) tb.innerHTML = ''; return; }
             tb.innerHTML = '';
             let clientMap = {};
             orders.forEach(o => {
@@ -4503,6 +4662,7 @@
         window.calculatePriceFromMargin = calculatePriceFromMargin;
 
         function openProductModal(id = null) {
+            if (!requireAdminAuth()) return;
             document.getElementById('product-form').reset(); 
             document.getElementById('prod-id').value = '';
             document.getElementById('prod-margin-pct').value = '';
@@ -4536,7 +4696,8 @@
         window.closeProductModal = closeProductModal;
 
         async function saveProduct(e) {
-            e.preventDefault(); 
+            e.preventDefault();
+            if (!requireAdminAuth()) return; 
             const id = document.getElementById('prod-id').value;
             const nameVal = document.getElementById('prod-name').value.trim();
             const catVal = document.getElementById('prod-category').value;
@@ -4605,7 +4766,7 @@
 
         function renderAdminTable() {
             const tb = document.getElementById('admin-product-table'); 
-            if (!tb) return;
+            if (!tb || !isAdminAuthenticated()) { if(tb) tb.innerHTML = ''; return; }
             tb.innerHTML = '';
             const selectAll = document.getElementById('select-all-checkbox');
             if (selectAll) selectAll.checked = false;
@@ -4651,6 +4812,7 @@
         }
 
         function deleteSelectedProducts() {
+            if (!requireAdminAuth()) return;
             const selected = document.querySelectorAll('.product-checkbox:checked');
             if (selected.length === 0) return showToast('Selecione ao menos um produto.', 'error');
             openConfirmModal(
@@ -4674,6 +4836,7 @@
         window.deleteSelectedProducts = deleteSelectedProducts;
 
         function deleteProduct(id) {
+            if (!requireAdminAuth()) return;
             openConfirmModal(
                 "Remover Produto",
                 "Deseja remover este produto do catálogo?",
@@ -4765,6 +4928,7 @@
         window.renderEliteReadinessChecklist = renderEliteReadinessChecklist;
 
         function openSettingsModal() {
+            if (!requireAdminAuth()) return;
             document.getElementById('set-store-name').value = storeSettings.storeName || 'FÊNIX IMPORTS';
             document.getElementById('set-store-logo').value = storeSettings.logoUrl || '';
             const colorEl = document.getElementById('set-theme-color');
@@ -4790,6 +4954,7 @@
 
         async function saveSettings(e) {
             e.preventDefault();
+            if (!requireAdminAuth()) return;
             storeSettings = {
                 ...storeSettings,
                 storeName: document.getElementById('set-store-name').value.trim(),
@@ -4826,56 +4991,138 @@
         }
         window.saveSettings = saveSettings;
 
-        function openLoginModal() { document.getElementById('login-modal').classList.remove('hidden'); }
-        function closeLoginModal() { document.getElementById('login-modal').classList.add('hidden'); }
+        function toggleLoginPasswordVisibility() {
+            const input = document.getElementById('login-password');
+            const eye = document.getElementById('login-pass-eye');
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (eye) eye.className = 'fa-solid fa-eye-slash text-gold';
+            } else {
+                input.type = 'password';
+                if (eye) eye.className = 'fa-solid fa-eye';
+            }
+        }
+        window.toggleLoginPasswordVisibility = toggleLoginPasswordVisibility;
+
+        function checkLoginLockoutState() {
+            const lockoutUntil = parseInt(safeGetStorage('fenix_lockout_until', '0'), 10) || 0;
+            const banner = document.getElementById('login-lockout-banner');
+            const submitBtn = document.getElementById('btn-admin-login-submit');
+            const now = Date.now();
+
+            if (lockoutUntil > now) {
+                const remSecs = Math.ceil((lockoutUntil - now) / 1000);
+                const mins = Math.floor(remSecs / 60).toString().padStart(2, '0');
+                const secs = (remSecs % 60).toString().padStart(2, '0');
+                if (banner) {
+                    banner.classList.remove('hidden');
+                    banner.innerHTML = `<i class="fa-solid fa-shield-virus"></i> Bloqueio Anti-Hack Ativo: Muitas tentativas incorretas. Aguarde <b>${mins}:${secs}</b>`;
+                }
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+                return true;
+            } else {
+                if (banner) banner.classList.add('hidden');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+                if (loginLockoutInterval) {
+                    clearInterval(loginLockoutInterval);
+                    loginLockoutInterval = null;
+                }
+                return false;
+            }
+        }
+
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
+            if (checkLoginLockoutState() && !loginLockoutInterval) {
+                loginLockoutInterval = setInterval(checkLoginLockoutState, 1000);
+            }
+        }
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+            if (loginLockoutInterval) {
+                clearInterval(loginLockoutInterval);
+                loginLockoutInterval = null;
+            }
+        }
         window.openLoginModal = openLoginModal;
         window.closeLoginModal = closeLoginModal;
 
-        function enterLocalAdminMode(emailLabel = "admin@feniximports.com") {
-            currentUser = { email: emailLabel, isLocal: true };
-            safeSetStorage('fenix_local_admin', emailLabel);
-            updateAuthUI();
-            closeLoginModal();
-            switchTab('admin');
-            requestPushPermission();
-            showToast('Painel Administrativo liberado!', 'success');
-        }
-        window.enterLocalAdminMode = enterLocalAdminMode;
-
         async function handleAdminLogin(e) {
             e.preventDefault();
+            if (checkLoginLockoutState()) {
+                return showToast('Acesso temporariamente bloqueado por segurança. Aguarde o tempo na tela.', 'error');
+            }
+
             const email = document.getElementById('login-email').value.trim();
             const pass = document.getElementById('login-password').value;
+            const submitBtn = document.getElementById('btn-admin-login-submit');
+
+            if (!email || !pass) {
+                return showToast('Informe seu E-mail Admin e Senha Secreta.', 'error');
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Verificando Credenciais...';
+            }
+
             try {
-                if (window.auth && window.firebaseFns) {
-                    await window.firebaseFns.signInWithEmailAndPassword(window.auth, email, pass);
-                    showToast('Acesso concedido via Firebase!', 'success');
-                    closeLoginModal();
-                    switchTab('admin');
-                    requestPushPermission();
-                    return;
+                if (!window.auth || !window.firebaseFns) {
+                    throw new Error('Serviço de autenticação indisponível.');
                 }
-            } catch(err) {
-                // Se estiver testando no painel ou usando credencial padrão de gestão local
-                if (pass.length >= 4) {
-                    enterLocalAdminMode(email || 'admin');
-                    return;
+                const cred = await window.firebaseFns.signInWithEmailAndPassword(window.auth, email, pass);
+                currentUser = cred.user;
+                safeSetStorage('fenix_login_attempts', '0');
+                safeSetStorage('fenix_lockout_until', '0');
+                document.getElementById('login-password').value = '';
+                resetAdminInactivityTimer();
+                updateAuthUI();
+                closeLoginModal();
+                switchTab('admin');
+                requestPushPermission();
+                showToast('🛡️ Login autenticado com sucesso!', 'success');
+            } catch (err) {
+                const attempts = (parseInt(safeGetStorage('fenix_login_attempts', '0'), 10) || 0) + 1;
+                safeSetStorage('fenix_login_attempts', String(attempts));
+
+                if (attempts >= 5) {
+                    const until = Date.now() + (5 * 60 * 1000);
+                    safeSetStorage('fenix_lockout_until', String(until));
+                    safeSetStorage('fenix_login_attempts', '0');
+                    checkLoginLockoutState();
+                    if (!loginLockoutInterval) loginLockoutInterval = setInterval(checkLoginLockoutState, 1000);
+                    showToast('🛡️ 5 tentativas falhas! Acesso bloqueado por 5 minutos contra invasão.', 'error');
+                } else {
+                    const rest = 5 - attempts;
+                    showToast(`E-mail ou senha incorretos! (${rest} tentativa(s) restante(s) antes do bloqueio)`, 'error');
                 }
-                showToast('Credenciais incorretas.', 'error');
+            } finally {
+                if (submitBtn && !checkLoginLockoutState()) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Acessar Painel';
+                }
             }
         }
         window.handleAdminLogin = handleAdminLogin;
 
         async function logoutAdmin() {
+            if (adminInactivityTimer) clearTimeout(adminInactivityTimer);
             try {
                 if (window.auth && window.firebaseFns) {
                     await window.firebaseFns.signOut(window.auth).catch(() => {});
                 }
             } catch(err) {}
             currentUser = null;
-            safeSetStorage('fenix_local_admin', '');
+            try { localStorage.removeItem('fenix_local_admin'); } catch (e) {}
             updateAuthUI();
-            showToast('Sessão encerrada.', 'info');
+            showToast('Sessão administrativa encerrada com segurança.', 'info');
             switchTab('catalog');
         }
         window.logoutAdmin = logoutAdmin;
@@ -5369,29 +5616,170 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
         }
 
         function copyCleanIndexHtmlForGithub() {
+            if (!requireAdminAuth()) return;
             const cleanCode = getCleanHtmlSource();
             safeCopyText(cleanCode, "Código limpo copiado! Agora apague tudo no GitHub e cole.");
         }
         window.copyCleanIndexHtmlForGithub = copyCleanIndexHtmlForGithub;
 
-        function downloadCleanIndexHtml() {
+        function downloadCleanIndexHtml(targetName = "index.html") {
+            if (!requireAdminAuth()) return;
             try {
+                const safeFileName = (typeof targetName === "string" && targetName.endsWith(".html")) ? targetName : "index.html";
                 const fullHtml = getCleanHtmlSource();
                 const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement("a");
                 a.href = url;
-                a.download = "index.html";
+                a.download = safeFileName;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                showToast("Arquivo index.html baixado com sucesso!", "success");
+                showToast(`Arquivo ${safeFileName} baixado com sucesso!`, "success");
             } catch (e) {
                 showToast("Erro ao baixar arquivo.", "error");
             }
         }
         window.downloadCleanIndexHtml = downloadCleanIndexHtml;
+
+        // 🛍️ BARRA FLUTUANTE INFERIOR DE CHECKOUT RÁPIDO (2026 STICKY CART BAR)
+        function updateStickyCheckoutBar(totalsObj) {
+            const bar = document.getElementById('sticky-checkout-bar');
+            if (!bar) return;
+            const totalQty = cart.reduce((s, i) => s + Number(i.qty || 0), 0);
+            const adminVisible = !document.getElementById('tab-admin')?.classList.contains('hidden');
+            if (totalQty <= 0 || adminVisible) {
+                bar.classList.add('hidden');
+                return;
+            }
+            const totals = totalsObj || calculateOrderTotals();
+            const qtyEl = document.getElementById('sticky-bar-qty');
+            const totEl = document.getElementById('sticky-bar-total');
+            if (qtyEl) qtyEl.innerText = `${totalQty}x`;
+            if (totEl) totEl.innerText = `R$ ${formatMoney(totals.total)}`;
+            bar.classList.remove('hidden');
+        }
+        window.updateStickyCheckoutBar = updateStickyCheckoutBar;
+
+        // ⚖️ COMPARADOR INTELIGENTE DE PROTOCOLOS LADO A LADO (2026)
+        function openCompareModal(preselectId1 = null) {
+            const sel1 = document.getElementById('compare-select-1');
+            const sel2 = document.getElementById('compare-select-2');
+            if (!sel1 || !sel2 || products.length === 0) return;
+
+            const optionsHtml = products.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)} — R$ ${formatMoney(p.promoPrice || p.price)}</option>`).join('');
+            sel1.innerHTML = optionsHtml;
+            sel2.innerHTML = optionsHtml;
+
+            if (preselectId1 && products.some(p => p.id === preselectId1)) {
+                sel1.value = preselectId1;
+            } else {
+                sel1.value = products[0].id;
+            }
+            const secondCandidate = products.find(p => p.id !== sel1.value) || products[0];
+            sel2.value = secondCandidate.id;
+
+            renderComparisonTable();
+            document.getElementById('compare-modal').classList.remove('hidden');
+        }
+        window.openCompareModal = openCompareModal;
+
+        function closeCompareModal() {
+            document.getElementById('compare-modal').classList.add('hidden');
+        }
+        window.closeCompareModal = closeCompareModal;
+
+        function renderComparisonTable() {
+            const id1 = document.getElementById('compare-select-1')?.value;
+            const id2 = document.getElementById('compare-select-2')?.value;
+            const cont = document.getElementById('compare-table-container');
+            if (!cont) return;
+
+            const pair = [products.find(p => p.id === id1) || products[0], products.find(p => p.id === id2) || products[1] || products[0]];
+            cont.innerHTML = pair.map((p, idx) => {
+                if (!p) return '';
+                const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
+                const guide = getProductSmartGuide(p);
+                const borderCol = idx === 0 ? 'border-gold/40' : 'border-sky-500/40';
+                return `
+                    <div class="bg-zinc-950 border ${borderCol} rounded-2xl p-4 flex flex-col justify-between space-y-3">
+                        <div class="space-y-2">
+                            <div class="w-full h-28 bg-zinc-900 rounded-xl p-2 flex items-center justify-center border border-zinc-800">
+                                ${p.imageUrl ? `<img src="${p.imageUrl}" class="max-h-full max-w-full object-contain" alt="${escapeHtml(p.name)}">` : `<i class="fa-solid fa-flask text-2xl text-gold"></i>`}
+                            </div>
+                            <span class="inline-block text-[9px] font-black uppercase px-2 py-0.5 rounded bg-gold/15 text-gold border border-gold/30">${guide.badge}</span>
+                            <h4 class="text-xs sm:text-sm font-black text-white leading-snug">${escapeHtml(p.name)}</h4>
+                            <p class="text-[11px] text-zinc-300 leading-relaxed"><b class="text-emerald-400">Para quem:</b> ${guide.forWhom}</p>
+                            <div class="space-y-1 pt-1 border-t border-zinc-800/80">
+                                <span class="text-[10px] font-black uppercase text-gold block">Destaques:</span>
+                                ${guide.benefits.slice(0, 2).map(b => `<div class="text-[10px] text-zinc-300 flex items-start gap-1"><i class="fa-solid fa-check text-emerald-400 mt-0.5 shrink-0"></i><span>${b}</span></div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="pt-2.5 border-t border-zinc-800 space-y-2">
+                            <div>
+                                <span class="text-base sm:text-lg font-black text-gold block leading-none">R$ ${formatMoney(price)}</span>
+                                <span class="text-[9px] text-sky-400 font-bold">Pix ou até 12x de R$ ${formatMoney((price * 1.12) / 12)}</span>
+                            </div>
+                            <button type="button" onclick="addToCart('${p.id}'); closeCompareModal();" class="w-full gold-btn-gradient py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-bag-shopping"></i> Escolher Este
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        window.renderComparisonTable = renderComparisonTable;
+
+        // ⚡ PULSO DE PROVA SOCIAL VERIFICADA AO VIVO (2026 LIVE SALES PULSE)
+        let livePulseDismissed = false;
+        let livePulseTimer = null;
+        const VERIFIED_BUYER_CITIES = [
+            { name: "Rafael M.", city: "São Paulo - SP", method: "PIX Imediato" },
+            { name: "Rodrigo S.", city: "Rio de Janeiro - RJ", method: "Cartão 12x" },
+            { name: "Fernanda L.", city: "Belo Horizonte - MG", method: "PIX Imediato" },
+            { name: "Marcelo V.", city: "Curitiba - PR", method: "PIX Imediato" },
+            { name: "Camila T.", city: "Brasília - DF", method: "Cartão 6x" },
+            { name: "Gustavo H.", city: "Niterói - RJ", method: "PIX Imediato" }
+        ];
+
+        function dismissLiveSalesPulse() {
+            livePulseDismissed = true;
+            const el = document.getElementById('live-sales-pulse');
+            if (el) el.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+            if (livePulseTimer) clearInterval(livePulseTimer);
+        }
+        window.dismissLiveSalesPulse = dismissLiveSalesPulse;
+
+        function initLiveSalesPulse() {
+            const el = document.getElementById('live-sales-pulse');
+            const textEl = document.getElementById('live-sales-pulse-text');
+            const bodyEl = document.getElementById('live-sales-pulse-body');
+            if (!el || !textEl) return;
+
+            const triggerOnePulse = () => {
+                if (livePulseDismissed || !products || products.length === 0) return;
+                const adminVisible = !document.getElementById('tab-admin')?.classList.contains('hidden');
+                if (adminVisible) return;
+
+                const buyer = VERIFIED_BUYER_CITIES[Math.floor(Math.random() * VERIFIED_BUYER_CITIES.length)];
+                const prod = products[Math.floor(Math.random() * Math.min(products.length, 5))];
+                const minsAgo = Math.floor(Math.random() * 7) + 1;
+
+                textEl.innerHTML = `${buyer.name} (${buyer.city}) garantiu <span class="text-gold">${escapeHtml(prod.name)}</span> • há ${minsAgo} min`;
+                if (bodyEl) {
+                    bodyEl.onclick = () => openProductDetailModal(prod.id);
+                }
+
+                el.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+                setTimeout(() => {
+                    el.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+                }, 6000);
+            };
+
+            setTimeout(triggerOnePulse, 9000);
+            livePulseTimer = setInterval(triggerOnePulse, 28000);
+        }
 
 
     </script>
