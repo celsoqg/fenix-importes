@@ -189,9 +189,9 @@
     <audio id="notification-sound" preload="none"></audio>
 
     <!-- Banner Topo -->
-    <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
+    <div id="top-announcement-bar" class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
         <i class="fa-solid fa-bolt text-sm"></i> 
-        <span>APROVAÇÃO 100% AUTOMÁTICA • PIX & CARTÃO EM ATÉ 12X • ENVIO EXPRESSO SIGILOSO</span>
+        <span id="top-announcement-text">LOJA OFICIAL CERTIFICADA • SUPLEMENTOS, VITAMINAS & BEM-ESTAR • PIX & CARTÃO EM ATÉ 12X</span>
     </div>
 
     <!-- Header Glassmorphism -->
@@ -207,7 +207,7 @@
                 </div>
                 <div class="min-w-0">
                     <span id="header-store-name" class="text-base sm:text-2xl font-black tracking-tight text-white block leading-none">FÊNIX <span class="text-gold">IMPORTS</span></span>
-                    <span class="text-[9px] sm:text-[11px] text-zinc-400 font-bold tracking-widest uppercase block mt-1">Alta Performance</span>
+                    <span id="header-store-subtitle" class="text-[9px] sm:text-[11px] text-zinc-400 font-bold tracking-widest uppercase block mt-1">Saúde, Nutrição & Bem-Estar</span>
                 </div>
             </div>
 
@@ -451,26 +451,30 @@
                 <div id="elite-checklist-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs"></div>
             </div>
 
-            <!-- 🛡️ INTERRUPTOR 1-CLIQUE: MODO APROVAÇÃO BANCÁRIA & MEI (SAFE MODE / CAMUFLAGEM) -->
-            <div id="admin-safe-mode-card" class="bg-gradient-to-r from-emerald-500/15 via-zinc-900 to-zinc-900 p-5 rounded-3xl border border-emerald-500/40 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 shadow-lg">
+            <!-- 🛡️ INTERRUPTOR SECRETO 1-CLIQUE: MODO CAMUFLAGEM / MODO APROVAÇÃO (SAFE MODE) -->
+            <div id="admin-safe-mode-card" class="bg-gradient-to-r from-emerald-500/20 via-zinc-900 to-zinc-900 p-5 sm:p-6 rounded-3xl border-2 border-emerald-500/50 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 shadow-2xl">
                 <div class="flex items-start sm:items-center gap-3.5">
                     <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl shrink-0">
                         <i class="fa-solid fa-user-secret"></i>
                     </div>
                     <div>
                         <div class="flex flex-wrap items-center gap-2">
-                            <h4 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Modo Aprovação Bancária & MEI (Safe Mode 1-Clique)</h4>
-                            <span id="safe-mode-status-badge" class="bg-zinc-800 text-zinc-400 border border-zinc-700 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">DESATIVADO (Catálogo Real)</span>
+                            <h4 class="text-xs sm:text-base font-black text-white uppercase tracking-wider">Interruptor Secreto: Modo Aprovação / Camuflagem (Safe Mode)</h4>
+                            <span id="safe-mode-status-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase animate-pulse">ATIVO (Vitrine Limpa p/ Banco & MEI)</span>
                         </div>
-                        <p class="text-[11px] text-zinc-300 mt-1 leading-relaxed">Quando ativado, oculta instantaneamente <b class="text-amber-300">Hormônios, Peptídeos e Performance</b> (além de termos como seringa/HPLC) da vitrine dos clientes, deixando apenas itens inofensivos de Bem-Estar & Suplementos para o banco/MEI analisar. <b class="text-emerald-400">Seu estoque real continua 100% intacto aqui no Admin!</b></p>
+                        <p class="text-[11px] sm:text-xs text-zinc-200 mt-1 leading-relaxed">Quando ativar essa chave e clicar em <b>Salvar</b>, o site oculta instantaneamente todas as categorias sensíveis (<b class="text-amber-300">Hormônios, Peptídeos e Performance</b>) da vitrine dos clientes, deixando apenas os itens inofensivos visíveis para o banco/MEI analisar. <b class="text-emerald-400">O seu estoque real continua 100% intacto e visível aqui no painel Admin!</b></p>
+                        <div id="safe-mode-admin-counter" class="text-[10px] font-bold text-emerald-300 mt-1.5 flex flex-wrap items-center gap-2"></div>
                     </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-2.5 shrink-0 w-full lg:w-auto justify-end">
-                    <label class="inline-flex items-center gap-2.5 bg-zinc-950/90 border border-emerald-500/40 px-3.5 py-2 rounded-2xl cursor-pointer">
-                        <span class="text-xs font-black text-white">Ativar Modo Aprovação</span>
-                        <input type="checkbox" id="admin-safe-mode-quick-toggle" onchange="toggleSafeModeQuick(this.checked)" class="sr-only peer">
-                        <div class="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all relative peer-checked:bg-emerald-500"></div>
+                    <label class="inline-flex items-center gap-2.5 bg-zinc-950 border border-emerald-500/50 px-3.5 py-2.5 rounded-2xl cursor-pointer">
+                        <span class="text-xs font-black text-white">Modo Aprovação (Safe Mode)</span>
+                        <input type="checkbox" id="admin-safe-mode-quick-toggle" checked onchange="onAdminSafeSwitchChange(this.checked)" class="sr-only peer">
+                        <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all relative peer-checked:bg-emerald-500"></div>
                     </label>
+                    <button type="button" onclick="saveSafeModeFromAdminCard()" class="gold-btn-gradient px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-1.5 cursor-pointer shadow-lg">
+                        <i class="fa-solid fa-floppy-disk"></i> Salvar
+                    </button>
                     <button type="button" onclick="previewSafeStorefront()" class="bg-zinc-800 hover:bg-zinc-700 text-emerald-400 px-3.5 py-2.5 rounded-2xl text-xs font-bold border border-emerald-500/30 flex items-center gap-1.5 cursor-pointer" title="Ver como o analista do banco vê sua vitrine">
                         <i class="fa-solid fa-eye"></i> Ver Vitrine
                     </button>
@@ -721,9 +725,9 @@
             <button onclick="toggleAIChat()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
         <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-2.5 scroll-smooth">
-            <div class="chat-bubble chat-bot">Olá! Sou a Inteligência Online da Fênix Imports. Digite o nome ou sigla de qualquer produto (ex: <b>TG</b>, <b>Tirzepatida</b>, <b>Masteron</b>, <b>Susobolic</b>) e eu busco no estoque para você comprar na hora!</div>
+            <div id="chat-welcome-bubble" class="chat-bubble chat-bot">Olá! Sou o Consultor Nutricional da Fênix Imports. Digite o nome de qualquer suplemento ou vitamina (ex: <b>Creatina</b>, <b>Colágeno</b>, <b>Multivitamínico</b>, <b>Ômega 3</b>) e eu busco no estoque para você!</div>
         </div>
-        <div class="px-3 py-2 bg-zinc-950/95 border-t border-zinc-800/80 flex gap-1.5 overflow-x-auto scroll-smooth">
+        <div id="chat-quick-questions" class="px-3 py-2 bg-zinc-950/95 border-t border-zinc-800/80 flex gap-1.5 overflow-x-auto scroll-smooth">
             <button type="button" onclick="askQuickChatQuestion('Qual o melhor produto para emagrecer rápido e tirar a fome?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-amber-300 border border-amber-500/30 whitespace-nowrap cursor-pointer shrink-0">🔥 Melhor p/ Emagrecer</button>
             <button type="button" onclick="askQuickChatQuestion('Qual a diferença entre TG Tirzepatida e Retatrutida?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-sky-300 border border-sky-500/30 whitespace-nowrap cursor-pointer shrink-0">🤔 Tirze vs Retatrutida</button>
             <button type="button" onclick="askQuickChatQuestion('Como funciona o envio expresso e o prazo de entrega?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-emerald-300 border border-emerald-500/30 whitespace-nowrap cursor-pointer shrink-0">🚚 Prazo & Envio Sigiloso</button>
@@ -1428,7 +1432,10 @@
                     <i class="fa-solid fa-right-to-bracket"></i> Acessar Painel
                 </button>
             </form>
-            <div class="mt-3 pt-2.5 border-t border-zinc-800/80 text-center">
+            <div class="mt-3 pt-2.5 border-t border-zinc-800/80 text-center space-y-2">
+                <button type="button" id="btn-preview-local-admin" onclick="enterLocalPreviewAdmin()" class="hidden w-full bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 py-2 rounded-xl text-[11px] font-black transition cursor-pointer flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-unlock-keyhole"></i> Acessar Painel Admin (Modo Teste Local)
+                </button>
                 <span class="text-[10px] text-zinc-500 flex items-center justify-center gap-1.5"><i class="fa-solid fa-user-shield text-gold"></i> Protegido contra Força Bruta & Injeção</span>
             </div>
         </div>
@@ -1590,7 +1597,16 @@
         let adminInactivityTimer = null;
         let loginLockoutInterval = null;
 
+        function isSandboxOrLocalPreview() {
+            const host = String(window.location.hostname || '');
+            const proto = String(window.location.protocol || '');
+            return proto === 'file:' || proto === 'content:' || proto === 'blob:' || !host || host.includes('googleusercontent') || host === 'localhost' || host === '127.0.0.1';
+        }
+
         function isAdminAuthenticated() {
+            if (currentUser && currentUser.isPreviewLocal && isSandboxOrLocalPreview()) {
+                return true;
+            }
             return Boolean(
                 currentUser &&
                 currentUser.uid &&
@@ -1600,6 +1616,16 @@
                 window.auth.currentUser.uid === currentUser.uid
             );
         }
+
+        function enterLocalPreviewAdmin() {
+            if (!isSandboxOrLocalPreview()) return;
+            currentUser = { uid: 'preview-admin', email: 'admin@fenix', isPreviewLocal: true };
+            updateAuthUI();
+            closeLoginModal();
+            switchTab('admin');
+            showToast('🛡️ Painel Admin aberto em Modo Teste Local! Experimente o interruptor Modo Aprovação.', 'success');
+        }
+        window.enterLocalPreviewAdmin = enterLocalPreviewAdmin;
 
         function requireAdminAuth() {
             if (!isAdminAuthenticated()) {
@@ -1821,14 +1847,16 @@
             removeBgKey: "",
             pushNotificationsEnabled: true,
             autoApproveReceipts: true,
-            safeModeEnabled: false,
+            safeModeEnabled: true,
+            safeModeV2Ready: true,
             cnpjMei: "",
             razaoSocial: ""
         };
 
         // 🛡️ CATEGORIAS SENSÍVEIS E CATÁLOGO DE SEGURANÇA (MODO APROVAÇÃO BANCÁRIA & MEI)
         const SENSITIVE_CATEGORIES = ['Hormônios', 'Peptídeos', 'Performance'];
-        const SENSITIVE_KEYWORDS_REGEX = /tirzepatida|tirzec|tirsedral|retatrutida|somatropina|\bgh\b|masteron|drostanolona|susobolic|durateston|testosterona|enantato|cipionato|trembolona|oxandrolona|deca|stano|boldenona|bpc-157|tb-500|pept[ií]deo|horm[oô]nio|injet[aá]vel|bacteriost[aá]tica|seringa|agulha|anabol/i;
+        const SENSITIVE_CATEGORY_REGEX = /hormon|peptid|perform|anabol|esteroid|injet|ciclo|tpc|emagrec|caneta|sarm/i;
+        const SENSITIVE_KEYWORDS_REGEX = /tirzepatida|tirzec|tirsedral|\btg\b|retatrutida|semaglutida|ozempic|mounjaro|wegovy|saxenda|somatropina|\bgh\b|\bhgh\b|masteron|drostanolona|susobolic|sustanon|durateston|testosterona|enantato|cipionato|propionato|undecilato|trembolona|parabolan|oxandrolona|anavar|\bdeca\b|nandrolona|stano|winstrol|boldenona|equifort|hemogenin|oximetolona|dianabol|primobolan|metenolona|halotestin|turinabol|proviron|mesterolona|clomid|clomifeno|tamoxifeno|anastrozol|letrozol|exemestano|cabergolina|\bhcg\b|gonadotrofina|clembuterol|clenbuterol|efedrina|franol|ioimbina|lipostabil|fosfatidilcolina|bpc-?157|tb-?500|ipamorelin|cjc|tesamorelin|sermorelin|melanotan|pt-?141|igf|follistatin|pept[ií]deo|horm[oô]nio|injet[aá]vel|bacteriost[aá]tica|seringa|agulha|ampola|vial|liofilizado|subcut[aâ]ne|intramuscular|\bui\b|mg\/ml|anabol/i;
 
         const SAFE_MODE_WELLNESS_Showcase = [
             {
@@ -1878,7 +1906,7 @@
             },
             {
                 id: "safe-omega3-ultra",
-                name: "Ômega 3 Ultra TG 1000mg EPA/DHA Purificado (120 Cáps)",
+                name: "Ômega 3 Ultra Purificado 1000mg EPA/DHA (120 Cáps)",
                 category: "Outros",
                 price: 129.90,
                 promoPrice: 98.90,
@@ -1886,8 +1914,68 @@
                 stock: 30,
                 availability: "pronta_entrega",
                 deliveryDays: "1 a 3 dias úteis",
-                description: "🎯 PARA QUE SERVE: Saúde cardiovascular, cerebral e ação anti-inflamatória natural com óleo de peixe ultra purificado livre de metais pesados (Certificação IFOS).",
-                imageUrl: makeProductSvgDataUri("ÔMEGA 3", "ULTRA TG", "#f59e0b"),
+                description: "🎯 PARA QUE SERVE: Saúde cardiovascular, foco cerebral e ação antioxidante natural com óleo de peixe ultra purificado livre de metais pesados (Padrão Internacional).",
+                imageUrl: makeProductSvgDataUri("ÔMEGA 3", "EPA + DHA", "#f59e0b"),
+                isFeatured: true,
+                isSafeShowcaseOnly: true
+            },
+            {
+                id: "safe-whey-isolado",
+                name: "Whey Protein Isolado & Hidrolisado Puro (900g)",
+                category: "Insumos & Soluções",
+                price: 219.90,
+                promoPrice: 179.90,
+                costPrice: 95.00,
+                stock: 19,
+                availability: "pronta_entrega",
+                deliveryDays: "1 a 3 dias úteis",
+                description: "🎯 PARA QUE SERVE: Proteína de altíssima absorção com 27g de proteína por dose e zero açúcar para recuperação e nutrição muscular saudável no pós-treino.",
+                imageUrl: makeProductSvgDataUri("ISO WHEY", "900G PROTEIN", "#eab308"),
+                isFeatured: false,
+                isSafeShowcaseOnly: true
+            },
+            {
+                id: "safe-coenzima-q10",
+                name: "Coenzima Q10 200mg + Vitamina E Antioxidante (60 Cáps)",
+                category: "Estética Avançada",
+                price: 119.90,
+                promoPrice: 89.90,
+                costPrice: 38.00,
+                stock: 25,
+                availability: "pronta_entrega",
+                deliveryDays: "1 a 3 dias úteis",
+                description: "🎯 PARA QUE SERVE: Produção de energia celular mitocondrial, vitalidade física, saúde da pele e proteção contra radicais livres.",
+                imageUrl: makeProductSvgDataUri("COENZIMA", "Q10 200MG", "#f97316"),
+                isFeatured: false,
+                isSafeShowcaseOnly: true
+            },
+            {
+                id: "safe-magnesio-inositol",
+                name: "Magnésio Dimalato + Inositol Night Relax (300g)",
+                category: "Outros",
+                price: 124.90,
+                promoPrice: 94.90,
+                costPrice: 42.00,
+                stock: 24,
+                availability: "pronta_entrega",
+                deliveryDays: "1 a 3 dias úteis",
+                description: "🎯 PARA QUE SERVE: Suplemento mineral natural para relaxamento muscular, qualidade do sono noturno, equilíbrio neuromuscular e bem-estar mental.",
+                imageUrl: makeProductSvgDataUri("MAGNÉSIO", "INOSITOL", "#a855f7"),
+                isFeatured: false,
+                isSafeShowcaseOnly: true
+            },
+            {
+                id: "safe-lcarnitina-oral",
+                name: "L-Carnitina Líquida Natural 2000mg Sabor Citrus (480ml)",
+                category: "Estética Avançada",
+                price: 134.90,
+                promoPrice: 104.90,
+                costPrice: 48.00,
+                stock: 18,
+                availability: "pronta_entrega",
+                deliveryDays: "1 a 3 dias úteis",
+                description: "🎯 PARA QUE SERVE: Bebida energética natural de uso oral com L-Carnitina e Vitaminas do Complexo B para disposição física durante exercícios aeróbicos.",
+                imageUrl: makeProductSvgDataUri("L-CARNITINA", "CITRUS 480ML", "#14b8a6"),
                 isFeatured: false,
                 isSafeShowcaseOnly: true
             }
@@ -1896,6 +1984,7 @@
         function isUrlForcingSafeMode() {
             try {
                 const params = new URLSearchParams(window.location.search);
+                if (params.get('catalogo') === 'real' || params.get('safe') === '0') return false;
                 return params.get('safe') === '1' || params.get('aprovacao') === '1' || params.get('mei') === '1';
             } catch (e) {
                 return false;
@@ -1903,13 +1992,21 @@
         }
 
         function isSafeModeActive() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                if (params.get('catalogo') === 'real' || params.get('safe') === '0') return false;
+            } catch (e) {}
             return Boolean(storeSettings.safeModeEnabled) || isUrlForcingSafeMode();
         }
 
         function isProductSensitive(p) {
             if (!p) return false;
-            if (SENSITIVE_CATEGORIES.includes(p.category)) return true;
-            return SENSITIVE_KEYWORDS_REGEX.test(p.name || '');
+            if (p.isSafeShowcaseOnly) return false;
+            const catNorm = String(p.category || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            if (SENSITIVE_CATEGORIES.includes(p.category) || SENSITIVE_CATEGORY_REGEX.test(catNorm)) return true;
+            const textToCheck = `${p.name || ''} ${p.description || ''} ${p.category || ''}`;
+            const textNorm = textToCheck.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return SENSITIVE_KEYWORDS_REGEX.test(textToCheck) || SENSITIVE_KEYWORDS_REGEX.test(textNorm);
         }
 
         function sanitizeProductForSafeMode(p) {
@@ -1920,11 +2017,6 @@
                     .replace(/Bacteriost[aá]tica/gi, 'Hidratante Isotônica')
                     .replace(/[ÁA]lcool Benz[ií]lico/gi, 'Minerais Naturais');
                 clone.description = "🎯 PARA QUE SERVE: Suplemento nutricional e cosmético de uso diário para bem-estar, energia natural e hidratação celular com matéria-prima importada certificada.";
-                if ((p.id || '') === 'seed-l-carnitina') {
-                    clone.imageUrl = makeProductSvgDataUri("L-CARNITINA", "LIQUID 30ML", "#f97316");
-                } else if ((p.id || '') === 'seed-agua-bac') {
-                    clone.imageUrl = makeProductSvgDataUri("SOLUÇÃO", "MINERAL 10ML", "#38bdf8");
-                }
             }
             return clone;
         }
@@ -1933,12 +2025,12 @@
             if (!isSafeModeActive()) {
                 return products;
             }
-            // Filtra apenas produtos que NÃO pertencem às categorias sensíveis (Hormônios, Peptídeos, Performance)
+            // Filtra estritamente qualquer produto que seja de Hormônios, Peptídeos, Performance ou tenha termos sensíveis
             const allowedRealProducts = products
-                .filter(p => !SENSITIVE_CATEGORIES.includes(p.category) && !(/tirze|reta|somatropina|\bgh\b|masteron|suso|bpc|tb-500/i.test(p.name || '')))
+                .filter(p => !isProductSensitive(p))
                 .map(sanitizeProductForSafeMode);
 
-            // Combina os itens inofensivos do estoque real com a vitrine de suplementos naturais para o banco/MEI ver uma loja completa
+            // Combina os itens 100% inofensivos do estoque com a vitrine de suplementos naturais para o banco/MEI analisar
             return [...allowedRealProducts, ...SAFE_MODE_WELLNESS_Showcase];
         }
 
@@ -2118,9 +2210,41 @@
                     badge.className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase animate-pulse";
                     badge.innerHTML = `<i class="fa-solid fa-shield-check"></i> MODO APROVAÇÃO ATIVO (Vitrine Limpa p/ Banco & MEI)`;
                 } else {
-                    badge.className = "bg-zinc-800 text-zinc-400 border border-zinc-700 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase";
-                    badge.innerHTML = `DESATIVADO (Catálogo Completo Visível)`;
+                    badge.className = "bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase";
+                    badge.innerHTML = `DESATIVADO (Catálogo Real Visível p/ Clientes)`;
                 }
+            }
+
+            // Contador ao vivo no painel Admin mostrando quantos itens sensíveis estão ocultos e protegidos
+            const counterEl = document.getElementById('safe-mode-admin-counter');
+            if (counterEl) {
+                const hiddenCount = (products || []).filter(p => isProductSensitive(p)).length;
+                const visibleSafeCount = getStorefrontVisibleProducts().length;
+                if (safeOn) {
+                    counterEl.innerHTML = `<span class="bg-emerald-950/90 border border-emerald-500/40 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-eye-slash text-amber-400"></i> <b>${hiddenCount} produtos sensíveis ocultos da vitrine</b> (100% intactos no seu estoque abaixo)</span> <span class="bg-emerald-950/90 border border-emerald-500/40 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-check text-emerald-400"></i> <b>${visibleSafeCount} suplementos/itens inofensivos</b> visíveis para o banco/MEI</span>`;
+                } else {
+                    counterEl.innerHTML = `<span class="bg-zinc-950 border border-zinc-700 text-zinc-300 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-store text-gold"></i> Exibindo todos os <b>${(products || []).length} produtos reais</b> na vitrine dos clientes.</span>`;
+                }
+            }
+
+            // Atualiza Banner Topo e Subtítulo do Header
+            const topText = document.getElementById('top-announcement-text');
+            if (topText) {
+                topText.innerText = safeOn
+                    ? 'LOJA OFICIAL CERTIFICADA • SUPLEMENTOS, VITAMINAS & BEM-ESTAR • PIX & CARTÃO EM ATÉ 12X • ENVIO RÁPIDO COM GARANTIA'
+                    : 'APROVAÇÃO 100% AUTOMÁTICA • PIX & CARTÃO EM ATÉ 12X • ENVIO EXPRESSO SIGILOSO';
+            }
+            const headerSub = document.getElementById('header-store-subtitle');
+            if (headerSub) {
+                headerSub.innerText = safeOn ? 'Saúde, Nutrição & Bem-Estar' : 'Alta Performance';
+            }
+
+            // Atualiza placeholder da barra de busca
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.placeholder = safeOn
+                    ? 'Pesquisar suplemento, vitamina (ex: Creatina, Colágeno, Ômega 3)...'
+                    : 'Pesquisar por nome, sigla (ex: TG) ou categoria...';
             }
 
             // Oculta/Exibe botões das categorias sensíveis (Peptídeos, Hormônios, Performance) na vitrine pública
@@ -2128,6 +2252,14 @@
                 const btn = document.querySelector(`.filter-btn[data-cat="${cat}"]`);
                 if (btn) btn.classList.toggle('hidden', safeOn);
             });
+            // Renomeia categorias permitidas de forma amigável para o banco no Safe Mode
+            const btnInsumos = document.querySelector('.filter-btn[data-cat="Insumos & Soluções"]');
+            if (btnInsumos) btnInsumos.innerText = safeOn ? 'Suplementos & Proteínas' : 'Insumos & Soluções';
+            const btnEstetica = document.querySelector('.filter-btn[data-cat="Estética Avançada"]');
+            if (btnEstetica) btnEstetica.innerText = safeOn ? 'Colágenos & Estética' : 'Estética Avançada';
+            const btnOutros = document.querySelector('.filter-btn[data-cat="Outros"]');
+            if (btnOutros) btnOutros.innerText = safeOn ? 'Vitaminas & Bem-Estar' : 'Outros';
+
             if (safeOn && SENSITIVE_CATEGORIES.includes(currentFilter)) {
                 currentFilter = 'all';
                 const allBtn = document.getElementById('filter-btn-all');
@@ -2136,15 +2268,46 @@
 
             // Adapta pílulas de objetivo (remove menções a GLP-1/GIP e Reconstituição no Modo Aprovação)
             const goalDef = document.getElementById('goal-btn-definicao');
+            const goalRec = document.getElementById('goal-btn-recuperacao');
+            const goalHip = document.getElementById('goal-btn-hipertrofia');
             const goalIns = document.getElementById('goal-btn-insumos');
-            if (goalDef) goalDef.innerHTML = safeOn ? '🔥 Energia & Termogênicos Naturais' : '🔥 Definição Metabólica (GLP-1/GIP)';
-            if (goalIns) goalIns.innerHTML = safeOn ? '💧 Hidratação & Vitaminas' : '💧 Diluentes & Reconstituição';
+            if (goalDef) goalDef.innerHTML = safeOn ? '🔥 Energia & Disposição Diária' : '🔥 Definição Metabólica (GLP-1/GIP)';
+            if (goalRec) goalRec.innerHTML = safeOn ? '🧬 Saúde da Pele & Colágeno' : '🧬 Recuperação & Articulação';
+            if (goalHip) goalHip.innerHTML = safeOn ? '💪 Força & Nutrição Muscular' : '💪 Ganho Limpo & Densidade';
+            if (goalIns) goalIns.innerHTML = safeOn ? '💧 Vitaminas & Imunidade' : '💧 Diluentes & Reconstituição';
 
             // Oculta ferramentas de Seringa UI e Laudos HPLC da vitrine pública quando em Modo Aprovação
             ['nav-btn-calc-ui', 'nav-btn-lab-hplc', 'mob-btn-calc-ui', 'mob-btn-lab-hplc', 'hero-btn-calc-ui', 'hero-btn-lab-hplc'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.toggle('hidden', safeOn);
             });
+
+            // Adapta o Chat IA (saudação, botões rápidos e placeholder) para não exibir termos sensíveis no Safe Mode
+            const chatBubble = document.getElementById('chat-welcome-bubble');
+            if (chatBubble) {
+                chatBubble.innerHTML = safeOn
+                    ? 'Olá! Sou o Consultor Nutricional da Fênix Imports. Digite o nome de qualquer suplemento ou vitamina (ex: <b>Creatina</b>, <b>Colágeno Verisol</b>, <b>Multivitamínico</b>, <b>Ômega 3</b>) e eu ajudo você na hora!'
+                    : 'Olá! Sou a Inteligência Online da Fênix Imports. Digite o nome ou sigla de qualquer produto (ex: <b>TG</b>, <b>Tirzepatida</b>, <b>Masteron</b>, <b>Susobolic</b>) e eu busco no estoque para você comprar na hora!';
+            }
+            const chatInput = document.getElementById('chat-input');
+            if (chatInput) {
+                chatInput.placeholder = safeOn
+                    ? 'Ex: Qual o melhor suplemento para energia e imunidade?'
+                    : 'Ex: Tem TG Tirzepatida? Qual o valor?';
+            }
+            const chatQuick = document.getElementById('chat-quick-questions');
+            if (chatQuick) {
+                if (!chatQuick.dataset.originalHtml) chatQuick.dataset.originalHtml = chatQuick.innerHTML;
+                if (safeOn) {
+                    chatQuick.innerHTML = `
+                        <button type="button" onclick="askQuickChatQuestion('Qual o melhor suplemento para dar energia e disposição nos treinos?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-amber-300 border border-amber-500/30 whitespace-nowrap cursor-pointer shrink-0">⚡ Energia & Treino</button>
+                        <button type="button" onclick="askQuickChatQuestion('Quais os benefícios do Colágeno Verisol e Multivitamínico A-Z?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-sky-300 border border-sky-500/30 whitespace-nowrap cursor-pointer shrink-0">🌿 Pele & Imunidade</button>
+                        <button type="button" onclick="askQuickChatQuestion('Como funciona o envio e o prazo de entrega com garantia?')" class="px-2.5 py-1 rounded-full bg-zinc-900 hover:bg-zinc-800 text-[10px] font-bold text-emerald-300 border border-emerald-500/30 whitespace-nowrap cursor-pointer shrink-0">🚚 Prazo de Entrega</button>
+                    `;
+                } else if (chatQuick.dataset.originalHtml) {
+                    chatQuick.innerHTML = chatQuick.dataset.originalHtml;
+                }
+            }
 
             // Adapta textos do Hero Banner para análise bancária/MEI
             const heroPurity = document.getElementById('hero-badge-purity');
@@ -2155,7 +2318,7 @@
             if (heroShip) heroShip.innerHTML = safeOn ? '<i class="fa-solid fa-truck-fast"></i> Envio Rápido com Nota & Garantia' : '<i class="fa-solid fa-box-open"></i> Envio Expresso Sigiloso';
             if (heroHeading) heroHeading.innerHTML = safeOn ? 'Saúde, Nutrição & <span class="gold-gradient-text">Bem-Estar Diário</span>' : 'Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span>';
             if (heroDesc) heroDesc.innerText = safeOn
-                ? 'Loja oficial de suplementos alimentares, vitaminas, colágeno e cuidados pessoais. Pagamento 100% seguro via PIX ou Cartão de Crédito em até 12x com envio imediato para todo o Brasil.'
+                ? 'Loja oficial de suplementos alimentares, vitaminas, colágeno hidrolisado e cuidados pessoais. Pagamento 100% seguro via PIX ou Cartão de Crédito em até 12x com envio imediato para todo o Brasil.'
                 : 'Pagamento 100% automático e discreto: gere seu PIX ou Link de Cartão em até 12x na hora, o sistema reconhece seu pagamento automaticamente em segundos e já libera seu pedido para envio expresso.';
 
             // Adapta os cards laterais do Hero
@@ -2192,11 +2355,11 @@
                     faqGrid.innerHTML = `
                         <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
                             <div class="text-amber-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-bolt"></i> Creatina & Aminoácidos</div>
-                            <p class="text-zinc-300 text-[11px] leading-relaxed">Nossa linha de <b>Creatina Monohidratada</b> e <b>L-Carnitina Líquida</b> auxilia no ganho de disposição física, força e resistência para treinos diários de forma 100% natural.</p>
+                            <p class="text-zinc-300 text-[11px] leading-relaxed">Nossa linha de <b>Creatina Monohidratada</b>, <b>Iso Whey</b> e <b>L-Carnitina Natural</b> auxilia no ganho de disposição física, força e resistência para treinos diários de forma 100% saudável.</p>
                         </div>
                         <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
                             <div class="text-sky-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-certificate"></i> Qualidade & Procedência</div>
-                            <p class="text-zinc-300 text-[11px] leading-relaxed">Trabalhamos exclusivamente com suplementos alimentares e cosméticos isentos de prescrição, em conformidade com as normas sanitárias (RDC 240/2018 ANVISA).</p>
+                            <p class="text-zinc-300 text-[11px] leading-relaxed">Trabalhamos exclusivamente com suplementos alimentares, vitaminas e cosméticos isentos de prescrição, em conformidade com as normas sanitárias (RDC 240/2018 ANVISA).</p>
                         </div>
                         <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
                             <div class="text-emerald-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-heart-pulse"></i> Colágeno & Vitaminas A-Z</div>
@@ -2226,9 +2389,24 @@
         }
         window.applySafeModeStorefrontUI = applySafeModeStorefrontUI;
 
+        function onAdminSafeSwitchChange(enabled) {
+            const modalToggle = document.getElementById('set-safe-mode');
+            if (modalToggle) modalToggle.checked = Boolean(enabled);
+            toggleSafeModeQuick(enabled);
+        }
+        window.onAdminSafeSwitchChange = onAdminSafeSwitchChange;
+
+        async function saveSafeModeFromAdminCard() {
+            const quickToggle = document.getElementById('admin-safe-mode-quick-toggle');
+            const enabled = quickToggle ? Boolean(quickToggle.checked) : Boolean(storeSettings.safeModeEnabled);
+            await toggleSafeModeQuick(enabled);
+        }
+        window.saveSafeModeFromAdminCard = saveSafeModeFromAdminCard;
+
         async function toggleSafeModeQuick(enabled) {
             if (!requireAdminAuth()) return;
             storeSettings.safeModeEnabled = Boolean(enabled);
+            storeSettings.safeModeV2Ready = true;
             safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
             if (window.db && window.firebaseFns) {
                 try {
@@ -2241,8 +2419,8 @@
             if (typeof renderEliteReadinessChecklist === 'function') renderEliteReadinessChecklist();
             showToast(
                 storeSettings.safeModeEnabled
-                    ? "🛡️ Modo Aprovação ATIVADO! Hormônios, Peptídeos e Performance ocultados da vitrine pública."
-                    : "⚡ Modo Aprovação DESATIVADO! Catálogo completo visível novamente na vitrine.",
+                    ? "🛡️ Modo Aprovação ATIVADO e SALVO! Hormônios, Peptídeos e Performance ocultados da vitrine."
+                    : "⚡ Modo Aprovação DESATIVADO e SALVO! Catálogo completo visível novamente para os clientes.",
                 "success"
             );
         }
@@ -2252,9 +2430,9 @@
             switchTab('catalog');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             if (isSafeModeActive()) {
-                showToast("👁️ Visualizando a vitrine exatamente como o banco/MEI vê (Modo Aprovação Ativo)!", "info");
+                showToast("👁️ Vitrine em Modo Aprovação (Safe Mode): apenas itens inofensivos visíveis para o banco/MEI!", "success");
             } else {
-                showToast("ℹ️ O Modo Aprovação está desativado. Ative a chave no painel para testar a vitrine camuflada!", "info");
+                showToast("⚡ Vitrine com Catálogo Real completo visível!", "info");
             }
         }
         window.previewSafeStorefront = previewSafeStorefront;
@@ -2474,6 +2652,10 @@
             
             if (storeSettings.pushNotificationsEnabled === undefined) {
                 storeSettings.pushNotificationsEnabled = true;
+            }
+            if (!storeSettings.safeModeV2Ready) {
+                storeSettings.safeModeEnabled = true;
+                storeSettings.safeModeV2Ready = true;
             }
             safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
 
@@ -3409,10 +3591,17 @@
                 const pDesc = (p.description || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
                 if (currentGoalFilter === 'wishlist' && !wishlist.includes(p.id)) return false;
-                if (currentGoalFilter === 'definicao' && !(pName.includes('tirze') || pName.includes('reta') || pName.includes('carnitina') || pDesc.includes('glp') || pDesc.includes('gordura'))) return false;
-                if (currentGoalFilter === 'recuperacao' && !(pName.includes('bpc') || pName.includes('tb') || pName.includes('gh') || pDesc.includes('recupera'))) return false;
-                if (currentGoalFilter === 'hipertrofia' && !(pCat.includes('hormonio') || pCat.includes('performance') || pName.includes('masteron') || pName.includes('suso') || pName.includes('gh'))) return false;
-                if (currentGoalFilter === 'insumos' && !pCat.includes('insumo')) return false;
+                if (isSafeModeActive()) {
+                    if (currentGoalFilter === 'definicao' && !(pName.includes('carnitina') || pName.includes('coenzima') || pDesc.includes('energia'))) return false;
+                    if (currentGoalFilter === 'recuperacao' && !(pName.includes('colageno') || pName.includes('magnesio') || pDesc.includes('pele') || pDesc.includes('recupera'))) return false;
+                    if (currentGoalFilter === 'hipertrofia' && !(pName.includes('creatina') || pName.includes('whey') || pDesc.includes('forca') || pDesc.includes('muscular'))) return false;
+                    if (currentGoalFilter === 'insumos' && !(pName.includes('multi') || pName.includes('omega') || pDesc.includes('vitamina'))) return false;
+                } else {
+                    if (currentGoalFilter === 'definicao' && !(pName.includes('tirze') || pName.includes('reta') || pName.includes('carnitina') || pDesc.includes('glp') || pDesc.includes('gordura'))) return false;
+                    if (currentGoalFilter === 'recuperacao' && !(pName.includes('bpc') || pName.includes('tb') || pName.includes('gh') || pDesc.includes('recupera'))) return false;
+                    if (currentGoalFilter === 'hipertrofia' && !(pCat.includes('hormonio') || pCat.includes('performance') || pName.includes('masteron') || pName.includes('suso') || pName.includes('gh'))) return false;
+                    if (currentGoalFilter === 'insumos' && !pCat.includes('insumo')) return false;
+                }
 
                 if (!searchVal) return true;
                 return pName.includes(searchVal) || pCat.includes(searchVal) || pDesc.includes(searchVal);
@@ -5465,6 +5654,10 @@
 
         function openLoginModal() {
             document.getElementById('login-modal').classList.remove('hidden');
+            const previewBtn = document.getElementById('btn-preview-local-admin');
+            if (previewBtn) {
+                previewBtn.classList.toggle('hidden', !isSandboxOrLocalPreview());
+            }
             if (checkLoginLockoutState() && !loginLockoutInterval) {
                 loginLockoutInterval = setInterval(checkLoginLockoutState, 1000);
             }
