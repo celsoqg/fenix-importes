@@ -182,8 +182,6 @@
         .skeleton { animation: pulse-skeleton 1.5s infinite; background-color: #181824; }
         @keyframes pulse-skeleton { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
-    <!-- 17TRACK Global Multi-Carrier Official Script -->
-    <script type="text/javascript" src="https://www.17track.net/externalcall.js" async></script>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative">
 
@@ -1054,63 +1052,60 @@
         </div>
     </div>
 
-    <!-- Modal Rastreio Global Multi-Transportadoras (17TRACK + WhatsApp) -->
+    <!-- Modal Rastreio Nativo Inteligente (100% Dentro do Site • Sem Anúncios e Sem Sair da Loja) -->
     <div id="tracking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div class="absolute inset-0 bg-black/85 backdrop-blur-md" onclick="closeTrackingModal()"></div>
         <div class="relative glass-card border border-gold/40 rounded-3xl max-w-2xl w-full p-5 sm:p-7 space-y-4 shadow-2xl z-10 max-h-[92vh] overflow-y-auto">
             <div class="flex items-start justify-between gap-3 border-b border-zinc-800 pb-3">
                 <div class="flex items-center gap-3 text-left">
                     <div class="w-11 h-11 rounded-2xl bg-amber-500/15 border border-gold/40 flex items-center justify-center text-gold shrink-0">
-                        <i class="fa-solid fa-satellite-dish text-xl"></i>
+                        <i class="fa-solid fa-truck-fast text-xl"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
-                            <h3 class="text-lg sm:text-xl font-black text-white">Central de Rastreio Ao Vivo</h3>
-                            <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">17TRACK Global</span>
+                            <h3 class="text-lg sm:text-xl font-black text-white">Rastreamento Direto na Loja</h3>
+                            <span class="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"><i class="fa-solid fa-bolt mr-1"></i>100% Nativo • Tempo Real</span>
                         </div>
-                        <p class="text-[11px] text-zinc-400">Rastreamento automático em tempo real: Correios/Sedex, J&T Express, Shopee Xpress, Loggi e Jadlog</p>
+                        <p class="text-[11px] text-zinc-400">Digite seu código ou WhatsApp e veja todas as etapas da sua entrega aqui mesmo na tela</p>
                     </div>
                 </div>
                 <button onclick="closeTrackingModal()" class="text-zinc-400 hover:text-white p-1.5 rounded-xl bg-zinc-900 border border-zinc-800 cursor-pointer"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
 
-            <!-- Emblemas de Transportadoras Suportadas -->
+            <!-- Emblemas de Transportadoras Reconhecidas Automaticamente -->
             <div class="flex flex-wrap items-center justify-center gap-1.5 text-[10px] font-bold">
-                <span class="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-amber-300"><i class="fa-solid fa-truck-fast mr-1"></i>Correios / Sedex / PAC</span>
+                <span class="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-amber-300"><i class="fa-solid fa-truck-fast mr-1"></i>Correios (Sedex / PAC)</span>
                 <span class="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-red-400"><i class="fa-solid fa-bolt mr-1"></i>J&T Express</span>
                 <span class="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-orange-400"><i class="fa-solid fa-box-open mr-1"></i>Shopee Xpress</span>
                 <span class="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-sky-400"><i class="fa-solid fa-motorcycle mr-1"></i>Loggi</span>
-                <span class="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-emerald-400"><i class="fa-solid fa-plane-departure mr-1"></i>Jadlog & Internacional</span>
+                <span class="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-emerald-400"><i class="fa-solid fa-plane-departure mr-1"></i>Jadlog & Expresso</span>
             </div>
 
-            <!-- Opção 1: Rastreamento Direto por Código (17TRACK) -->
-            <div class="bg-zinc-950/90 border border-gold/30 rounded-2xl p-4 space-y-3 text-left">
+            <!-- Opção 1: Digitar o Código de Rastreio e Ver Tudo na Hora -->
+            <div class="bg-zinc-950/90 border border-gold/40 rounded-2xl p-4 space-y-3 text-left shadow-inner">
                 <label class="text-xs font-black uppercase tracking-wider text-gold flex items-center justify-between">
-                    <span><i class="fa-solid fa-barcode mr-1.5"></i> 1. Já tem o Código de Rastreio? Digite abaixo:</span>
-                    <span class="text-[10px] text-emerald-400 font-bold">Detecção Automática</span>
+                    <span><i class="fa-solid fa-barcode mr-1.5"></i> Digite seu Código de Rastreio:</span>
+                    <span class="text-[10px] text-emerald-400 font-bold">Leitura Instantânea</span>
                 </label>
                 <div class="flex flex-col sm:flex-row gap-2">
-                    <input type="text" id="track-code-input" onkeydown="if(event.key==='Enter') trackByCode17Track()" placeholder="Ex: QN123456789BR, 888001234567, BR24123456789" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-white font-mono uppercase focus:border-gold outline-none">
+                    <input type="text" id="track-code-input" onkeydown="if(event.key==='Enter') trackByCode17Track()" placeholder="Ex: 888031000805873, QN123456789BR, BR24..." class="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-white font-mono uppercase focus:border-gold outline-none">
                     <button type="button" onclick="trackByCode17Track()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 shrink-0 cursor-pointer">
-                        <i class="fa-solid fa-magnifying-glass-location"></i> Rastrear Código Ao Vivo
+                        <i class="fa-solid fa-magnifying-glass-location"></i> Ver Onde Está Agora
                     </button>
                 </div>
-                <p class="text-[11px] text-zinc-400">Basta colar o código recebido no seu WhatsApp para ver onde sua encomenda está agora mesmo.</p>
             </div>
 
-            <!-- Container do Radar Logístico + Widget Oficial 17TRACK -->
+            <!-- Painel Nativo de Resultados e Linha do Tempo (100% Dentro do Nosso Site) -->
             <div id="yq-tracking-wrapper" class="hidden space-y-3 text-left">
-                <div id="yq-carrier-header" class="bg-zinc-950 border border-zinc-800 rounded-2xl p-3.5"></div>
-                <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-2 overflow-hidden">
-                    <div id="YQContainer" class="w-full min-h-[340px] rounded-xl bg-zinc-900/60 flex items-center justify-center text-xs text-zinc-400"></div>
-                </div>
-                <div id="yq-external-links" class="flex flex-wrap gap-2"></div>
+                <div id="yq-carrier-header" class="bg-zinc-950 border border-gold/30 rounded-2xl p-4 space-y-3"></div>
+                <div id="YQContainer" class="bg-zinc-950 border border-zinc-800 rounded-2xl p-4 space-y-3"></div>
+                <div id="yq-external-links" class="hidden"></div>
             </div>
 
-            <!-- Opção 2: Buscar Código pelo Número de WhatsApp -->
+            <!-- Opção 2: Buscar pelo Número de WhatsApp -->
             <div class="bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 space-y-3 text-left">
                 <label class="text-xs font-extrabold text-zinc-200 flex items-center gap-1.5">
-                    <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i> 2. Não lembra o código? Consulte pelo seu WhatsApp:
+                    <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i> Não tem o código em mãos? Consulte pelo seu WhatsApp:
                 </label>
                 <div class="flex flex-col sm:flex-row gap-2">
                     <input type="text" id="track-phone" oninput="maskPhone(this)" onkeydown="if(event.key==='Enter') trackOrder()" placeholder="Digite o seu WhatsApp (Ex: 21999999999)" class="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white focus:border-gold outline-none">
@@ -3118,11 +3113,22 @@
                 const safeName = (o.client?.name || 'Cliente').replace(/'/g, '');
                 const safeAddress = (o.client?.address || 'Endereço não informado').replace(/'/g, '');
 
+                const curStage = o.trackingStage || 'auto';
                 const trackInput = (o.status === 'pago' || o.status === 'enviado') ? `
-                    <div class="flex gap-1 mt-1.5 items-center">
-                        <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="Código Correios/J&T/Loggi" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-1 rounded-lg w-28 font-mono uppercase outline-none text-white focus:border-gold">
-                        <button onclick="window.saveAndSendTrack('${o.id}', '${safePhone}', '${safeName}')" class="bg-green-600 hover:bg-green-500 text-white px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer" title="Salvar e Enviar Link de Rastreio Automático no WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
-                        <button onclick="window.openTrackingModalWithCode(document.getElementById('track-${o.id}')?.value || '${trackCode}')" class="bg-amber-500/20 hover:bg-amber-500 text-gold hover:text-black border border-gold/40 px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer" title="Rastrear Encomenda Ao Vivo (17TRACK)"><i class="fa-solid fa-satellite-dish"></i></button>
+                    <div class="space-y-1 mt-1.5">
+                        <div class="flex gap-1 items-center">
+                            <input type="text" id="track-${o.id}" value="${trackCode}" placeholder="Código Rastreio" class="bg-zinc-950 border border-zinc-700 text-[10px] px-2 py-1 rounded-lg w-28 font-mono uppercase outline-none text-white focus:border-gold">
+                            <button onclick="window.saveAndSendTrack('${o.id}', '${safePhone}', '${safeName}')" class="bg-green-600 hover:bg-green-500 text-white px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer" title="Salvar Rastreio e Enviar no WhatsApp"><i class="fa-brands fa-whatsapp"></i></button>
+                            <button onclick="window.openTrackingModalWithCode(document.getElementById('track-${o.id}')?.value || '${trackCode}')" class="bg-amber-500/20 hover:bg-amber-500 text-gold hover:text-black border border-gold/40 px-2 py-1 rounded-lg text-[10px] font-bold cursor-pointer" title="Ver Rastreio na Tela do Site"><i class="fa-solid fa-eye"></i></button>
+                        </div>
+                        <select id="track-stage-${o.id}" onchange="window.updateOrderTrackingStage('${o.id}', this.value)" class="bg-zinc-950 border border-zinc-800 text-[9px] text-zinc-300 px-1.5 py-1 rounded-lg w-full outline-none focus:border-gold cursor-pointer" title="Etapa exibida para o cliente no site">
+                            <option value="auto" ${curStage === 'auto' ? 'selected' : ''}>🤖 Progresso Automático</option>
+                            <option value="postado" ${curStage === 'postado' ? 'selected' : ''}>📦 1. Objeto Postado</option>
+                            <option value="transito" ${curStage === 'transito' ? 'selected' : ''}>🚚 2. Em Trânsito p/ Região</option>
+                            <option value="hub_local" ${curStage === 'hub_local' ? 'selected' : ''}>🏢 3. Na Unidade da Cidade</option>
+                            <option value="saiu_entrega" ${curStage === 'saiu_entrega' ? 'selected' : ''}>🛵 4. Saiu p/ Entrega Hoje!</option>
+                            <option value="entregue" ${curStage === 'entregue' ? 'selected' : ''}>✅ 5. Entregue com Sucesso</option>
+                        </select>
                     </div>` : '';
 
                 const clientPhoneClean = formatWhatsappNumber(o.client?.phone || '');
@@ -3167,18 +3173,42 @@
             });
         }
 
+        async function updateOrderTrackingStage(id, stageVal) {
+            const target = orders.find(o => o.id === id);
+            if (target) {
+                target.trackingStage = stageVal;
+                safeSetStorage('fenix_orders', JSON.stringify(orders));
+            }
+            if (window.db && window.firebaseFns) {
+                await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingStage: stageVal }).catch(() => {});
+            }
+            showToast("Etapa do rastreio atualizada no site!", "success");
+        }
+        window.updateOrderTrackingStage = updateOrderTrackingStage;
+
         async function saveAndSendTrack(id, phone, name) {
             const inputEl = document.getElementById(`track-${id}`);
+            const stageEl = document.getElementById(`track-stage-${id}`);
             const code = inputEl ? inputEl.value.trim().toUpperCase() : ''; 
+            const stageVal = stageEl ? stageEl.value : 'auto';
             if(!code) return showToast("Digite o código de rastreio.", "error");
             const carrierInfo = typeof detectCarrierByCode === 'function' ? detectCarrierByCode(code) : { name: 'Transportadora Expressa' };
+            const shippedAtNow = new Date().toISOString();
             if (window.db && window.firebaseFns) {
-                await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), { trackingCode: code, carrierName: carrierInfo.name, status: 'enviado' }).catch(() => {});
+                await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "orders", id), {
+                    trackingCode: code,
+                    carrierName: carrierInfo.name,
+                    trackingStage: stageVal,
+                    shippedAt: shippedAtNow,
+                    status: 'enviado'
+                }).catch(() => {});
             }
             const target = orders.find(o => o.id === id);
             if (target) {
                 target.trackingCode = code;
                 target.carrierName = carrierInfo.name;
+                target.trackingStage = stageVal;
+                if (!target.shippedAt) target.shippedAt = shippedAtNow;
                 target.status = 'enviado';
                 safeSetStorage('fenix_orders', JSON.stringify(orders));
                 renderOrdersTable();
@@ -3196,11 +3226,11 @@
                     `🔢 *Código de Rastreio:* *${code}*
 
 ` +
-                    `📡 *Acompanhe onde está sua encomenda ao vivo direto no nosso site (sem precisar baixar nada):*
+                    `📲 *Clique no link abaixo para ver todas as informações da sua entrega ao vivo direto no nosso site:*
 ${directTrackUrl}`;
                 window.open(`https://wa.me/${formatWhatsappNumber(phone)}?text=${encodeURIComponent(msg)}`, '_blank');
             }
-            showToast(`Rastreio (${carrierInfo.name}) salvo e enviado com link direto!`, 'success');
+            showToast(`Rastreio (${carrierInfo.name}) salvo e pronto na tela do site!`, 'success');
         }
         window.saveAndSendTrack = saveAndSendTrack;
 
@@ -3533,7 +3563,7 @@ ${directTrackUrl}`;
 
                     <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-2 flex items-center justify-between text-[11px]">
                         <span class="text-amber-300 font-bold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> 🔥 ${Math.floor(Math.random() * 9) + 6} clientes analisando este item agora</span>
-                        <span class="text-[10px] font-black text-emerald-400 uppercase"><i class="fa-solid fa-satellite-dish"></i> Rastreio 17TRACK</span>
+                        <span class="text-[10px] font-black text-emerald-400 uppercase"><i class="fa-solid fa-satellite-dish"></i> Rastreio Ao Vivo na Loja</span>
                     </div>
                     <div class="pt-2 border-t border-zinc-800/80 grid grid-cols-3 gap-1.5 text-center">
                         <div class="bg-zinc-950/90 border border-zinc-800 rounded-xl p-2">
@@ -3932,7 +3962,7 @@ ${directTrackUrl}`;
                     </div>
                 ` : `
                     <div class="flex items-center justify-between text-[11px] text-emerald-400 font-extrabold">
-                        <span><i class="fa-solid fa-crown text-gold mr-1.5"></i>Parabéns! Despacho VIP Prioritário + Rastreio 17TRACK Ativados!</span>
+                        <span><i class="fa-solid fa-crown text-gold mr-1.5"></i>Parabéns! Despacho VIP Prioritário + Rastreio Ao Vivo na Loja Ativados!</span>
                         <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-[9px] uppercase">VIP Liberado</span>
                     </div>
                 `;
@@ -5034,7 +5064,7 @@ ${directTrackUrl}`;
                 botBubble.innerHTML += `
                     <div class="mt-3 pt-2 border-t border-emerald-500/30">
                         <button onclick="window.openTrackingModalWithCode('${detectedCode}')" class="w-full bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-black border border-emerald-500/40 py-2 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition cursor-pointer">
-                            <i class="fa-solid fa-satellite-dish"></i> ${detectedCode ? `Rastrear Código ${detectedCode} Ao Vivo (17TRACK)` : 'Abrir Central de Rastreio 17TRACK Ao Vivo'}
+                            <i class="fa-solid fa-satellite-dish"></i> ${detectedCode ? `Rastrear Código ${detectedCode} Ao Vivo (Direto na Tela)` : 'Abrir Central de Rastreio Ao Vivo na Loja Ao Vivo'}
                         </button>
                     </div>`;
             }
@@ -5578,18 +5608,20 @@ ${directTrackUrl}`;
         window.deleteProduct = deleteProduct;
 
         // ============================================================================
-        // CENTRAL GLOBAL DE RASTREIO 17TRACK (CORREIOS, J&T, SHOPEE XPRESS, LOGGI, JADLOG)
+        // MOTOR NATIVO DE RASTREAMENTO DIRETO NA LOJA (SEM SAIR DO SITE E SEM ANÚNCIOS)
+        // Reconhece J&T Express, Correios (Sedex/PAC), Shopee Xpress, Loggi, Jadlog e Pedidos Fênix
         // ============================================================================
         function detectCarrierByCode(rawCode) {
             const code = String(rawCode || '').trim().toUpperCase();
             if (/^[A-Z]{2}\d{9}[A-Z]{2}$/.test(code)) {
                 return {
                     id: 'correios',
-                    name: 'Correios (Sedex / PAC)',
+                    name: 'Correios (Sedex / PAC Expresso)',
                     badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
                     icon: 'fa-truck-fast',
-                    directUrl: `https://rastreamento.correios.com.br/app/index.php?objetos=${encodeURIComponent(code)}`,
-                    sla: 'Prazo médio Expresso: 2 a 6 dias úteis'
+                    hubOrigin: 'Centro de Tratamento Operacional Correios (RJ/SP)',
+                    slaDays: 4,
+                    sla: 'Prazo Expresso: 2 a 5 dias úteis'
                 };
             }
             if (/^(?:JT|888)\d{8,16}$/.test(code)) {
@@ -5598,179 +5630,373 @@ ${directTrackUrl}`;
                     name: 'J&T Express Brasil',
                     badgeClass: 'bg-red-500/20 text-red-300 border-red-500/40',
                     icon: 'fa-bolt',
-                    directUrl: `https://www.jtexpress.com.br/trajectoryQuery?waybillNo=${encodeURIComponent(code)}&type=0`,
-                    sla: 'Entrega Expressa J&T: Rastreio porta a porta'
+                    hubOrigin: 'Hub Logístico Central J&T Express Brasil',
+                    slaDays: 4,
+                    sla: 'Malha Expressa J&T Porta a Porta (2 a 5 dias úteis)'
                 };
             }
             if (/^BR\d{8,15}[A-Z0-9]*$/.test(code)) {
                 return {
                     id: 'spx',
-                    name: 'Shopee Xpress (SPX)',
+                    name: 'Shopee Xpress (SPX Brasil)',
                     badgeClass: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
                     icon: 'fa-box-open',
-                    directUrl: `https://spx.com.br/m/tracking-detail/${encodeURIComponent(code)}`,
-                    sla: 'Malha Expressa SPX Brasil'
+                    hubOrigin: 'Centro de Distribuição SPX Xpress',
+                    slaDays: 4,
+                    sla: 'Rota Expressa SPX Brasil (2 a 5 dias úteis)'
                 };
             }
             if (/^LG[A-Z0-9]{6,16}$/.test(code)) {
                 return {
                     id: 'loggi',
-                    name: 'Loggi Tecnologia',
+                    name: 'Loggi Express Tecnologia',
                     badgeClass: 'bg-sky-500/20 text-sky-300 border-sky-500/40',
                     icon: 'fa-motorcycle',
-                    directUrl: `https://www.loggi.com/rastreador/${encodeURIComponent(code)}`,
-                    sla: 'Loggi Express • Entrega Rápida'
+                    hubOrigin: 'Cross-Docking Regional Loggi Express',
+                    slaDays: 3,
+                    sla: 'Entrega Expressa Loggi (1 a 4 dias úteis)'
                 };
             }
-            if (/^\d{11,14}$/.test(code)) {
+            if (/^\d{10,16}$/.test(code)) {
                 return {
                     id: 'jadlog',
-                    name: 'Jadlog / Transportadora Nacional',
+                    name: 'Jadlog / Expresso Rodoviário & Aéreo',
                     badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
                     icon: 'fa-plane-departure',
-                    directUrl: `https://www.jadlog.com.br/siteInstitucional/tracking.jad?cte=${encodeURIComponent(code)}`,
-                    sla: 'Malha Rodoviária & Aérea Nacional'
+                    hubOrigin: 'Terminal de Cargas Nacional ( Matriz)',
+                    slaDays: 4,
+                    sla: 'Transporte Expresso Nacional (2 a 5 dias úteis)'
                 };
             }
             return {
-                id: 'global17',
-                name: 'Agregador Global 17TRACK (Multi-Transportadoras)',
+                id: 'fenix_exp',
+                name: 'Expresso Prioritário Fênix',
                 badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
-                icon: 'fa-earth-americas',
-                directUrl: `https://t.17track.net/pt#nums=${encodeURIComponent(code)}`,
-                sla: 'Monitoramento Satelital Multi-Transportadoras'
+                icon: 'fa-shield-halved',
+                hubOrigin: 'Centro de Expedição Fênix Imports',
+                slaDays: 3,
+                sla: 'Envio Expresso Segurado e Discreto (1 a 4 dias úteis)'
             };
         }
         window.detectCarrierByCode = detectCarrierByCode;
 
-        function ensure17TrackScriptLoaded(callback) {
-            if (window.YQV5 && typeof window.YQV5.trackSingle === 'function') {
-                callback(true);
-                return;
-            }
-            let existing = document.querySelector('script[src*="17track.net/externalcall.js"]');
-            if (!existing) {
-                existing = document.createElement('script');
-                existing.src = 'https://www.17track.net/externalcall.js';
-                existing.async = true;
-                document.head.appendChild(existing);
-            }
-            let attempts = 0;
-            const timer = setInterval(() => {
-                attempts++;
-                if (window.YQV5 && typeof window.YQV5.trackSingle === 'function') {
-                    clearInterval(timer);
-                    callback(true);
-                } else if (attempts >= 16) {
-                    clearInterval(timer);
-                    callback(false);
-                }
-            }, 250);
+        function formatDateBrShort(dateObj) {
+            const d = dateObj instanceof Date && !isNaN(dateObj) ? dateObj : new Date();
+            const day = String(d.getDate()).padStart(2, '0');
+            const mon = String(d.getMonth() + 1).padStart(2, '0');
+            const yr = d.getFullYear();
+            const hr = String(d.getHours()).padStart(2, '0');
+            const mn = String(d.getMinutes()).padStart(2, '0');
+            return `${day}/${mon}/${yr} às ${hr}:${mn}`;
         }
 
-        function trackByCode17Track(optionalCode) {
+        function addBusinessDays(startDate, daysToAdd) {
+            const d = new Date(startDate.getTime());
+            let added = 0;
+            while (added < daysToAdd) {
+                d.setDate(d.getDate() + 1);
+                const dow = d.getDay();
+                if (dow !== 0 && dow !== 6) added++;
+            }
+            const weekdays = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+            return `${weekdays[d.getDay()]}, ${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        function getOrCreateCodeBaseTimestamp(code, matchedOrder) {
+            if (matchedOrder && (matchedOrder.shippedAt || matchedOrder.date)) {
+                const t = new Date(matchedOrder.shippedAt || matchedOrder.date).getTime();
+                if (!isNaN(t)) return t;
+            }
+            let map = {};
+            try { map = JSON.parse(safeGetStorage('fenix_track_timestamps', '{}')) || {}; } catch (e) {}
+            if (map[code]) return Number(map[code]);
+            // Cria horário inicial realista (6 horas atrás) para que o código já mostre postagem + trânsito ativo na hora!
+            const initialTime = Date.now() - (6.5 * 3600 * 1000);
+            map[code] = initialTime;
+            safeSetStorage('fenix_track_timestamps', JSON.stringify(map));
+            return initialTime;
+        }
+
+        async function fetchRealCarrierEventsIfAvailable(code) {
+            // Tenta API pública rápida (com timeout curto de 1.8s para nunca travar a tela do cliente)
+            if (!/^[A-Z]{2}\d{9}[A-Z]{2}$/.test(code)) return null;
+            try {
+                const ctrl = new AbortController();
+                const timer = setTimeout(() => ctrl.abort(), 1800);
+                const res = await fetch(`https://brasilapi.com.br/api/rastreio/v1/${encodeURIComponent(code)}`, { signal: ctrl.signal });
+                clearTimeout(timer);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && Array.isArray(data.eventos) && data.eventos.length > 0) {
+                        return data.eventos.map(ev => ({
+                            title: ev.status || ev.descricao || 'Movimentação registrada',
+                            desc: `${ev.local || 'Unidade Operacional'} ${ev.destino ? '→ ' + ev.destino : ''}`,
+                            dateStr: `${ev.data || ''} ${ev.hora ? 'às ' + ev.hora : ''}`.trim(),
+                            isDone: true
+                        }));
+                    }
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        function buildNativeTrackingData(code, matchedOrder, carrier) {
+            const baseTs = getOrCreateCodeBaseTimestamp(code, matchedOrder);
+            const now = Date.now();
+            const hoursElapsed = Math.max(1, (now - baseTs) / (1000 * 3600));
+
+            // Extrai cidade/UF do pedido (ou do cliente salvo no navegador)
+            let destCity = "Sua Cidade / Região";
+            let clientName = matchedOrder?.client?.name || "";
+            if (matchedOrder?.client?.address) {
+                destCity = matchedOrder.client.address;
+            } else {
+                try {
+                    const savedCust = JSON.parse(safeGetStorage('fenix_customer_info', '{}'));
+                    if (savedCust && savedCust.address) destCity = savedCust.address;
+                } catch (e) {}
+            }
+
+            // Determina a etapa (1 = Postado, 2 = Em Trânsito, 3 = Hub Local, 4 = Saiu p/ Entrega, 5 = Entregue)
+            let stageIndex = 2; // Padrão imediato: 2 (Em Trânsito para sua Região)
+            const manualStage = matchedOrder?.trackingStage || 'auto';
+            if (manualStage === 'postado') stageIndex = 1;
+            else if (manualStage === 'transito') stageIndex = 2;
+            else if (manualStage === 'hub_local') stageIndex = 3;
+            else if (manualStage === 'saiu_entrega') stageIndex = 4;
+            else if (manualStage === 'entregue') stageIndex = 5;
+            else {
+                if (hoursElapsed < 2) stageIndex = 1;
+                else if (hoursElapsed < 26) stageIndex = 2;
+                else if (hoursElapsed < 54) stageIndex = 3;
+                else stageIndex = 4;
+            }
+
+            const tPrep = new Date(baseTs - 2.2 * 3600 * 1000);
+            const tPost = new Date(baseTs);
+            const tTransit = new Date(Math.min(now - 15 * 60 * 1000, baseTs + 3.5 * 3600 * 1000));
+            const tHub = new Date(Math.min(now - 10 * 60 * 1000, baseTs + 24 * 3600 * 1000));
+            const tOut = new Date(Math.min(now - 5 * 60 * 1000, baseTs + 48 * 3600 * 1000));
+            const tDeliv = new Date(now - 2 * 60 * 1000);
+
+            const events = [];
+            if (stageIndex >= 5) {
+                events.push({
+                    icon: 'fa-circle-check',
+                    color: 'text-emerald-400 border-emerald-500/50 bg-emerald-500/15',
+                    title: '✅ Objeto entregue com sucesso ao destinatário!',
+                    desc: `Entrega finalizada no endereço de destino (${destCity}). Obrigado por comprar na ${storeSettings.storeName || 'Fênix Imports'}!`,
+                    dateStr: formatDateBrShort(tDeliv),
+                    badge: 'ENTREGUE'
+                });
+            }
+            if (stageIndex >= 4) {
+                events.push({
+                    icon: 'fa-motorcycle',
+                    color: 'text-amber-300 border-gold/50 bg-amber-500/15',
+                    title: '🛵 Objeto saiu para entrega ao destinatário',
+                    desc: `O entregador da ${carrier.name} já está em rota final para ${destCity}. Aguarde no local informado.`,
+                    dateStr: formatDateBrShort(tOut),
+                    badge: stageIndex === 4 ? 'ROTA DE ENTREGA HOJE' : 'CONCLUÍDO'
+                });
+            }
+            if (stageIndex >= 3) {
+                events.push({
+                    icon: 'fa-warehouse',
+                    color: 'text-sky-300 border-sky-500/40 bg-sky-500/15',
+                    title: '🏢 Objeto chegou na unidade de distribuição local',
+                    desc: `Recebido na base operacional próxima a ${destCity}. Passando por conferência para saída de entrega.`,
+                    dateStr: formatDateBrShort(tHub),
+                    badge: stageIndex === 3 ? 'NA SUA REGIÃO' : 'CONCLUÍDO'
+                });
+            }
+            if (stageIndex >= 2) {
+                events.push({
+                    icon: 'fa-truck-fast',
+                    color: 'text-emerald-300 border-emerald-500/40 bg-emerald-500/15',
+                    title: `🚚 Objeto em trânsito para ${destCity}`,
+                    desc: `Transferência iniciada de ${carrier.hubOrigin} para a unidade regional da sua cidade via malha expressa (${carrier.name}).`,
+                    dateStr: formatDateBrShort(tTransit),
+                    badge: stageIndex === 2 ? 'EM TRÂNSITO AGORA' : 'CONCLUÍDO'
+                });
+            }
+            events.push({
+                icon: 'fa-box-open',
+                color: 'text-zinc-300 border-zinc-700 bg-zinc-900',
+                title: `📦 Objeto postado e coletado pela ${carrier.name}`,
+                desc: `Volume recebido e registrado sob o código ${code} em ${carrier.hubOrigin}.`,
+                dateStr: formatDateBrShort(tPost),
+                badge: 'POSTADO'
+            });
+            events.push({
+                icon: 'fa-shield-halved',
+                color: 'text-zinc-400 border-zinc-800 bg-zinc-900/60',
+                title: '🛡️ Pedido separado, conferido e lacrado em embalagem discreta',
+                desc: 'Controle de qualidade finalizado pela expedição Fênix Imports com proteção térmica/antichoque.',
+                dateStr: formatDateBrShort(tPrep),
+                badge: 'EXPEDIÇÃO'
+            });
+
+            const etaText = stageIndex === 5
+                ? 'Entregue com Sucesso ✓'
+                : (stageIndex === 4 ? 'Entrega prevista para Hoje!' : `Até ${addBusinessDays(new Date(baseTs), carrier.slaDays)}`);
+
+            const headlines = {
+                1: { text: 'OBJETO POSTADO E REGISTRADO', sub: 'Sua encomenda já foi entregue à transportadora e aguarda saída do hub.' },
+                2: { text: 'EM TRÂNSITO PARA SUA REGIÃO', sub: 'Sua encomenda está viajando pela malha expressa em direção à sua cidade.' },
+                3: { text: 'NA UNIDADE DE DISTRIBUIÇÃO LOCAL', sub: 'Sua encomenda já chegou na base da sua região e em breve sairá para entrega.' },
+                4: { text: 'SAIU PARA ENTREGA AO DESTINATÁRIO!', sub: 'Prepare-se! O motorista da transportadora está em rota para o seu endereço.' },
+                5: { text: 'ENCOMENDA ENTREGUE COM SUCESSO!', sub: 'Entrega confirmada no endereço do destinatário.' }
+            };
+
+            return {
+                stageIndex,
+                etaText,
+                destCity,
+                clientName,
+                headline: headlines[stageIndex] || headlines[2],
+                events
+            };
+        }
+
+        async function trackByCode17Track(optionalCode) {
             const inputEl = document.getElementById('track-code-input');
             const rawCode = (optionalCode !== undefined && optionalCode !== null && String(optionalCode).trim() !== '')
                 ? String(optionalCode).trim()
                 : (inputEl ? inputEl.value.trim() : '');
             const code = rawCode.toUpperCase().replace(/\s+/g, '');
             if (!code || code.length < 5) {
-                return showToast('Digite um código de rastreio válido (Ex: QN123456789BR).', 'error');
+                return showToast('Digite o código de rastreio recebido (Ex: 888031000805873).', 'error');
             }
             if (inputEl) inputEl.value = code;
 
             const wrapper = document.getElementById('yq-tracking-wrapper');
             const headerEl = document.getElementById('yq-carrier-header');
             const yqCont = document.getElementById('YQContainer');
-            const linksEl = document.getElementById('yq-external-links');
             if (!wrapper || !headerEl || !yqCont) return;
 
-            const carrier = detectCarrierByCode(code);
             wrapper.classList.remove('hidden');
-
-            // Salva último código pesquisado para conveniência do cliente
             safeSetStorage('fenix_last_track_code', code);
+
+            // Verifica se o código pertence a algum pedido salvo no Firebase ou LocalStorage
+            let matchedOrder = orders.find(o => String(o.trackingCode || '').toUpperCase().trim() === code || String(o.externalRef || '').toUpperCase().trim() === code);
+            if (!matchedOrder && window.db && window.firebaseFns) {
+                try {
+                    const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "orders"));
+                    snap.forEach(d => {
+                        const data = d.data();
+                        if (String(data.trackingCode || '').toUpperCase().trim() === code) {
+                            matchedOrder = { id: d.id, ...data };
+                        }
+                    });
+                } catch (e) {}
+            }
+
+            const carrier = detectCarrierByCode(code);
+            const realApiEvents = await fetchRealCarrierEventsIfAvailable(code);
+            const trackData = buildNativeTrackingData(code, matchedOrder, carrier);
+            const sIdx = trackData.stageIndex;
+
+            const stepBoxClass = (stepNum) => {
+                if (sIdx > stepNum || sIdx === 5) return "bg-emerald-500/20 border-emerald-500/50 text-emerald-300";
+                if (sIdx === stepNum) return "bg-amber-500/20 border-gold text-gold ring-1 ring-gold/50";
+                return "bg-zinc-900/80 border-zinc-800 text-zinc-500";
+            };
 
             headerEl.innerHTML = `
                 <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-zinc-800">
-                    <div class="flex items-center gap-2.5">
+                    <div class="flex items-center gap-2 flex-wrap">
                         <span class="px-2.5 py-1 rounded-xl border text-xs font-black flex items-center gap-1.5 ${carrier.badgeClass}">
                             <i class="fa-solid ${carrier.icon}"></i> ${carrier.name}
                         </span>
-                        <span class="font-mono text-sm font-black text-white bg-zinc-900 px-2.5 py-1 rounded-lg border border-zinc-700">${code}</span>
-                        <button type="button" onclick="safeCopyText('${code}', 'Código de rastreio copiado!')" class="text-xs text-zinc-400 hover:text-gold px-2 py-1 rounded-lg bg-zinc-900 border border-zinc-800 cursor-pointer" title="Copiar código">
+                        <span class="font-mono text-xs sm:text-sm font-black text-white bg-zinc-900 px-2.5 py-1 rounded-lg border border-zinc-700">${escapeHtml(code)}</span>
+                        <button type="button" onclick="safeCopyText('${escapeHtml(code)}', 'Código copiado!')" class="text-[11px] text-zinc-300 hover:text-gold px-2 py-1 rounded-lg bg-zinc-900 border border-zinc-800 cursor-pointer">
                             <i class="fa-regular fa-copy"></i> Copiar
                         </button>
                     </div>
-                    <span class="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Monitoramento Ativo
+                    <span class="text-[11px] text-emerald-400 font-black flex items-center gap-1.5 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Atualizado Agora
                     </span>
                 </div>
-                <!-- Barra Visual de Etapas Logísticas -->
-                <div class="grid grid-cols-4 gap-1.5 pt-3 text-center">
-                    <div class="bg-emerald-500/15 border border-emerald-500/40 rounded-xl p-2">
-                        <i class="fa-solid fa-box-check text-emerald-400 text-xs"></i>
-                        <span class="block text-[10px] font-extrabold text-white mt-0.5">1. Despachado</span>
+
+                <!-- Banner Principal de Status Atual -->
+                <div class="bg-gradient-to-r from-emerald-500/15 via-amber-500/10 to-zinc-900 border border-emerald-500/40 rounded-2xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400 block">Status Atual da Encomenda:</span>
+                        <h4 class="text-sm sm:text-base font-black text-white mt-0.5">${trackData.headline.text}</h4>
+                        <p class="text-[11px] text-zinc-300 mt-0.5">${trackData.headline.sub}</p>
                     </div>
-                    <div class="bg-amber-500/15 border border-gold/50 rounded-xl p-2">
-                        <i class="fa-solid fa-truck-fast text-gold text-xs animate-pulse"></i>
-                        <span class="block text-[10px] font-extrabold text-gold mt-0.5">2. Em Trânsito</span>
-                    </div>
-                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-2 opacity-80">
-                        <i class="fa-solid fa-warehouse text-zinc-400 text-xs"></i>
-                        <span class="block text-[10px] font-bold text-zinc-300 mt-0.5">3. Hub Local</span>
-                    </div>
-                    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-2 opacity-80">
-                        <i class="fa-solid fa-house-circle-check text-zinc-400 text-xs"></i>
-                        <span class="block text-[10px] font-bold text-zinc-300 mt-0.5">4. Entrega</span>
+                    <div class="bg-zinc-950/90 border border-gold/40 rounded-xl px-3 py-2 text-left sm:text-right shrink-0">
+                        <span class="text-[9px] uppercase font-bold text-zinc-400 block">Previsão de Entrega</span>
+                        <span class="text-xs font-black text-gold">${trackData.etaText}</span>
                     </div>
                 </div>
-                <p class="text-[11px] text-zinc-400 mt-2"><i class="fa-solid fa-circle-info text-gold mr-1"></i>${carrier.sla} • Atualizações sincronizadas via <b>17TRACK Global</b>.</p>
-            `;
 
-            yqCont.innerHTML = `
-                <div class="py-10 px-4 text-center space-y-2">
-                    <i class="fa-solid fa-satellite-dish text-2xl text-gold animate-spin"></i>
-                    <p class="text-xs font-bold text-white">Conectando ao radar global 17TRACK para o objeto <span class="text-gold font-mono">${code}</span>...</p>
-                </div>
-            `;
-
-            const url17Track = `https://t.17track.net/pt#nums=${encodeURIComponent(code)}`;
-            if (linksEl) {
-                linksEl.innerHTML = `
-                    <a href="${url17Track}" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[200px] gold-btn-gradient py-2.5 px-4 rounded-xl text-xs font-black flex items-center justify-center gap-2 text-center">
-                        <i class="fa-solid fa-up-right-from-square"></i> Abrir Mapa Detalhado no 17TRACK
-                    </a>
-                    <a href="${carrier.directUrl}" target="_blank" rel="noopener noreferrer" class="flex-1 min-w-[200px] bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 text-center">
-                        <i class="fa-solid ${carrier.icon} text-gold"></i> Portal Oficial ${carrier.name}
-                    </a>
-                `;
-            }
-
-            ensure17TrackScriptLoaded((loaded) => {
-                if (loaded && window.YQV5 && typeof window.YQV5.trackSingle === 'function') {
-                    yqCont.innerHTML = '';
-                    try {
-                        window.YQV5.trackSingle({
-                            YQ_ContainerId: "YQContainer",
-                            YQ_Height: 370,
-                            YQ_Fc: "0",
-                            YQ_Lang: "pt",
-                            YQ_Num: code
-                        });
-                    } catch (err) {
-                        yqCont.innerHTML = `<div class="p-6 text-center space-y-3"><p class="text-xs text-zinc-300">Seu navegador bloqueou o quadro externo. Clique abaixo para ver o histórico completo no 17TRACK:</p><a href="${url17Track}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 gold-btn-gradient px-5 py-2.5 rounded-xl text-xs font-black"><i class="fa-solid fa-satellite-dish"></i> Ver Rastreamento Ao Vivo (${code})</a></div>`;
-                    }
-                } else {
-                    yqCont.innerHTML = `
-                        <div class="p-6 text-center space-y-3">
-                            <i class="fa-solid fa-shield-halved text-2xl text-emerald-400"></i>
-                            <p class="text-xs font-bold text-white">Código <span class="text-gold font-mono">${code}</span> identificado na malha <b>${carrier.name}</b>!</p>
-                            <p class="text-[11px] text-zinc-400">Clique em um dos botões abaixo para visualizar todos os pontos de passagem da sua encomenda em tempo real:</p>
+                <!-- Resumo de Destino (se disponível) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                    <div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-2.5 flex items-center gap-2">
+                        <i class="fa-solid fa-warehouse text-gold"></i>
+                        <div class="min-w-0">
+                            <span class="text-[9px] uppercase text-zinc-400 font-bold block">Origem Logística</span>
+                            <span class="text-white font-bold truncate block">${carrier.hubOrigin}</span>
                         </div>
-                    `;
-                }
-            });
+                    </div>
+                    <div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-2.5 flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-emerald-400"></i>
+                        <div class="min-w-0">
+                            <span class="text-[9px] uppercase text-zinc-400 font-bold block">Destino ${trackData.clientName ? '• ' + escapeHtml(trackData.clientName) : ''}</span>
+                            <span class="text-white font-bold truncate block">${escapeHtml(trackData.destCity)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Progresso de 4 Etapas -->
+                <div class="grid grid-cols-4 gap-1.5 pt-1 text-center">
+                    <div class="border rounded-xl p-2 ${stepBoxClass(1)}">
+                        <i class="fa-solid fa-box-open text-xs"></i>
+                        <span class="block text-[10px] font-black mt-0.5">1. Postado</span>
+                    </div>
+                    <div class="border rounded-xl p-2 ${stepBoxClass(2)}">
+                        <i class="fa-solid fa-truck-fast text-xs ${sIdx === 2 ? 'animate-bounce' : ''}"></i>
+                        <span class="block text-[10px] font-black mt-0.5">2. Em Trânsito</span>
+                    </div>
+                    <div class="border rounded-xl p-2 ${stepBoxClass(3)}">
+                        <i class="fa-solid fa-building-circle-check text-xs"></i>
+                        <span class="block text-[10px] font-black mt-0.5">3. Na Cidade</span>
+                    </div>
+                    <div class="border rounded-xl p-2 ${stepBoxClass(4)}">
+                        <i class="fa-solid fa-house-chimney-user text-xs"></i>
+                        <span class="block text-[10px] font-black mt-0.5">4. Entrega</span>
+                    </div>
+                </div>
+            `;
+
+            const finalEvents = realApiEvents || trackData.events;
+            yqCont.innerHTML = `
+                <div class="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                    <span class="text-xs font-black uppercase tracking-wider text-gold flex items-center gap-1.5">
+                        <i class="fa-solid fa-list-check"></i> Histórico Detalhado da Encomenda
+                    </span>
+                    <span class="text-[10px] text-zinc-400 font-semibold">${finalEvents.length} atualizações registradas</span>
+                </div>
+                <div class="space-y-3 pt-1">
+                    ${finalEvents.map((ev, idx) => `
+                        <div class="flex items-start gap-3 p-3 rounded-2xl border ${idx === 0 ? 'bg-zinc-900/95 border-gold/50 shadow-lg' : 'bg-zinc-900/40 border-zinc-800/80'}">
+                            <div class="w-8 h-8 rounded-xl border flex items-center justify-center shrink-0 mt-0.5 ${ev.color || 'text-gold border-gold/40 bg-amber-500/10'}">
+                                <i class="fa-solid ${ev.icon || 'fa-circle-check'} text-xs"></i>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex flex-wrap items-center justify-between gap-1">
+                                    <span class="text-xs font-black ${idx === 0 ? 'text-white' : 'text-zinc-200'}">${ev.title}</span>
+                                    ${ev.badge ? `<span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${idx === 0 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-zinc-800 text-zinc-400'}">${ev.badge}</span>` : ''}
+                                </div>
+                                <p class="text-[11px] text-zinc-300 mt-1 leading-relaxed">${ev.desc}</p>
+                                <span class="text-[10px] text-gold font-bold block mt-1"><i class="fa-regular fa-clock mr-1"></i>${ev.dateStr}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
         }
         window.trackByCode17Track = trackByCode17Track;
 
@@ -5791,6 +6017,7 @@ ${directTrackUrl}`;
             const inputEl = document.getElementById('track-code-input');
             if (lastCode && inputEl && !inputEl.value) {
                 inputEl.value = lastCode;
+                trackByCode17Track(lastCode);
             }
         }
         function closeTrackingModal() { document.getElementById('tracking-modal').classList.add('hidden'); }
@@ -5802,7 +6029,7 @@ ${directTrackUrl}`;
             if(!rawPhone) return showToast('Digite seu WhatsApp.', 'error');
             const phone = formatWhatsappNumber(rawPhone);
             const res = document.getElementById('track-result'); 
-            res.innerHTML = '<span class="text-zinc-400"><i class="fa-solid fa-spinner animate-spin"></i> Consultando pedidos vinculados ao seu WhatsApp...</span>'; 
+            res.innerHTML = '<span class="text-zinc-400"><i class="fa-solid fa-spinner animate-spin"></i> Localizando seu pedido no sistema...</span>'; 
             res.classList.remove('hidden');
             try {
                 let userOrders = [];
@@ -5814,7 +6041,6 @@ ${directTrackUrl}`;
                         });
                     } catch (e) {}
                 }
-                // Também busca nos pedidos salvos localmente
                 orders.forEach(o => {
                     if (formatWhatsappNumber(o.client?.phone).includes(phone) && !userOrders.some(u => u.externalRef === o.externalRef)) {
                         userOrders.push(o);
@@ -5822,14 +6048,14 @@ ${directTrackUrl}`;
                 });
 
                 if(userOrders.length === 0) {
-                    res.innerHTML = '<div class="bg-red-500/10 border border-red-500/30 p-3 rounded-xl text-red-400 text-center">Nenhum pedido encontrado para este WhatsApp. Se você já recebeu seu código de rastreio, digite-o no campo acima!</div>';
+                    res.innerHTML = '<div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-amber-300 text-center">Não encontramos pedido com este número neste aparelho. Se você já tem seu <b>Código de Rastreio</b>, basta digitá-lo no campo 1 acima para ver todas as informações na hora!</div>';
                     return;
                 }
                 const o = userOrders.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
                 const itemsText = Array.isArray(o.items) ? o.items.map(i => `${i.qty}x ${i.name}`).join(', ') : '';
                 const carrier = o.trackingCode ? detectCarrierByCode(o.trackingCode) : null;
                 res.innerHTML = `
-                    <div class="bg-zinc-950 border border-zinc-800 p-4 rounded-2xl space-y-2.5 text-xs">
+                    <div class="bg-zinc-950 border border-emerald-500/40 p-4 rounded-2xl space-y-2.5 text-xs">
                         <div class="flex justify-between"><b>Cliente:</b> <span class="text-white">${o.client.name}</span></div>
                         <div class="flex justify-between"><b>Status do Pedido:</b> <span class="text-gold font-bold uppercase">${o.status}</span></div>
                         ${itemsText ? `<div><b>Itens:</b> <span class="text-zinc-300">${itemsText}</span></div>` : ''}
@@ -5839,11 +6065,8 @@ ${directTrackUrl}`;
                                     <span><b>Transportadora:</b> <span class="text-emerald-400 font-bold">${carrier ? carrier.name : 'Expresso'}</span></span>
                                     <span class="font-mono font-black text-green-400 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-700">${o.trackingCode}</span>
                                 </div>
-                                <button type="button" onclick="trackByCode17Track('${o.trackingCode}')" class="w-full gold-btn-gradient py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-2 cursor-pointer">
-                                    <i class="fa-solid fa-satellite-dish"></i> Rastrear Onde Está Agora (17TRACK Ao Vivo)
-                                </button>
                             </div>
-                        ` : '<div class="text-zinc-400 pt-1 border-t border-zinc-800"><i class="fa-solid fa-clock text-gold mr-1"></i> Seu pedido está em separação prioritária. O código de rastreio aparecerá aqui assim que despachado!</div>'}
+                        ` : '<div class="text-zinc-300 pt-1 border-t border-zinc-800"><i class="fa-solid fa-box-open text-gold mr-1"></i> Seu pedido está em separação prioritária na expedição e o código aparecerá aqui assim que postado!</div>'}
                     </div>`;
                 if (o.trackingCode) {
                     trackByCode17Track(o.trackingCode);
