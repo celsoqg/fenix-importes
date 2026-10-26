@@ -215,8 +215,8 @@
                 <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-1.5 hover:text-yellow-300 transition cursor-pointer"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
                 <button onclick="openProductAdvisorModal()" class="text-amber-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer font-bold"><i class="fa-solid fa-compass text-gold text-xs"></i> Qual Escolher? (IA)</button>
                 <button onclick="openCompareModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-scale-balanced text-gold text-xs"></i> Comparar</button>
-                <button onclick="openReconstitutionModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-syringe text-gold text-xs"></i> Calculadora UI</button>
-                <button onclick="openLabVerifyModal()" class="text-zinc-300 hover:text-emerald-400 transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400 text-xs"></i> Laudos HPLC</button>
+                <button id="nav-btn-calc-ui" onclick="openReconstitutionModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-syringe text-gold text-xs"></i> Calculadora UI</button>
+                <button id="nav-btn-lab-hplc" onclick="openLabVerifyModal()" class="text-zinc-300 hover:text-emerald-400 transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400 text-xs"></i> Laudos HPLC</button>
                 <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
                 <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-shield-halved text-xs"></i> Admin</button>
                 <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
@@ -247,8 +247,8 @@
             <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-store"></i> Catálogo de Produtos</button>
             <button onclick="openProductAdvisorModal(); toggleMobileMenu();" class="w-full text-left text-amber-300 font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-compass text-gold"></i> Consultor IA: Qual Produto Escolher?</button>
             <button onclick="openCompareModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-scale-balanced text-gold"></i> Comparador Lado a Lado (2026)</button>
-            <button onclick="openReconstitutionModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-syringe text-gold"></i> Calculadora de Reconstituição (UI)</button>
-            <button onclick="openLabVerifyModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400"></i> Verificar Lote & Laudos HPLC</button>
+            <button id="mob-btn-calc-ui" onclick="openReconstitutionModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-syringe text-gold"></i> Calculadora de Reconstituição (UI)</button>
+            <button id="mob-btn-lab-hplc" onclick="openLabVerifyModal(); toggleMobileMenu();" class="w-full text-left text-zinc-200 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400"></i> Verificar Lote & Laudos HPLC</button>
             <button onclick="openTrackingModal(); toggleMobileMenu();" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-route"></i> Rastrear Pedido</button>
             <button onclick="openLoginModal(); toggleMobileMenu();" id="mobile-nav-login" class="w-full text-left text-zinc-300 font-semibold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-shield-halved"></i> Painel de Controle</button>
             <button onclick="switchTab('admin'); toggleMobileMenu();" id="mobile-nav-admin" class="hidden w-full text-left text-gold font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-chart-line"></i> Gestão da Loja</button>
@@ -284,42 +284,42 @@
                 <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
                     <div class="lg:col-span-7 space-y-4">
                         <div class="flex flex-wrap gap-2">
-                            <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-halved"></i> Pureza HPLC 99.8%</span>
+                            <span id="hero-badge-purity" class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-halved"></i> Pureza HPLC 99.8%</span>
                             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30"><i class="fa-solid fa-credit-card"></i> Pix & Cartão até 12x</span>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"><i class="fa-solid fa-box-open"></i> Envio Expresso Sigiloso</span>
+                            <span id="hero-badge-shipping" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"><i class="fa-solid fa-box-open"></i> Envio Expresso Sigiloso</span>
                         </div>
-                        <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
-                        <p class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Pagamento 100% automático e discreto: gere seu PIX ou Link de Cartão em até 12x na hora, o sistema reconhece seu pagamento automaticamente em segundos e já libera seu pedido para envio expresso.</p>
+                        <h1 id="hero-main-heading" class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
+                        <p id="hero-main-desc" class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Pagamento 100% automático e discreto: gere seu PIX ou Link de Cartão em até 12x na hora, o sistema reconhece seu pagamento automaticamente em segundos e já libera seu pedido para envio expresso.</p>
                         <div class="flex flex-wrap gap-2.5 pt-1">
                             <button onclick="openProductAdvisorModal()" class="gold-btn-gradient px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 cursor-pointer shadow-lg">
                                 <i class="fa-solid fa-wand-magic-sparkles"></i> Não sabe qual escolher? Consultor IA (15s)
                             </button>
-                            <button onclick="openReconstitutionModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-gold border border-gold/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
+                            <button id="hero-btn-calc-ui" onclick="openReconstitutionModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-gold border border-gold/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
                                 <i class="fa-solid fa-syringe"></i> Calculadora de Dosagem (UI)
                             </button>
                             <button onclick="openCompareModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-sky-400 border border-sky-500/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
                                 <i class="fa-solid fa-scale-balanced"></i> Comparar Lado a Lado
                             </button>
-                            <button onclick="openLabVerifyModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-emerald-400 border border-emerald-500/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
+                            <button id="hero-btn-lab-hplc" onclick="openLabVerifyModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-emerald-400 border border-emerald-500/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
                                 <i class="fa-solid fa-microscope"></i> Laudos HPLC 99.8%
                             </button>
                         </div>
                     </div>
                     <div class="lg:col-span-5 grid grid-cols-2 gap-3">
-                        <div onclick="openReconstitutionModal()" class="bg-zinc-950/80 hover:border-gold/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
+                        <div id="hero-card-1" onclick="openReconstitutionModal()" class="bg-zinc-950/80 hover:border-gold/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
                             <div class="w-9 h-9 rounded-xl bg-gold/15 text-gold flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-calculator"></i></div>
-                            <h3 class="text-xs font-black text-white">Calculadora UI/mg</h3>
-                            <p class="text-[10px] text-zinc-400 mt-0.5">Descubra na hora quantas UI puxar na seringa.</p>
+                            <h3 id="hero-card-1-title" class="text-xs font-black text-white">Calculadora UI/mg</h3>
+                            <p id="hero-card-1-desc" class="text-[10px] text-zinc-400 mt-0.5">Descubra na hora quantas UI puxar na seringa.</p>
                         </div>
-                        <div onclick="openLabVerifyModal()" class="bg-zinc-950/80 hover:border-emerald-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
+                        <div id="hero-card-2" onclick="openLabVerifyModal()" class="bg-zinc-950/80 hover:border-emerald-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
                             <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-file-shield"></i></div>
-                            <h3 class="text-xs font-black text-white">Laudos HPLC 99.8%</h3>
-                            <p class="text-[10px] text-zinc-400 mt-0.5">Certificados de pureza e autenticidade de lote.</p>
+                            <h3 id="hero-card-2-title" class="text-xs font-black text-white">Laudos HPLC 99.8%</h3>
+                            <p id="hero-card-2-desc" class="text-[10px] text-zinc-400 mt-0.5">Certificados de pureza e autenticidade de lote.</p>
                         </div>
-                        <div onclick="setGoalFilter('definicao')" class="bg-zinc-950/80 hover:border-amber-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
+                        <div id="hero-card-3" onclick="setGoalFilter('definicao')" class="bg-zinc-950/80 hover:border-amber-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
                             <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-fire-flame-simple"></i></div>
-                            <h3 class="text-xs font-black text-white">Protocolos Seca/GLP</h3>
-                            <p class="text-[10px] text-zinc-400 mt-0.5">Linha completa de alta pureza certificada.</p>
+                            <h3 id="hero-card-3-title" class="text-xs font-black text-white">Protocolos Seca/GLP</h3>
+                            <p id="hero-card-3-desc" class="text-[10px] text-zinc-400 mt-0.5">Linha completa de alta pureza certificada.</p>
                         </div>
                         <div onclick="openTrackingModal()" class="bg-zinc-950/80 hover:border-sky-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
                             <div class="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-truck-fast"></i></div>
@@ -398,7 +398,7 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs">
+                <div id="faq-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5 text-xs">
                     <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
                         <div class="text-amber-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-fire"></i> Tirzepatida vs Retatrutida</div>
                         <p class="text-zinc-300 text-[11px] leading-relaxed">Ambos servem para <b>emagrecimento rápido e bloqueio da fome</b>. A <b>Tirzepatida (TG)</b> age em 2 receptores (saciedade forte). A <b>Retatrutida</b> age em 3 receptores (inclui Glucagon, acelerando ainda mais a queima de gordura parada).</p>
@@ -449,6 +449,35 @@
                     </button>
                 </div>
                 <div id="elite-checklist-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs"></div>
+            </div>
+
+            <!-- 🛡️ INTERRUPTOR 1-CLIQUE: MODO APROVAÇÃO BANCÁRIA & MEI (SAFE MODE / CAMUFLAGEM) -->
+            <div id="admin-safe-mode-card" class="bg-gradient-to-r from-emerald-500/15 via-zinc-900 to-zinc-900 p-5 rounded-3xl border border-emerald-500/40 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 shadow-lg">
+                <div class="flex items-start sm:items-center gap-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl shrink-0">
+                        <i class="fa-solid fa-user-secret"></i>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h4 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Modo Aprovação Bancária & MEI (Safe Mode 1-Clique)</h4>
+                            <span id="safe-mode-status-badge" class="bg-zinc-800 text-zinc-400 border border-zinc-700 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">DESATIVADO (Catálogo Real)</span>
+                        </div>
+                        <p class="text-[11px] text-zinc-300 mt-1 leading-relaxed">Quando ativado, oculta instantaneamente <b class="text-amber-300">Hormônios, Peptídeos e Performance</b> (além de termos como seringa/HPLC) da vitrine dos clientes, deixando apenas itens inofensivos de Bem-Estar & Suplementos para o banco/MEI analisar. <b class="text-emerald-400">Seu estoque real continua 100% intacto aqui no Admin!</b></p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2.5 shrink-0 w-full lg:w-auto justify-end">
+                    <label class="inline-flex items-center gap-2.5 bg-zinc-950/90 border border-emerald-500/40 px-3.5 py-2 rounded-2xl cursor-pointer">
+                        <span class="text-xs font-black text-white">Ativar Modo Aprovação</span>
+                        <input type="checkbox" id="admin-safe-mode-quick-toggle" onchange="toggleSafeModeQuick(this.checked)" class="sr-only peer">
+                        <div class="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all relative peer-checked:bg-emerald-500"></div>
+                    </label>
+                    <button type="button" onclick="previewSafeStorefront()" class="bg-zinc-800 hover:bg-zinc-700 text-emerald-400 px-3.5 py-2.5 rounded-2xl text-xs font-bold border border-emerald-500/30 flex items-center gap-1.5 cursor-pointer" title="Ver como o analista do banco vê sua vitrine">
+                        <i class="fa-solid fa-eye"></i> Ver Vitrine
+                    </button>
+                    <button type="button" onclick="copyBankSafeUrl()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2.5 rounded-2xl text-xs font-black flex items-center gap-1.5 cursor-pointer shadow-lg" title="Copia o link com parâmetro ?aprovacao=1 que sempre abre no Modo Aprovação para o banco">
+                        <i class="fa-solid fa-link"></i> Link p/ Banco/MEI
+                    </button>
+                </div>
             </div>
 
             <!-- Toggle Switch de Notificações -->
@@ -637,15 +666,36 @@
         </div>
     </main>
 
-    <footer class="border-t border-zinc-800/60 py-6 mt-12 text-center text-xs text-zinc-500">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <span>© 2026 <b id="footer-store-name" class="text-zinc-400">FÊNIX IMPORTS</b> • Exclusividade & Alta Performance</span>
-            <span class="flex items-center gap-3 text-[11px]">
-                <span><i class="fa-solid fa-lock text-gold"></i> Ambiente Criptografado</span>
-                <span><i class="fa-brands fa-pix text-emerald-400"></i> Pix Imediato & Cartão até 12x</span>
-            </span>
+    <footer class="border-t border-zinc-800/60 py-8 mt-12 text-xs text-zinc-500 bg-zinc-950/40">
+        <div class="max-w-7xl mx-auto px-4 space-y-4">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+                <div class="text-center md:text-left">
+                    <span>© 2026 <b id="footer-store-name" class="text-zinc-300">FÊNIX IMPORTS</b> • <span id="footer-tagline">Exclusividade & Alta Performance</span></span>
+                    <span id="footer-mei-info" class="block text-[10px] text-zinc-500 mt-0.5">Comércio Varejista de Suplementos Alimentares, Bem-Estar & Cosméticos • Envio Nacional com Garantia</span>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-3 text-[11px]">
+                    <button type="button" onclick="openLegalComplianceModal('terms')" class="hover:text-gold underline cursor-pointer">Termos de Uso</button>
+                    <button type="button" onclick="openLegalComplianceModal('privacy')" class="hover:text-gold underline cursor-pointer">Política de Privacidade (LGPD)</button>
+                    <button type="button" onclick="openLegalComplianceModal('refund')" class="hover:text-gold underline cursor-pointer">Trocas & Devoluções (CDC 7 Dias)</button>
+                    <span><i class="fa-solid fa-lock text-gold"></i> SSL 256-Bit</span>
+                    <span><i class="fa-brands fa-pix text-emerald-400"></i> Pix & Cartão até 12x</span>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <!-- Modal Institucional de Políticas (Compliance Bancário, MEI & Gateways) -->
+    <div id="legal-compliance-modal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeLegalComplianceModal()"></div>
+        <div class="relative glass-card border border-zinc-700 rounded-3xl max-w-lg w-full p-6 shadow-2xl z-10 space-y-4 max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <h3 id="legal-modal-title" class="text-sm sm:text-base font-black text-white flex items-center gap-2"><i class="fa-solid fa-scale-balanced text-gold"></i> Políticas Institucionais & Garantia</h3>
+                <button type="button" onclick="closeLegalComplianceModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="legal-modal-body" class="text-xs text-zinc-300 space-y-3 leading-relaxed"></div>
+            <button type="button" onclick="closeLegalComplianceModal()" class="w-full gold-btn-gradient py-2.5 rounded-xl text-xs font-black cursor-pointer">Entendi e Fechar</button>
+        </div>
+    </div>
 
     <!-- Flutuantes -->
     <div class="fixed bottom-6 right-6 flex flex-col gap-3 z-40">
@@ -1285,6 +1335,24 @@
                     <input type="text" id="set-store-logo" placeholder="URL da Logo (opcional)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 </div>
 
+                <!-- 🛡️ MODO APROVAÇÃO BANCÁRIA & MEI (SAFE MODE / CAMUFLAGEM DE VITRINE) -->
+                <div class="bg-emerald-950/30 border border-emerald-500/40 p-3.5 rounded-2xl space-y-2.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <label for="set-safe-mode" class="text-[11px] text-emerald-400 font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-user-secret text-sm"></i> Modo Aprovação (Safe Mode / Banco & MEI)
+                        </label>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="set-safe-mode" class="sr-only peer">
+                            <div class="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                        </label>
+                    </div>
+                    <p class="text-[10px] text-zinc-300 leading-snug">Quando ativado e salvo, o site <b>oculta instantaneamente as categorias Hormônios, Peptídeos e Performance</b> da vitrine pública, deixando apenas itens inofensivos e suplementos naturais visíveis para análise do banco/MEI. Seu estoque real continua intacto no Admin.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        <input type="text" id="set-cnpj-mei" placeholder="CNPJ / MEI (Opcional p/ Rodapé)" class="w-full bg-zinc-900 border border-emerald-500/30 rounded-xl px-3 py-1.5 text-white text-[11px]">
+                        <input type="text" id="set-razao-social" placeholder="Razão Social / Nome MEI (Opcional)" class="w-full bg-zinc-900 border border-emerald-500/30 rounded-xl px-3 py-1.5 text-white text-[11px]">
+                    </div>
+                </div>
+
                 <!-- Automação Camuflada Anti-Bloqueio (Gera Link & PIX Sozinho + Reconhece Pagamento) -->
                 <div class="bg-sky-950/30 border border-sky-500/40 p-3 rounded-2xl space-y-2">
                     <label class="text-[10px] text-sky-400 font-black uppercase tracking-wider flex items-center gap-1.5">
@@ -1752,8 +1820,131 @@
             geminiKey: "", 
             removeBgKey: "",
             pushNotificationsEnabled: true,
-            autoApproveReceipts: true
+            autoApproveReceipts: true,
+            safeModeEnabled: false,
+            cnpjMei: "",
+            razaoSocial: ""
         };
+
+        // 🛡️ CATEGORIAS SENSÍVEIS E CATÁLOGO DE SEGURANÇA (MODO APROVAÇÃO BANCÁRIA & MEI)
+        const SENSITIVE_CATEGORIES = ['Hormônios', 'Peptídeos', 'Performance'];
+        const SENSITIVE_KEYWORDS_REGEX = /tirzepatida|tirzec|tirsedral|retatrutida|somatropina|\bgh\b|masteron|drostanolona|susobolic|durateston|testosterona|enantato|cipionato|trembolona|oxandrolona|deca|stano|boldenona|bpc-157|tb-500|pept[ií]deo|horm[oô]nio|injet[aá]vel|bacteriost[aá]tica|seringa|agulha|anabol/i;
+
+        const SAFE_MODE_WELLNESS_Showcase = [
+            {
+                id: "safe-creatina-300",
+                name: "Creatina Monohidratada 100% Pura Micronizada (300g)",
+                category: "Insumos & Soluções",
+                price: 139.90,
+                promoPrice: 109.90,
+                costPrice: 55.00,
+                stock: 28,
+                availability: "pronta_entrega",
+                deliveryDays: "1 a 3 dias úteis",
+                description: "🎯 PARA QUE SERVE: Suplemento alimentar natural em pó para ganho de força, explosão muscular e resistência física nos treinos diários. Produto dispensado de registro conforme RDC 240/2018.",
+                imageUrl: makeProductSvgDataUri("CREATINA", "300G PURA", "#10b981"),
+                isFeatured: true,
+                isSafeShowcaseOnly: true
+            },
+            {
+                id: "safe-colageno-verisol",
+                name: "Colágeno Hidrolisado Verisol + Ácido Hialurônico & Vitamina C",
+                category: "Estética Avançada",
+                price: 149.90,
+                promoPrice: 119.90,
+                costPrice: 58.00,
+                stock: 22,
+                availability: "pronta_entrega",
+                deliveryDays: "1 a 3 dias úteis",
+                description: "🎯 PARA QUE SERVE: Nutrição estética avançada para elasticidade da pele, fortalecimento de unhas, cabelos e rejuvenescimento celular com peptídeos bioativos de colágeno oral.",
+                imageUrl: makeProductSvgDataUri("COLÁGENO", "VERISOL C+", "#38bdf8"),
+                isFeatured: true,
+                isSafeShowcaseOnly: true
+            },
+            {
+                id: "safe-multivitaminico-az",
+                name: "Multivitamínico Complexo A-Z Imunidade & Energia (90 Cáps)",
+                category: "Outros",
+                price: 99.90,
+                promoPrice: 79.90,
+                costPrice: 35.00,
+                stock: 40,
+                availability: "pronta_entrega",
+                deliveryDays: "1 a 3 dias úteis",
+                description: "🎯 PARA QUE SERVE: Fórmula completa com 24 vitaminas e minerais quelatos de alta absorção para imunidade, disposição diária, foco mental e saúde metabólica.",
+                imageUrl: makeProductSvgDataUri("MULTI A-Z", "90 CÁPSULAS", "#d4a017"),
+                isFeatured: true,
+                isSafeShowcaseOnly: true
+            },
+            {
+                id: "safe-omega3-ultra",
+                name: "Ômega 3 Ultra TG 1000mg EPA/DHA Purificado (120 Cáps)",
+                category: "Outros",
+                price: 129.90,
+                promoPrice: 98.90,
+                costPrice: 45.00,
+                stock: 30,
+                availability: "pronta_entrega",
+                deliveryDays: "1 a 3 dias úteis",
+                description: "🎯 PARA QUE SERVE: Saúde cardiovascular, cerebral e ação anti-inflamatória natural com óleo de peixe ultra purificado livre de metais pesados (Certificação IFOS).",
+                imageUrl: makeProductSvgDataUri("ÔMEGA 3", "ULTRA TG", "#f59e0b"),
+                isFeatured: false,
+                isSafeShowcaseOnly: true
+            }
+        ];
+
+        function isUrlForcingSafeMode() {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                return params.get('safe') === '1' || params.get('aprovacao') === '1' || params.get('mei') === '1';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function isSafeModeActive() {
+            return Boolean(storeSettings.safeModeEnabled) || isUrlForcingSafeMode();
+        }
+
+        function isProductSensitive(p) {
+            if (!p) return false;
+            if (SENSITIVE_CATEGORIES.includes(p.category)) return true;
+            return SENSITIVE_KEYWORDS_REGEX.test(p.name || '');
+        }
+
+        function sanitizeProductForSafeMode(p) {
+            const clone = { ...p };
+            if (SENSITIVE_KEYWORDS_REGEX.test(clone.name || '') || SENSITIVE_KEYWORDS_REGEX.test(clone.description || '')) {
+                clone.name = (clone.name || '')
+                    .replace(/Injet[aá]vel/gi, 'Líquida Uso Oral')
+                    .replace(/Bacteriost[aá]tica/gi, 'Hidratante Isotônica')
+                    .replace(/[ÁA]lcool Benz[ií]lico/gi, 'Minerais Naturais');
+                clone.description = "🎯 PARA QUE SERVE: Suplemento nutricional e cosmético de uso diário para bem-estar, energia natural e hidratação celular com matéria-prima importada certificada.";
+                if ((p.id || '') === 'seed-l-carnitina') {
+                    clone.imageUrl = makeProductSvgDataUri("L-CARNITINA", "LIQUID 30ML", "#f97316");
+                } else if ((p.id || '') === 'seed-agua-bac') {
+                    clone.imageUrl = makeProductSvgDataUri("SOLUÇÃO", "MINERAL 10ML", "#38bdf8");
+                }
+            }
+            return clone;
+        }
+
+        function getStorefrontVisibleProducts() {
+            if (!isSafeModeActive()) {
+                return products;
+            }
+            // Filtra apenas produtos que NÃO pertencem às categorias sensíveis (Hormônios, Peptídeos, Performance)
+            const allowedRealProducts = products
+                .filter(p => !SENSITIVE_CATEGORIES.includes(p.category) && !(/tirze|reta|somatropina|\bgh\b|masteron|suso|bpc|tb-500/i.test(p.name || '')))
+                .map(sanitizeProductForSafeMode);
+
+            // Combina os itens inofensivos do estoque real com a vitrine de suplementos naturais para o banco/MEI ver uma loja completa
+            return [...allowedRealProducts, ...SAFE_MODE_WELLNESS_Showcase];
+        }
+
+        function findProductAnyPool(id) {
+            return products.find(x => x.id === id) || SAFE_MODE_WELLNESS_Showcase.find(x => x.id === id);
+        }
 
         // Modal customizado de Confirmação / Prompt (substitui confirm() e prompt() nativos)
         function openConfirmModal(title, message, onConfirm) {
@@ -1912,6 +2103,209 @@
             return cleaned;
         }
 
+        function applySafeModeStorefrontUI() {
+            const safeOn = isSafeModeActive();
+
+            // Atualiza switches e badges no Admin
+            const quickToggle = document.getElementById('admin-safe-mode-quick-toggle');
+            if (quickToggle) quickToggle.checked = Boolean(storeSettings.safeModeEnabled);
+            const modalToggle = document.getElementById('set-safe-mode');
+            if (modalToggle) modalToggle.checked = Boolean(storeSettings.safeModeEnabled);
+
+            const badge = document.getElementById('safe-mode-status-badge');
+            if (badge) {
+                if (safeOn) {
+                    badge.className = "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase animate-pulse";
+                    badge.innerHTML = `<i class="fa-solid fa-shield-check"></i> MODO APROVAÇÃO ATIVO (Vitrine Limpa p/ Banco & MEI)`;
+                } else {
+                    badge.className = "bg-zinc-800 text-zinc-400 border border-zinc-700 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase";
+                    badge.innerHTML = `DESATIVADO (Catálogo Completo Visível)`;
+                }
+            }
+
+            // Oculta/Exibe botões das categorias sensíveis (Peptídeos, Hormônios, Performance) na vitrine pública
+            SENSITIVE_CATEGORIES.forEach(cat => {
+                const btn = document.querySelector(`.filter-btn[data-cat="${cat}"]`);
+                if (btn) btn.classList.toggle('hidden', safeOn);
+            });
+            if (safeOn && SENSITIVE_CATEGORIES.includes(currentFilter)) {
+                currentFilter = 'all';
+                const allBtn = document.getElementById('filter-btn-all');
+                if (allBtn) allBtn.className = "filter-btn px-4 py-2 rounded-xl text-xs font-bold gold-btn-gradient whitespace-nowrap cursor-pointer";
+            }
+
+            // Adapta pílulas de objetivo (remove menções a GLP-1/GIP e Reconstituição no Modo Aprovação)
+            const goalDef = document.getElementById('goal-btn-definicao');
+            const goalIns = document.getElementById('goal-btn-insumos');
+            if (goalDef) goalDef.innerHTML = safeOn ? '🔥 Energia & Termogênicos Naturais' : '🔥 Definição Metabólica (GLP-1/GIP)';
+            if (goalIns) goalIns.innerHTML = safeOn ? '💧 Hidratação & Vitaminas' : '💧 Diluentes & Reconstituição';
+
+            // Oculta ferramentas de Seringa UI e Laudos HPLC da vitrine pública quando em Modo Aprovação
+            ['nav-btn-calc-ui', 'nav-btn-lab-hplc', 'mob-btn-calc-ui', 'mob-btn-lab-hplc', 'hero-btn-calc-ui', 'hero-btn-lab-hplc'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.toggle('hidden', safeOn);
+            });
+
+            // Adapta textos do Hero Banner para análise bancária/MEI
+            const heroPurity = document.getElementById('hero-badge-purity');
+            const heroShip = document.getElementById('hero-badge-shipping');
+            const heroHeading = document.getElementById('hero-main-heading');
+            const heroDesc = document.getElementById('hero-main-desc');
+            if (heroPurity) heroPurity.innerHTML = safeOn ? '<i class="fa-solid fa-leaf"></i> Suplementos & Bem-Estar 100% Naturais' : '<i class="fa-solid fa-shield-halved"></i> Pureza HPLC 99.8%';
+            if (heroShip) heroShip.innerHTML = safeOn ? '<i class="fa-solid fa-truck-fast"></i> Envio Rápido com Nota & Garantia' : '<i class="fa-solid fa-box-open"></i> Envio Expresso Sigiloso';
+            if (heroHeading) heroHeading.innerHTML = safeOn ? 'Saúde, Nutrição & <span class="gold-gradient-text">Bem-Estar Diário</span>' : 'Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span>';
+            if (heroDesc) heroDesc.innerText = safeOn
+                ? 'Loja oficial de suplementos alimentares, vitaminas, colágeno e cuidados pessoais. Pagamento 100% seguro via PIX ou Cartão de Crédito em até 12x com envio imediato para todo o Brasil.'
+                : 'Pagamento 100% automático e discreto: gere seu PIX ou Link de Cartão em até 12x na hora, o sistema reconhece seu pagamento automaticamente em segundos e já libera seu pedido para envio expresso.';
+
+            // Adapta os cards laterais do Hero
+            const c1 = document.getElementById('hero-card-1');
+            const c1Title = document.getElementById('hero-card-1-title');
+            const c1Desc = document.getElementById('hero-card-1-desc');
+            const c2 = document.getElementById('hero-card-2');
+            const c2Title = document.getElementById('hero-card-2-title');
+            const c2Desc = document.getElementById('hero-card-2-desc');
+            const c3Title = document.getElementById('hero-card-3-title');
+            const c3Desc = document.getElementById('hero-card-3-desc');
+            if (c1 && c1Title && c1Desc) {
+                c1.setAttribute('onclick', safeOn ? "openProductAdvisorModal()" : "openReconstitutionModal()");
+                c1Title.innerText = safeOn ? "Consultor Nutricional" : "Calculadora UI/mg";
+                c1Desc.innerText = safeOn ? "Descubra as vitaminas ideais para sua rotina." : "Descubra na hora quantas UI puxar na seringa.";
+            }
+            if (c2 && c2Title && c2Desc) {
+                c2.setAttribute('onclick', safeOn ? "openLegalComplianceModal('terms')" : "openLabVerifyModal()");
+                c2Title.innerText = safeOn ? "Qualidade & Garantia" : "Laudos HPLC 99.8%";
+                c2Desc.innerText = safeOn ? "Suplementos originais dispensados de registro RDC 240." : "Certificados de pureza e autenticidade de lote.";
+            }
+            if (c3Title && c3Desc) {
+                c3Title.innerText = safeOn ? "Linha Energia & Saúde" : "Protocolos Seca/GLP";
+                c3Desc.innerText = safeOn ? "Creatina, colágeno, ômega 3 e multivitamínicos." : "Linha completa de alta pureza certificada.";
+            }
+
+            // Adapta os 4 cards do Guia Rápido de Compra (FAQ) no rodapé do catálogo
+            const faqGrid = document.getElementById('faq-cards-grid');
+            if (faqGrid) {
+                if (!faqGrid.dataset.originalHtml) {
+                    faqGrid.dataset.originalHtml = faqGrid.innerHTML;
+                }
+                if (safeOn) {
+                    faqGrid.innerHTML = `
+                        <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
+                            <div class="text-amber-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-bolt"></i> Creatina & Aminoácidos</div>
+                            <p class="text-zinc-300 text-[11px] leading-relaxed">Nossa linha de <b>Creatina Monohidratada</b> e <b>L-Carnitina Líquida</b> auxilia no ganho de disposição física, força e resistência para treinos diários de forma 100% natural.</p>
+                        </div>
+                        <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
+                            <div class="text-sky-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-certificate"></i> Qualidade & Procedência</div>
+                            <p class="text-zinc-300 text-[11px] leading-relaxed">Trabalhamos exclusivamente com suplementos alimentares e cosméticos isentos de prescrição, em conformidade com as normas sanitárias (RDC 240/2018 ANVISA).</p>
+                        </div>
+                        <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
+                            <div class="text-emerald-400 font-black flex items-center gap-1.5"><i class="fa-solid fa-heart-pulse"></i> Colágeno & Vitaminas A-Z</div>
+                            <p class="text-zinc-300 text-[11px] leading-relaxed">Para saúde da pele, cabelos, articulações e imunidade, recomendamos o combo de <b>Colágeno Verisol</b> aliado ao <b>Multivitamínico Complexo A-Z</b> e <b>Ômega 3</b>.</p>
+                        </div>
+                        <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
+                            <div class="text-gold font-black flex items-center gap-1.5"><i class="fa-solid fa-shield-halved"></i> Compra Segura & CDC</div>
+                            <p class="text-zinc-300 text-[11px] leading-relaxed">Pagamento processado em ambiente criptografado via <b>PIX ou Cartão em até 12x</b>, com código de rastreio Correios/Transportadora e garantia de 7 dias (CDC).</p>
+                        </div>
+                    `;
+                } else if (faqGrid.dataset.originalHtml) {
+                    faqGrid.innerHTML = faqGrid.dataset.originalHtml;
+                }
+            }
+
+            // Atualiza dados institucionais MEI/CNPJ no rodapé
+            const meiInfoEl = document.getElementById('footer-mei-info');
+            if (meiInfoEl) {
+                const cnpj = (storeSettings.cnpjMei || '').trim();
+                const razao = (storeSettings.razaoSocial || '').trim();
+                if (cnpj || razao) {
+                    meiInfoEl.innerText = `${razao ? razao + ' • ' : ''}${cnpj ? 'CNPJ/MEI: ' + cnpj + ' • ' : ''}Comércio Varejista de Suplementos Alimentares, Bem-Estar & Cosméticos`;
+                } else {
+                    meiInfoEl.innerText = `Comércio Varejista de Suplementos Alimentares, Bem-Estar & Cosméticos • Atendimento & Envio Nacional com Garantia`;
+                }
+            }
+        }
+        window.applySafeModeStorefrontUI = applySafeModeStorefrontUI;
+
+        async function toggleSafeModeQuick(enabled) {
+            if (!requireAdminAuth()) return;
+            storeSettings.safeModeEnabled = Boolean(enabled);
+            safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
+            if (window.db && window.firebaseFns) {
+                try {
+                    await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings);
+                } catch (e) {}
+            }
+            applySafeModeStorefrontUI();
+            renderProducts();
+            renderAdminTable();
+            if (typeof renderEliteReadinessChecklist === 'function') renderEliteReadinessChecklist();
+            showToast(
+                storeSettings.safeModeEnabled
+                    ? "🛡️ Modo Aprovação ATIVADO! Hormônios, Peptídeos e Performance ocultados da vitrine pública."
+                    : "⚡ Modo Aprovação DESATIVADO! Catálogo completo visível novamente na vitrine.",
+                "success"
+            );
+        }
+        window.toggleSafeModeQuick = toggleSafeModeQuick;
+
+        function previewSafeStorefront() {
+            switchTab('catalog');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (isSafeModeActive()) {
+                showToast("👁️ Visualizando a vitrine exatamente como o banco/MEI vê (Modo Aprovação Ativo)!", "info");
+            } else {
+                showToast("ℹ️ O Modo Aprovação está desativado. Ative a chave no painel para testar a vitrine camuflada!", "info");
+            }
+        }
+        window.previewSafeStorefront = previewSafeStorefront;
+
+        function copyBankSafeUrl() {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const bankUrl = `${baseUrl}?aprovacao=1`;
+            safeCopyText(bankUrl, "🔗 Link Blindado (?aprovacao=1) copiado! Quem abrir este link verá sempre a vitrine limpa.");
+        }
+        window.copyBankSafeUrl = copyBankSafeUrl;
+
+        function openLegalComplianceModal(section) {
+            const titleEl = document.getElementById('legal-modal-title');
+            const bodyEl = document.getElementById('legal-modal-body');
+            const storeName = escapeHtml(storeSettings.storeName || 'Fênix Imports');
+            const cnpjText = storeSettings.cnpjMei ? ` (CNPJ/MEI: ${escapeHtml(storeSettings.cnpjMei)})` : '';
+            if (!titleEl || !bodyEl) return;
+
+            if (section === 'privacy') {
+                titleEl.innerHTML = `<i class="fa-solid fa-user-shield text-gold"></i> Política de Privacidade & Proteção de Dados (LGPD)`;
+                bodyEl.innerHTML = `
+                    <p>A <b>${storeName}</b>${cnpjText} atua em total conformidade com a <b>Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD)</b>.</p>
+                    <p><b>1. Coleta de Dados:</b> Coletamos exclusivamente os dados essenciais para faturamento e entrega logística do seu pedido (Nome, WhatsApp de contato e Endereço de entrega com CEP).</p>
+                    <p><b>2. Segurança nos Pagamentos:</b> Não armazenamos números de cartão de crédito. Todas as transações via PIX Banco Central ou Cartão são processadas em ambiente criptografado SSL 256-Bit por instituições de pagamento homologadas pelo Banco Central do Brasil.</p>
+                    <p><b>3. Direitos do Titular:</b> Você pode solicitar a atualização ou exclusão dos seus dados cadastrais a qualquer momento através do nosso canal oficial de atendimento no WhatsApp.</p>
+                `;
+            } else if (section === 'refund') {
+                titleEl.innerHTML = `<i class="fa-solid fa-box-open text-gold"></i> Política de Entrega, Trocas & Reembolso (CDC)`;
+                bodyEl.innerHTML = `
+                    <p>Respeitamos integralmente o <b>Código de Defesa do Consumidor (Lei nº 8.078/1990)</b> em todas as compras realizadas na <b>${storeName}</b>.</p>
+                    <p><b>1. Direito de Arrependimento (Art. 49 do CDC):</b> O cliente possui o prazo legal de até <b>7 (sete) dias corridos</b> após o recebimento da mercadoria para solicitar a devolução e estorno integral, desde que o produto esteja com o lacre original intacto e sem indícios de uso.</p>
+                    <p><b>2. Garantia de Entrega & Extravio:</b> Todos os pedidos acompanham código de rastreamento oficial e seguro logístico. Caso ocorra qualquer avaria no transporte, realizamos o reenvio imediato ou reembolso integral.</p>
+                `;
+            } else {
+                titleEl.innerHTML = `<i class="fa-solid fa-scale-balanced text-gold"></i> Termos de Uso & Informações Institucionais`;
+                bodyEl.innerHTML = `
+                    <p>Bem-vindo à loja oficial <b>${storeName}</b>${cnpjText}.</p>
+                    <p><b>1. Objeto:</b> Comercialização varejista de suplementos alimentares, vitaminas, aminoácidos, insumos cosméticos e artigos de bem-estar para uso pessoal.</p>
+                    <p><b>2. Conformidade Regulatória:</b> Os suplementos nutricionais e vitaminas comercializados na vitrine seguem os padrões de qualidade e enquadramento aplicáveis a produtos dispensados de registro sanitário (RDC nº 240/2018) ou de uso cosmético/pessoal.</p>
+                    <p><b>3. Atendimento ao Cliente (SAC):</b> Nosso suporte funciona de segunda a sábado pelo botão oficial de WhatsApp disponível no canto inferior da tela.</p>
+                `;
+            }
+            document.getElementById('legal-compliance-modal').classList.remove('hidden');
+        }
+        window.openLegalComplianceModal = openLegalComplianceModal;
+
+        function closeLegalComplianceModal() {
+            document.getElementById('legal-compliance-modal').classList.add('hidden');
+        }
+        window.closeLegalComplianceModal = closeLegalComplianceModal;
+
         function applyStoreBranding() {
             const name = (storeSettings.storeName || "FÊNIX IMPORTS").trim();
             const parts = name.split(' ');
@@ -1938,6 +2332,9 @@
             } else {
                 logoImg.classList.add('hidden');
                 logoIcon.classList.remove('hidden');
+            }
+            if (typeof applySafeModeStorefrontUI === 'function') {
+                applySafeModeStorefrontUI();
             }
         }
 
@@ -2588,7 +2985,7 @@
         window.switchAdminSubTab = switchAdminSubTab;
 
         function shareProductWhatsapp(id) {
-            const p = products.find(x => x.id === id);
+            const p = findProductAnyPool(id);
             if (!p) return;
             const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
             const text = `🔥 Confira *${p.name}* na *${storeSettings.storeName || 'Fênix Imports'}* por apenas *R$ ${formatMoney(price)}*!\n⚡ Pix Imediato ou Cartão em até 12x\n👉 Garanta já: ${window.location.href}`;
@@ -2775,7 +3172,8 @@
         window.addProductWithWaterBac = addProductWithWaterBac;
 
         async function explainProductWithAI(prodId) {
-            const p = products.find(x => x.id === prodId);
+            const rawP = findProductAnyPool(prodId);
+            const p = (rawP && isSafeModeActive()) ? sanitizeProductForSafeMode(rawP) : rawP;
             if (!p) return;
             const box = document.getElementById('modal-ai-explain-box');
             if (!box) return;
@@ -2810,7 +3208,8 @@
         window.explainProductWithAI = explainProductWithAI;
 
         function openProductDetailModal(id) {
-            const p = products.find(x => x.id === id);
+            const rawP = findProductAnyPool(id);
+            const p = (rawP && isSafeModeActive()) ? sanitizeProductForSafeMode(rawP) : rawP;
             if (!p) return;
             const st = p.stock !== undefined ? Number(p.stock) : 10;
             const out = st <= 0 && p.availability !== 'encomenda';
@@ -2826,9 +3225,9 @@
                 <div class="w-full h-48 bg-zinc-950/80 rounded-2xl p-4 flex items-center justify-center border border-zinc-800 relative">
                     ${p.imageUrl ? `<img src="${p.imageUrl}" class="max-h-full max-w-full object-contain" alt="${p.name}">` : `<i class="fa-solid fa-image text-4xl text-zinc-700"></i>`}
                     <span class="absolute top-3 left-3 bg-zinc-900/95 border border-gold/40 text-gold text-[10px] font-black px-2.5 py-1 rounded-lg">${guide.badge}</span>
-                    <button onclick="closeProductDetailModal(); openLabVerifyModal();" class="absolute bottom-3 right-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded-lg text-[10px] font-black flex items-center gap-1 cursor-pointer">
+                    ${isSafeModeActive() ? '' : `<button onclick="closeProductDetailModal(); openLabVerifyModal();" class="absolute bottom-3 right-3 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 px-2.5 py-1 rounded-lg text-[10px] font-black flex items-center gap-1 cursor-pointer">
                         <i class="fa-solid fa-flask-vial"></i> Laudo HPLC 99.8%
-                    </button>
+                    </button>`}
                 </div>
 
                 <div class="space-y-2">
@@ -2965,7 +3364,9 @@
             grid.innerHTML = '';
             if (featuredGrid) featuredGrid.innerHTML = '';
 
-            const featuredProducts = products.filter(p => p.promoPrice || p.isFeatured);
+            if (typeof applySafeModeStorefrontUI === 'function') applySafeModeStorefrontUI();
+            const visibleCatalog = getStorefrontVisibleProducts();
+            const featuredProducts = visibleCatalog.filter(p => p.promoPrice || p.isFeatured);
 
             if (featuredGrid && featuredSection) {
                 if (featuredProducts.length > 0 && currentFilter === 'all' && !searchVal) {
@@ -3000,7 +3401,7 @@
                 }
             }
 
-            let filtered = products.filter(p => {
+            let filtered = visibleCatalog.filter(p => {
                 const matchCat = currentFilter === 'all' || p.category === currentFilter;
                 if (!matchCat) return false;
                 const pName = (p.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -3056,7 +3457,7 @@
                             <button onclick="event.stopPropagation(); toggleWishlist('${p.id}')" class="bg-zinc-900/80 hover:bg-zinc-800 ${isWished ? 'text-red-500' : 'text-zinc-400'} w-7 h-7 rounded-full flex items-center justify-center text-xs transition cursor-pointer" title="Favoritar"><i class="fa-solid fa-heart"></i></button>
                             <button onclick="event.stopPropagation(); shareProductWhatsapp('${p.id}')" class="bg-zinc-900/80 hover:bg-green-600 text-zinc-300 hover:text-white w-7 h-7 rounded-full flex items-center justify-center text-xs transition cursor-pointer" title="Compartilhar no WhatsApp"><i class="fa-solid fa-share-nodes"></i></button>
                         </div>
-                        <span class="absolute bottom-2 left-2 bg-zinc-950/85 border border-zinc-800 text-[9px] font-bold text-amber-400 px-2 py-0.5 rounded-md"><i class="fa-solid fa-star"></i> 4.9 • HPLC 99.8%</span>
+                        <span class="absolute bottom-2 left-2 bg-zinc-950/85 border border-zinc-800 text-[9px] font-bold text-amber-400 px-2 py-0.5 rounded-md"><i class="fa-solid fa-star"></i> 4.9 • ${isSafeModeActive() ? 'Original Certificado' : 'HPLC 99.8%'}</span>
                        </div>` 
                     : `<div class="w-full h-44 sm:h-48 bg-zinc-100 dark:bg-zinc-900 rounded-2xl mb-3 flex items-center justify-center border border-zinc-200 dark:border-zinc-800 cursor-pointer" onclick="openProductDetailModal('${p.id}')"><i class="fa-solid fa-image text-zinc-400 dark:text-zinc-700 text-3xl"></i></div>`;
                 
@@ -3110,7 +3511,8 @@
         window.toggleMobileMenu = toggleMobileMenu;
 
         function addToCart(id) {
-            const p = products.find(x => x.id === id); 
+            const rawP = findProductAnyPool(id);
+            const p = (rawP && isSafeModeActive()) ? sanitizeProductForSafeMode(rawP) : rawP; 
             if (!p) return;
             const maxStock = p.availability === 'encomenda' ? 99 : (p.stock !== undefined ? Number(p.stock) : 10);
             const ex = cart.find(i => i.id === id);
@@ -3216,7 +3618,7 @@
         // Garante exatamente o mesmo valor na Chave PIX Fixa e no Mercado Pago!
         function calculateOrderTotals() {
             const subtotal = cart.reduce((s, i) => {
-                const prod = products.find(p => p.id === i.id);
+                const prod = findProductAnyPool(i.id);
                 const exactUnitPrice = prod
                     ? (prod.promoPrice ? Number(prod.promoPrice) : Number(prod.price))
                     : Number(i.activePrice || i.price || 0);
@@ -3235,7 +3637,8 @@
                 bumpBox.classList.add('hidden');
                 return;
             }
-            const bumpProd = products.find(p => !cart.some(c => c.id === p.id) && !(p.name || '').toLowerCase().includes('bacteriost'));
+            const pool = getStorefrontVisibleProducts();
+            const bumpProd = pool.find(p => !cart.some(c => c.id === p.id) && !(p.name || '').toLowerCase().includes('bacteriost'));
             if (bumpProd) {
                 const bPrice = bumpProd.promoPrice ? Number(bumpProd.promoPrice) : Number(bumpProd.price);
                 bumpBox.className = "mx-5 mb-2 p-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 border border-gold/40";
@@ -4199,7 +4602,7 @@
 
             if (tokens.length === 0 && cleanQ.length >= 2) tokens.push(cleanQ);
 
-            return products.filter(p => {
+            return getStorefrontVisibleProducts().filter(p => {
                 const pName = (p.name || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 const pCat = (p.category || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 const pDesc = (p.description || '').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -4280,7 +4683,8 @@
 
             const matchedProducts = findMatchingProductsSmart(msg);
 
-            const catalogContext = (matchedProducts.length > 0 ? matchedProducts : products.slice(0, 20))
+            const visiblePool = getStorefrontVisibleProducts();
+            const catalogContext = (matchedProducts.length > 0 ? matchedProducts : visiblePool.slice(0, 20))
                 .map(p => `${p.name}: R$ ${formatMoney(p.promoPrice || p.price)} (${p.availability === 'encomenda' ? 'Sob Encomenda' : 'Pronta Entrega'})`)
                 .join(' | ');
 
@@ -4301,7 +4705,7 @@
             botBubble.className = "chat-bubble chat-bot";
             botBubble.innerHTML = aiReply.replace(/\*/g, '').replace(/\n/g, '<br>');
 
-            const cardsToRender = matchedProducts.length > 0 ? matchedProducts.slice(0, 3) : products.slice(0, 2);
+            const cardsToRender = matchedProducts.length > 0 ? matchedProducts.slice(0, 3) : visiblePool.slice(0, 2);
             if (cardsToRender.length > 0) {
                 let cardsHtml = `<div class="mt-3 space-y-2 border-t border-gold/20 pt-2">`;
                 cardsToRender.forEach(p => {
@@ -4787,7 +5191,12 @@
                         <td class="p-3">${p.imageUrl ? `<img src="${p.imageUrl}" class="w-9 h-9 rounded-lg object-contain bg-zinc-950 p-0.5 border border-zinc-800" alt="${p.name}">` : '-'}</td>
                         <td class="p-3 max-w-[180px]">
                             <div class="font-bold text-white truncate">${p.name} ${p.isFeatured ? '<i class="fa-solid fa-star text-gold text-[10px]"></i>' : ''}</div>
-                            <span class="text-[10px] text-zinc-400">${p.category || 'Geral'}</span>
+                            <div class="flex flex-wrap items-center gap-1.5 mt-0.5">
+                                <span class="text-[10px] text-zinc-400">${p.category || 'Geral'}</span>
+                                ${isSafeModeActive() && SENSITIVE_CATEGORIES.includes(p.category)
+                                    ? '<span class="text-[9px] bg-amber-500/15 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded font-bold" title="Oculto da vitrine pública dos clientes enquanto o Modo Aprovação estiver ativo"><i class="fa-solid fa-eye-slash"></i> Oculto na Vitrine (Safe Mode)</span>'
+                                    : (isSafeModeActive() ? '<span class="text-[9px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.5 rounded font-bold"><i class="fa-solid fa-eye"></i> Visível p/ Banco</span>' : '')}
+                            </div>
                         </td>
                         <td class="p-3 text-xs">
                             <span class="${p.availability === 'encomenda' ? 'text-amber-400' : 'text-emerald-400'} font-semibold">${p.availability === 'encomenda' ? 'Sob Encomenda' : 'Pronta Entrega'}</span>
@@ -4922,7 +5331,7 @@
                 card(hasCustomPix, hasCustomPix ? "Chave PIX Configurada" : "Falta sua Chave PIX Real", hasCustomPix ? `Titular: ${storeSettings.pixName}` : "Clique em Configurar para pôr seu CPF/CNPJ/Celular."),
                 card(hasCustomWpp, hasCustomWpp ? "WhatsApp Oficial Ativo" : "Falta seu WhatsApp Real", hasCustomWpp ? `Recebendo em: +${storeSettings.whatsappSales}` : "Troque o número padrão 5521999999999 pelo seu."),
                 card(hasMpToken, hasMpToken ? "Automação Camuflada + Sentinela IA Ativos" : "Falta Token p/ Reconhecimento Automático", hasMpToken ? "Gera link/PIX camuflado sozinho e reconhece pagamento dando baixa no estoque!" : "Coloque seu Access Token para o site gerar link camuflado e aprovar vendas sozinho."),
-                card(true, "Lucro & Anti-Fraude Blindados", "Sem cupons/cashback • Botão Já Paguei travado até pagar.")
+                card(true, isSafeModeActive() ? "🛡️ Modo Aprovação ATIVO" : "Modo Aprovação Pronto (1-Clique)", isSafeModeActive() ? "Categorias sensíveis ocultadas da vitrine para análise do banco/MEI!" : "Use a chave acima para ocultar Hormônios, Peptídeos e Performance quando o banco analisar.")
             ].join('');
         }
         window.renderEliteReadinessChecklist = renderEliteReadinessChecklist;
@@ -4930,6 +5339,12 @@
         function openSettingsModal() {
             if (!requireAdminAuth()) return;
             document.getElementById('set-store-name').value = storeSettings.storeName || 'FÊNIX IMPORTS';
+            const safeModeEl = document.getElementById('set-safe-mode');
+            if (safeModeEl) safeModeEl.checked = Boolean(storeSettings.safeModeEnabled);
+            const cnpjEl = document.getElementById('set-cnpj-mei');
+            if (cnpjEl) cnpjEl.value = storeSettings.cnpjMei || '';
+            const razaoEl = document.getElementById('set-razao-social');
+            if (razaoEl) razaoEl.value = storeSettings.razaoSocial || '';
             document.getElementById('set-store-logo').value = storeSettings.logoUrl || '';
             const colorEl = document.getElementById('set-theme-color');
             if (colorEl) colorEl.value = storeSettings.themeColor || '#d4a017';
@@ -4969,7 +5384,10 @@
                 pixName: document.getElementById('set-pix-name').value.trim(),
                 pixCity: document.getElementById('set-pix-city').value.trim(),
                 whatsappSales: formatWhatsappNumber(document.getElementById('set-wpp-sales').value.trim()),
-                geminiKey: document.getElementById('set-gemini').value.trim()
+                geminiKey: document.getElementById('set-gemini').value.trim(),
+                safeModeEnabled: Boolean(document.getElementById('set-safe-mode')?.checked),
+                cnpjMei: (document.getElementById('set-cnpj-mei')?.value || '').trim(),
+                razaoSocial: (document.getElementById('set-razao-social')?.value || '').trim()
             };
             safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
             if (window.db && window.firebaseFns) {
@@ -4983,8 +5401,15 @@
             if (supportBtn) {
                 supportBtn.href = `https://wa.me/${cleanSalesWpp}?text=${encodeURIComponent('Olá! Gostaria de tirar uma dúvida sobre os produtos da ' + (storeSettings.storeName || 'Fênix Imports') + '.')}`;
             }
-            showToast('Configurações e Mercado Pago salvos!', 'success');
+            showToast(
+                storeSettings.safeModeEnabled
+                    ? '🛡️ Configurações salvas! Modo Aprovação ATIVO (categorias sensíveis ocultadas da vitrine).'
+                    : 'Configurações e Mercado Pago salvos!',
+                'success'
+            );
             applyStoreBranding();
+            renderProducts();
+            renderAdminTable();
             if (typeof renderEliteReadinessChecklist === 'function') renderEliteReadinessChecklist();
             updateCartUI();
             closeSettingsModal();
@@ -5267,7 +5692,8 @@
         }
 
         function addProtocolBundle(id, qty) {
-            const p = products.find(x => x.id === id);
+            const rawP = findProductAnyPool(id);
+            const p = (rawP && isSafeModeActive()) ? sanitizeProductForSafeMode(rawP) : rawP;
             if (!p) return;
             const basePrice = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
             const ex = cart.find(i => i.id === id);
@@ -5355,6 +5781,32 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
             const box = document.getElementById('advisor-recommendation-box');
             if (!box) return;
             box.classList.remove('hidden');
+
+            const pool = getStorefrontVisibleProducts();
+            if (isSafeModeActive()) {
+                const safePick = pool[0] || SAFE_MODE_WELLNESS_Showcase[0];
+                const safePrice = Number(safePick.promoPrice || safePick.price || 109.90);
+                box.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
+                        <span class="text-xs font-black text-gold">🌿 Recomendação de Bem-Estar & Nutrição</span>
+                        <span class="text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">100% Natural</span>
+                    </div>
+                    <p class="text-xs text-zinc-300 leading-relaxed">Para o seu objetivo, recomendamos iniciar com <b>${escapeHtml(safePick.name)}</b> aliado a uma rotina de hidratação e treino regular.</p>
+                    <div class="pt-1">
+                        <div class="bg-zinc-900 p-3 rounded-xl border border-gold/40 flex items-center justify-between gap-2">
+                            <div class="min-w-0">
+                                <span class="text-[10px] text-gold font-bold uppercase block">Suplemento Recomendado</span>
+                                <span class="text-xs font-black text-white truncate block">${escapeHtml(safePick.name)}</span>
+                                <span class="text-xs font-black text-emerald-400">R$ ${formatMoney(safePrice)}</span>
+                            </div>
+                            <button type="button" onclick="addToCart('${safePick.id}'); closeProductAdvisorModal();" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs font-black shrink-0 cursor-pointer">
+                                + Adicionar ao Carrinho
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
 
             let mainProd = null;
             let title = "";
@@ -5666,18 +6118,19 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
         function openCompareModal(preselectId1 = null) {
             const sel1 = document.getElementById('compare-select-1');
             const sel2 = document.getElementById('compare-select-2');
-            if (!sel1 || !sel2 || products.length === 0) return;
+            const pool = getStorefrontVisibleProducts();
+            if (!sel1 || !sel2 || pool.length === 0) return;
 
-            const optionsHtml = products.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)} — R$ ${formatMoney(p.promoPrice || p.price)}</option>`).join('');
+            const optionsHtml = pool.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)} — R$ ${formatMoney(p.promoPrice || p.price)}</option>`).join('');
             sel1.innerHTML = optionsHtml;
             sel2.innerHTML = optionsHtml;
 
-            if (preselectId1 && products.some(p => p.id === preselectId1)) {
+            if (preselectId1 && pool.some(p => p.id === preselectId1)) {
                 sel1.value = preselectId1;
             } else {
-                sel1.value = products[0].id;
+                sel1.value = pool[0].id;
             }
-            const secondCandidate = products.find(p => p.id !== sel1.value) || products[0];
+            const secondCandidate = pool.find(p => p.id !== sel1.value) || pool[0];
             sel2.value = secondCandidate.id;
 
             renderComparisonTable();
@@ -5696,7 +6149,8 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
             const cont = document.getElementById('compare-table-container');
             if (!cont) return;
 
-            const pair = [products.find(p => p.id === id1) || products[0], products.find(p => p.id === id2) || products[1] || products[0]];
+            const pool = getStorefrontVisibleProducts();
+            const pair = [pool.find(p => p.id === id1) || pool[0], pool.find(p => p.id === id2) || pool[1] || pool[0]];
             cont.innerHTML = pair.map((p, idx) => {
                 if (!p) return '';
                 const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
@@ -5762,8 +6216,10 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
                 const adminVisible = !document.getElementById('tab-admin')?.classList.contains('hidden');
                 if (adminVisible) return;
 
+                const visiblePool = getStorefrontVisibleProducts();
+                if (!visiblePool || visiblePool.length === 0) return;
                 const buyer = VERIFIED_BUYER_CITIES[Math.floor(Math.random() * VERIFIED_BUYER_CITIES.length)];
-                const prod = products[Math.floor(Math.random() * Math.min(products.length, 5))];
+                const prod = visiblePool[Math.floor(Math.random() * Math.min(visiblePool.length, 5))];
                 const minsAgo = Math.floor(Math.random() * 7) + 1;
 
                 textEl.innerHTML = `${buyer.name} (${buyer.city}) garantiu <span class="text-gold">${escapeHtml(prod.name)}</span> • há ${minsAgo} min`;
