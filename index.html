@@ -191,7 +191,7 @@
     <!-- Banner Topo -->
     <div id="top-announcement-bar" class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
         <i class="fa-solid fa-bolt text-sm"></i> 
-        <span id="top-announcement-text">LOJA OFICIAL CERTIFICADA • SUPLEMENTOS, VITAMINAS & BEM-ESTAR • PIX & CARTÃO EM ATÉ 12X</span>
+        <span id="top-announcement-text">APROVAÇÃO 100% AUTOMÁTICA • PIX & CARTÃO EM ATÉ 12X • ENVIO EXPRESSO SIGILOSO</span>
     </div>
 
     <!-- Header Glassmorphism -->
@@ -207,7 +207,7 @@
                 </div>
                 <div class="min-w-0">
                     <span id="header-store-name" class="text-base sm:text-2xl font-black tracking-tight text-white block leading-none">FÊNIX <span class="text-gold">IMPORTS</span></span>
-                    <span id="header-store-subtitle" class="text-[9px] sm:text-[11px] text-zinc-400 font-bold tracking-widest uppercase block mt-1">Saúde, Nutrição & Bem-Estar</span>
+                    <span id="header-store-subtitle" class="text-[9px] sm:text-[11px] text-zinc-400 font-bold tracking-widest uppercase block mt-1">Alta Performance</span>
                 </div>
             </div>
 
@@ -460,7 +460,7 @@
                     <div>
                         <div class="flex flex-wrap items-center gap-2">
                             <h4 class="text-xs sm:text-base font-black text-white uppercase tracking-wider">Interruptor Secreto: Modo Aprovação / Camuflagem (Safe Mode)</h4>
-                            <span id="safe-mode-status-badge" class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase animate-pulse">ATIVO (Vitrine Limpa p/ Banco & MEI)</span>
+                            <span id="safe-mode-status-badge" class="bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">DESATIVADO (Catálogo Real Visível p/ Clientes)</span>
                         </div>
                         <p class="text-[11px] sm:text-xs text-zinc-200 mt-1 leading-relaxed">Quando ativar essa chave e clicar em <b>Salvar</b>, o site oculta instantaneamente todas as categorias sensíveis (<b class="text-amber-300">Hormônios, Peptídeos e Performance</b>) da vitrine dos clientes, deixando apenas os itens inofensivos visíveis para o banco/MEI analisar. <b class="text-emerald-400">O seu estoque real continua 100% intacto e visível aqui no painel Admin!</b></p>
                         <div id="safe-mode-admin-counter" class="text-[10px] font-bold text-emerald-300 mt-1.5 flex flex-wrap items-center gap-2"></div>
@@ -469,7 +469,7 @@
                 <div class="flex flex-wrap items-center gap-2.5 shrink-0 w-full lg:w-auto justify-end">
                     <label class="inline-flex items-center gap-2.5 bg-zinc-950 border border-emerald-500/50 px-3.5 py-2.5 rounded-2xl cursor-pointer">
                         <span class="text-xs font-black text-white">Modo Aprovação (Safe Mode)</span>
-                        <input type="checkbox" id="admin-safe-mode-quick-toggle" checked onchange="onAdminSafeSwitchChange(this.checked)" class="sr-only peer">
+                        <input type="checkbox" id="admin-safe-mode-quick-toggle" onchange="onAdminSafeSwitchChange(this.checked)" class="sr-only peer">
                         <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all relative peer-checked:bg-emerald-500"></div>
                     </label>
                     <button type="button" onclick="saveSafeModeFromAdminCard()" class="gold-btn-gradient px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-1.5 cursor-pointer shadow-lg">
@@ -1081,18 +1081,19 @@
                 <span class="px-2.5 py-1 rounded-lg bg-zinc-900 border border-zinc-800 text-emerald-400"><i class="fa-solid fa-plane-departure mr-1"></i>Jadlog & Expresso</span>
             </div>
 
-            <!-- Opção 1: Digitar o Código de Rastreio e Ver Tudo na Hora -->
+            <!-- Opção 1: Digitar o Código de Rastreio + Redirecionamento Inteligente por Transportadora -->
             <div class="bg-zinc-950/90 border border-gold/40 rounded-2xl p-4 space-y-3 text-left shadow-inner">
                 <label class="text-xs font-black uppercase tracking-wider text-gold flex items-center justify-between">
                     <span><i class="fa-solid fa-barcode mr-1.5"></i> Digite seu Código de Rastreio:</span>
-                    <span class="text-[10px] text-emerald-400 font-bold">Leitura Instantânea</span>
+                    <span class="text-[10px] text-emerald-400 font-bold"><i class="fa-solid fa-wand-magic-sparkles"></i> Detecta a Transportadora Sozinho</span>
                 </label>
                 <div class="flex flex-col sm:flex-row gap-2">
-                    <input type="text" id="track-code-input" onkeydown="if(event.key==='Enter') trackByCode17Track()" placeholder="Ex: 888031000805873, QN123456789BR, BR24..." class="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-white font-mono uppercase focus:border-gold outline-none">
+                    <input type="text" id="track-code-input" oninput="previewDetectedCarrierBadge(this.value)" onkeydown="if(event.key==='Enter') trackByCode17Track()" placeholder="Ex: 888031000805873, QN123456789BR, BR24..." class="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-white font-mono uppercase focus:border-gold outline-none">
                     <button type="button" onclick="trackByCode17Track()" class="gold-btn-gradient px-5 py-3 rounded-xl text-xs sm:text-sm font-black flex items-center justify-center gap-2 shrink-0 cursor-pointer">
                         <i class="fa-solid fa-magnifying-glass-location"></i> Ver Onde Está Agora
                     </button>
                 </div>
+                <div id="live-carrier-detect-pill" class="hidden text-[11px] pt-1"></div>
             </div>
 
             <!-- Painel Nativo de Resultados e Linha do Tempo (100% Dentro do Nosso Site) -->
@@ -1134,9 +1135,23 @@
                 <!-- Sugestão de Item Complementar (Compre Junto sem desconto) -->
                 <div id="cart-order-bump" class="mx-5 mb-2 p-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 border border-gold/40 hidden"></div>
                 <div class="p-5 border-t border-zinc-800 bg-zinc-950/80 space-y-3">
+                    <!-- Simulador Rápido de Frete e Prazo por CEP direto no Carrinho -->
+                    <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3 space-y-2">
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="font-bold text-zinc-200 flex items-center gap-1.5"><i class="fa-solid fa-truck-fast text-gold"></i> Calcular Frete & Prazo no CEP:</span>
+                            <span id="cart-cep-region-badge" class="text-[10px] font-bold text-emerald-400">Expresso c/ Seguro</span>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <input type="text" id="cart-cep-input" placeholder="Digite seu CEP (Ex: 20040-002)" oninput="maskCEP(this); if(this.value.replace(/\D/g,'').length===8) calculateCartDrawerShipping();" onkeydown="if(event.key==='Enter') calculateCartDrawerShipping()" maxlength="9" class="flex-1 bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-1.5 text-xs text-white font-mono focus:border-gold outline-none">
+                            <button type="button" onclick="calculateCartDrawerShipping()" id="btn-cart-calc-cep" class="bg-zinc-800 hover:bg-zinc-700 text-gold border border-gold/30 px-3 py-1.5 rounded-xl text-[11px] font-black shrink-0 cursor-pointer">
+                                Calcular
+                            </button>
+                        </div>
+                        <div id="cart-cep-result-text" class="hidden text-[10px] text-emerald-400 font-semibold leading-snug"></div>
+                    </div>
                     <div class="space-y-1.5 pt-1">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal dos Produtos</span><span id="cart-subtotal">R$ 0,00</span></div>
-                        <div class="flex justify-between text-xs text-zinc-400"><span>Frete Expresso</span><span id="cart-shipping-cost">R$ 0,00</span></div>
+                        <div class="flex justify-between text-xs text-zinc-400"><span id="cart-shipping-label">Frete Expresso</span><span id="cart-shipping-cost">R$ 0,00</span></div>
                         <div class="flex justify-between text-base font-black text-white pt-2 border-t border-zinc-800"><span>Total Final</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
                     <button onclick="proceedToCheckout()" class="w-full gold-btn-gradient py-3.5 rounded-2xl flex justify-center items-center gap-2 text-xs sm:text-sm tracking-wider uppercase cursor-pointer">
@@ -1900,8 +1915,9 @@
             removeBgKey: "",
             pushNotificationsEnabled: true,
             autoApproveReceipts: true,
-            safeModeEnabled: true,
+            safeModeEnabled: false,
             safeModeV2Ready: true,
+            realCatalogDefaultV3: true,
             cnpjMei: "",
             razaoSocial: ""
         };
@@ -2460,10 +2476,10 @@
             if (!requireAdminAuth()) return;
             storeSettings.safeModeEnabled = Boolean(enabled);
             storeSettings.safeModeV2Ready = true;
-            safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
+            safeSetStorage('fenix_store_settings', JSON.stringify(buildPublicStoreSettingsPayload(storeSettings)));
             if (window.db && window.firebaseFns) {
                 try {
-                    await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings);
+                    await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), buildPublicStoreSettingsPayload(storeSettings));
                 } catch (e) {}
             }
             applySafeModeStorefrontUI();
@@ -2592,7 +2608,11 @@
                     const c = JSON.parse(savedCust);
                     if (c.name) document.getElementById('cust-name').value = c.name;
                     if (c.whatsapp) document.getElementById('cust-whatsapp').value = c.whatsapp;
-                    if (c.cep) document.getElementById('cust-cep').value = c.cep;
+                    if (c.cep) {
+                        document.getElementById('cust-cep').value = c.cep;
+                        const cartCepInput = document.getElementById('cart-cep-input');
+                        if (cartCepInput) cartCepInput.value = c.cep;
+                    }
                     if (c.address) document.getElementById('cust-address').value = c.address;
                     if (c.number) document.getElementById('cust-number').value = c.number;
                 }
@@ -2667,6 +2687,7 @@
             // Remove qualquer resquício de modo local antigo por segurança
             try { localStorage.removeItem('fenix_local_admin'); } catch (e) {}
             initTheme();
+            if (typeof initPreviewDownloadHelperBar === 'function') initPreviewDownloadHelperBar();
             loadPersistedCartAndCustomer();
             await loadSettings();
             await loadProductsFromFirebase();
@@ -2686,7 +2707,10 @@
                         if (user && user.uid) {
                             currentUser = user;
                             resetAdminInactivityTimer();
-                            updateAuthUI();
+                            loadAdminSecretsIfAuthorized().then(() => {
+                                updateAuthUI();
+                                if (typeof renderEliteReadinessChecklist === 'function') renderEliteReadinessChecklist();
+                            });
                         } else {
                             currentUser = null;
                             updateAuthUI();
@@ -2697,6 +2721,45 @@
         }
         window.initApp = initApp;
 
+        async function loadAdminSecretsIfAuthorized() {
+            const localSecrets = safeGetStorage('fenix_admin_secrets');
+            if (localSecrets) {
+                try {
+                    const parsed = JSON.parse(localSecrets);
+                    if (parsed.mpAccessToken) storeSettings.mpAccessToken = parsed.mpAccessToken;
+                    if (parsed.removeBgKey) storeSettings.removeBgKey = parsed.removeBgKey;
+                    if (parsed.geminiKey) storeSettings.geminiKey = parsed.geminiKey;
+                } catch (e) {}
+            }
+            if (window.db && window.firebaseFns && isAdminAuthenticated()) {
+                try {
+                    const secSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "admin_secrets"));
+                    if (secSnap.exists()) {
+                        const sData = secSnap.data() || {};
+                        if (sData.mpAccessToken) storeSettings.mpAccessToken = sData.mpAccessToken;
+                        if (sData.removeBgKey) storeSettings.removeBgKey = sData.removeBgKey;
+                        if (sData.geminiKey) storeSettings.geminiKey = sData.geminiKey;
+                        safeSetStorage('fenix_admin_secrets', JSON.stringify({
+                            mpAccessToken: storeSettings.mpAccessToken || '',
+                            removeBgKey: storeSettings.removeBgKey || '',
+                            geminiKey: storeSettings.geminiKey || ''
+                        }));
+                    }
+                } catch (e) {}
+            }
+        }
+        window.loadAdminSecretsIfAuthorized = loadAdminSecretsIfAuthorized;
+
+        function buildPublicStoreSettingsPayload(settingsObj) {
+            const copy = { ...(settingsObj || storeSettings) };
+            // Blindagem de Segurança: Nunca expõe tokens privados no documento público settings/config
+            delete copy.mpAccessToken;
+            delete copy.removeBgKey;
+            delete copy.geminiKey;
+            copy.hasMercadoPagoConfigured = Boolean((settingsObj?.mpAccessToken || storeSettings.mpAccessToken || '').trim().length > 15);
+            return copy;
+        }
+
         async function loadSettings() {
             const local = safeGetStorage('fenix_store_settings');
             if (local) {
@@ -2706,19 +2769,22 @@
                 try { 
                     const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
                     if (docSnap.exists()) {
-                        storeSettings = { ...storeSettings, ...docSnap.data() };
+                        const cloudPublic = docSnap.data() || {};
+                        storeSettings = { ...storeSettings, ...cloudPublic };
                     }
                 } catch (e) {}
             }
+            await loadAdminSecretsIfAuthorized();
             
             if (storeSettings.pushNotificationsEnabled === undefined) {
                 storeSettings.pushNotificationsEnabled = true;
             }
-            if (!storeSettings.safeModeV2Ready) {
-                storeSettings.safeModeEnabled = true;
-                storeSettings.safeModeV2Ready = true;
+            // Garante que o Catálogo Real venha aberto por padrão para todos os clientes (a menos que ativado pelo Admin ou via ?aprovacao=1)
+            if (!storeSettings.realCatalogDefaultV3) {
+                storeSettings.safeModeEnabled = false;
+                storeSettings.realCatalogDefaultV3 = true;
             }
-            safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
+            safeSetStorage('fenix_store_settings', JSON.stringify(buildPublicStoreSettingsPayload(storeSettings)));
 
             const pushCb = document.getElementById('push-toggle-checkbox');
             if(pushCb) pushCb.checked = storeSettings.pushNotificationsEnabled;
@@ -3708,9 +3774,14 @@ ${directTrackUrl}`;
                                         ${oldPrice}
                                         <span class="text-sm font-black text-amber-400 block leading-none">R$ ${formatMoney(price)}</span>
                                     </div>
-                                    <button onclick="addToCart('${p.id}')" class="gold-btn-gradient text-xs px-3.5 py-2 rounded-xl font-bold flex items-center gap-1 shadow-md cursor-pointer">
-                                        <i class="fa-solid fa-bag-shopping"></i> Comprar
-                                    </button>
+                                    <div class="flex items-center gap-1.5">
+                                        <button onclick="addToCart('${p.id}', false)" class="bg-zinc-900 hover:bg-zinc-800 text-gold border border-gold/40 text-xs px-2.5 py-2 rounded-xl font-black flex items-center justify-center transition cursor-pointer" title="Adicionar ao carrinho e continuar comprando">
+                                            <i class="fa-solid fa-cart-plus"></i>
+                                        </button>
+                                        <button onclick="buyNowOneClick('${p.id}')" class="gold-btn-gradient text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1 shadow-md cursor-pointer" title="Comprar direto em 1 clique">
+                                            <i class="fa-solid fa-bolt"></i> Comprar
+                                        </button>
+                                    </div>
                                 </div>
                             </div>`;
                     });
@@ -3812,9 +3883,14 @@ ${directTrackUrl}`;
                                 ${p.promoPrice ? `<span class="text-[10px] text-zinc-500 line-through block leading-none">R$ ${formatMoney(p.price)}</span>` : `<span class="text-[9px] text-zinc-400 uppercase font-bold block leading-none">Pix ou Cartão</span>`}
                                 <span class="text-sm sm:text-base font-black ${p.promoPrice ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-gold'}">R$ ${formatMoney(price)}</span>
                             </div>
-                            <button onclick="addToCart('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed' : 'gold-btn-gradient'} text-xs px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shrink-0 font-bold cursor-pointer">
-                                <i class="fa-solid fa-bag-shopping"></i> <span>${out ? 'Esgotado' : 'Comprar'}</span>
-                            </button>
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <button onclick="addToCart('${p.id}', false)" ${out ? 'disabled' : ''} class="${out ? 'hidden' : 'bg-zinc-900 hover:bg-zinc-800 text-gold border border-gold/40'} text-xs px-2.5 py-2 rounded-xl transition flex items-center justify-center cursor-pointer" title="Adicionar ao carrinho sem sair da vitrine">
+                                    <i class="fa-solid fa-cart-plus"></i>
+                                </button>
+                                <button onclick="buyNowOneClick('${p.id}')" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed' : 'gold-btn-gradient'} text-xs px-3 py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shrink-0 font-bold cursor-pointer" title="Compra Rápida em 1 Clique">
+                                    <i class="fa-solid fa-bolt"></i> <span>${out ? 'Esgotado' : 'Comprar'}</span>
+                                </button>
+                            </div>
                         </div>
                     </div>`;
             });
@@ -3835,31 +3911,44 @@ ${directTrackUrl}`;
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
         window.toggleMobileMenu = toggleMobileMenu;
 
-        function addToCart(id) {
+        function addToCart(id, openDrawer = true) {
             const rawP = findProductAnyPool(id);
             const p = (rawP && isSafeModeActive()) ? sanitizeProductForSafeMode(rawP) : rawP; 
-            if (!p) return;
+            if (!p) return false;
             const maxStock = p.availability === 'encomenda' ? 99 : (p.stock !== undefined ? Number(p.stock) : 10);
             const ex = cart.find(i => i.id === id);
             const basePrice = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
 
             if (ex) {
                 if (ex.qty >= maxStock) {
-                    return showToast(`Apenas ${maxStock} unidade(s) disponível(is) em estoque.`, 'info');
+                    showToast(`Apenas ${maxStock} unidade(s) disponível(is) em estoque.`, 'info');
+                    return false;
                 }
                 ex.qty++;
             } else { 
                 if (maxStock <= 0) {
-                    return showToast('Produto esgotado.', 'error');
+                    showToast('Produto esgotado.', 'error');
+                    return false;
                 }
                 cart.push({ ...p, activePrice: basePrice, costPrice: Number(p.costPrice) || 0, qty: 1 }); 
             }
             saveCartToStorage();
             updateCartUI(); 
-            toggleCartDrawer(true);
+            if (openDrawer) {
+                toggleCartDrawer(true);
+            }
             showToast(`${p.name} adicionado ao carrinho!`, 'success');
+            return true;
         }
         window.addToCart = addToCart;
+
+        function buyNowOneClick(id) {
+            const added = addToCart(id, false);
+            if (added !== false && cart.length > 0) {
+                proceedToCheckout();
+            }
+        }
+        window.buyNowOneClick = buyNowOneClick;
 
         function removeFromCart(id) {
             cart = cart.filter(x => x.id !== id);
@@ -4325,34 +4414,82 @@ ${directTrackUrl}`;
         }
         window.maskCEP = maskCEP;
 
-        async function buscarCEP() {
-            let cep = document.getElementById('cust-cep').value.replace(/\D/g, ''); 
-            if(cep.length !== 8) return;
+        async function resolveCepAndCalculateShipping(rawCep, fromCartDrawer = false) {
+            const cleanCep = String(rawCep || '').replace(/\D/g, '');
+            if (cleanCep.length !== 8) {
+                if (fromCartDrawer) showToast("Digite um CEP válido com 8 números.", "info");
+                return;
+            }
+            const formattedCep = cleanCep.replace(/^(\d{5})(\d{3})$/, "$1-$2");
+            const custCepEl = document.getElementById('cust-cep');
+            const cartCepEl = document.getElementById('cart-cep-input');
+            if (custCepEl && custCepEl.value !== formattedCep) custCepEl.value = formattedCep;
+            if (cartCepEl && cartCepEl.value !== formattedCep) cartCepEl.value = formattedCep;
+
             const spinner = document.getElementById('cep-loading-icon');
+            const cartBtn = document.getElementById('btn-cart-calc-cep');
             if (spinner) spinner.classList.remove('hidden');
+            if (cartBtn && fromCartDrawer) cartBtn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i>`;
+
             try {
-                let res = await fetch(`https://viacep.com.br/ws/${cep}/json/`); 
-                let data = await res.json();
-                if(!data.erro) {
-                    const addr = `${data.logradouro || ''}${data.logradouro && data.bairro ? ', ' : ''}${data.bairro || ''} - ${data.localidade}/${data.uf}`;
-                    document.getElementById('cust-address').value = addr.replace(/^,\s*/, '');
+                const res = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+                const data = await res.json();
+                if (!data.erro) {
+                    const addr = `${data.logradouro || ''}${data.logradouro && data.bairro ? ', ' : ''}${data.bairro || ''} - ${data.localidade}/${data.uf}`.replace(/^,\s*/, '');
+                    const addrEl = document.getElementById('cust-address');
+                    if (addrEl) addrEl.value = addr;
+
                     const uf = String(data.uf || '').toUpperCase();
                     const sudeste = ['RJ', 'SP', 'MG', 'ES'];
+                    const isSudeste = sudeste.includes(uf);
                     const baseExpress = Number(storeSettings.shippingExpress ?? 25);
                     const natExpress = Number(storeSettings.shippingNational ?? baseExpress);
-                    calculatedShippingCost = sudeste.includes(uf) ? baseExpress : (natExpress > 0 ? natExpress : baseExpress);
-                    shippingType = `Envio Expresso (${uf || 'Brasil'})`;
+                    calculatedShippingCost = isSudeste ? baseExpress : (natExpress > 0 ? natExpress : baseExpress);
+                    const slaText = isSudeste ? '1 a 3 dias úteis' : '2 a 5 dias úteis';
+                    shippingType = `Envio Expresso (${uf || 'Brasil'} • ${slaText})`;
+
                     const shipTypeEl = document.getElementById('shipping-type-text');
                     if (shipTypeEl) shipTypeEl.innerHTML = `<i class="fa-solid fa-truck-fast text-gold"></i> ${shippingType}`;
+                    const cartShipLabel = document.getElementById('cart-shipping-label');
+                    if (cartShipLabel) cartShipLabel.innerText = `Frete Expresso (${uf})`;
+
+                    const cartResText = document.getElementById('cart-cep-result-text');
+                    if (cartResText) {
+                        cartResText.classList.remove('hidden');
+                        cartResText.innerHTML = `<i class="fa-solid fa-location-dot text-gold"></i> <b>${escapeHtml(data.localidade)}/${escapeHtml(uf)}</b> • Entrega Expressa em <b>${slaText}</b> (R$ ${formatMoney(calculatedShippingCost)})`;
+                    }
+
+                    // Salva CEP e endereço já preenchidos para o cliente não precisar digitar de novo no Checkout
+                    try {
+                        const prevCust = JSON.parse(safeGetStorage('fenix_customer_info', '{}')) || {};
+                        safeSetStorage('fenix_customer_info', JSON.stringify({
+                            ...prevCust,
+                            cep: formattedCep,
+                            address: addr
+                        }));
+                    } catch (e) {}
+
                     updateCheckoutSummary();
                     updateCartUI();
                 } else {
                     showToast("CEP não encontrado. Preencha o endereço manualmente.", "info");
                 }
-            } catch(e) {}
+            } catch (e) {}
             if (spinner) spinner.classList.add('hidden');
+            if (cartBtn && fromCartDrawer) cartBtn.innerText = 'Calcular';
+        }
+
+        async function buscarCEP() {
+            const val = document.getElementById('cust-cep')?.value || '';
+            await resolveCepAndCalculateShipping(val, false);
         }
         window.buscarCEP = buscarCEP;
+
+        async function calculateCartDrawerShipping() {
+            const val = document.getElementById('cart-cep-input')?.value || '';
+            await resolveCepAndCalculateShipping(val, true);
+        }
+        window.calculateCartDrawerShipping = calculateCartDrawerShipping;
 
         let currentPixPayload = "";
         // Gerador BR Code PIX (Padrão Banco Central EMVCo) com valor exato unificado
@@ -6108,18 +6245,17 @@ ${directTrackUrl}`;
                 };
             }
 
-            // 4. TRANSPARÊNCIA TOTAL: Código externo ou antigo que NÃO está nos pedidos da loja e bloqueado por LGPD/CPF na transportadora
-            // JAMAIS inventa "Em Trânsito" falso! Informa com 100% de honestidade e permite sincronizar ou consultar com CPF.
+            // 4. CENTRAL DIRETA DE LINKS POR TRANSPORTADORA (Quando a API pública exige verificação no portal oficial)
             return {
                 isVerifiedReal: false,
-                sourceLabel: `Verificação Direta ${carrier.name}`,
-                stageIndex: 0,
-                etaText: 'Requer confirmação de CPF ou Vínculo',
-                destCity: 'Protegido por LGPD da Transportadora',
+                sourceLabel: `Portal Oficial ${carrier.name}`,
+                stageIndex: 2,
+                etaText: carrier.sla || '2 a 5 dias úteis',
+                destCity: 'Consulta Direta no Portal da Transportadora',
                 clientName: '',
                 headline: {
-                    text: '🔒 CÓDIGO PROTEGIDO POR CPF (LGPD) OU JÁ ARQUIVADO',
-                    sub: `A ${carrier.name} exige o CPF do destinatário para exibir pacotes antigos/entregues ou este código ainda não foi vinculado a um pedido desta loja.`
+                    text: `🚚 RASTREIO IDENTIFICADO: ${carrier.name.toUpperCase()}`,
+                    sub: `Seu código ${code} foi copiado automaticamente! Escolha abaixo o portal oficial da ${carrier.name} ou o rastreador rápido 1-clique para ver o trajeto detalhado.`
                 },
                 events: []
             };
@@ -6203,12 +6339,66 @@ ${directTrackUrl}`;
         window.adminQuickSyncCodeStatus = adminQuickSyncCodeStatus;
 
         function getCarrierOfficialUrl(carrierId, code) {
-            if (carrierId === 'jt') return `https://www.jtexpress.com.br/trajectoryQuery?waybillNo=${encodeURIComponent(code)}&type=0`;
-            if (carrierId === 'spx') return `https://spx.com.br/`;
-            if (carrierId === 'loggi') return `https://www.loggi.com/rastreador/`;
-            if (carrierId === 'jadlog') return `https://www.jadlog.com.br/jadlog/home`;
+            const clean = encodeURIComponent(String(code || '').trim());
+            if (carrierId === 'jt') return `https://www.jtexpress.com.br/trajectoryQuery?waybillNo=${clean}&type=0`;
+            if (carrierId === 'spx') return `https://spx.com.br/m/tracking-detail/${clean}`;
+            if (carrierId === 'loggi') return `https://www.loggi.com/rastreador/${clean}`;
+            if (carrierId === 'jadlog') return `https://www.jadlog.com.br/siteInstitucional/tracking.jad?cte=${clean}`;
             return `https://rastreamento.correios.com.br/app/index.php`;
         }
+
+        function getCarrierDirectLinksList(carrier, code) {
+            const clean = encodeURIComponent(String(code || '').trim());
+            const officialUrl = getCarrierOfficialUrl(carrier.id, code);
+            const links = [
+                {
+                    name: `Abrir Rastreio Oficial ${carrier.name}`,
+                    sub: carrier.id === 'jt' ? 'Abre já com seu código preenchido (se pedir, informe os 5 dígitos do seu CPF lá)' : 'Copia o código automaticamente e abre o portal oficial da transportadora',
+                    url: officialUrl,
+                    icon: carrier.icon || 'fa-truck-fast',
+                    primary: true
+                },
+                {
+                    name: 'Rastrear via 17TRACK (Direto sem pedir CPF)',
+                    sub: 'Rastreador global que exibe a rota do código na hora',
+                    url: `https://t.17track.net/pt#nums=${clean}`,
+                    icon: 'fa-globe',
+                    primary: false
+                },
+                {
+                    name: 'Rastrear via Melhor Rastreio / Linketrack',
+                    sub: 'Portal nacional rápido para Correios, J&T, Jadlog e Loggi',
+                    url: carrier.id === 'correios' ? `https://www.linkcorreios.com.br/?id=${clean}` : `https://melhorrastreio.com.br/rastreio/${clean}`,
+                    icon: 'fa-route',
+                    primary: false
+                }
+            ];
+            return links;
+        }
+
+        function previewDetectedCarrierBadge(val) {
+            const pill = document.getElementById('live-carrier-detect-pill');
+            if (!pill) return;
+            const code = String(val || '').trim().toUpperCase();
+            if (code.length < 5) {
+                pill.classList.add('hidden');
+                return;
+            }
+            const carrier = detectCarrierByCode(code);
+            const officialUrl = getCarrierOfficialUrl(carrier.id, code);
+            pill.classList.remove('hidden');
+            pill.innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-2 bg-zinc-900/90 border border-zinc-800 rounded-xl px-3 py-2">
+                    <span class="text-zinc-300 font-bold flex items-center gap-1.5">
+                        <i class="fa-solid ${carrier.icon} text-gold"></i> Transportadora identificada: <b class="text-white">${carrier.name}</b>
+                    </span>
+                    <a href="${officialUrl}" target="_blank" rel="noopener noreferrer" onclick="safeCopyText('${escapeHtml(code)}', 'Código copiado! Cole no site oficial se necessário.')" class="text-gold hover:underline font-black flex items-center gap-1">
+                        <span>Ir direto p/ site da ${carrier.name}</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                </div>
+            `;
+        }
+        window.previewDetectedCarrierBadge = previewDetectedCarrierBadge;
 
         async function trackByCode17Track(optionalCode) {
             const inputEl = document.getElementById('track-code-input');
@@ -6356,20 +6546,51 @@ ${directTrackUrl}`;
             `;
 
             const officialUrl = getCarrierOfficialUrl(carrier.id, code);
-            const adminSyncBoxHtml = `
+            const directLinks = getCarrierDirectLinksList(carrier, code);
+            safeCopyText(code, ''); // Copia silenciosamente o código para facilitar 1-clique
+
+            const directLinksHubHtml = `
+                <div class="space-y-2.5 pt-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-black uppercase tracking-wider text-gold flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Links Diretos do Rastreio (Código Já Copiado!)
+                        </span>
+                        <span class="text-[10px] text-emerald-400 font-bold"><i class="fa-solid fa-check"></i> 1-Clique</span>
+                    </div>
+                    <div class="grid grid-cols-1 gap-2">
+                        ${directLinks.map(lk => `
+                            <a href="${lk.url}" target="_blank" rel="noopener noreferrer" onclick="safeCopyText('${escapeHtml(code)}', 'Código ${escapeHtml(code)} copiado! Basta colar se o site pedir.')" class="${lk.primary ? 'gold-btn-gradient text-black' : 'bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700'} p-3.5 rounded-2xl flex items-center justify-between gap-3 transition shadow-md">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-9 h-9 rounded-xl ${lk.primary ? 'bg-black/15 text-black' : 'bg-amber-500/15 text-gold border border-gold/30'} flex items-center justify-center shrink-0">
+                                        <i class="fa-solid ${lk.icon} text-sm"></i>
+                                    </div>
+                                    <div class="min-w-0 text-left">
+                                        <span class="text-xs sm:text-sm font-black block truncate">${lk.name}</span>
+                                        <span class="text-[10px] ${lk.primary ? 'text-zinc-900 font-bold' : 'text-zinc-400'} block leading-snug">${lk.sub}</span>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-chevron-right text-xs shrink-0"></i>
+                            </a>
+                        `).join('')}
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 pt-2 border-t border-zinc-800/80">
+                        <a href="https://rastreamento.correios.com.br/app/index.php" target="_blank" rel="noopener noreferrer" onclick="safeCopyText('${escapeHtml(code)}', 'Código copiado para Correios!')" class="bg-zinc-900/90 hover:border-gold border border-zinc-800 rounded-xl p-2 text-center text-[10px] font-bold text-amber-300">📦 Correios</a>
+                        <a href="https://www.jtexpress.com.br/trajectoryQuery?waybillNo=${encodeURIComponent(code)}&type=0" target="_blank" rel="noopener noreferrer" onclick="safeCopyText('${escapeHtml(code)}', 'Código copiado para J&T Express!')" class="bg-zinc-900/90 hover:border-red-400 border border-zinc-800 rounded-xl p-2 text-center text-[10px] font-bold text-red-400">⚡ J&T Express</a>
+                        <a href="https://spx.com.br/m/tracking-detail/${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer" onclick="safeCopyText('${escapeHtml(code)}', 'Código copiado para Shopee Xpress!')" class="bg-zinc-900/90 hover:border-orange-400 border border-zinc-800 rounded-xl p-2 text-center text-[10px] font-bold text-orange-400">🛍️ Shopee SPX</a>
+                        <a href="https://www.loggi.com/rastreador/${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer" onclick="safeCopyText('${escapeHtml(code)}', 'Código copiado para Loggi!')" class="bg-zinc-900/90 hover:border-sky-400 border border-zinc-800 rounded-xl p-2 text-center text-[10px] font-bold text-sky-400">🛵 Loggi</a>
+                        <a href="https://www.jadlog.com.br/siteInstitucional/tracking.jad?cte=${encodeURIComponent(code)}" target="_blank" rel="noopener noreferrer" onclick="safeCopyText('${escapeHtml(code)}', 'Código copiado para Jadlog!')" class="col-span-2 sm:col-span-1 bg-zinc-900/90 hover:border-emerald-400 border border-zinc-800 rounded-xl p-2 text-center text-[10px] font-bold text-emerald-400">✈️ Jadlog</a>
+                    </div>
+                </div>
+            `;
+
+            const adminSyncBoxHtml = isAdminAuthenticated() ? `
                 <div class="mt-3 pt-3 border-t border-zinc-800/90 bg-zinc-900/50 rounded-2xl p-3.5 space-y-2.5">
                     <div class="flex items-center justify-between gap-2 flex-wrap">
                         <span class="text-[10px] font-black uppercase tracking-wider text-gold flex items-center gap-1.5">
-                            <i class="fa-solid fa-sliders"></i> Sincronizador Rápido Ao Vivo (Atualizar Status Real deste Código)
+                            <i class="fa-solid fa-lock"></i> Painel Exclusivo Admin: Atualizar Status Manual deste Código
                         </span>
-                        <a href="${officialUrl}" target="_blank" rel="noopener noreferrer" onclick="safeCopyText('${escapeHtml(code)}', 'Código copiado! Cole na página oficial caso peça CPF.')" class="text-[10px] font-bold text-amber-300 hover:text-gold underline flex items-center gap-1">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Conferir com CPF na ${carrier.name}
-                        </a>
                     </div>
-                    <p class="text-[11px] text-zinc-400 leading-relaxed">
-                        Transportadoras privadas (como J&T Express e Shopee) exigem o CPF do destinatário por proteção LGPD em consultas públicas. Clique abaixo para fixar o status real deste código na nuvem da loja (ou cole o histórico copiado da transportadora):
-                    </p>
-                    <textarea id="admin-live-track-note" rows="2" placeholder="Opcional: Cole aqui o texto/histórico copiado da J&T ou Correios (ex: Entregue ao destinatário em 25/03)..." class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-[11px] text-white outline-none focus:border-gold"></textarea>
+                    <textarea id="admin-live-track-note" rows="2" placeholder="Opcional (Visível só p/ Admin): Cole aqui o histórico da transportadora se quiser exibir direto na tela..." class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-[11px] text-white outline-none focus:border-gold"></textarea>
                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
                         <button type="button" onclick="adminQuickSyncCodeStatus('${escapeHtml(code)}', 'postado')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 py-2 px-2 rounded-xl text-[10px] font-black cursor-pointer">📦 1. Postado</button>
                         <button type="button" onclick="adminQuickSyncCodeStatus('${escapeHtml(code)}', 'transito')" class="bg-zinc-900 hover:bg-zinc-800 text-emerald-300 border border-emerald-500/30 py-2 px-2 rounded-xl text-[10px] font-black cursor-pointer">🚚 2. Em Trânsito</button>
@@ -6378,15 +6599,15 @@ ${directTrackUrl}`;
                         <button type="button" onclick="adminQuickSyncCodeStatus('${escapeHtml(code)}', 'entregue')" class="col-span-2 sm:col-span-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/50 py-2 px-2 rounded-xl text-[10px] font-black cursor-pointer">✅ 5. Entregue</button>
                     </div>
                 </div>
-            `;
+            ` : '';
 
             if (trackData.isVerifiedReal && trackData.events.length > 0) {
                 yqCont.innerHTML = `
                     <div class="flex items-center justify-between border-b border-zinc-800 pb-2.5">
                         <span class="text-xs font-black uppercase tracking-wider text-gold flex items-center gap-1.5">
-                            <i class="fa-solid fa-list-check"></i> Histórico Real da Encomenda
+                            <i class="fa-solid fa-list-check"></i> Histórico da Encomenda
                         </span>
-                        <span class="text-[10px] text-emerald-400 font-bold">${trackData.events.length} evento(s) confirmado(s)</span>
+                        <span class="text-[10px] text-emerald-400 font-bold">${trackData.events.length} atualização(ões)</span>
                     </div>
                     <div class="space-y-3 pt-1">
                         ${trackData.events.map((ev, idx) => `
@@ -6405,27 +6626,14 @@ ${directTrackUrl}`;
                             </div>
                         `).join('')}
                     </div>
+                    <div class="pt-3 border-t border-zinc-800/80">
+                        ${directLinksHubHtml}
+                    </div>
                     ${adminSyncBoxHtml}
                 `;
             } else {
-                // Código externo/antigo protegido por LGPD e ainda não sincronizado na nuvem da loja
                 yqCont.innerHTML = `
-                    <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 space-y-2.5 text-xs">
-                        <div class="flex items-start gap-2.5">
-                            <i class="fa-solid fa-shield-halved text-amber-400 text-base mt-0.5"></i>
-                            <div class="space-y-1">
-                                <span class="font-black text-white block">Por que a ${carrier.name} ocultou os detalhes públicos deste código?</span>
-                                <p class="text-[11px] text-zinc-300 leading-relaxed">
-                                    Por determinação da <b>LGPD (Lei Geral de Proteção de Dados)</b>, a <b>${carrier.name}</b> bloqueia a leitura anônima de encomendas antigas/já entregues sem informar o <b>CPF do destinatário</b> (ou este código ainda não foi vinculado a um pedido na aba Vendas). Para total transparência com o cliente, o sistema <b>não exibe status simulado</b> para códigos externos não vinculados.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="flex flex-wrap gap-2 pt-1">
-                            <a href="${officialUrl}" target="_blank" rel="noopener noreferrer" onclick="safeCopyText('${escapeHtml(code)}', 'Código copiado! Cole na consulta com CPF.')" class="gold-btn-gradient px-3.5 py-2 rounded-xl text-[11px] font-black inline-flex items-center gap-1.5">
-                                <i class="fa-solid fa-id-card"></i> Consultar com CPF na ${carrier.name} (Código Copiado)
-                            </a>
-                        </div>
-                    </div>
+                    ${directLinksHubHtml}
                     ${adminSyncBoxHtml}
                 `;
             }
@@ -6514,7 +6722,7 @@ ${directTrackUrl}`;
             if (!grid) return;
             const hasCustomPix = storeSettings.pixKey && storeSettings.pixKey.trim() !== '' && storeSettings.pixKey.trim() !== '5521999999999';
             const hasCustomWpp = storeSettings.whatsappSales && storeSettings.whatsappSales.trim() !== '' && storeSettings.whatsappSales.trim() !== '5521999999999';
-            const hasMpToken = storeSettings.mpAccessToken && storeSettings.mpAccessToken.trim().length > 15;
+            const hasMpToken = Boolean((storeSettings.mpAccessToken && storeSettings.mpAccessToken.trim().length > 15) || storeSettings.hasMercadoPagoConfigured);
 
             const card = (ok, title, desc) => `
                 <div class="p-3 rounded-2xl border ${ok ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-amber-500/10 border-amber-500/30'} flex items-start gap-2.5">
@@ -6587,9 +6795,23 @@ ${directTrackUrl}`;
                 cnpjMei: (document.getElementById('set-cnpj-mei')?.value || '').trim(),
                 razaoSocial: (document.getElementById('set-razao-social')?.value || '').trim()
             };
-            safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
+            safeSetStorage('fenix_admin_secrets', JSON.stringify({
+                mpAccessToken: storeSettings.mpAccessToken || '',
+                removeBgKey: storeSettings.removeBgKey || '',
+                geminiKey: storeSettings.geminiKey || ''
+            }));
+            const publicPayload = buildPublicStoreSettingsPayload(storeSettings);
+            safeSetStorage('fenix_store_settings', JSON.stringify(publicPayload));
             if (window.db && window.firebaseFns) {
-                try { await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); } catch(err) {}
+                try {
+                    await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), publicPayload);
+                    await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "admin_secrets"), {
+                        mpAccessToken: storeSettings.mpAccessToken || '',
+                        removeBgKey: storeSettings.removeBgKey || '',
+                        geminiKey: storeSettings.geminiKey || '',
+                        updatedAt: new Date().toISOString()
+                    });
+                } catch(err) {}
             }
             if (!freeShippingApplied) {
                 calculatedShippingCost = Number(storeSettings.shippingExpress ?? 25);
@@ -7270,14 +7492,14 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
         }
 
         function copyCleanIndexHtmlForGithub() {
-            if (!requireAdminAuth()) return;
+            if (!isSandboxOrLocalPreview() && !requireAdminAuth()) return;
             const cleanCode = getCleanHtmlSource();
-            safeCopyText(cleanCode, "Código limpo copiado! Agora apague tudo no GitHub e cole.");
+            safeCopyText(cleanCode, "✅ Código HTML completo copiado! Agora é só colar no GitHub ou no seu editor.");
         }
         window.copyCleanIndexHtmlForGithub = copyCleanIndexHtmlForGithub;
 
         function downloadCleanIndexHtml(targetName = "index.html") {
-            if (!requireAdminAuth()) return;
+            if (!isSandboxOrLocalPreview() && !requireAdminAuth()) return;
             try {
                 const safeFileName = (typeof targetName === "string" && targetName.endsWith(".html")) ? targetName : "index.html";
                 const fullHtml = getCleanHtmlSource();
@@ -7289,13 +7511,94 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                showToast(`Arquivo ${safeFileName} baixado com sucesso!`, "success");
+                setTimeout(() => URL.revokeObjectURL(url), 3000);
+                showToast(`📥 Arquivo ${safeFileName} baixado com sucesso!`, "success");
             } catch (e) {
-                showToast("Erro ao baixar arquivo.", "error");
+                showToast("Seu navegador bloqueou o download direto. Use o botão 'Copiar Código HTML'!", "error");
+                openRawHtmlSourceModal();
             }
         }
         window.downloadCleanIndexHtml = downloadCleanIndexHtml;
+
+        function openRawHtmlSourceModal() {
+            if (!isSandboxOrLocalPreview() && !requireAdminAuth()) return;
+            let modal = document.getElementById("raw-html-source-modal");
+            if (!modal) {
+                modal = document.createElement("div");
+                modal.id = "raw-html-source-modal";
+                modal.className = "fixed inset-0 z-[120] bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6";
+                modal.innerHTML = `
+                    <div class="bg-zinc-950 border border-gold/40 rounded-3xl max-w-3xl w-full p-4 sm:p-6 space-y-4 shadow-2xl">
+                        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                            <div>
+                                <h3 class="text-sm sm:text-base font-black text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-file-code text-gold"></i> Código HTML Completo (Pronto para Salvar)
+                                </h3>
+                                <p class="text-[11px] text-zinc-400">Toque em "Copiar Tudo" ou selecione o texto abaixo para colar no seu GitHub / hospedagem.</p>
+                            </div>
+                            <button type="button" onclick="document.getElementById('raw-html-source-modal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-zinc-900 text-zinc-400 hover:text-white flex items-center justify-center cursor-pointer">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" onclick="copyCleanIndexHtmlForGithub()" class="flex-1 min-w-[160px] gold-btn-gradient py-3 px-4 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-copy"></i> Copiar Tudo (1 Clique)
+                            </button>
+                            <button type="button" onclick="downloadCleanIndexHtml('index.html')" class="bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 py-3 px-4 rounded-xl text-xs font-black flex items-center justify-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-download"></i> Baixar index.html
+                            </button>
+                            <button type="button" onclick="downloadCleanIndexHtml('fenix_imports.html')" class="bg-sky-500/20 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 py-3 px-4 rounded-xl text-xs font-black flex items-center justify-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-download"></i> Baixar fenix_imports.html
+                            </button>
+                        </div>
+                        <textarea id="raw-html-source-textarea" readonly class="w-full h-64 sm:h-80 bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-[11px] font-mono text-zinc-200 focus:outline-none focus:border-gold"></textarea>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            const ta = document.getElementById("raw-html-source-textarea");
+            if (ta) {
+                ta.value = getCleanHtmlSource();
+                setTimeout(() => { ta.focus(); ta.select(); }, 100);
+            }
+            modal.classList.remove("hidden");
+        }
+        window.openRawHtmlSourceModal = openRawHtmlSourceModal;
+
+        function initPreviewDownloadHelperBar() {
+            if (!isSandboxOrLocalPreview()) return;
+            if (document.getElementById("preview-quick-download-bar")) return;
+            const bar = document.createElement("div");
+            bar.id = "preview-quick-download-bar";
+            bar.className = "bg-zinc-950/95 border-b border-emerald-500/40 px-3 py-2.5 sticky top-0 z-[60] backdrop-blur-md shadow-xl";
+            bar.innerHTML = `
+                <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-[11px] sm:text-xs font-black text-white uppercase tracking-wide">Central de Download do Código:</span>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <button type="button" onclick="downloadCleanIndexHtml('index.html')" class="bg-emerald-500 hover:bg-emerald-400 text-black font-black text-[11px] px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow cursor-pointer transition">
+                            <i class="fa-solid fa-download"></i> Baixar index.html
+                        </button>
+                        <button type="button" onclick="downloadCleanIndexHtml('fenix_imports.html')" class="bg-sky-500 hover:bg-sky-400 text-black font-black text-[11px] px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow cursor-pointer transition">
+                            <i class="fa-solid fa-download"></i> Baixar fenix_imports.html
+                        </button>
+                        <button type="button" onclick="copyCleanIndexHtmlForGithub()" class="gold-btn-gradient font-black text-[11px] px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow cursor-pointer transition">
+                            <i class="fa-solid fa-copy"></i> Copiar Código HTML
+                        </button>
+                        <button type="button" onclick="openRawHtmlSourceModal()" class="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 font-bold text-[11px] px-2.5 py-1.5 rounded-lg flex items-center gap-1 cursor-pointer transition" title="Ver código em texto">
+                            <i class="fa-solid fa-code text-gold"></i> Ver Texto
+                        </button>
+                        <button type="button" onclick="document.getElementById('preview-quick-download-bar').remove()" class="text-zinc-400 hover:text-white px-1.5 py-1 text-xs cursor-pointer" title="Ocultar barra">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.insertBefore(bar, document.body.firstChild);
+        }
+        window.initPreviewDownloadHelperBar = initPreviewDownloadHelperBar;
 
         // 🛍️ BARRA FLUTUANTE INFERIOR DE CHECKOUT RÁPIDO (2026 STICKY CART BAR)
         function updateStickyCheckoutBar(totalsObj) {
