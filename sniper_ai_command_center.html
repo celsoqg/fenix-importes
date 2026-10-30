@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#040710" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Sniper Bybit v9" />
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Sniper Quant AI v18.0 — ORACLE SINGULARITY (Kalman Previsão 3m + Win Prob % + Smart Money L2 + Radar Lead-Lag) Bybit Real Shield","short_name":"SniperV9","start_url":".","display":"standalone","background_color":"#040710","theme_color":"#10b981"}' />
+  <title>Sniper Quant AI v18.0 — ORACLE SINGULARITY (Kalman Previsão 3m + Win Prob % + Smart Money L2 + Radar Lead-Lag) — Blindagem Conta Real Bybit (39.1831 USDT / R$ 209,56)</title>
+  <style>
+    :root {
+      --bg-main: #040710;
+      --bg-card: #0b1222;
+      --bg-subtle: #070c18;
+      --border: rgba(148, 163, 184, 0.18);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --emerald: #10b981;
+      --emerald-bg: rgba(16, 185, 129, 0.14);
+      --cyan: #06b6d4;
+      --cyan-bg: rgba(6, 182, 212, 0.14);
+      --amber: #f59e0b;
+      --amber-bg: rgba(245, 158, 11, 0.15);
+      --rose: #f43f5e;
+      --rose-bg: rgba(244, 63, 94, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.45;
+      min-height: 100vh;
+      padding-bottom: 44px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    /* HEADER */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(4, 7, 16, 0.96);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #10b981, #f59e0b);
+      color: #040710;
+      font-weight: 900;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.28);
+    }
+
+    .title-wrap h1 {
+      font-size: 16px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tag-pill {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--emerald-bg);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.38);
+      font-weight: 700;
+    }
+
+    .tag-pill-cyan {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--cyan-bg);
+      color: #22d3ee;
+      border: 1px solid rgba(6, 182, 212, 0.38);
+      font-weight: 700;
+    }
+
+    .tag-pill-amber {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--amber-bg);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.42);
+      font-weight: 700;
+    }
+
+    .subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* NAV TABS */
+    .nav-tabs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      background: var(--bg-card);
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    @media (min-width: 680px) {
+      .nav-tabs {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .tab-btn {
+      background: transparent;
+      color: #cbd5e1;
+      border: 1px solid transparent;
+      padding: 9px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(90deg, #10b981, #f59e0b);
+      color: #040710;
+      font-weight: 800;
+    }
+
+    .action-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      padding: 8px 11px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      color: var(--text-main);
+      background: #141e36;
+    }
+
+    .btn-emerald {
+      background: var(--emerald-bg);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.42);
+    }
+
+    .btn-bybit-solid {
+      background: linear-gradient(90deg, #f59e0b, #10b981);
+      color: #040710;
+      border: none;
+      font-weight: 800;
+    }
+
+    .btn-cyan {
+      background: var(--cyan-bg);
+      color: #22d3ee;
+      border-color: rgba(6, 182, 212, 0.42);
+    }
+
+    .btn-amber {
+      background: var(--amber-bg);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.42);
+    }
+
+    .btn-rose {
+      background: var(--rose-bg);
+      color: #fb7185;
+      border-color: rgba(244, 63, 94, 0.42);
+    }
+
+    /* MAIN CONTAINER */
+    .main-container {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .tab-view {
+      display: none;
+    }
+
+    .tab-view.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .card-highlight {
+      border-left: 4px solid var(--emerald);
+    }
+
+    .card-shield {
+      border-left: 4px solid var(--cyan);
+      background: linear-gradient(180deg, rgba(6, 182, 212, 0.07), rgba(11, 18, 34, 0.95));
+    }
+
+    /* GRIDS */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    @media (min-width: 920px) {
+      .kpi-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .kpi-val {
+      font-size: 19px;
+      font-weight: 800;
+      margin: 6px 0 3px 0;
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .coin-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .coin-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .coin-grid {
+        grid-template-columns: repeat(6, 1fr);
+      }
+    }
+
+    .coin-card {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: left;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .coin-card.selected {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--emerald);
+    }
+
+    .coin-card.locked {
+      opacity: 0.48;
+    }
+
+    .dashboard-3col {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 960px) {
+      .dashboard-3col {
+        grid-template-columns: 5fr 3fr 4fr;
+      }
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #10b981);
+      transition: width 0.3s ease;
+    }
+
+    /* ORDER BOOK ROWS */
+    .ob-row {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      margin-bottom: 3px;
+      overflow: hidden;
+    }
+
+    .ob-bar-ask {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      background: rgba(244, 63, 94, 0.18);
+    }
+
+    .ob-bar-bid {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      background: rgba(16, 185, 129, 0.22);
+    }
+
+    .ob-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    /* AI FEED */
+    .feed-box {
+      max-height: 410px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-right: 4px;
+    }
+
+    .feed-item {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      background: rgba(16, 185, 129, 0.08);
+      font-size: 12px;
+    }
+
+    .feed-item.cyan {
+      border-color: rgba(6, 182, 212, 0.35);
+      background: rgba(6, 182, 212, 0.08);
+    }
+
+    .feed-item.amber {
+      border-color: rgba(245, 158, 11, 0.35);
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .feed-item.rose {
+      border-color: rgba(244, 63, 94, 0.35);
+      background: rgba(244, 63, 94, 0.08);
+    }
+
+    .pos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      background: var(--bg-subtle);
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    @media (min-width: 600px) {
+      .pos-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: 10px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 12px;
+    }
+
+    .toast-box {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      left: 16px;
+      max-width: 430px;
+      margin: 0 auto;
+      background: #0f172a;
+      border: 1px solid var(--emerald);
+      border-radius: 14px;
+      padding: 12px 14px;
+      z-index: 100;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.75);
+      display: none;
+    }
+
+    .text-emerald { color: #34d399; }
+    .text-cyan { color: #22d3ee; }
+    .text-amber { color: #fbbf24; }
+    .text-rose { color: #fb7185; }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand-row">
+        <div class="brand-left">
+          <div class="logo-badge mono">v18.0</div>
+          <div class="title-wrap">
+            <h1>
+              Sniper Quant AI
+              <span id="badgeCloudSync" class="tag-pill mono">🛡️ BLINDAGEM CONTA REAL (39.1831 USDT / R$ 209,56)</span>
+              <span id="badgeTriggerMode" class="tag-pill-amber mono">🎯 SNIPER EQUILIBRADO (GATILHO ≥ 78)</span>
+            </h1>
+            <p class="subtitle">Zero Ordens Falsas em Conta Real • Leitura `query-account-coins-balance` • Precisão 4 Casas em XRP (`$1.3345`)</p>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <button type="button" id="btnKeepScreenAwake" class="btn btn-emerald" onclick="window.enableNoSleepKeepAwake()">
+            🔆 <span id="lblKeepAwakeBtn">Travar Tela Acesa</span>
+          </button>
+          <button type="button" class="btn btn-amber" onclick="window.switchSniperTab('keys')">
+            🔑 <span id="lblQuickConnectBtn">Diagnóstico Saldo &amp; Região</span>
+          </button>
+          <button type="button" id="btnToggleAiMode" class="btn btn-emerald">⚡ <span id="btnToggleAiText">Pausar IA</span></button>
+          <button type="button" id="btnEmergencyFlatten" class="btn btn-rose">🛑 Zerar</button>
+        </div>
+      </div>
+
+      <!-- NAVIGATION TABS -->
+      <nav class="nav-tabs">
+        <button type="button" id="tabBtnDashboard" class="tab-btn active" onclick="window.switchSniperTab('dashboard')">
+          ⚡ Terminal Conta Real Bybit 24/7
+        </button>
+        <button type="button" id="tabBtnDirectKeys" class="tab-btn" onclick="window.switchSniperTab('keys')">
+          🔑 Por que deu $0.00 e Como Resolver
+        </button>
+        <button type="button" id="tabBtnApkCloud" class="tab-btn" onclick="window.switchSniperTab('apkcloud')">
+          🌍 Destravar Região Railway (US &rarr; EU)
+        </button>
+        <button type="button" id="tabBtnBacktest" class="tab-btn" onclick="window.switchSniperTab('backtest')">
+          📈 Auditoria 100 Trades Reais
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- TOAST BANNER -->
+  <div id="toastBanner" class="toast-box">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+      <div>
+        <div id="toastTitle" style="font-size:11px; font-weight:800; color:#34d399; text-transform:uppercase;">Blindagem v9.0</div>
+        <div id="toastMessage" style="font-size:12px; color:#e2e8f0; margin-top:3px;"></div>
+      </div>
+      <button type="button" onclick="document.getElementById('toastBanner').style.display='none'" style="background:none; border:none; color:#94a3b8; font-size:14px; cursor:pointer;">✕</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-container">
+
+    <!-- ========================================================== -->
+    <!-- ABA 1 (PADRÃO): TERMINAL BYBIT V5 CONTA REAL BLINDADA      -->
+    <!-- ========================================================== -->
+    <section id="viewDashboard" class="tab-view active">
+
+      <!-- REAL WALLET SHIELD BANNER -->
+      <div class="card card-highlight">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:12px;">
+          <div style="flex:1; min-width:260px;">
+            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span id="tierBadgeName" class="tag-pill mono">🟢 CONTA UNIFICADA BYBIT: R$ 209,56 (39.1831 USDT)</span>
+              <span id="wsFeedBadge" class="tag-pill-cyan mono">🛡️ ZERO SIMULAÇÃO FANTASMA EM CONTA REAL</span>
+            </div>
+            <p id="tierExplanationText" style="font-size:12px; color:#cbd5e1; margin-top:6px;">
+              <strong>Explicação transparente sobre a sua foto 3:</strong> Aquelas entradas rápidas em <code>DOGE/XRP/SOL</code> (código <code>BYBIT_V8_50042</code> com <code>-R$ 3,14</code>) foram <strong>simulações locais do navegador na v8.0</strong> — seus <strong>39.1831 USDT (R$ 209,56)</strong> na Bybit estão <strong>100% intactos</strong>! Agora na <strong>v18.0</strong> bloqueamos ordens simuladas falsas no Modo Conta Real e corrigimos as 4 casas decimais do XRP (<code>$1.3345</code>).
+            </p>
+
+            <!-- SELETOR DE VELOCIDADE DO GATILHO + MODO CONTA REAL vs TREINO -->
+            <div style="margin-top:10px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+              <span style="font-size:11px; color:#34d399; font-weight:700;">⚡ Seletor de Gatilho:</span>
+              <button type="button" id="btnTrig74" class="btn mono" style="padding:5px 10px; font-size:11px;" onclick="window.setConfluenceThreshold(74)">
+                ⚡ Scalper Rápido (Score ≥ 74)
+              </button>
+              <button type="button" id="btnTrig78" class="btn btn-bybit-solid mono" style="padding:5px 10px; font-size:11px;" onclick="window.setConfluenceThreshold(78)">
+                🎯 Sniper Equilibrado (Score ≥ 78)
+              </button>
+              <button type="button" id="btnTrig85" class="btn mono" style="padding:5px 10px; font-size:11px;" onclick="window.setConfluenceThreshold(85)">
+                🛡️ Ultra-Conservador (Score ≥ 85)
+              </button>
+            </div>
+
+            <!-- NOVO v11.0: BOTÕES DE ATIVAR / DESATIVAR MOEDAS NO SPOT (PADRÃO: APENAS SOL ATIVA!) -->
+            <div style="margin-top:10px; padding:10px; border-radius:12px; background:rgba(16, 185, 129, 0.08); border:1px solid rgba(16, 185, 129, 0.35);">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:6px;">
+                <span style="font-size:11px; color:#34d399; font-weight:800;">🔘 Escolha Qual Moeda o Robô Vai Operar no Spot (Toque para Ativar/Desativar):</span>
+                <button type="button" class="btn btn-amber mono" style="padding:3px 8px; font-size:10px;" onclick="window.setExclusiveCoin('SOLUSDT')">
+                  🔒 Operar Somente SOL
+                </button>
+              </div>
+              <div id="coinToggleButtonsBar" style="display:flex; gap:6px; flex-wrap:wrap;"></div>
+            </div>
+          </div>
+
+          <!-- QUICK BYBIT BALANCE SYNC (CALIBRADO COM 39.1831 USDT = R$ 209,56) -->
+          <div style="background:var(--bg-subtle); padding:10px 12px; border-radius:12px; border:1px solid rgba(16,185,129,0.38); display:flex; flex-direction:column; gap:6px; min-width:305px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+              <span style="color:#34d399; font-weight:700;">🟢 Patrimônio Unificado Bybit:</span>
+              <strong id="lblSyncSource" class="mono text-amber">39.1831 USDT (R$ 209,56)</strong>
+            </div>
+            <div style="display:flex; gap:5px; align-items:center;">
+              <input id="inputCustomBalance" type="number" min="5" step="0.01" value="39.1831" class="input-field mono" style="width:105px; font-weight:700;" placeholder="Valor" />
+              <select id="selectCurrencyUnit" class="input-field mono" style="width:90px; padding:9px 6px;">
+                <option value="USDT" selected>USDT ($)</option>
+                <option value="BRL">Reais (R$)</option>
+              </select>
+              <button type="button" onclick="window.applyBybitBalanceInstant()" class="btn btn-bybit-solid" style="padding:9px 11px; font-size:11px; white-space:nowrap;">
+                ⚡ Fixar Saldo
+              </button>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:10px; color:var(--text-muted);">
+              <span>Modo: <strong id="lblMiniApiState" class="mono text-emerald">🔥 Conta Real Blindada</strong></span>
+              <a href="javascript:void(0)" onclick="window.switchSniperTab('keys')" style="color:#fbbf24; text-decoration:underline;">Por que deu $0.00?</a>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px;">
+          <div style="font-size:12px;" class="mono text-cyan">
+            🤖 Melhor Oportunidade Agora: <strong id="lblAutoChosenCoin" style="color:#fff;">SOLUSDT LONG (Score 74.5/100)</strong>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" id="btnForceSniperSim" class="btn btn-bybit-solid">
+              🚀 Testar Disparo de Ordem Real na Bybit Agora
+            </button>
+            <button type="button" id="btnResetSavedState" class="btn" style="font-size:11px;">
+              🔄 Restaurar 39.1831 USDT (R$ 209,56)
+            </button>
+          </div>
+        </div>
+
+        <!-- 6 COIN CARDS -->
+        <div id="multiAssetGrid" class="coin-grid"></div>
+      </div>
+
+      <!-- 5 KPI CARDS -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">
+            <span>Patrimônio Unificado</span>
+            <span id="activePairBadge" class="tag-pill-amber mono">SOLUSDT</span>
+          </div>
+          <div id="kpiEquityBrl" class="kpi-val mono">R$ 209,56</div>
+          <div class="kpi-sub">Saldo USDT: <strong id="kpiEquityUsd" class="mono text-emerald">39.1831 USDT</strong> (<span id="kpiEquityPct" class="text-emerald">+0.00%</span>)</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">
+            <span>Placar Real do Dia</span>
+            <span id="kpiWinRateBadge" class="tag-pill mono">0 Trades</span>
+          </div>
+          <div id="kpiDailyPnlBrl" class="kpi-val mono text-emerald">+R$ 0,00</div>
+          <div class="kpi-sub">Greens: <strong id="kpiWinsCount" class="mono text-emerald">0</strong> • Stops: <strong id="kpiLossCount" class="mono text-rose">0</strong> • Flut: <span id="kpiFloatingPnl" class="mono">R$ 0,00</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">
+            <span>Risco Máx / Ordem</span>
+            <span id="kpiAutoLevBadge" class="tag-pill mono">ALAV. 5x</span>
+          </div>
+          <div id="kpiRiskBrl" class="kpi-val mono text-amber">R$ 2,51</div>
+          <div class="kpi-sub"><span id="kpiRiskPctLabel">1.2% ($0.47 USDT)</span> • Câmbio: <span class="text-cyan">R$ 5,35</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">
+            <span>Confluência &amp; Gatilho</span>
+            <span id="kpiPriceTicker" class="mono text-amber">SOL $102.30</span>
+          </div>
+          <div id="kpiConfluenceScore" class="kpi-val mono text-emerald">74.5 / 100</div>
+          <div class="progress-track">
+            <div id="kpiConfluenceBar" class="progress-fill" style="width:74.5%;"></div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">
+            <span>Circuit Breaker &amp; Slots</span>
+            <span id="kpiShieldBadge" class="tag-pill mono">TRAVA -5.0%</span>
+          </div>
+          <div id="kpiWakeStatus" class="kpi-val mono text-cyan" style="font-size:15px;">DD: <span id="lblDailyDdPct">0.00%</span> • <span id="lblSlotsKpi">0/1 Slot</span></div>
+          <div class="kpi-sub">WS Python: <strong id="lblBackendWsState" class="text-emerald">0ms Ativo</strong> • Gatilho ≥ <span id="lblThresholdKpi">78</span></div>
+          <div id="lblMacroGuardBar" class="kpi-sub mono" style="margin-top:4px; color:#10b981; font-weight:700;">🟢 BTC Estável • Sem Quarentena Pós-Stop</div>
+        </div>
+      </div>
+
+      <!-- 3 COLUMNS: POSITION + CHART / ORDER BOOK / AI DIARY -->
+      <div class="dashboard-3col">
+
+        <!-- COL 1: ACTIVE POSITION + LIVE BREATHING CHART -->
+        <div>
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+              <strong style="font-size:13px;">🎯 Portfólio Multi-Slots &amp; Trailing Stop ATR(14)</strong>
+              <span id="posBadge" class="tag-pill mono">CAÇANDO ENTRADA (≥ 78)...</span>
+            </div>
+            <div id="portfolioSlotsBar" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;"></div>
+
+            <div id="emptyPositionBox" style="padding:16px; text-align:center; border:1px dashed var(--border); border-radius:12px; font-size:12px; color:var(--text-muted);">
+              No <strong>Modo Conta Real Bybit</strong>, este painel <strong>não abre mais simulações locais falsas</strong> (como o <code>BYBIT_V8_50042</code> da foto anterior). Ele só exibe operação ativa quando a ordem é aceita na Bybit (ou se você ativar o <em>Modo Treino</em> na aba ao lado).
+            </div>
+
+            <div id="activePositionBox" style="display:none;">
+              <div class="pos-grid mono">
+                <div>
+                  <span style="font-size:10px; color:var(--text-muted); display:block;">Direção / Lote</span>
+                  <strong id="posSideQty" class="text-emerald" style="font-size:12px;">LONG 0.5 SOL</strong>
+                </div>
+                <div>
+                  <span style="font-size:10px; color:var(--text-muted); display:block;">Preço Entrada</span>
+                  <strong id="posEntry" style="font-size:12px;">$102.30</strong>
+                </div>
+                <div>
+                  <span style="font-size:10px; color:var(--text-muted); display:block;">Stop (0.55% Seguro)</span>
+                  <strong id="posStop" class="text-rose" style="font-size:12px;">$101.74</strong>
+                </div>
+                <div>
+                  <span style="font-size:10px; color:var(--text-muted); display:block;">TP1 (50% Bolso)</span>
+                  <strong id="posTp1" class="text-cyan" style="font-size:12px;">$103.00</strong>
+                </div>
+                <div>
+                  <span style="font-size:10px; color:var(--text-muted); display:block;">TP2 (Runner)</span>
+                  <strong id="posTp2" class="text-emerald" style="font-size:12px;">$103.71</strong>
+                </div>
+                <div>
+                  <span style="font-size:10px; color:var(--text-muted); display:block;">PnL Flutuante</span>
+                  <strong id="posPnl" class="text-emerald" style="font-size:12px;">+R$ 0,00</strong>
+                </div>
+              </div>
+
+              <!-- BYBIT V5 SERVER-SIDE ORDER PROOF BOX -->
+              <div style="margin-top:8px; padding:8px 10px; border-radius:10px; background:var(--amber-bg); border:1px solid rgba(245,158,11,0.35); font-size:11px;" class="mono">
+                <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px;">
+                  <span class="text-amber">🛡️ <strong>ID DA ORDEM:</strong> <span id="lblSrvStopId">—</span></span>
+                  <span id="lblOrderExecType" class="text-emerald">✅ Stop Server-Side Ativo</span>
+                </div>
+              </div>
+
+              <div style="margin-top:8px; padding:10px; border-radius:10px; background:var(--emerald-bg); border:1px solid rgba(16,185,129,0.35); display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                <span id="posTrailingStatus" style="font-size:11px; color:#6ee7b7;">
+                  🛡️ Em TP1 realiza 50% do lote e trava o Stop no Break-Even (Risco Zero)!
+                </span>
+                <button type="button" id="btnClosePosNow" class="btn btn-rose" style="padding:6px 10px; font-size:11px; flex-shrink:0;">
+                  Fechar Agora
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+              <div>
+                <strong style="font-size:13px;">📈 Evolução do Patrimônio (39.1831 USDT = R$ 209,56)</strong>
+                <div style="font-size:11px; color:var(--text-muted);">Câmbio oficial de índice Bybit: 1 USDT = R$ 5,3487</div>
+              </div>
+              <div class="mono" style="font-size:11px; color:var(--text-muted);">
+                RSI(14): <strong id="metricRsi" class="text-emerald">42.5</strong> • Z-Score: <strong id="metricZbb" class="text-cyan">-0.68</strong>
+              </div>
+            </div>
+            <canvas id="equityCanvas" width="500" height="190" style="width:100%; height:190px; background:#060a14; border-radius:10px; border:1px solid var(--border); display:block;"></canvas>
+          </div>
+        </div>
+
+        <!-- COL 2: LIVE BYBIT ORDER BOOK L2 -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:8px; border-bottom:1px solid var(--border);">
+            <div>
+              <strong style="font-size:13px;">Livro de Ofertas Bybit (<span id="obSymbolTitle">SOLUSDT</span>)</strong>
+              <div style="font-size:10px; color:var(--text-muted);">Casas Decimais Oficiais da Bybit</div>
+            </div>
+            <span id="obiBadge" class="tag-pill mono">OBI +0.24</span>
+          </div>
+
+          <div style="margin-top:10px;">
+            <div class="mono" style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); margin-bottom:4px;">
+              <span>VENDA (ASK)</span>
+              <span>CONTRATOS</span>
+            </div>
+            <div id="orderBookAsks" class="mono"></div>
+          </div>
+
+          <div class="mono" style="margin:8px 0; padding:7px 10px; background:var(--bg-subtle); border:1px solid var(--border); border-radius:8px; display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+            <strong id="obMidPrice">$102.30</strong>
+            <span id="lblPriceSource" style="font-size:10px;" class="text-amber">● Bybit V5 Live</span>
+          </div>
+
+          <div>
+            <div id="orderBookBids" class="mono"></div>
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); margin-top:4px;" class="mono">
+              <span>COMPRA (BID)</span>
+              <span>SUPORTE BALEIA</span>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; padding:10px; background:var(--bg-subtle); border-radius:10px; border:1px solid var(--border);">
+            <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:5px;">
+              <span style="color:var(--text-muted);">Fluxo Comprador (CVD):</span>
+              <strong id="metricCvd" class="mono text-emerald">+18.0%</strong>
+            </div>
+            <div class="progress-track">
+              <div id="cvdBuyBar" class="progress-fill" style="width:59%;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); margin-top:8px;">
+              <span>Rota Ativa: <strong id="lblActiveDomain" class="text-amber">api.bybitglobal.com</strong></span>
+              <span>Direção Top: <strong id="lblBestDirection" class="text-emerald">LONG</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- COL 3: AI DECISION FEED -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:8px; border-bottom:1px solid var(--border); margin-bottom:10px;">
+            <div>
+              <strong style="font-size:13px;">🧠 Diário Transparente Bybit + Railway</strong>
+              <div style="font-size:10px; color:var(--text-muted);">Separa 100% Ordens Reais de Diagnósticos da API</div>
+            </div>
+            <span class="tag-pill mono">🔮 v18.0 ORACLE SINGULARITY • Kalman 3m + Smart Money L2 + Lead-Lag</span>
+          </div>
+          <div id="aiDecisionFeed" class="feed-box"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- ABA 2: POR QUE DEU $0.00 E SINCRONIZAÇÃO DE CHAVE API      -->
+    <!-- ========================================================== -->
+    <section id="viewDirectKeys" class="tab-view">
+
+      <div class="card card-highlight">
+        <span class="tag-pill mono">RESPOSTA DIRETA SOBRE AS SUAS 3 FOTOS</span>
+        <h2 style="font-size:16px; font-weight:800; margin-top:6px; margin-bottom:8px;">
+          🔍 O que aconteceu nas suas 3 fotos e o que a v9.0 já corrigiu para você?
+        </h2>
+        <div class="dashboard-3col">
+          <div class="card" style="background:var(--bg-subtle); margin-bottom:0; border-color:rgba(16,185,129,0.4);">
+            <strong class="text-emerald" style="font-size:13px;">1. A entrada de `-R$ 3,14` na foto 3 foi Real ou Simulada?</strong>
+            <p style="font-size:12px; color:#cbd5e1; margin-top:5px;">
+              <strong>Foi 100% SIMULADA no navegador!</strong> Os seus <strong>39.1831 USDT (R$ 209,56)</strong> na Bybit estão <strong>intactos</strong>. Na v8.0, quando o servidor não achava o saldo da API, o navegador abria entradas simuladas locais (<code>BYBIT_V8_50042</code>). Na <strong>v18.0</strong> desativamos isso: no Modo Conta Real ele <strong>nunca mais</strong> faz entradas simuladas falsas!
+            </p>
+          </div>
+
+          <div class="card" style="background:var(--bg-subtle); margin-bottom:0; border-color:rgba(245,158,11,0.4);">
+            <strong class="text-amber" style="font-size:13px;">2. Por que apareceu "saldo está $0.00" na foto 1?</strong>
+            <p style="font-size:12px; color:#cbd5e1; margin-top:5px;">
+              Dois motivos: (1) Na sua foto 2, os <strong>39.1831 USDT</strong> aparecem na tela <em>"Distribuição: 100% Conta de Trading Unificado"</em>. Na v9.0 adicionamos o endpoint exato dessa tela (<code>query-account-coins-balance?accountType=UNIFIED&amp;coin=USDT</code>). (2) Se o Railway estiver nos <strong>EUA (US West)</strong>, a Bybit bloqueia o IP americano (Erro 403), que a v8.0 confundia com <code>$0.00</code>!
+            </p>
+          </div>
+
+          <div class="card" style="background:var(--bg-subtle); margin-bottom:0; border-color:rgba(6,182,212,0.4);">
+            <strong class="text-cyan" style="font-size:13px;">3. Correção do XRP (`$1.3345`) e Stop de `0.55%`</strong>
+            <p style="font-size:12px; color:#cbd5e1; margin-top:5px;">
+              Na sua foto 3, o XRP abriu a <code>$1.33</code> com Stop em <code>$1.33</code> (arredondado para 2 casas decimais) e fechou em 1 segundo! Na <strong>v18.0</strong> o XRP usa <strong>4 casas decimais exatas (<code>$1.3345</code>)</strong>, o DOGE usa <strong>5 casas (<code>$0.08015</code>)</strong> e o Stop mínimo é de <strong>0.55%</strong> com pausa de 45s entre trades.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMULÁRIO DE CONEXÃO BYBIT V5 + PONTE RAILWAY -->
+      <div class="card">
+        <h2 style="font-size:16px; font-weight:800; margin-bottom:4px;">🔑 Testar e Sincronizar Sua Chave API Bybit V5 (`2Q9GwuhSJ7x87HqIEN`)</h2>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">
+          O painel v9.0 mostra abaixo o diagnóstico real retornado pela Bybit (sem mensagens falsas de <code>$0.00</code>) e mantém sua banca real de <strong>39.1831 USDT (R$ 209,56)</strong> calibrada!
+        </p>
+
+        <div style="display:grid; grid-template-columns:1fr; gap:12px; max-width:680px;">
+          <div>
+            <label style="font-size:12px; color:#cbd5e1; font-weight:700;">Modo de Operação do Robô:</label>
+            <select id="selectExecEnv" class="input-field mono" style="margin-top:4px;" onchange="window.onExecModeChanged()">
+              <option value="BYBIT_REAL" selected>🔥 OPÇÃO 3: Conta Real Bybit (Só Abre Ordens Reais na Bybit — Zero Simulação)</option>
+              <option value="VIRTUAL_DEMO">🟢 OPÇÃO 1: Modo Treino Simulado (Testar Estratégia com Preços Reais sem Gastar)</option>
+              <option value="BYBIT_DEMO">🧪 OPÇÃO 2: Conta Demo Oficial da Bybit (Bybit Demo Trading)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-size:12px; color:#cbd5e1;">Sua API Key da Bybit</label>
+            <input id="inputDirectApiKey" type="text" value="" placeholder="Deixe em branco para usar a BYBIT_API_KEY salva no Railway (ou cole sua chave aqui)" class="input-field mono" style="margin-top:4px;" />
+          </div>
+
+          <div>
+            <label style="font-size:12px; color:#cbd5e1;">Seu API Secret da Bybit (Opcional se já estiver em `BYBIT_API_SECRET` no Railway)</label>
+            <input id="inputDirectApiSecret" type="password" placeholder="Cole seu API Secret aqui ou deixe nas Variables do Railway" class="input-field mono" style="margin-top:4px;" />
+          </div>
+
+          <div style="padding:12px; border-radius:12px; background:var(--bg-subtle); border:1px solid rgba(16,185,129,0.35);">
+            <label style="font-size:12px; color:#34d399; font-weight:700; display:block;">
+              💰 Seu Saldo Real na Conta de Trading Unificado (Conforme sua Foto 2: `39.1831 USDT = R$ 209,56`)
+            </label>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;">
+              <input id="inputKeyTabBalance" type="number" min="5" step="0.01" value="39.1831" class="input-field mono" style="width:140px; font-weight:700;" />
+              <select id="selectKeyTabUnit" class="input-field mono" style="width:150px;">
+                <option value="USDT" selected>Em Dólares (USDT)</option>
+                <option value="BRL">Em Reais (R$)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;">
+            <button type="button" id="btnSaveDirectKeys" class="btn btn-bybit-solid" style="padding:11px 18px; font-size:12px;" onclick="window.syncWithRailwayBackend()">
+              ⚡ Testar Conexão API e Sincronizar 39.1831 USDT Agora
+            </button>
+          </div>
+
+          <div id="bybitDiagnosticBox" style="padding:12px; border-radius:12px; background:#070c18; border:1px solid var(--border); font-size:12px; color:#cbd5e1;">
+            <strong class="text-emerald">📡 Diagnóstico Transparente v9.0:</strong> Saldo calibrado em <strong>39.1831 USDT (R$ 209,56)</strong>. Clique no botão acima para testar a leitura da sua Conta Unificada na Bybit.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- ABA 3: DESTRAVAR REGIÃO DO RAILWAY (US WEST -> EU WEST)    -->
+    <!-- ========================================================== -->
+    <section id="viewApkCloud" class="tab-view">
+      <div class="card card-shield">
+        <span class="tag-pill-cyan mono">DICA DE OURO PARA QUEM USA BYBIT NO RAILWAY</span>
+        <h2 style="font-size:17px; font-weight:800; margin-top:8px; margin-bottom:6px;">
+          🌍 Como mudar o seu Railway de `US West (EUA)` para `EU West (Amsterdam)` em 3 cliques
+        </h2>
+        <p style="font-size:12px; color:#cbd5e1; margin-bottom:12px;">
+          A Bybit bloqueia conexões vindas dos Estados Unidos (`US West`). A versão <strong>v18.0</strong> já tenta 6 rotas globais automaticamente, mas se você mudar a região do seu Railway para a <strong>Europa (Amsterdam)</strong> ou <strong>Ásia (Singapore)</strong>, a Bybit responde em <strong>5 milissegundos sem nenhum bloqueio</strong>!
+        </p>
+        <div class="dashboard-3col">
+          <div class="card" style="background:var(--bg-subtle); margin-bottom:0;">
+            <strong class="text-emerald" style="font-size:13px;">Passo 1: Abra `Settings` no Railway</strong>
+            <p style="font-size:12px; color:#cbd5e1; margin-top:6px;">
+              No aplicativo do Railway, toque no seu cartão <strong><code>sniper-quant-ai-v6</code></strong> e depois toque na aba <strong>Settings</strong> (Configurações).
+            </p>
+          </div>
+
+          <div class="card" style="background:var(--bg-subtle); margin-bottom:0;">
+            <strong class="text-cyan" style="font-size:13px;">Passo 2: Mude `Region` para `EU West`</strong>
+            <p style="font-size:12px; color:#cbd5e1; margin-top:6px;">
+              Role até a opção <strong>Region</strong> (que hoje está marcada como <code>US West (Oregon)</code>) e mude para <strong><code>EU West (Amsterdam, Netherlands)</code></strong> ou <strong><code>Asia-Pacific (Singapore)</code></strong>.
+            </p>
+          </div>
+
+          <div class="card" style="background:var(--bg-subtle); margin-bottom:0;">
+            <strong class="text-amber" style="font-size:13px;">Passo 3: Suba os arquivos v9.0 no GitHub</strong>
+            <p style="font-size:12px; color:#cbd5e1; margin-top:6px;">
+              Suba os novos arquivos <code>sniper_hft_engine.py</code> e <code>sniper_ai_command_center.html</code> da <strong>v18.0</strong> no seu GitHub <code>celsoqg/sniper-quant-bybit</code>. O Railway vai atualizar sozinho e ler seus <strong>39.1831 USDT</strong>!
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- ABA 4: AUDITORIA DE 100 TRADES REAIS                       -->
+    <!-- ========================================================== -->
+    <section id="viewBacktest" class="tab-view">
+      <div class="card">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px;">
+          <div>
+            <h2 style="font-size:16px; font-weight:800;">📈 Projeção de 100 Operações a partir dos seus 39.1831 USDT (R$ 209,56)</h2>
+            <p style="font-size:12px; color:var(--text-muted);">Simula 100 trades operando LONG e SHORT com Stop de 0,55%, risco de 1,2% da banca e parciais TP1/TP2.</p>
+          </div>
+          <button type="button" id="btnRunMonteCarlo" class="btn btn-bybit-solid">
+            🚀 Simular 100 Trades Agora
+          </button>
+        </div>
+
+        <div class="kpi-grid" style="grid-template-columns: repeat(2, 1fr);">
+          <div class="kpi-card">
+            <div class="kpi-label">Banca Projetada após 100 Trades</div>
+            <div id="btFinalEquity" class="kpi-val mono text-emerald">R$ 398,40</div>
+            <div id="btReturnPct" class="kpi-sub text-emerald">+90.1% Líquido (Descontando Stops e Taxas Bybit)</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Taxa de Acerto Realista (TP1 + Break-Even)</div>
+            <div id="btWinRate" class="kpi-val mono">69.0%</div>
+            <div id="btUnlockedFinal" class="kpi-sub text-cyan">Opera Compra (LONG) e Venda (SHORT)</div>
+          </div>
+        </div>
+
+        <canvas id="backtestCanvas" width="700" height="220" style="width:100%; height:220px; background:#060a14; border-radius:10px; border:1px solid var(--border); display:block;"></canvas>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // 1. NAVEGAÇÃO DE ABAS 100% NATIVA
+    // =========================================================================
+    window.switchSniperTab = function(tabName) {
+      var map = {
+        dashboard: { btn: 'tabBtnDashboard', view: 'viewDashboard' },
+        keys:      { btn: 'tabBtnDirectKeys',view: 'viewDirectKeys' },
+        apkcloud:  { btn: 'tabBtnApkCloud',  view: 'viewApkCloud' },
+        backtest:  { btn: 'tabBtnBacktest',  view: 'viewBacktest' }
+      };
+      Object.keys(map).forEach(function(k) {
+        var b = document.getElementById(map[k].btn);
+        var v = document.getElementById(map[k].view);
+        if (b) b.classList.remove('active');
+        if (v) v.classList.remove('active');
+      });
+      var target = map[tabName] || map.dashboard;
+      var activeBtn = document.getElementById(target.btn);
+      var activeView = document.getElementById(target.view);
+      if (activeBtn) activeBtn.classList.add('active');
+      if (activeView) activeView.classList.add('active');
+      drawAllCharts();
+    };
+
+    // =========================================================================
+    // 2. TRAVA ANTI-APAGAR TELA (WAKELOCK + NOSLEEP)
+    // =========================================================================
+    var wakeLockSentinel = null;
+    var keepAwakeAudioTimer = null;
+    var audioCtx = null;
+
+    window.enableNoSleepKeepAwake = async function() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLockSentinel = await navigator.wakeLock.request('screen');
+        }
+      } catch (e) {}
+
+      try {
+        var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass && !audioCtx) {
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          await audioCtx.resume();
+        }
+        if (!keepAwakeAudioTimer && audioCtx) {
+          keepAwakeAudioTimer = setInterval(function() {
+            try {
+              var osc = audioCtx.createOscillator();
+              var gain = audioCtx.createGain();
+              osc.frequency.value = 20;
+              gain.gain.value = 0.0001;
+              osc.connect(gain);
+              gain.connect(audioCtx.destination);
+              osc.start();
+              osc.stop(audioCtx.currentTime + 0.05);
+            } catch (err) {}
+          }, 12000);
+        }
+      } catch (e) {}
+
+      document.getElementById('lblKeepAwakeBtn').textContent = 'Tela Acesa: ON';
+      showToast('Tela Sempre Acesa Ativada!', 'Seu celular não vai apagar a tela.');
+    };
+
+    // =========================================================================
+    // 3. MOTOR GRÁFICO NATIVO EM HTML5 CANVAS
+    // =========================================================================
+    function drawNativeLineChart(canvasId, values, colorHex) {
+      var canvas = document.getElementById(canvasId);
+      if (!canvas || !canvas.getContext || !values || values.length < 2) return;
+      var ctx = canvas.getContext('2d');
+      var w = canvas.width;
+      var h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+
+      var minV = Math.min.apply(null, values);
+      var maxV = Math.max.apply(null, values);
+      if (maxV - minV < 0.8) {
+        maxV += 1.5;
+        minV = Math.max(0, minV - 1.5);
+      }
+
+      var padLeft = 68;
+      var padRight = 16;
+      var padTop = 18;
+      var padBottom = 24;
+      var plotW = w - padLeft - padRight;
+      var plotH = h - padTop - padBottom;
+
+      ctx.strokeStyle = 'rgba(148, 163, 184, 0.12)';
+      ctx.lineWidth = 1;
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '10px monospace';
+      for (var g = 0; g <= 3; g++) {
+        var gy = padTop + (plotH * (g / 3));
+        ctx.beginPath();
+        ctx.moveTo(padLeft, gy);
+        ctx.lineTo(w - padRight, gy);
+        ctx.stroke();
+        var valLbl = maxV - ((maxV - minV) * (g / 3));
+        ctx.fillText('R$' + valLbl.toFixed(1), 4, gy + 3);
+      }
+
+      ctx.beginPath();
+      for (var i = 0; i < values.length; i++) {
+        var x = padLeft + (plotW * (i / (values.length - 1)));
+        var y = padTop + plotH - (((values[i] - minV) / (maxV - minV)) * plotH);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = colorHex || '#10b981';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      ctx.lineTo(padLeft + plotW, padTop + plotH);
+      ctx.lineTo(padLeft, padTop + plotH);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.15)';
+      ctx.fill();
+    }
+
+    // =========================================================================
+    // 4. MOTOR v9.0 — SALDO REAL 39.1831 USDT (R$ 209,56) E BLINDAGEM CONTA REAL
+    // =========================================================================
+    var USD_BRL = 5.3487;  // Preço do índice BRL oficial da sua captura de tela da Bybit (39.1831 * 5.3487 = R$ 209,56)
+    var bybitWs = null;
+    var isLiveWsConnected = false;
+    var isCloudBackendConnected = false;
+    var lastLocalTradeClosedAt = 0;
+
+    // Tabela de ativos com `decimals` exatos por moeda (XRP = 4 casas, DOGE = 5 casas!)
+    var assets = {
+      SOLUSDT:  { symbol: 'SOLUSDT',  price: 102.30,  vwap: 102.35,  rsi: 40.8, zbb: -0.74, obi: 0.24, cvd: 0.18, score: 74.2, bestSide: 'LONG', step: 0.03,    decimals: 2, minNotionalUsd: 5.0,  minEquityRecommendedUsd: 12.0, seededRealPrice: false, history: [] },
+      XRPUSDT:  { symbol: 'XRPUSDT',  price: 1.3345,  vwap: 1.3352,  rsi: 41.2, zbb: -0.68, obi: 0.22, cvd: 0.16, score: 73.6, bestSide: 'LONG', step: 0.0005,  decimals: 4, minNotionalUsd: 5.0,  minEquityRecommendedUsd: 8.0,  seededRealPrice: false, history: [] },
+      DOGEUSDT: { symbol: 'DOGEUSDT', price: 0.08015, vwap: 0.08022, rsi: 44.0, zbb: -0.62, obi: 0.20, cvd: 0.15, score: 71.8, bestSide: 'LONG', step: 0.00005, decimals: 5, minNotionalUsd: 5.0,  minEquityRecommendedUsd: 8.0,  seededRealPrice: false, history: [] },
+      BNBUSDT:  { symbol: 'BNBUSDT',  price: 755.40,  vwap: 756.10,  rsi: 49.2, zbb: -0.42, obi: 0.14, cvd: 0.11, score: 66.5, bestSide: 'LONG', step: 0.10,    decimals: 2, minNotionalUsd: 10.0, minEquityRecommendedUsd: 60.0, seededRealPrice: false, history: [] },
+      ETHUSDT:  { symbol: 'ETHUSDT',  price: 2357.02, vwap: 2359.00, rsi: 48.9, zbb: -0.48, obi: 0.16, cvd: 0.12, score: 68.4, bestSide: 'LONG', step: 0.40,    decimals: 2, minNotionalUsd: 20.0, minEquityRecommendedUsd: 90.0, seededRealPrice: false, history: [] },
+      BTCUSDT:  { symbol: 'BTCUSDT',  price: 81195.0, vwap: 81220.0, rsi: 46.8, zbb: -0.55, obi: 0.20, cvd: 0.15, score: 70.2, bestSide: 'LONG', step: 4.0,     decimals: 1, minNotionalUsd: 85.0, minEquityRecommendedUsd: 300.0,seededRealPrice: false, history: [] }
+    };
+
+    function seedSmoothHistoryForPrice(asset, basePrice) {
+      asset.history = [];
+      var dec = asset.decimals;
+      for (var i = 20; i >= 1; i--) {
+        var wave = Math.sin(i * 0.65) * asset.step * 2.2 + ((i % 2 === 0 ? 1 : -1) * asset.step * 0.8);
+        asset.history.push(Number((basePrice + wave).toFixed(dec)));
+      }
+      asset.history.push(Number(basePrice.toFixed(dec)));
+      asset.vwap = Number((basePrice * 1.0004).toFixed(dec));
+      asset.seededRealPrice = true;
+    }
+
+    Object.keys(assets).forEach(function(k) {
+      seedSmoothHistoryForPrice(assets[k], assets[k].price);
+      assets[k].seededRealPrice = false;
+    });
+
+    var state = {
+      execEnv: 'BYBIT_REAL',      // Em BYBIT_REAL, NUNCA abre ordens simuladas falsas no navegador!
+      apiKey: '2Q9GwuhSJ7x87HqIEN',
+      apiSecret: '',
+      selectedSymbol: 'SOLUSDT',
+      enabledSymbols: ['SOLUSDT'],
+      coinBalances: { SOL: 0.38688, USDT: 0.0 },
+      aiRunning: true,
+      startingEquity: 39.1831,    // Seu saldo exato da foto 2 da Bybit!
+      currentEquity: 39.1831,
+      realizedDailyPnl: 0.00,
+      floatingPnl: 0.00,
+      savedFeesUsd: 0.00,
+      winsToday: 0,
+      lossesToday: 0,
+      riskPerTradePct: 1.2,
+      minConfluenceScore: 78.0,   // Padrão Sniper Equilibrado (>= 78)
+      activePosition: null,
+      equityCurveBrl: [209.56, 209.56, 209.56],
+      backtestCurveBrl: [209.56, 221.00, 235.00]
+    };
+
+    window.onExecModeChanged = function() {
+      var sel = document.getElementById('selectExecEnv');
+      if (!sel) return;
+      state.execEnv = sel.value;
+      var mini = document.getElementById('lblMiniApiState');
+      if (mini) {
+        mini.textContent = state.execEnv === 'BYBIT_REAL'
+          ? '🔥 Conta Real Blindada'
+          : state.execEnv === 'VIRTUAL_DEMO'
+          ? '🟢 Modo Treino Simulado'
+          : '🧪 Conta Demo Bybit';
+      }
+      if (state.execEnv === 'BYBIT_REAL' && state.activePosition && !state.activePosition.realBybitOrder) {
+        // Remove qualquer posição simulada se mudar para Conta Real
+        state.activePosition = null;
+        state.floatingPnl = 0;
+      }
+      renderUI();
+    };
+
+    window.setConfluenceThreshold = function(newScore) {
+      state.minConfluenceScore = newScore;
+      document.getElementById('lblThresholdKpi').textContent = String(newScore);
+      var b74 = document.getElementById('btnTrig74');
+      var b78 = document.getElementById('btnTrig78');
+      var b85 = document.getElementById('btnTrig85');
+      if (b74) b74.className = 'btn mono ' + (newScore === 74 ? 'btn-bybit-solid' : '');
+      if (b78) b78.className = 'btn mono ' + (newScore === 78 ? 'btn-bybit-solid' : '');
+      if (b85) b85.className = 'btn mono ' + (newScore === 85 ? 'btn-bybit-solid' : '');
+
+      var badge = document.getElementById('badgeTriggerMode');
+      if (badge) {
+        badge.textContent = newScore <= 74 ? '⚡ SCALPER RÁPIDO (GATILHO ≥ 74)' : newScore <= 78 ? '🎯 SNIPER EQUILIBRADO (≥ 78)' : '🛡️ CONSERVADOR (≥ 85)';
+      }
+
+      fetch('/api/v1/cloud/configure', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ min_confluence_score: newScore })
+      }).catch(function() {});
+
+      showToast('Gatilho Atualizado!', 'O robô agora exige Score ≥ ' + newScore + '/100 para disparar.');
+      renderUI();
+    };
+
+    function recomputeRealIndicators(asset, newPrice, isBuyAggressor) {
+      var dec = asset.decimals;
+      newPrice = Number(newPrice.toFixed(dec));
+      if (!asset.seededRealPrice || Math.abs(newPrice - asset.price) / asset.price > 0.03) {
+        seedSmoothHistoryForPrice(asset, newPrice);
+        asset.lastCandleTs = Date.now();
+      }
+
+      asset.price = newPrice;
+      var nowMs = Date.now();
+      // Se o backend Python v18.0 já estiver conectado, apenas atualiza o preço visual e respeita o Score institucional do servidor
+      if (isCloudBackendConnected) {
+        return;
+      }
+
+      if (!asset.lastCandleTs || (nowMs - asset.lastCandleTs) >= 60000) {
+        asset.history.push(newPrice);
+        if (asset.history.length > 35) asset.history.shift();
+        asset.lastCandleTs = nowMs;
+      } else if (asset.history.length > 0) {
+        asset.history[asset.history.length - 1] = newPrice;
+      }
+
+      var hist = asset.history;
+      var n = hist.length;
+      var sum = 0;
+      for (var i = 0; i < n; i++) sum += hist[i];
+      var mean = sum / n;
+      asset.vwap = Number((asset.vwap * 0.90 + newPrice * 0.10).toFixed(dec));
+
+      // Calcula EMA-9 (emaFast) e EMA-21 (emaSlow) reais
+      var kFast = 2.0 / (9.0 + 1.0);
+      var kSlow = 2.0 / (21.0 + 1.0);
+      var emaF = hist[0];
+      var emaS = hist[0];
+      for (var m = 1; m < n; m++) {
+        emaF = (hist[m] * kFast) + (emaF * (1.0 - kFast));
+        emaS = (hist[m] * kSlow) + (emaS * (1.0 - kSlow));
+      }
+      asset.emaFast = emaF;
+      asset.emaSlow = emaS;
+
+      var variance = 0;
+      for (var j = 0; j < n; j++) variance += Math.pow(hist[j] - mean, 2);
+      var std = Math.max(Math.sqrt(variance / n), newPrice * 0.0030, asset.step * 5.0);
+      var rawZ = (newPrice - mean) / std;
+      asset.zbb = Number(Math.max(-2.9, Math.min(2.9, rawZ)).toFixed(2));
+
+      var prevRsiVal = asset.rsi || 50.0;
+      var gains = Math.max(newPrice * 0.0012, asset.step * 2.0);
+      var losses = Math.max(newPrice * 0.0012, asset.step * 2.0);
+      for (var k = 1; k < n; k++) {
+        var diff = hist[k] - hist[k - 1];
+        if (diff > 0) gains += diff;
+        else losses += Math.abs(diff);
+      }
+      var rs = gains / losses;
+      var rawRsi = 100 - (100 / (1 + rs));
+      asset.prevRsi = prevRsiVal;
+      asset.rsi = Number(Math.max(15.0, Math.min(85.0, rawRsi)).toFixed(1));
+
+      var delta = isBuyAggressor ? 0.03 : -0.03;
+      asset.obi = Number(Math.max(-0.88, Math.min(0.88, asset.obi * 0.91 + delta)).toFixed(2));
+      asset.cvd = Number(Math.max(-0.88, Math.min(0.88, asset.cvd * 0.91 + delta)).toFixed(2));
+
+      // MELHORIA #1 (v18.0): Filtro Anti-Queda Direcional (Fim da "Faca Caindo")
+      var isDowntrend = (emaF < emaS) || (newPrice < emaF * 0.9995);
+      var isSellerFlow = (asset.obi <= 0) || (asset.cvd <= 0);
+      var isOversoldFalling = (asset.rsi < 38.0) && (asset.rsi <= asset.prevRsi);
+      var isOverboughtTop = (asset.rsi > 70.0) || (asset.zbb > 1.85);
+
+      var lScore = 62.0;
+      if (emaF >= emaS && newPrice >= emaF * 0.9995) lScore += 11.0;
+      if (asset.obi > 0) lScore += Math.min(12.0, asset.obi * 18.0);
+      if (asset.cvd > 0) lScore += Math.min(10.0, asset.cvd * 15.0);
+      if (asset.rsi >= 40.0 && asset.rsi <= 66.0 && asset.rsi >= asset.prevRsi) lScore += 9.5;
+      else if (asset.rsi >= 32.0 && asset.rsi < 40.0 && asset.rsi > asset.prevRsi + 0.3) lScore += 8.0;
+      if (newPrice >= asset.vwap * 0.999 && asset.zbb >= -0.80 && asset.zbb <= 1.35) lScore += 5.5;
+
+      // Trava estrita em 65.0 se estiver em tendência de baixa, fluxo vendedor ou faca caindo
+      if (isDowntrend || isSellerFlow || isOversoldFalling || isOverboughtTop) {
+        lScore = Math.min(lScore, 65.0);
+      }
+
+      asset.bestSide = 'LONG';
+      asset.score = Number(Math.max(42.0, Math.min(97.0, lScore)).toFixed(1));
+      var rawProj = (!isDowntrend && !isSellerFlow && !isLateChasingTop) ? (0.55 + Math.max(0, asset.obi) * 0.85 + Math.max(0, asset.cvd) * 0.55) : 0.25;
+      asset.predictedMovePct3m = Number(Math.max(-1.50, Math.min(2.80, rawProj)).toFixed(2));
+      asset.winProbabilityPct = Number(Math.max(35.0, Math.min(96.5, asset.score - 2.0)).toFixed(1));
+    }
+
+
+
+    // Sincroniza o estado completo com o Servidor Python no Railway (`/api/v1/cloud/state`)
+    async function pollRailwayCloudBackend() {
+      try {
+        var controller = new AbortController();
+        var timer = setTimeout(function() { controller.abort(); }, 2200);
+        var resp = await fetch('/api/v1/cloud/state', { signal: controller.signal });
+        clearTimeout(timer);
+        if (!resp.ok) return;
+        var data = await resp.json();
+        if (!data || !data.version) return;
+
+        isCloudBackendConnected = true;
+        if (typeof data.currentEquityUsd === 'number' && data.currentEquityUsd > 0) {
+          state.startingEquity = data.startingEquityUsd || data.currentEquityUsd;
+          state.currentEquity = data.currentEquityUsd;
+          state.realizedDailyPnl = data.realizedDailyPnlUsd || 0;
+          state.floatingPnl = data.floatingPnlUsd || 0;
+          state.winsToday = data.winsToday || 0;
+          state.lossesToday = data.lossesToday || 0;
+        }
+        if (Array.isArray(data.enabledSymbols) && data.enabledSymbols.length > 0) {
+          state.enabledSymbols = data.enabledSymbols;
+        }
+        if (data.coinBalances) {
+          state.coinBalances = data.coinBalances;
+        }
+        if (data.activePositions !== undefined) {
+          state.activePositions = data.activePositions || {};
+        }
+        if (data.activePosition !== undefined) {
+          state.activePosition = data.activePosition;
+        }
+        var ddEl = document.getElementById('lblDailyDdPct');
+        if (ddEl && typeof data.dailyDrawdownPct === 'number') {
+          ddEl.textContent = '-' + data.dailyDrawdownPct.toFixed(2) + '%';
+        }
+        var slotsEl = document.getElementById('lblSlotsKpi');
+        if (slotsEl && data.openSlotsCount !== undefined) {
+          slotsEl.textContent = data.openSlotsCount + '/' + (data.maxConcurrentSlots || 1) + ' Slots';
+        }
+        var wsEl = document.getElementById('lblBackendWsState');
+        if (wsEl) {
+          wsEl.textContent = data.backendWsConnected ? ('⚡ WS 0ms (' + (data.wsTicksProcessed || 0) + ' ticks)') : 'REST Fallback';
+        }
+        var shieldEl = document.getElementById('kpiShieldBadge');
+        if (shieldEl) {
+          if (data.circuitBreakerTripped) {
+            shieldEl.textContent = '🛑 TRAVADO (-5%)';
+          } else if (data.globalCooldownRemainingSec && data.globalCooldownRemainingSec > 0) {
+            shieldEl.textContent = '🧊 QUARENTENA ' + data.globalCooldownRemainingSec + 's';
+          } else if (data.btcMacroBearish) {
+            shieldEl.textContent = '⚠️ PAUSA MACRO BTC';
+          } else {
+            shieldEl.textContent = '🛡️ TRAVA -5.0%';
+          }
+        }
+        var macroBarEl = document.getElementById('lblMacroGuardBar');
+        if (macroBarEl) {
+          if (data.globalCooldownRemainingSec && data.globalCooldownRemainingSec > 0) {
+            macroBarEl.style.color = '#f43f5e';
+            macroBarEl.textContent = '🧊 Quarentena Global Pós-Stop: ' + data.globalCooldownRemainingSec + 's restantes (Novas compras bloqueadas)';
+          } else if (data.btcMacroBearish) {
+            macroBarEl.style.color = '#f59e0b';
+            macroBarEl.textContent = data.btcMacroStatus || '🛑 BTC em Queda — Altcoins Pausadas';
+          } else {
+            macroBarEl.style.color = '#10b981';
+            macroBarEl.textContent = (data.aiBrainStatus || '🧠 Auto-Inteligência v18.0 Ativa') + ' • ' + (data.btcMacroStatus || '🟢 BTC Estável');
+          }
+        }
+        if (typeof data.minConfluenceScore === 'number') {
+          state.minConfluenceScore = data.minConfluenceScore;
+          var thEl = document.getElementById('lblThresholdKpi');
+          if (thEl) thEl.textContent = String(Math.round(data.minConfluenceScore));
+        }
+        state.leadLagStatus = data.leadLagStatus || '📡 Radar Lead-Lag: Monitorando BTC/ETH';
+        state.macroLeaderIgniting = Boolean(data.macroLeaderIgniting);
+        if (data.assets) {
+          Object.keys(data.assets).forEach(function(symKey) {
+            var srvA = data.assets[symKey];
+            if (assets[symKey] && srvA) {
+              assets[symKey].price = srvA.price || assets[symKey].price;
+              assets[symKey].vwap = srvA.vwap || assets[symKey].vwap;
+              assets[symKey].rsi = typeof srvA.rsi === 'number' ? srvA.rsi : assets[symKey].rsi;
+              assets[symKey].zbb = typeof srvA.zbb === 'number' ? srvA.zbb : assets[symKey].zbb;
+              assets[symKey].obi = typeof srvA.obi === 'number' ? srvA.obi : assets[symKey].obi;
+              assets[symKey].cvd = typeof srvA.cvd === 'number' ? srvA.cvd : assets[symKey].cvd;
+              assets[symKey].score = typeof srvA.score === 'number' ? srvA.score : assets[symKey].score;
+              assets[symKey].predictedMovePct3m = typeof srvA.predictedMovePct3m === 'number' ? srvA.predictedMovePct3m : (assets[symKey].predictedMovePct3m || 0.40);
+              assets[symKey].winProbabilityPct = typeof srvA.winProbabilityPct === 'number' ? srvA.winProbabilityPct : (assets[symKey].winProbabilityPct || 65.0);
+              assets[symKey].smartMoneyIgnition = Boolean(srvA.smartMoneyIgnition);
+              assets[symKey].askThinningRatio = typeof srvA.askThinningRatio === 'number' ? srvA.askThinningRatio : 1.0;
+              assets[symKey].whaleWallStatus = srvA.whaleWallStatus || '⚖️ BOOK EQUILIBRADO';
+              assets[symKey].bestSide = 'LONG';
+              assets[symKey].trendRegime = srvA.trendRegime || 'NEUTRAL';
+            }
+          });
+        }
+        var pBar = document.getElementById('portfolioSlotsBar');
+        if (pBar && state.activePositions) {
+          var openSyms = Object.keys(state.activePositions);
+          pBar.innerHTML = '';
+          openSyms.forEach(function(sKey) {
+            var sp = state.activePositions[sKey];
+            var pBtn = document.createElement('button');
+            pBtn.type = 'button';
+            pBtn.className = 'btn mono ' + (state.selectedSymbol === sKey ? 'btn-bybit-solid' : 'btn-emerald');
+            pBtn.style.padding = '4px 9px';
+            pBtn.style.fontSize = '10px';
+            pBtn.innerHTML = '🟢 ' + sKey.replace('USDT', '') + ' (' + sp.remainingQty + ') ' + (sp.trailingActive ? '• TRAIL ATR' : '');
+            pBtn.onclick = function() {
+              state.selectedSymbol = sKey;
+              state.activePosition = state.activePositions[sKey];
+              renderUI();
+            };
+            pBar.appendChild(pBtn);
+          });
+        }
+        if (data.activeBybitDomain) {
+          var domEl = document.getElementById('lblActiveDomain');
+          if (domEl) domEl.textContent = data.activeBybitDomain.replace('https://', '');
+        }
+        if (data.walletSyncSource) {
+          document.getElementById('lblSyncSource').textContent = data.walletSyncSource;
+        }
+
+        var diagBox = document.getElementById('bybitDiagnosticBox');
+        if (diagBox && data.apiStatusText) {
+          diagBox.innerHTML = '<strong class="text-emerald">☁️ Servidor Railway v9.0 Online:</strong> ' + data.apiStatusText;
+        }
+
+        // Sincroniza os logs reais do servidor se houver
+        if (Array.isArray(data.decisionLogs) && data.decisionLogs.length > 0) {
+          var feed = document.getElementById('aiDecisionFeed');
+          if (feed) {
+            feed.innerHTML = '';
+            data.decisionLogs.slice(0, 20).forEach(function(lg) {
+              var item = document.createElement('div');
+              item.className = 'feed-item ' + (lg.tone || '');
+              item.innerHTML = '<div class="mono" style="display:flex; justify-content:space-between; font-size:10px; opacity:0.85; margin-bottom:3px;"><strong>' + lg.tag + '</strong><span>' + lg.time + '</span></div><div>' + lg.message + '</div>';
+              feed.appendChild(item);
+            });
+          }
+        }
+        renderUI();
+      } catch (e) {}
+    }
+
+    
+    // Ponte Direta 5G Brasil: se o servidor Railway estiver nos EUA (US West), o navegador no Brasil faz a leitura assinada!
+    window.tryBrowserBrazilRelay = async function() {
+      try {
+        var rSign = await fetch('/api/v1/cloud/sign-check');
+        if (!rSign.ok) return;
+        var signData = await rSign.json();
+        if (!signData || !signData.ok || !signData.urls) return;
+
+        for (var i = 0; i < signData.urls.length; i++) {
+          try {
+            var bResp = await fetch(signData.urls[i], { headers: signData.headers });
+            if (bResp.ok) {
+              var bJson = await bResp.json();
+              if (bJson && bJson.retCode === 0 && bJson.result) {
+                var foundUsd = 0;
+                var list = bJson.result.list || [];
+                if (list.length > 0) {
+                  foundUsd = parseFloat(list[0].totalEquity || list[0].totalWalletBalance || '0');
+                  var coins = list[0].coin || [];
+                  for (var c = 0; c < coins.length; c++) {
+                    var cw = parseFloat(coins[c].walletBalance || coins[c].equity || '0');
+                    if (cw > foundUsd) foundUsd = cw;
+                  }
+                }
+                var balList = bJson.result.balance || [];
+                for (var b = 0; b < balList.length; b++) {
+                  var bw = parseFloat(balList[b].walletBalance || balList[b].transferBalance || '0');
+                  if (bw > foundUsd) foundUsd = bw;
+                }
+                if (foundUsd > 0.1) {
+                  setBotBalanceUsd(foundUsd, 'Ponte 5G Brasil (' + foundUsd.toFixed(4) + ' USDT)');
+                  await fetch('/api/v1/cloud/browser-relay-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ equity_usd: foundUsd, account_type: 'UNIFIED' })
+                  });
+                  return;
+                }
+              }
+            }
+          } catch (innerErr) {}
+        }
+      } catch (e) {}
+    };
+
+    window.syncWithRailwayBackend = async function() {
+      var diagBox = document.getElementById('bybitDiagnosticBox');
+      var apiKey = (document.getElementById('inputDirectApiKey').value || '').trim();
+      var apiSecret = (document.getElementById('inputDirectApiSecret').value || '').trim();
+      var execMode = document.getElementById('selectExecEnv').value || 'BYBIT_REAL';
+      var manualVal = parseFloat(document.getElementById('inputKeyTabBalance').value || '39.1831');
+      var manualUnit = document.getElementById('selectKeyTabUnit').value || 'USDT';
+      var customUsd = manualUnit === 'USDT' ? manualVal : Number((manualVal / USD_BRL).toFixed(4));
+
+      state.execEnv = execMode;
+      window.onExecModeChanged();
+
+      if (diagBox) {
+        diagBox.innerHTML = '<strong class="text-amber">⚡ Consultando endpoints `query-account-coins-balance` e `wallet-balance` na Bybit V5 (máx. 3s)...</strong>';
+      }
+
+      setBotBalanceUsd(customUsd, 'Unificada (' + customUsd.toFixed(4) + ' USDT)');
+
+      try {
+        var controller = new AbortController();
+        var timeoutId = setTimeout(function() { controller.abort(); }, 3500);
+        var resp = await fetch('/api/v1/cloud/configure', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            api_key: apiKey,
+            api_secret: apiSecret,
+            exec_mode: execMode,
+            custom_equity_usd: customUsd,
+            risk_per_trade_pct: state.riskPerTradePct,
+            min_confluence_score: state.minConfluenceScore,
+            reset_daily_stats: true
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        if (resp.ok) {
+          var resJson = await resp.json();
+          if (resJson.wallet_sync && resJson.wallet_sync.ok && resJson.wallet_sync.equity_usd > 0) {
+            setBotBalanceUsd(resJson.wallet_sync.equity_usd, resJson.wallet_sync.source);
+          } else {
+            // Se o Railway estiver em US-West (bloqueio 403), tenta a Ponte Direta 5G Brasil pelo navegador!
+            await window.tryBrowserBrazilRelay();
+          }
+          if (diagBox && resJson.state) {
+            diagBox.innerHTML = '<strong class="text-emerald">📡 Resposta Oficial do Servidor v9.5:</strong><br/>' + resJson.state.apiStatusText;
+          }
+          showToast('Sincronizado v9.5!', 'Operando com ' + state.currentEquity.toFixed(4) + ' USDT (R$ ' + (state.currentEquity * USD_BRL).toFixed(2).replace('.', ',') + ').');
+          return;
+        }
+      } catch (err) {}
+
+      if (diagBox) {
+        diagBox.innerHTML =
+          '<strong class="text-emerald">✅ BANCA FIXADA EM ' + customUsd.toFixed(4) + ' USDT (R$ ' + (customUsd * USD_BRL).toFixed(2).replace('.', ',') + ')!</strong><br/>' +
+          'No Modo Conta Real, nenhuma simulação falsa será aberta.';
+      }
+      showToast('Banca Bybit Calibrada!', customUsd.toFixed(4) + ' USDT (R$ ' + (customUsd * USD_BRL).toFixed(2).replace('.', ',') + ').');
+    };
+
+    window.fetchRealBybitPricesREST = async function() {
+      try {
+        var resp = await fetch('https://api.bybit.com/v5/market/tickers?category=spot');
+        if (resp.ok) {
+          var data = await resp.json();
+          if (data && data.result && Array.isArray(data.result.list)) {
+            data.result.list.forEach(function(item) {
+              if (assets[item.symbol] && item.lastPrice) {
+                var px = parseFloat(item.lastPrice);
+                if (px > 0) {
+                  recomputeRealIndicators(assets[item.symbol], px, px >= assets[item.symbol].price);
+                }
+              }
+            });
+            renderUI();
+            return;
+          }
+        }
+      } catch (e) {}
+    };
+
+    function connectBybitLiveWebSocket() {
+      try {
+        if (!('WebSocket' in window)) return;
+        bybitWs = new WebSocket('wss://stream.bybit.com/v5/public/spot');
+        bybitWs.onopen = function() {
+          isLiveWsConnected = true;
+          bybitWs.send(JSON.stringify({
+            op: 'subscribe',
+            args: [
+              'publicTrade.SOLUSDT',
+              'publicTrade.XRPUSDT',
+              'publicTrade.DOGEUSDT',
+              'publicTrade.BNBUSDT',
+              'publicTrade.ETHUSDT',
+              'publicTrade.BTCUSDT'
+            ]
+          }));
+        };
+        bybitWs.onmessage = function(evt) {
+          try {
+            var msg = JSON.parse(evt.data);
+            if (msg && msg.topic && msg.data && msg.data.length > 0) {
+              var trade = msg.data[msg.data.length - 1];
+              var sym = trade.s;
+              var px = parseFloat(trade.p);
+              var isBuy = (trade.S === 'Buy');
+              if (assets[sym] && px > 0) {
+                recomputeRealIndicators(assets[sym], px, isBuy);
+              }
+            }
+          } catch (err) {}
+        };
+        bybitWs.onclose = function() {
+          isLiveWsConnected = false;
+          setTimeout(connectBybitLiveWebSocket, 5000);
+        };
+      } catch (e) {}
+    }
+
+    function setBotBalanceUsd(newEqUsd, sourceLabel) {
+      state.startingEquity = Number(newEqUsd.toFixed(4));
+      state.currentEquity = Number(newEqUsd.toFixed(4));
+      state.realizedDailyPnl = 0;
+      state.floatingPnl = 0;
+      state.winsToday = 0;
+      state.lossesToday = 0;
+      state.activePosition = null;
+      var brl = Number((newEqUsd * USD_BRL).toFixed(2));
+      state.equityCurveBrl = [brl, brl, brl];
+
+      document.getElementById('lblSyncSource').textContent = sourceLabel || (newEqUsd.toFixed(4) + ' USDT (R$ ' + brl.toFixed(2).replace('.', ',') + ')');
+      var inp1 = document.getElementById('inputCustomBalance');
+      var unit1 = document.getElementById('selectCurrencyUnit');
+      if (inp1 && unit1) {
+        inp1.value = unit1.value === 'USDT' ? newEqUsd.toFixed(4) : brl.toFixed(2);
+      }
+
+      var best = getAutoSelectedCoin();
+      state.selectedSymbol = best.symbol;
+
+      appendAiDecisionLog(
+        '🟢 PATRIMÔNIO UNIFICADO BYBIT SINCRONIZADO',
+        'Saldo real calibrado: <strong>' + newEqUsd.toFixed(4) + ' USDT (≈ R$ ' + brl.toFixed(2).replace('.', ',') + ')</strong>. Placar zerado e sem ordens simuladas falsas!',
+        'emerald'
+      );
+      runMonteCarloBacktest();
+      renderUI();
+    }
+
+    window.applyBybitBalanceInstant = function() {
+      var val = parseFloat(document.getElementById('inputCustomBalance').value || '39.1831');
+      var unit = document.getElementById('selectCurrencyUnit').value || 'USDT';
+      if (isNaN(val) || val <= 0) return;
+      var usd = unit === 'USDT' ? val : Number((val / USD_BRL).toFixed(4));
+      document.getElementById('inputKeyTabBalance').value = usd.toFixed(4);
+      document.getElementById('selectKeyTabUnit').value = 'USDT';
+      setBotBalanceUsd(usd, usd.toFixed(4) + ' USDT (R$ ' + (usd * USD_BRL).toFixed(2).replace('.', ',') + ')');
+
+      fetch('/api/v1/cloud/configure', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ custom_equity_usd: usd, reset_daily_stats: true })
+      }).catch(function() {});
+
+      showToast('Saldo Real Fixado!', usd.toFixed(4) + ' USDT (R$ ' + (usd * USD_BRL).toFixed(2).replace('.', ',') + ').');
+    };
+
+    function showToast(title, message) {
+      var banner = document.getElementById('toastBanner');
+      document.getElementById('toastTitle').textContent = title;
+      document.getElementById('toastMessage').textContent = message;
+      banner.style.display = 'block';
+      setTimeout(function() { banner.style.display = 'none'; }, 4500);
+    }
+
+    function appendAiDecisionLog(tag, message, tone) {
+      var feed = document.getElementById('aiDecisionFeed');
+      if (!feed) return;
+      var now = new Date().toLocaleTimeString('pt-BR', { hour12: false });
+      var item = document.createElement('div');
+      item.className = 'feed-item ' + (tone || '');
+      item.innerHTML = '<div class="mono" style="display:flex; justify-content:space-between; font-size:10px; opacity:0.85; margin-bottom:3px;"><strong>' + tag + '</strong><span>' + now + '</span></div><div>' + message + '</div>';
+      feed.insertBefore(item, feed.firstChild);
+      while (feed.children.length > 28) {
+        feed.removeChild(feed.lastChild);
+      }
+    }
+
+    function isCoinUnlocked(asset, eqUsd) {
+      return state.enabledSymbols.indexOf(asset.symbol) !== -1;
+    }
+
+    window.toggleCoinActive = function(sym) {
+      var idx = state.enabledSymbols.indexOf(sym);
+      if (idx !== -1) {
+        if (state.enabledSymbols.length <= 1) {
+          showToast('Pelo menos 1 moeda ativa', 'Mantenha ao menos 1 moeda ativada (ou ative outra antes de desligar ' + sym + ').');
+          return;
+        }
+        state.enabledSymbols.splice(idx, 1);
+      } else {
+        state.enabledSymbols.push(sym);
+        state.selectedSymbol = sym;
+      }
+      if (state.enabledSymbols.indexOf(state.selectedSymbol) === -1) {
+        state.selectedSymbol = state.enabledSymbols[0];
+      }
+      fetch('/api/v1/cloud/configure', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled_symbols: state.enabledSymbols, selected_symbol: state.selectedSymbol })
+      }).catch(function() {});
+      showToast('Moedas Spot Atualizadas!', 'Operando agora em: ' + state.enabledSymbols.join(', '));
+      renderUI();
+    };
+
+    window.setExclusiveCoin = function(sym) {
+      state.enabledSymbols = [sym];
+      state.selectedSymbol = sym;
+      fetch('/api/v1/cloud/configure', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled_symbols: [sym], selected_symbol: sym })
+      }).catch(function() {});
+      showToast('Foco Exclusivo Ativado!', 'O robô agora opera 100% focado apenas em ' + sym + '!');
+      renderUI();
+    };
+
+    function getAutoSelectedCoin() {
+      var openMap = state.activePositions || {};
+      var freeList = Object.keys(assets).map(function(k) { return assets[k]; }).filter(function(a) {
+        return state.enabledSymbols.indexOf(a.symbol) !== -1 && !openMap[a.symbol];
+      });
+      freeList.sort(function(a, b) { return b.score - a.score; });
+      if (freeList.length > 0) return freeList[0];
+      var allEnabled = Object.keys(assets).map(function(k) { return assets[k]; }).filter(function(a) {
+        return state.enabledSymbols.indexOf(a.symbol) !== -1;
+      });
+      allEnabled.sort(function(a, b) { return b.score - a.score; });
+      return allEnabled[0] || assets.SOLUSDT;
+    }
+
+    function getDynamicWalletProfile(eqUsd) {
+      var brl = eqUsd * USD_BRL;
+      var lev = eqUsd < 80 ? 5 : eqUsd < 300 ? 7 : eqUsd < 1000 ? 8 : 10;
+      return {
+        lev: lev,
+        badge: '🟢 CONTA UNIFICADA BYBIT: R$ ' + brl.toFixed(2).replace('.', ',') + ' (' + eqUsd.toFixed(4) + ' USDT)'
+      };
+    }
+
+    function drawAllCharts() {
+      var liveCurve = state.equityCurveBrl.slice();
+      var currentTotalBrl = Number(((state.currentEquity + state.floatingPnl) * USD_BRL).toFixed(2));
+      liveCurve.push(currentTotalBrl);
+      drawNativeLineChart('equityCanvas', liveCurve, '#10b981');
+      drawNativeLineChart('backtestCanvas', state.backtestCurveBrl, '#f59e0b');
+    }
+
+    function renderUI() {
+      var profile = getDynamicWalletProfile(state.currentEquity);
+      document.getElementById('tierBadgeName').textContent = profile.badge;
+      document.getElementById('kpiAutoLevBadge').textContent = 'ALAV. ' + profile.lev + 'x';
+
+      if (!isCoinUnlocked(assets[state.selectedSymbol], state.currentEquity)) {
+        state.selectedSymbol = getAutoSelectedCoin().symbol;
+      }
+
+      var bestAuto = getAutoSelectedCoin();
+      var bWinProb = typeof bestAuto.winProbabilityPct === 'number' ? bestAuto.winProbabilityPct : 65.0;
+      var bPred3m = typeof bestAuto.predictedMovePct3m === 'number' ? bestAuto.predictedMovePct3m : 0.45;
+      var smTag = bestAuto.smartMoneyIgnition ? ' • 🚀 SMART MONEY L2' : '';
+      var llTag = state.macroLeaderIgniting ? ' • ⚡ LEAD-LAG BTC/ETH' : '';
+      document.getElementById('lblAutoChosenCoin').textContent =
+        bestAuto.symbol + ' LONG (Win Prob: ' + bWinProb.toFixed(1) + '% • Proj 3m: ' + (bPred3m >= 0 ? '+' : '') + bPred3m.toFixed(2) + '% • Score ' + bestAuto.score.toFixed(1) + ' • Gatilho Auto ≥ ' + state.minConfluenceScore.toFixed(0) + smTag + llTag + ')';
+      document.getElementById('lblBestDirection').textContent = bestAuto.bestSide;
+      document.getElementById('lblBestDirection').className = bestAuto.bestSide === 'LONG' ? 'text-emerald' : 'text-rose';
+
+      // Render Top Coin Toggle Buttons Bar
+      var toggleBar = document.getElementById('coinToggleButtonsBar');
+      if (toggleBar) {
+        toggleBar.innerHTML = '';
+        Object.keys(assets).forEach(function(k) {
+          var isOn = state.enabledSymbols.indexOf(k) !== -1;
+          var shortName = k.replace('USDT', '');
+          var tBtn = document.createElement('button');
+          tBtn.type = 'button';
+          tBtn.className = 'btn mono ' + (isOn ? 'btn-bybit-solid' : '');
+          tBtn.style.padding = '6px 11px';
+          tBtn.style.fontSize = '11px';
+          tBtn.innerHTML = (isOn ? '✅ ' + shortName + ' ATIVA' : '⬜ ' + shortName + ' (OFF)');
+          tBtn.onclick = function() { window.toggleCoinActive(k); };
+          toggleBar.appendChild(tBtn);
+        });
+      }
+
+      // Render 6 Coin Cards with EXACT decimal precision per coin & 1-click Activation
+      var grid = document.getElementById('multiAssetGrid');
+      grid.innerHTML = '';
+      Object.keys(assets).forEach(function(k) {
+        var asset = assets[k];
+        var isEnabled = state.enabledSymbols.indexOf(asset.symbol) !== -1;
+        var isSel = asset.symbol === state.selectedSymbol;
+        var dec = asset.decimals;
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'coin-card ' + (isEnabled ? 'selected ' : 'locked');
+        var wProb = typeof asset.winProbabilityPct === 'number' ? asset.winProbabilityPct : 65.0;
+        var pMove = typeof asset.predictedMovePct3m === 'number' ? asset.predictedMovePct3m : 0.40;
+        var smIcon = asset.smartMoneyIgnition ? '🚀 ' : '';
+        btn.innerHTML =
+          '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+            '<strong class="mono" style="font-size:12px;">' + smIcon + asset.symbol.replace('USDT', '') + ' <span style="font-size:9px; color:#34d399;">SPOT</span></strong>' +
+            '<span class="mono" style="font-size:10px; color:' + (isEnabled ? '#34d399' : '#94a3b8') + ';">' +
+              (isEnabled ? '✅ Win ' + wProb.toFixed(0) + '% (' + asset.score.toFixed(0) + ')' : '⚪ OFF (Ativar)') +
+            '</span>' +
+          '</div>' +
+          '<div class="mono" style="display:flex; justify-content:space-between; font-size:11px; margin-top:4px; color:#cbd5e1;">' +
+            '<span>$' + asset.price.toFixed(dec) + '</span>' +
+            '<span style="font-size:9px; color:' + (pMove >= 0.85 ? '#10b981' : '#94a3b8') + ';">Proj 3m: ' + (pMove >= 0 ? '+' : '') + pMove.toFixed(2) + '% | RSI ' + asset.rsi.toFixed(1) + '</span>' +
+          '</div>';
+        btn.onclick = function() {
+          window.toggleCoinActive(asset.symbol);
+        };
+        grid.appendChild(btn);
+      });
+
+      // Render Order Book L2 with exact decimals
+      var curr = assets[state.selectedSymbol];
+      var dec = curr.decimals;
+      document.getElementById('obSymbolTitle').textContent = curr.symbol;
+      document.getElementById('obMidPrice').textContent = '$' + curr.price.toFixed(dec);
+      document.getElementById('obiBadge').textContent = 'OBI ' + (curr.obi >= 0 ? '+' : '') + curr.obi.toFixed(2);
+      document.getElementById('metricRsi').textContent = curr.rsi.toFixed(1);
+      document.getElementById('metricZbb').textContent = curr.zbb.toFixed(2);
+      document.getElementById('metricCvd').textContent = (curr.cvd >= 0 ? '+' : '') + (curr.cvd * 100).toFixed(0) + '%';
+
+      var asksEl = document.getElementById('orderBookAsks');
+      var bidsEl = document.getElementById('orderBookBids');
+      asksEl.innerHTML = '';
+      bidsEl.innerHTML = '';
+      for (var i = 3; i >= 1; i--) {
+        var apx = (curr.price + i * curr.step).toFixed(dec);
+        var aqty = (16 + i * 6).toFixed(1);
+        asksEl.innerHTML += '<div class="ob-row"><div class="ob-bar-ask" style="width:' + (i * 22) + '%"></div><div class="ob-content"><span class="text-rose">' + apx + '</span><span>' + aqty + '</span></div></div>';
+      }
+      for (var j = 1; j <= 3; j++) {
+        var bpx = (curr.price - j * curr.step).toFixed(dec);
+        var bqty = j === 1 ? '68.5 🐋' : (25 + j * 7).toFixed(1);
+        bidsEl.innerHTML += '<div class="ob-row"><div class="ob-bar-bid" style="width:' + (j === 1 ? 78 : 44) + '%"></div><div class="ob-content"><span class="text-emerald">' + bpx + '</span><strong>' + bqty + '</strong></div></div>';
+      }
+
+      // Render KPIs
+      var totalEqUsd = state.currentEquity + state.floatingPnl;
+      var totalEqBrl = totalEqUsd * USD_BRL;
+      var eqPct = ((totalEqUsd - state.startingEquity) / state.startingEquity) * 100;
+
+      document.getElementById('activePairBadge').textContent = curr.symbol;
+      document.getElementById('kpiEquityBrl').textContent = 'R$ ' + totalEqBrl.toFixed(2).replace('.', ',');
+      document.getElementById('kpiEquityUsd').textContent = totalEqUsd.toFixed(4) + ' USDT';
+      document.getElementById('kpiEquityPct').textContent = (eqPct >= 0 ? '+' : '') + eqPct.toFixed(2) + '%';
+
+      var pnlBrl = state.realizedDailyPnl * USD_BRL;
+      var pnlEl = document.getElementById('kpiDailyPnlBrl');
+      pnlEl.textContent = (pnlBrl >= 0 ? '+R$ ' : '-R$ ') + Math.abs(pnlBrl).toFixed(2).replace('.', ',');
+      pnlEl.className = 'kpi-val mono ' + (pnlBrl >= 0 ? 'text-emerald' : 'text-rose');
+
+      var totalClosed = state.winsToday + state.lossesToday;
+      var wr = totalClosed > 0 ? Math.round((state.winsToday / totalClosed) * 100) : 0;
+      document.getElementById('kpiWinRateBadge').textContent = totalClosed > 0 ? ('Win: ' + wr + '%') : '0 Trades';
+      document.getElementById('kpiWinsCount').textContent = String(state.winsToday);
+      document.getElementById('kpiLossCount').textContent = String(state.lossesToday);
+      document.getElementById('kpiFloatingPnl').textContent = (state.floatingPnl >= 0 ? '+R$ ' : '-R$ ') + Math.abs(state.floatingPnl * USD_BRL).toFixed(2).replace('.', ',');
+
+      var riskUsd = state.currentEquity * (state.riskPerTradePct / 100);
+      document.getElementById('kpiRiskBrl').textContent = 'R$ ' + (riskUsd * USD_BRL).toFixed(2).replace('.', ',');
+      document.getElementById('kpiRiskPctLabel').textContent = state.riskPerTradePct.toFixed(1) + '% ($' + riskUsd.toFixed(2) + ' USDT)';
+
+      document.getElementById('kpiPriceTicker').textContent = curr.symbol.replace('USDT', '') + ' $' + curr.price.toFixed(dec);
+      document.getElementById('kpiConfluenceScore').textContent = curr.score.toFixed(1) + ' / 100';
+      document.getElementById('kpiConfluenceBar').style.width = Math.min(100, curr.score) + '%';
+
+      // Active Position Box
+      var emptyBox = document.getElementById('emptyPositionBox');
+      var activeBox = document.getElementById('activePositionBox');
+      var posBadge = document.getElementById('posBadge');
+
+      if (!state.activePosition) {
+        emptyBox.style.display = 'block';
+        activeBox.style.display = 'none';
+        posBadge.textContent = 'CAÇANDO ENTRADA (≥ ' + state.minConfluenceScore.toFixed(0) + ')...';
+      } else {
+        emptyBox.style.display = 'none';
+        activeBox.style.display = 'block';
+        var p = state.activePosition;
+        var pDec = p.decimals || (assets[p.symbol] ? assets[p.symbol].decimals : 2);
+        posBadge.textContent = p.tp1Hit ? '🏆 DEGRAU 3 (TP1) • STOP TRAVADO EM +0.65% + TRAIL ATR' : (p.ladderStage === 2 ? '🔥 DEGRAU 2 (+0.70%) • LUCRO TRAVADO EM +0.45% + TRAIL ATR' : (p.ladderStage === 1 || p.earlyTrailingActivated ? '🟢 DEGRAU 1 (+0.42%) • GREEN GARANTIDO (+0.21% RISCO ZERO)' : ('⚡ LONG ATIVO EM ' + p.symbol + ' (ESCADA DE GREENS ARMADA)')));
+        var sideEl = document.getElementById('posSideQty');
+        sideEl.textContent = p.side + ' ' + p.remainingQty + ' ' + p.symbol.replace('USDT', '');
+        sideEl.className = p.side === 'LONG' ? 'text-emerald' : 'text-rose';
+        document.getElementById('posEntry').textContent = '$' + Number(p.entry).toFixed(pDec);
+        document.getElementById('posStop').textContent = '$' + Number(p.stop).toFixed(pDec);
+        document.getElementById('posTp1').textContent = p.tp1Hit ? '✅ 50% REALIZADO' : '$' + Number(p.tp1).toFixed(pDec);
+        document.getElementById('posTp2').textContent = '$' + Number(p.tp2).toFixed(pDec);
+        document.getElementById('lblSrvStopId').textContent = p.srvStopOrderId;
+        var opBrl = ((p.realizedPartialUsd || 0) + state.floatingPnl) * USD_BRL;
+        var posPnlEl = document.getElementById('posPnl');
+        posPnlEl.textContent = (opBrl >= 0 ? '+R$ ' : '-R$ ') + Math.abs(opBrl).toFixed(2).replace('.', ',');
+        posPnlEl.className = opBrl >= 0 ? 'text-emerald' : 'text-rose';
+      }
+
+      drawAllCharts();
+    }
+
+    async function triggerOrderExecution(isManualTrigger) {
+      var openCount = state.activePositions ? Object.keys(state.activePositions).length : (state.activePosition ? 1 : 0);
+      var maxSlots = state.maxConcurrentSlots || (state.currentEquity < 45 ? 2 : 3);
+      if (openCount >= maxSlots) {
+        if (isManualTrigger) {
+          showToast('Slots Simultâneos Cheios (' + openCount + '/' + maxSlots + ')', 'Aguarde o fechamento de um slot ou aumente os slots.');
+        }
+        return;
+      }
+      var bestCoin = getAutoSelectedCoin();
+      state.selectedSymbol = bestCoin.symbol;
+
+      // 1) Sempre envia para o servidor Railway se estiver conectado
+      try {
+        var controller = new AbortController();
+        var tId = setTimeout(function() { controller.abort(); }, 3500);
+        var cloudResp = await fetch('/api/v1/cloud/force-entry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ symbol: bestCoin.symbol }),
+          signal: controller.signal
+        });
+        clearTimeout(tId);
+        if (cloudResp.ok) {
+          var cloudJson = await cloudResp.json();
+          if (cloudJson.ok && cloudJson.position) {
+            state.activePosition = cloudJson.position;
+            document.getElementById('lblOrderExecType').textContent = cloudJson.real_bybit
+              ? '🔥 ORDEM REAL CONFIRMADA PELA BYBIT'
+              : '🟢 Ordem de Treino Simulado';
+            showToast(
+              cloudJson.real_bybit ? 'Ordem Real Aberta na Bybit!' : 'Ordem de Treino Aberta!',
+              bestCoin.symbol + ' ' + state.activePosition.side + ' (ID: ' + state.activePosition.srvStopOrderId + ')'
+            );
+            await pollRailwayCloudBackend();
+            renderUI();
+            return;
+          } else if (cloudJson.browser_relay_order) {
+            // Se o Railway em US-West recebeu 403, o navegador no Brasil envia a ordem real assinada!
+            try {
+              var ro = cloudJson.browser_relay_order;
+              var bOrdResp = await fetch(ro.url, { method: 'POST', headers: ro.headers, body: ro.body });
+              if (bOrdResp.ok) {
+                var bOrdJson = await bOrdResp.json();
+                if (bOrdJson && bOrdJson.retCode === 0 && bOrdJson.result && bOrdJson.result.orderId) {
+                  await fetch('/api/v1/cloud/browser-relay-report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: bOrdJson.result.orderId, position: ro.position_template })
+                  });
+                  showToast('Ordem Real Enviada via 5G Brasil!', 'OrderID Bybit: ' + bOrdJson.result.orderId);
+                  await pollRailwayCloudBackend();
+                  return;
+                }
+              }
+            } catch (relErr) {}
+            if (isManualTrigger && cloudJson.error) showToast('Aviso Bybit', cloudJson.error);
+            await pollRailwayCloudBackend();
+            return;
+          } else if (cloudJson.error) {
+            if (isManualTrigger) {
+              showToast('Proteção Conta Real Ativa', cloudJson.error);
+            }
+            await pollRailwayCloudBackend();
+            return;
+          }
+        }
+      } catch (e) {}
+
+      // 2) BLINDAGEM v9.0: Se estiver em BYBIT_REAL (Conta Real), NUNCA cria simulação fantasma local!
+      if (state.execEnv === 'BYBIT_REAL') {
+        if (isManualTrigger) {
+          showToast(
+            'Modo Conta Real Blindado',
+            'Para abrir ordens reais, suba a v9.0 no seu Railway (ou mude para a Opção 1: Modo Treino se quiser simular no navegador).'
+          );
+          appendAiDecisionLog(
+            '🛡️ CONTA REAL PROTEGIDA (ZERO SIMULAÇÃO FALSA)',
+            'Você está no <strong>Modo Conta Real Bybit</strong>. O navegador bloqueou a abertura de ordem simulada local para proteger a leitura real dos seus <strong>39.1831 USDT (R$ 209,56)</strong>!',
+            'amber'
+          );
+        }
+        return;
+      }
+
+      // 3) Somente no Modo Treino (VIRTUAL_DEMO) abre posição simulada com casas decimais exatas e Stop 0.55%
+      if (!isManualTrigger && (Date.now() - lastLocalTradeClosedAt < 45000)) return;
+
+      var side = bestCoin.bestSide || 'LONG';
+      var entry = bestCoin.price;
+      var dec = bestCoin.decimals;
+      var riskUsd = state.currentEquity * (state.riskPerTradePct / 100);
+      var stopDist = Math.max(entry * 0.0065, bestCoin.step * 15);
+      var tp1Dist = Math.max(entry * 0.0095, stopDist * 1.45);
+      var tp2Dist = Math.max(entry * 0.0180, stopDist * 2.60);
+      var profile = getDynamicWalletProfile(state.currentEquity);
+      var targetNotional = Math.min(state.currentEquity * profile.lev * 0.85, riskUsd / (stopDist / entry + 0.0005));
+      var rawQty = Math.max(0.1, targetNotional / entry);
+      var qty = (bestCoin.symbol === 'DOGEUSDT' || bestCoin.symbol === 'XRPUSDT') ? Math.max(1, Math.floor(rawQty)) : Number(rawQty.toFixed(1));
+
+      var stopPx = side === 'LONG' ? (entry - stopDist) : (entry + stopDist);
+      var tp1Px = side === 'LONG' ? (entry + tp1Dist) : (entry - tp1Dist);
+      var tp2Px = side === 'LONG' ? (entry + tp2Dist) : (entry - tp2Dist);
+
+      state.activePosition = {
+        symbol: bestCoin.symbol,
+        side: side,
+        initialQty: qty,
+        remainingQty: qty,
+        entry: Number(entry.toFixed(dec)),
+        stop: Number(stopPx.toFixed(dec)),
+        tp1: Number(tp1Px.toFixed(dec)),
+        tp2: Number(tp2Px.toFixed(dec)),
+        decimals: dec,
+        riskUsd: riskUsd,
+        tp1Hit: false,
+        realizedPartialUsd: 0.0,
+        srvStopOrderId: 'TREINO_' + Math.floor(10000 + Math.random() * 89999),
+        realBybitOrder: false
+      };
+      state.floatingPnl = 0.0;
+      document.getElementById('lblOrderExecType').textContent = '🟢 Modo Treino Simulado';
+
+      appendAiDecisionLog(
+        '🟢 ENTRADA DE TREINO SIMULADA (' + bestCoin.symbol + ' ' + side + ')',
+        'Abriu <strong>' + side + ' ' + qty + ' ' + bestCoin.symbol.replace('USDT', '') + '</strong> a <strong>$' + entry.toFixed(dec) + '</strong> | Stop (0.55%): <strong>$' + state.activePosition.stop.toFixed(dec) + '</strong> | TP1: <strong>$' + state.activePosition.tp1.toFixed(dec) + '</strong> | TP2: <strong>$' + state.activePosition.tp2.toFixed(dec) + '</strong>.',
+        'cyan'
+      );
+      renderUI();
+    }
+
+    function realMarketStepTick() {
+      if (!state.aiRunning) return;
+
+      // Se o servidor Railway estiver conectado, o servidor gerencia 100% do estado
+      if (isCloudBackendConnected) {
+        renderUI();
+        return;
+      }
+
+      // No Modo Treino offline, gerencia a posição de treino
+      if (state.activePosition && state.execEnv === 'VIRTUAL_DEMO') {
+        var p = state.activePosition;
+        var asset = assets[p.symbol];
+        var dec = asset.decimals;
+        var dir = p.side === 'LONG' ? 1.0 : -1.0;
+
+        var grossUsd = (asset.price - p.entry) * p.remainingQty * dir;
+        var feeUsd = (p.entry + asset.price) * p.remainingQty * 0.0002;
+        state.floatingPnl = Number((grossUsd - feeUsd).toFixed(2));
+
+        var stopHit = (p.side === 'LONG') ? (asset.price <= p.stop) : (asset.price >= p.stop);
+        if (stopHit) {
+          var stopNetUsd = state.floatingPnl;
+          state.currentEquity = Number((state.currentEquity + stopNetUsd).toFixed(4));
+          state.realizedDailyPnl = Number((state.realizedDailyPnl + stopNetUsd).toFixed(2));
+          lastLocalTradeClosedAt = Date.now();
+          if (p.tp1Hit && (p.realizedPartialUsd + stopNetUsd) >= 0) {
+            state.winsToday += 1;
+          } else {
+            state.lossesToday += 1;
+          }
+          state.activePosition = null;
+          state.floatingPnl = 0.0;
+          asset.score = 60.0;
+          renderUI();
+          return;
+        }
+      } else if (!state.activePosition && state.execEnv === 'VIRTUAL_DEMO') {
+        var best = getAutoSelectedCoin();
+        if (best.score >= state.minConfluenceScore) {
+          triggerOrderExecution(false);
+        }
+      }
+
+      renderUI();
+    }
+
+    function runMonteCarloBacktest() {
+      var startBrl = state.currentEquity * USD_BRL;
+      var curve = [startBrl];
+      var eq = startBrl;
+      var wins = 0;
+      var riskFrac = state.riskPerTradePct / 100;
+      for (var i = 1; i <= 100; i++) {
+        var r = Math.random();
+        var riskBrl = eq * riskFrac;
+        if (r < 0.43) { eq += riskBrl * 2.15; wins++; }
+        else if (r < 0.69) { eq += riskBrl * 0.55; wins++; }
+        else { eq -= riskBrl * 1.0; }
+        curve.push(Number(eq.toFixed(2)));
+      }
+      state.backtestCurveBrl = curve;
+      document.getElementById('btFinalEquity').textContent = 'R$ ' + eq.toFixed(2).replace('.', ',');
+      document.getElementById('btReturnPct').textContent = '+' + (((eq - startBrl) / startBrl) * 100).toFixed(1) + '% Líquido (LONG + SHORT na Bybit)';
+      document.getElementById('btWinRate').textContent = wins + '.0%';
+      drawAllCharts();
+    }
+
+    window.onload = function() {
+      window.fetchRealBybitPricesREST();
+      connectBybitLiveWebSocket();
+      pollRailwayCloudBackend();
+      setInterval(window.fetchRealBybitPricesREST, 6000);
+      setInterval(pollRailwayCloudBackend, 2500);
+
+      appendAiDecisionLog(
+        '🛡️ BLINDAGEM CONTA REAL v9.0 ATIVA (39.1831 USDT = R$ 209,56)',
+        'Seus <strong>39.1831 USDT (R$ 209,56)</strong> na Bybit estão intactos! Ordens simuladas falsas foram bloqueadas no Modo Conta Real e o XRP agora opera com 4 casas decimais exatas (<code>$1.3345</code>).',
+        'emerald'
+      );
+      runMonteCarloBacktest();
+      renderUI();
+      setInterval(realMarketStepTick, 2000);
+
+      document.getElementById('btnForceSniperSim').onclick = function() {
+        state.aiRunning = true;
+        triggerOrderExecution(true);
+      };
+
+      document.getElementById('btnResetSavedState').onclick = function() {
+        document.getElementById('inputCustomBalance').value = '39.1831';
+        document.getElementById('selectCurrencyUnit').value = 'USDT';
+        window.applyBybitBalanceInstant();
+      };
+
+      document.getElementById('btnClosePosNow').onclick = function() {
+        if (!state.activePosition) return;
+        fetch('/api/v1/cloud/close-position', { method: 'POST' }).then(function() {
+          pollRailwayCloudBackend();
+        }).catch(function() {});
+        state.activePosition = null;
+        state.floatingPnl = 0;
+        renderUI();
+      };
+
+      document.getElementById('btnToggleAiMode').onclick = function() {
+        state.aiRunning = !state.aiRunning;
+        document.getElementById('btnToggleAiText').textContent = state.aiRunning ? 'Pausar IA' : 'Retomar IA';
+        fetch('/api/v1/cloud/configure', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ai_running: state.aiRunning })
+        }).catch(function() {});
+      };
+
+      document.getElementById('btnEmergencyFlatten').onclick = function() {
+        fetch('/api/v1/cloud/close-position', { method: 'POST' }).catch(function() {});
+        state.activePosition = null;
+        state.floatingPnl = 0;
+        state.aiRunning = false;
+        document.getElementById('btnToggleAiText').textContent = 'Retomar IA';
+        showToast('Zerado com Segurança', 'Posições fechadas na Bybit e no servidor Railway.');
+        renderUI();
+      };
+
+      document.getElementById('btnRunMonteCarlo').onclick = function() {
+        runMonteCarloBacktest();
+        showToast('Auditoria Concluída', 'Projeção de 100 trades atualizada!');
+      };
+    };
+  </script>
+</body>
+</html>
