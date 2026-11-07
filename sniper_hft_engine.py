@@ -1,2794 +1,2084 @@
-"""
-Sniper HFT & Quantitative Trading Engine — ORACLE SINGULARITY v18.0 (MEGA INTELIGÊNCIA PREDITIVA AUTÔNOMA)
-===========================================================================================================
-Motor Autônomo 24/7 para Railway / Render / VPS — 100% Mercado SPOT ("spot") com Previsão Matemática de Futuro v18.0
-
-AS 6 INOVAÇÕES "ORACLE SINGULARITY v18.0" (PREVISÃO DE FUTURO + SMART MONEY L2 + RADAR LEAD-LAG):
-1. Motor Preditivo de Futuro (`predict_future_trajectory` — Kalman Filter + Velocidade/Aceleração + Regressão 12 Velas):
-   - Substitui a reação atrasada por previsão matemática da trajetória futura do preço:
-     * **Filtro de Kalman 1D (`kalman_price`, `kalman_velocity`)** acoplado à **1ª derivada (velocidade)** e
-       **2ª derivada (aceleração)** do preço + **Regressão Linear Ponderada** das últimas 12 velas e da janela de 5s.
-     * Calcula em tempo real `predicted_move_pct_3m` (movimento percentual projetado para os próximos 3 minutos)
-       e `win_probability_pct` (probabilidade matemática de vitória de `0.0%` a `99.0%`).
-     * **Regra de Ouro v18.0:** O robô SÓ abre compra automática se `predicted_move_pct_3m >= +0.85%` E
-       `win_probability_pct >= 76.0%`, garantindo entrada na ignição ANTES do movimento acontecer!
-2. Detector de Absorção Institucional e Vácuo de Liquidez (`Smart Money Radar L2`):
-   - Em `on_l2_orderbook_update`, além do `l2_obi`, calcula a razão de vácuo superior (`ask_thinning_ratio`):
-     compara o suporte comprador dos 15 níveis de Bids com a resistência dos 5 primeiros níveis de Asks.
-   - Quando há absorção institucional (`l2_obi >= +0.20` e `ask_thinning_ratio >= 1.35`), ativa `smart_money_ignition = True`,
-     elevando imediatamente a probabilidade preditiva e antecipando o disparo antes da explosão da vela!
-3. Radar Lead-Lag (`check_lead_lag_radar` — Antecipação pela Ignição do BTC/ETH):
-   - Monitora o micro-impulso de 5 segundos (`impulse_5s_pct`) e o fluxo (`obi`) dos líderes macro `BTCUSDT` e `ETHUSDT`.
-   - Quando BTC ou ETH iniciam ignição compradora (`impulse_5s_pct >= +0.06%` e `obi > 0.10`), ativa `macro_leader_igniting = True`,
-     priorizando compra imediata na altcoin ativa (`SOL`, `XRP`, `DOGE` ou `BNB`) de maior `win_probability_pct` e menor spread!
-4. Saída Preditiva no Topo da Onda (`PREDICTIVE_TOP_CASH_IN` em 0ms — Zero Devolução de Lucro):
-   - Em `evaluate_single_position`, quando a posição já está em lucro líquido (`gain_pct >= +0.42%`), o robô não espera
-     o preço despencar até o Stop: se a aceleração/impulso de 5s virar negativa (`impulse_5s_pct < -0.02%`) OU surgir
-     parede vendedora institucional no Book (`l2_obi <= -0.18`), executa `PREDICTIVE_TOP_CASH_IN` em 0ms no topo da vela!
-5. Cérebro Auto-Adaptativo de Gatilho (`auto_tune_neural_parameters` — 100% Autônomo):
-   - Analisa continuamente a força média do mercado (`OBI`, `CVD`, `Win Prob` e regime das 6 moedas) e ajusta sozinho
-     `self.min_confluence_score` entre `76.0` (explosão compradora sincronizada) e `85.0` (mercado travado/traiçoeiro),
-     além de reabilitar automaticamente uma moeda suspensa caso ela apresente reversão institucional perfeita com
-     `win_probability_pct >= 84.0%`!
-6. Mantém 100% das blindagens da conta real Bybit Spot (`qty_step=0.001` na SOL, Fast-Exit 0ms, Wilder RSI, MACD,
-   VWAP Ponderada por Volume, Spread Guard, Time-Stop 12m e High-Water Mark Diário).
-"""
-
-from __future__ import annotations
-
-import asyncio
-import hashlib
-import hmac
-import json
-import logging
-import math
 import os
+import sys
 import time
-import uuid
+import json
+import math
+import logging
+import threading
 from collections import deque
-from contextlib import asynccontextmanager
-from dataclasses import dataclass, replace
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any, Deque, Dict, List, Optional, Tuple
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import urlparse, parse_qs
+from typing import Any
 
-import httpx
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse
-from pydantic import BaseModel
-
-try:
-    import websockets  # type: ignore
-except ImportError:
-    websockets = None
+import numpy as np
+import requests
+from eth_account import Account
+from eth_account.signers.local import LocalAccount
+from hyperliquid.exchange import Exchange
+from hyperliquid.info import Info
+from hyperliquid.utils import constants
 
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s.%(msecs)03d [%(levelname)s] %(name)s: %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)],
 )
-logger = logging.getLogger("SniperBybitOracleV18")
+logger = logging.getLogger("SniperHFTEngine")
 
-BRAIN_STATE_FILE = Path("/tmp/sniper_v18_oracle_brain_state.json")
+USD_BRL_RATE = float(os.getenv("USD_BRL_RATE", "5.38"))
+MEMORY_FILE_PATH = os.getenv("OMNI_MEMORY_PATH", "/tmp/omni_market_memory_v41.json")
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
+NTFY_TOPIC = os.getenv("NTFY_TOPIC", "sniper_apex_0x397a16").strip()
+
+GATEWAY_LOCK = threading.RLock()
+LOG_BUFFER: deque = deque(maxlen=160)
+
+
+def send_mobile_alert(title: str, message: str, priority: str = "high", tags: str = "chart_with_upwards_trend"):
+    def _worker():
+        if NTFY_TOPIC:
+            try:
+                requests.post(
+                    f"https://ntfy.sh/{NTFY_TOPIC}",
+                    data=message.encode("utf-8"),
+                    headers={
+                        "Title": title.encode("utf-8"),
+                        "Priority": priority,
+                        "Tags": tags,
+                    },
+                    timeout=4.0,
+                )
+            except Exception:
+                pass
+        if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
+            try:
+                tg_text = f"*{title}*\n{message}"
+                requests.post(
+                    f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+                    json={
+                        "chat_id": TELEGRAM_CHAT_ID,
+                        "text": tg_text,
+                        "parse_mode": "Markdown",
+                    },
+                    timeout=4.0,
+                )
+            except Exception:
+                pass
+
+    threading.Thread(target=_worker, daemon=True).start()
+
+
+# Cesta Alpha v40.0: BTC permanece como Bússola de Mercado (100% bloqueado para abrir ordens),
+# enquanto AAVE e INJ entram como novos ativos de alta precisão ao lado das campeãs SUI, ETH, AVAX, HYPE, NEAR e DOGE!
+GLOBAL_BASKET = [
+    "BTC", "ETH", "SOL", "HYPE", "SUI", "XRP", "DOGE", "AVAX",
+    "LINK", "ADA", "NEAR", "ARB", "TIA", "APT", "OP", "LTC",
+    "AAVE", "INJ"
+]
+COMPASS_ONLY_COINS = {"BTC"}
+CORE_WATCHLIST = ["ETH", "SUI", "AVAX", "HYPE", "AAVE", "INJ", "SOL"]
 
 
 def safe_float(val: Any, default: float = 0.0) -> float:
-    if val is None or val == "":
-        return default
     try:
-        return float(val)
-    except (ValueError, TypeError):
+        f = float(val)
+        return f if math.isfinite(f) else default
+    except Exception:
         return default
 
 
-# =====================================================================
-# 1. ESPECIFICAÇÕES REAIS DO MERCADO SPOT DA BYBIT V5 ("category": "spot")
-# =====================================================================
-
-@dataclass(frozen=True)
-class BybitSpotSpec:
-    symbol: str
-    base_coin: str
-    qty_step: float
-    min_qty: float
-    min_notional_usd: float
-    tick_size: float
-    price_decimals: int
-    min_equity_usd: float
+def add_log(msg: str):
+    ts = time.strftime("%H:%M:%S", time.gmtime())
+    entry = f"[{ts} UTC] {msg}"
+    LOG_BUFFER.appendleft(entry)
+    logger.info(msg)
 
 
-BYBIT_CONTRACTS: Dict[str, BybitSpotSpec] = {
-    "SOLUSDT":  BybitSpotSpec("SOLUSDT",  base_coin="SOL",  qty_step=0.001,   min_qty=0.001,   min_notional_usd=5.0,  tick_size=0.01,    price_decimals=2, min_equity_usd=8.0),
-    "XRPUSDT":  BybitSpotSpec("XRPUSDT",  base_coin="XRP",  qty_step=0.01,    min_qty=0.1,     min_notional_usd=5.0,  tick_size=0.0001,  price_decimals=4, min_equity_usd=8.0),
-    "DOGEUSDT": BybitSpotSpec("DOGEUSDT", base_coin="DOGE", qty_step=0.1,     min_qty=1.0,     min_notional_usd=5.0,  tick_size=0.00001, price_decimals=5, min_equity_usd=8.0),
-    "BNBUSDT":  BybitSpotSpec("BNBUSDT",  base_coin="BNB",  qty_step=0.0001,  min_qty=0.001,   min_notional_usd=5.0,  tick_size=0.01,    price_decimals=2, min_equity_usd=15.0),
-    "ETHUSDT":  BybitSpotSpec("ETHUSDT",  base_coin="ETH",  qty_step=0.00001, min_qty=0.0001,  min_notional_usd=5.0,  tick_size=0.01,    price_decimals=2, min_equity_usd=25.0),
-    "BTCUSDT":  BybitSpotSpec("BTCUSDT",  base_coin="BTC",  qty_step=0.000001,min_qty=0.00001, min_notional_usd=5.0,  tick_size=0.10,    price_decimals=1, min_equity_usd=50.0),
+BOT_STATE: dict[str, Any] = {
+    "version": "v41.0 — SOVEREIGN LEADER SYNC & ANTI-REPEAT (Proibido Repetir Moeda • Trava Líderes ETH/SOL • LTC no lugar de PEPE)",
+    "status": "INICIALIZANDO LEADER SYNC v41.0...",
+    "trading_enabled": True,
+    "account_address": os.getenv("HYPERLIQUID_ACCOUNT_ADDRESS", "0x397a16b88f59dcc0ca5ab843842e6a6a6983365c").strip(),
+    "agent_address": "N/A",
+    # Patrimônio Completo (Perpétuos + Spot + Flutuante)
+    "starting_equity_usdc": 0.0,
+    "perp_equity_usdc": 0.0,
+    "spot_equity_usdc": 0.0,
+    "equity_usdc": 0.0,
+    "equity_brl": 0.0,
+    "free_margin_usdc": 0.0,
+    "margin_used_usdc": 0.0,
+    "floating_pnl_usdc": 0.0,
+    # Estatísticas Reais On-Chain (via info.user_fills)
+    "wins_total": 0,
+    "losses_total": 0,
+    "win_rate_pct": 0.0,
+    "avg_win_usdc": 0.0,
+    "avg_loss_usdc": 0.0,
+    "payoff_ratio": 0.0,
+    "realized_profit_usdc": 0.0,
+    "realized_profit_brl": 0.0,
+    "wins_24h": 0,
+    "losses_24h": 0,
+    "realized_24h_usdc": 0.0,
+    "stats_reset_ts_ms": 0,
+    "reset_mode_label": "ERA OMEGA v30+ (REDS ANTIGOS LIMPOS)",
+    "daily_goal_usdc": float(os.getenv("DAILY_GOAL_USDC", "1.50")),
+    "daily_progress_pct": 0.0,
+    "top_coins_summary": "Aguardando trades do novo ciclo...",
+    "recent_closed_trades": [],
+    # Memória Global do Mercado Todo
+    "market_brain": {
+        "regime": "CAÇANDO EXTREMO REAL DA BANDA (<=15% BASE | >=85% TOPO)...",
+        "regime_color": "#10b981",
+        "allowed_direction": "COMPRA 6%-15% BANDA | VENDA 85%-94% BANDA (BTC = SÓ BÚSSOLA)",
+        "breadth_bull_pct": 50.0,
+        "breadth_bear_pct": 50.0,
+        "btc_impulse_3m_pct": 0.0,
+        "eth_impulse_3m_pct": 0.0,
+        "top_mover_coin": "N/A",
+        "top_mover_ret_3m": 0.0,
+        "market_sync_score": 50.0,
+        "snapshots_recorded": 0,
+        "coins_tracked": len(GLOBAL_BASKET),
+        "second_slot_status": "MODO 1 OPERAÇÃO POR VEZ (RISCO BLINDADO)",
+        "summary": "BTC fixado como Bússola Exclusiva + AAVE & INJ ativas na cesta Alpha com proteção Anti-Violinada 180s!"
+    },
+    # Parâmetros de Execução Sniper Prime Elite
+    "order_notional": 15.0,
+    "leverage": 8,
+    "max_positions": 1,                  # 1 única posição focada por vez para nunca tomar perda dupla!
+    "round_trip_fee_pct": 0.0007,        # 0.07% taxa total Hyperliquid
+    "micro_shield_trigger_pct": 0.0009,  # DEGRAU 0 (+0.09% move / +0.72% ROE) -> Corta o Stop pela metade (-0.05% / ~-$0.04) na hora!
+    "micro_shield_lock_pct": -0.0005,    # -0.05% move (Risco reduzido a centavos assim que anda +0.09% a favor!)
+    "zero_risk_trigger_pct": 0.0013,     # DEGRAU 1 (+0.13% move / +1.04% ROE) -> Já sobe o Stop p/ o Preço de Entrada (PROIBIDO virar Red)!
+    "zero_risk_lock_pct": 0.0002,        # +0.02% move (Zero-a-Zero na entrada com folga p/ não fechar em 1 tick mas proibir prejuízo!)
+    "recovery_drawdown_pct": -0.0006,    # Se recuar até -0.06% move (-0.48% ROE) e voltar p/ a entrada, sai no 0x0 protegido!
+    "recovery_exit_pct": 0.0002,         # +0.02% move (Sai imediatamente no 0x0 assim que recupera do susto!)
+    "cash_in_band_move_pct": 0.0028,     # +0.28% move (+2.24% ROE) -> Embolsa Green cheio no pico sem deixar voltar!
+    "breakeven_trigger_pct": 0.0022,     # DEGRAU 2 (+0.22% move / +1.76% ROE) -> Trava Green líquido positivo em +0.12% move (+0.96% ROE)!
+    "breakeven_lock_pct": 0.0012,        # +0.12% move (+0.96% ROE garantido)
+    "trail_step1_trigger_pct": 0.0032,   # Degrau 3 (+0.32% move / +2.56% ROE) -> Trava lucro forte (+0.22% move = +1.76% ROE garantido!)
+    "trail_step1_dist_pct": 0.0010,
+    "trail_step2_trigger_pct": 0.0044,   # Degrau 4 (+0.44% move / +3.52% ROE) -> Trailing aperta para 0.08% do pico!
+    "trail_step2_dist_pct": 0.0008,
+    "trail_step3_trigger_pct": 0.0058,   # Degrau 5 (+0.58% move / +4.64% ROE) -> Trailing cirúrgico a 0.06% do pico!
+    "trail_step3_dist_pct": 0.0006,
+    "partial_tp_trigger_pct": 0.0025,    # +0.25% move (+2.00% ROE) -> Realiza 50% no bolso e trava o restante no verde!
+    "tp_move_pct": 0.0080,               # +0.80% move (+6.40% ROE) -> Take Profit Direto
+    "sl_move_pct": 0.0012,               # -0.12% move (-0.96% ROE) -> STOP TÉCNICO APÓS 180s (Red máximo ~$0.10 USDC)
+    "wick_absorption_sl_pct": 0.0020,    # -0.20% move -> Folga Anti-Agulhada nos primeiros 180s se o 15M continuar intacto!
+    "watchlist": [
+        "BTC", "ETH", "SOL", "HYPE", "SUI", "XRP", "DOGE", "AVAX",
+        "LINK", "ADA", "NEAR", "ARB", "TIA", "APT", "OP", "LTC",
+        "AAVE", "INJ"
+    ],
+    "open_positions": [],
+    "peak_move_by_coin": {},
+    "worst_move_by_coin": {},
+    "partial_taken_by_coin": {},
+    "notified_step_by_coin": {},
+    "ntfy_topic": NTFY_TOPIC,
+    "opened_ts_by_coin": {},
+    "loss_quarantine_until": {},
+    "global_long_lock_until": 0.0,
+    "global_short_lock_until": 0.0,
+    "global_any_lock_until": 0.0,
+    "funding_by_coin": {},
+    "open_interest_by_coin": {},
+    "radar": {},
+    "last_update": "N/A",
+    "logs": []
 }
 
-BASE_COIN_TO_SYMBOL: Dict[str, str] = {spec.base_coin: sym for sym, spec in BYBIT_CONTRACTS.items()}
 
-
-def format_bybit_qty(qty: float, step: float) -> str:
-    if step <= 0:
-        step = 0.001
-    if step >= 1.0:
-        floored_int = max(0, int(math.floor((qty + 1e-12) / step) * step))
-        return str(floored_int)
-    decimals = max(0, int(round(-math.log10(step))))
-    floored = math.floor((qty + 1e-12) / step) * step
-    return f"{floored:.{decimals}f}"
-
-
-def format_bybit_price(price: float, tick: float, decimals: int) -> str:
-    if tick <= 0:
-        tick = 0.01
-    rounded = round(price / tick) * tick
-    return f"{rounded:.{decimals}f}"
-
-
-# =====================================================================
-# 2. GATEWAY OFICIAL BYBIT V5 SPOT (FAST-EXECUTION 0MS + ZERO POEIRA)
-# =====================================================================
-
-class BybitV5AutonomousGateway:
-    MAINNET_ENDPOINTS: List[str] = [
-        "https://api.bytick.com",
-        "https://api.bybitglobal.com",
-        "https://api.bybit.com",
-    ]
-    DEMO_ENDPOINTS: List[str] = [
-        "https://api-demo.bybit.com",
-        "https://api-testnet.bybit.com",
-    ]
-    WS_SPOT_ENDPOINTS: List[str] = [
-        "wss://stream.bytick.com/v5/public/spot",
-        "wss://stream.bybit.com/v5/public/spot",
-        "wss://stream.bybitglobal.com/v5/public/spot",
-    ]
-    RECV_WINDOW: str = "25000"
-
-    def __init__(self) -> None:
-        self.env_api_key: str = os.getenv("BYBIT_API_KEY", "").strip()
-        self.env_api_secret: str = os.getenv("BYBIT_API_SECRET", "").strip()
-        self.api_key: str = self.env_api_key or "2Q9GwuhSJ7x87HqIEN"
-        self.api_secret: str = self.env_api_secret
-        self.exec_mode: str = os.getenv("BYBIT_EXEC_MODE", "BYBIT_REAL").strip()
-        self.active_base_url: str = self.MAINNET_ENDPOINTS[0]
-        self.time_offset_ms: int = 0
-        self.last_time_sync_ts: float = 0.0
-        self.http: Optional[httpx.AsyncClient] = None
-        self.last_api_status: str = "Inicializando conector Bybit V5 Spot Oracle Singularity v18.0..."
-        self.last_api_error: str = ""
-        self.last_http_code: int = 0
-        self.is_us_west_geoblocked: bool = False
-        self.account_type_detected: str = "UNIFIED"
-        self.leverage_configured: Dict[str, int] = {}
-        self.coin_balances: Dict[str, float] = {
-            "USDT": 24.8282,
-            "SOL": 0.0,
-            "XRP": 0.0,
-            "DOGE": 0.0,
-            "BNB": 0.0,
-            "ETH": 0.0,
-            "BTC": 0.0,
-        }
-        self.coin_usd_values: Dict[str, float] = {
-            "USDT": 24.8282,
-            "SOL": 0.0,
-            "XRP": 0.0,
-            "DOGE": 0.0,
-            "BNB": 0.0,
-            "ETH": 0.0,
-            "BTC": 0.0,
-        }
-
-    async def ensure_http(self) -> httpx.AsyncClient:
-        if self.http is None or self.http.is_closed:
-            self.http = httpx.AsyncClient(
-                timeout=6.0,
-                headers={
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-                    "Accept": "application/json",
-                },
-            )
-        return self.http
-
-    def get_candidate_urls(self) -> List[str]:
-        if self.exec_mode == "BYBIT_DEMO":
-            return list(self.DEMO_ENDPOINTS)
-        return [self.active_base_url] + [u for u in self.MAINNET_ENDPOINTS if u != self.active_base_url]
-
-    def get_candidate_api_keys(self) -> List[str]:
-        candidates: List[str] = []
-        for k in [self.env_api_key, self.api_key]:
-            k = k.strip()
-            if k and k not in candidates:
-                candidates.append(k)
-                for variant in [
-                    k.replace("HqIEN", "HqlEN"),
-                    k.replace("HqlEN", "HqIEN"),
-                    k.replace("HqIEN", "Hq1EN"),
-                ]:
-                    if variant and variant not in candidates:
-                        candidates.append(variant)
-        return candidates
-
-    def sign_v5_headers(self, payload_str: str, ts_ms: Optional[str] = None, override_key: Optional[str] = None) -> Dict[str, str]:
-        use_key = (override_key or self.api_key).strip()
-        ts = ts_ms or self.current_ts_ms()
-        raw_to_sign = f"{ts}{use_key}{self.RECV_WINDOW}{payload_str}"
-        sig = hmac.new(
-            self.api_secret.encode("utf-8"),
-            raw_to_sign.encode("utf-8"),
-            hashlib.sha256,
-        ).hexdigest()
-        return {
-            "X-BAPI-API-KEY": use_key,
-            "X-BAPI-TIMESTAMP": ts,
-            "X-BAPI-RECV-WINDOW": self.RECV_WINDOW,
-            "X-BAPI-SIGN": sig,
-        }
-
-    async def sync_server_time(self, force: bool = False) -> str:
-        if not force and (time.time() - self.last_time_sync_ts) < 45.0:
-            return self.current_ts_ms()
-        client = await self.ensure_http()
-        for base in self.get_candidate_urls():
-            try:
-                r = await client.get(f"{base}/v5/market/time")
-                self.last_http_code = r.status_code
-                if r.status_code == 200 and "application/json" in r.headers.get("content-type", ""):
-                    data = r.json()
-                    srv_ms = int(data.get("time") or (int(data.get("result", {}).get("timeNano", 0)) // 1_000_000))
-                    if srv_ms > 0:
-                        self.active_base_url = base
-                        self.time_offset_ms = srv_ms - int(time.time() * 1000)
-                        self.last_time_sync_ts = time.time()
-                        self.is_us_west_geoblocked = False
-                        return str(srv_ms)
-            except Exception:
-                continue
-        return str(int(time.time() * 1000) + self.time_offset_ms)
-
-    def current_ts_ms(self) -> str:
-        return str(int(time.time() * 1000) + self.time_offset_ms)
-
-    async def sync_spot_instruments_precision(self) -> None:
-        client = await self.ensure_http()
-        for base in self.get_candidate_urls():
-            try:
-                r = await client.get(f"{base}/v5/market/instruments-info?category=spot")
-                if r.status_code == 200 and "application/json" in r.headers.get("content-type", ""):
-                    items = r.json().get("result", {}).get("list", [])
-                    for it in items:
-                        sym = str(it.get("symbol", ""))
-                        if sym in BYBIT_CONTRACTS:
-                            lot_filter = it.get("lotSizeFilter", {})
-                            price_filter = it.get("priceFilter", {})
-                            b_prec = safe_float(lot_filter.get("basePrecision"), BYBIT_CONTRACTS[sym].qty_step)
-                            m_qty = safe_float(lot_filter.get("minOrderQty"), BYBIT_CONTRACTS[sym].min_qty)
-                            m_amt = safe_float(lot_filter.get("minOrderAmt"), BYBIT_CONTRACTS[sym].min_notional_usd)
-                            t_size = safe_float(price_filter.get("tickSize"), BYBIT_CONTRACTS[sym].tick_size)
-                            if sym == "SOLUSDT":
-                                b_prec = min(b_prec, 0.001) if b_prec > 0 else 0.001
-                            if b_prec > 0 and t_size > 0:
-                                p_dec = max(0, int(round(-math.log10(t_size)))) if t_size < 1.0 else 1
-                                BYBIT_CONTRACTS[sym] = replace(
-                                    BYBIT_CONTRACTS[sym],
-                                    qty_step=b_prec,
-                                    min_qty=max(b_prec, m_qty),
-                                    min_notional_usd=max(5.0, m_amt),
-                                    tick_size=t_size,
-                                    price_decimals=p_dec,
-                                )
-                    return
-            except Exception:
-                continue
-
-    async def signed_get(
-        self,
-        path: str,
-        query_string: str,
-        override_key: Optional[str] = None,
-        override_urls: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
-        client = await self.ensure_http()
-        await self.sync_server_time()
-        saw_403_geoblock = False
-        last_status = 0
-        urls = override_urls or self.get_candidate_urls()
-
-        for base in urls:
-            ts = self.current_ts_ms()
-            headers = self.sign_v5_headers(query_string, ts_ms=ts, override_key=override_key)
-            url = f"{base}{path}?{query_string}" if query_string else f"{base}{path}"
-            try:
-                resp = await client.get(url, headers=headers)
-                last_status = resp.status_code
-                self.last_http_code = last_status
-                if resp.status_code == 200 and "application/json" in resp.headers.get("content-type", ""):
-                    self.active_base_url = base
-                    self.is_us_west_geoblocked = False
-                    data = resp.json()
-                    data["_domain"] = base
-                    return data
-                elif resp.status_code == 403:
-                    saw_403_geoblock = True
-            except Exception as exc:
-                self.last_api_error = str(exc)
-
-        if saw_403_geoblock:
-            self.is_us_west_geoblocked = True
-            return {
-                "retCode": 403,
-                "_domain": "Railway US-West",
-                "retMsg": "Servidor em US West recebeu HTTP 403. Mude Region no Railway para Singapore ou EU West.",
-            }
-        return {"retCode": -1, "retMsg": f"Falha HTTP ({last_status}) ao conectar na Bybit: {self.last_api_error}"}
-
-    async def signed_post(self, path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
-        client = await self.ensure_http()
-        await self.sync_server_time()
-        body_str = json.dumps(payload, separators=(",", ":"))
-        saw_403_geoblock = False
-
-        for base in self.get_candidate_urls():
-            ts = self.current_ts_ms()
-            headers = {
-                **self.sign_v5_headers(body_str, ts_ms=ts),
-                "Content-Type": "application/json",
-            }
-            url = f"{base}{path}"
-            try:
-                resp = await client.post(url, content=body_str, headers=headers)
-                self.last_http_code = resp.status_code
-                if resp.status_code == 200 and "application/json" in resp.headers.get("content-type", ""):
-                    self.active_base_url = base
-                    self.is_us_west_geoblocked = False
-                    return resp.json()
-                elif resp.status_code == 403:
-                    saw_403_geoblock = True
-            except Exception as exc:
-                self.last_api_error = str(exc)
-
-        if saw_403_geoblock:
-            self.is_us_west_geoblocked = True
-            return {
-                "retCode": 403,
-                "retMsg": "HTTP 403 (Servidor Railway bloqueado regionalmente).",
-            }
-        return {"retCode": -1, "retMsg": f"Erro POST Bybit ({self.last_api_error})"}
-
-    async def auto_transfer_fund_to_unified(self, amount_usdt: float) -> bool:
-        if amount_usdt < 0.50:
-            return False
-        transfer_payload = {
-            "transferId": str(uuid.uuid4()),
-            "coin": "USDT",
-            "amount": f"{amount_usdt:.2f}",
-            "fromAccountType": "FUND",
-            "toAccountType": "UNIFIED",
-        }
-        res = await self.signed_post("/v5/asset/transfer/inter-transfer", transfer_payload)
-        if res.get("retCode") == 0:
-            logger.info(f"🔄 [AUTO-TRANSFER BYBIT] Transferiu ${amount_usdt:.2f} USDT de FUND -> UNIFIED!")
-            return True
-        return False
-
-    def extract_usd_and_coins_from_wallet_response(self, res: Dict[str, Any], usd_brl_rate: float) -> float:
-        lists = res.get("result", {}).get("list", [])
-        best_usd = 0.0
-        for acc in lists:
-            total_eq = max(
-                safe_float(acc.get("totalEquity")),
-                safe_float(acc.get("totalWalletBalance")),
-                safe_float(acc.get("totalMarginBalance")),
-                safe_float(acc.get("totalAvailableBalance")),
-            )
-            coins = acc.get("coin", [])
-            coin_sum_usd = 0.0
-            for c in coins:
-                c_name = str(c.get("coin", "")).upper()
-                c_qty = max(
-                    safe_float(c.get("walletBalance")),
-                    safe_float(c.get("equity")),
-                    safe_float(c.get("availableToWithdraw")),
-                )
-                c_usd = safe_float(c.get("usdValue"))
-                if c_name:
-                    self.coin_balances[c_name] = c_qty
-                    self.coin_usd_values[c_name] = c_qty if c_name in ("USDT", "USDC") else c_usd
-                if c_name in ("USDT", "USDC"):
-                    coin_sum_usd += c_qty
-                elif c_name == "BRL":
-                    coin_sum_usd += c_qty / usd_brl_rate
-                else:
-                    coin_sum_usd += c_usd
-            best_usd = max(best_usd, total_eq, coin_sum_usd)
-        return best_usd
-
-    def build_dynamic_holding_summary(self) -> str:
-        parts: List[str] = []
-        usdt_q = self.coin_balances.get("USDT", 0.0)
-        if usdt_q >= 0.05:
-            parts.append(f"USDT: ${usdt_q:.2f}")
-        for base_c in ["SOL", "XRP", "DOGE", "BNB", "ETH", "BTC"]:
-            q = self.coin_balances.get(base_c, 0.0)
-            u_val = self.coin_usd_values.get(base_c, 0.0)
-            if q > 0 and (u_val >= 0.05 or q >= 0.0005):
-                dec = 4 if q < 1 else 2
-                parts.append(f"{base_c}: {q:.{dec}f}" + (f" (${u_val:.2f})" if u_val > 0 else ""))
-        return " | ".join(parts) if parts else f"USDT: ${usdt_q:.2f}"
-
-    async def get_spot_coin_available_balance(self, coin_name: str) -> float:
-        for acct_type in ["UNIFIED", "SPOT"]:
-            res = await self.signed_get("/v5/account/wallet-balance", f"accountType={acct_type}&coin={coin_name}")
-            if int(res.get("retCode", -1)) == 0:
-                lists = res.get("result", {}).get("list", [])
-                for acc in lists:
-                    for c in acc.get("coin", []):
-                        if str(c.get("coin", "")).upper() == coin_name.upper():
-                            wb = safe_float(c.get("walletBalance"))
-                            eq = safe_float(c.get("equity"))
-                            av = safe_float(c.get("availableToWithdraw"))
-                            bal = wb if wb > 0 else max(eq, av)
-                            self.coin_balances[coin_name.upper()] = bal
-                            return bal
-        return self.coin_balances.get(coin_name.upper(), 0.0)
-
-    async def fetch_wallet_balance_v5(self, usd_brl_rate: float = 5.3487) -> Dict[str, Any]:
-        if not self.api_key or not self.api_secret:
-            self.last_api_status = "⚠️ API Secret ainda não informado nas Variables do Railway (BYBIT_API_SECRET)."
-            return {"ok": False, "error": self.last_api_status}
-
-        candidate_keys = self.get_candidate_api_keys()
-        last_ret_code = 0
-        last_ret_msg = ""
-        last_domain = self.active_base_url
-
-        for cand_key in candidate_keys:
-            try:
-                fund_res = await self.signed_get(
-                    "/v5/asset/transfer/query-account-coins-balance",
-                    "accountType=FUND&coin=USDT",
-                    override_key=cand_key,
-                )
-                if int(fund_res.get("retCode", -1)) == 0:
-                    f_list = fund_res.get("result", {}).get("balance", [])
-                    for f_item in f_list:
-                        if str(f_item.get("coin", "")).upper() == "USDT":
-                            f_usdt = safe_float(f_item.get("transferBalance") or f_item.get("walletBalance"))
-                            if f_usdt >= 1.0:
-                                await self.auto_transfer_fund_to_unified(f_usdt)
-            except Exception:
-                pass
-
-            for acct_type in ["UNIFIED", "SPOT"]:
-                for query in [
-                    f"accountType={acct_type}&coin=USDT,SOL,XRP,DOGE,BNB,ETH,BTC",
-                    f"accountType={acct_type}",
-                ]:
-                    res = await self.signed_get("/v5/account/wallet-balance", query, override_key=cand_key)
-                    ret_code = int(res.get("retCode", -1))
-                    ret_msg = str(res.get("retMsg", ""))
-                    last_domain = str(res.get("_domain", self.active_base_url))
-
-                    if ret_code == 403:
-                        self.last_api_status = f"🌍 {ret_msg}"
-                        return {"ok": False, "retCode": 403, "geoblocked": True, "error": self.last_api_status}
-
-                    if ret_code == 0:
-                        self.api_key = cand_key
-                        best_usd = self.extract_usd_and_coins_from_wallet_response(res, usd_brl_rate)
-                        if best_usd > 0.1:
-                            self.account_type_detected = acct_type
-                            brl_val = best_usd * usd_brl_rate
-                            holding_detail = self.build_dynamic_holding_summary()
-                            self.last_api_status = (
-                                f"✅ CONTA SPOT SINCRONIZADA ({acct_type}): ${best_usd:.4f} (≈ R$ {brl_val:.2f}) "
-                                f"[{holding_detail}] via {last_domain}"
-                            )
-                            return {
-                                "ok": True,
-                                "equity_usd": round(best_usd, 4),
-                                "account_type": acct_type,
-                                "coin_balances": dict(self.coin_balances),
-                                "coin_usd_values": dict(self.coin_usd_values),
-                                "source": f"Bybit Spot ({holding_detail})",
-                            }
-                    else:
-                        last_ret_code = ret_code
-                        last_ret_msg = ret_msg
-                        if ret_code == 10003:
-                            break
-
-                if last_ret_code == 10003:
-                    break
-
-        if last_ret_code != 0:
-            self.last_api_status = f"⚠️ Resposta da Bybit (Código {last_ret_code} em {last_domain}): {last_ret_msg}"
-            return {"ok": False, "retCode": last_ret_code, "error": self.last_api_status}
-
-        self.last_api_status = "✅ Chave API conectada ao Mercado Spot Bybit!"
-        return {"ok": False, "error": self.last_api_status}
-
-    async def ensure_leverage(self, symbol: str, leverage: int = 1) -> None:
-        self.leverage_configured[symbol] = leverage
-        return
-
-    async def place_real_bybit_order(
-        self,
-        symbol: str,
-        side: str,
-        qty_float: float,
-        stop_loss: float,
-        take_profit: float,
-        leverage: int = 1,
-    ) -> Dict[str, Any]:
-        spec = BYBIT_CONTRACTS.get(symbol, BYBIT_CONTRACTS["SOLUSDT"])
-        qty_str = format_bybit_qty(qty_float, spec.qty_step)
-        sl_str = format_bybit_price(stop_loss, spec.tick_size, spec.price_decimals)
-        tp_str = format_bybit_price(take_profit, spec.tick_size, spec.price_decimals)
-        bybit_side = "Buy" if side.upper() in ("LONG", "BUY") else "Sell"
-
-        await self.ensure_leverage(symbol, leverage)
-
-        order_payload: Dict[str, Any] = {
-            "category": "spot",
-            "symbol": symbol,
-            "side": bybit_side,
-            "orderType": "Market",
-            "qty": qty_str,
-            "marketUnit": "baseCoin",
-        }
-
-        res = await self.signed_post("/v5/order/create", order_payload)
-        ret_code = int(res.get("retCode", -1))
-        if ret_code == 0:
-            order_id = res.get("result", {}).get("orderId", f"SPOT_{int(time.time())}")
-            net_sellable_str = format_bybit_qty(float(qty_str) * 0.9988, spec.qty_step)
-            net_sellable_qty = max(spec.min_qty, float(net_sellable_str))
-            logger.info(
-                f"🔥 [ORDEM REAL SPOT EXECUTADA NA BYBIT] {bybit_side} {qty_str} {symbol} (Líquido: {net_sellable_qty}) | "
-                f"OrderID={order_id} | SL={sl_str} | TP={tp_str}"
-            )
-            return {
-                "ok": True,
-                "order_id": order_id,
-                "qty_str": qty_str,
-                "net_sellable_qty": net_sellable_qty,
-                "sl_str": sl_str,
-                "tp_str": tp_str,
-                "raw": res,
-            }
-
-        err_msg = str(res.get("retMsg", "Erro desconhecido"))
-        logger.warning(f"⚠️ [AVISO ORDEM SPOT BYBIT] retCode={ret_code} retMsg={err_msg}")
-        return {
-            "ok": False,
-            "retCode": ret_code,
-            "error": f"Erro Bybit Spot {ret_code}: {err_msg}",
-            "signed_order_payload": order_payload,
-        }
-
-    async def close_real_bybit_position(
-        self,
-        symbol: str,
-        side: str,
-        qty_float: float,
-        current_price: float = 0.0,
-    ) -> Dict[str, Any]:
-        spec = BYBIT_CONTRACTS.get(symbol, BYBIT_CONTRACTS["SOLUSDT"])
-        close_side = "Sell" if side.upper() in ("LONG", "BUY") else "Buy"
-
-        fast_qty_str = format_bybit_qty(max(spec.min_qty, qty_float), spec.qty_step)
-        if float(fast_qty_str) >= spec.min_qty:
-            fast_payload: Dict[str, Any] = {
-                "category": "spot",
-                "symbol": symbol,
-                "side": close_side,
-                "orderType": "Market",
-                "qty": fast_qty_str,
-                "marketUnit": "baseCoin",
-            }
-            fast_res = await self.signed_post("/v5/order/create", fast_payload)
-            if int(fast_res.get("retCode", -1)) == 0:
-                order_id = fast_res.get("result", {}).get("orderId", "")
-                logger.info(f"⚡ [FAST-EXIT 0ms SPOT LIQUIDADO] {close_side} {fast_qty_str} {symbol} | OrderID={order_id}")
-                return {"ok": True, "order_id": order_id, "sold_qty": float(fast_qty_str)}
-
-        avail_coin = await self.get_spot_coin_available_balance(spec.base_coin)
-        if avail_coin > 0:
-            leftover_coin = max(0.0, avail_coin - qty_float)
-            leftover_usd = leftover_coin * current_price if current_price > 0 else 0.0
-            if 0 <= leftover_usd < 5.50 or qty_float >= avail_coin * 0.98:
-                sell_qty = avail_coin
-            else:
-                sell_qty = min(qty_float, avail_coin)
-        else:
-            sell_qty = qty_float * 0.9985
-
-        for factor in [1.0, 0.9990]:
-            candidate_qty = max(spec.min_qty, (sell_qty * factor) if factor < 1.0 else sell_qty)
-            qty_str = format_bybit_qty(candidate_qty, spec.qty_step)
-            if float(qty_str) <= 0:
-                continue
-            payload: Dict[str, Any] = {
-                "category": "spot",
-                "symbol": symbol,
-                "side": close_side,
-                "orderType": "Market",
-                "qty": qty_str,
-                "marketUnit": "baseCoin",
-            }
-            res = await self.signed_post("/v5/order/create", payload)
-            if int(res.get("retCode", -1)) == 0:
-                order_id = res.get("result", {}).get("orderId", "")
-                logger.info(f"✅ [POSIÇÃO SPOT 100% LIQUIDADA NA BYBIT] {close_side} {qty_str} {symbol} | OrderID={order_id}")
-                return {"ok": True, "order_id": order_id, "sold_qty": float(qty_str)}
-
-        logger.warning(f"⚠️ [AVISO FECHAMENTO SPOT] Não foi possível liquidar {symbol}")
-        return {"ok": False, "raw": {}}
-
-
-# =====================================================================
-# 3. TELEMETRIA ORACLE SINGULARITY v18.0 (KALMAN FILTER + PREVISÃO 3M + SMART MONEY L2)
-# =====================================================================
-
-class CloudAssetTelemetry:
-    """
-    ORACLE SINGULARITY v18.0 (PREVISÃO MATEMÁTICA DE FUTURO + SMART MONEY L2):
-    1) `predict_future_trajectory()`:
-       - Filtro de Kalman 1D (`kalman_price`, `kalman_velocity`, `kalman_cov`) +
-         1ª derivada (`price_velocity`), 2ª derivada (`price_acceleration`) +
-         Regressão Linear Ponderada das últimas 12 velas e da janela de ticks de 5s (`impulse_5s_pct`).
-       - Calcula `predicted_move_pct_3m` (movimento previsto para os próximos 3 minutos)
-         e `win_probability_pct` (`0.0%` a `99.0%`).
-       - Regra de Ouro v18.0: SÓ abre compra se `predicted_move_pct_3m >= +0.85%` E `win_probability_pct >= 76.0%`!
-    2) `on_l2_orderbook_update()`:
-       - Calcula `ask_thinning_ratio` (liquidez dos 15 níveis de suporte Bids vs. 5 primeiros níveis de venda Asks).
-       - Quando há absorção institucional (`l2_obi >= +0.20` e `ask_thinning_ratio >= 1.35`), ativa
-         `smart_money_ignition = True` e concede bônus preditivo imediato!
-    """
-
-    CANDLE_INTERVAL_SEC: float = 60.0
-
-    def __init__(self, symbol: str, initial_price: float, step: float, decimals: int) -> None:
-        self.symbol = symbol
-        self.price = initial_price
-        self.best_bid = round(initial_price - step, decimals)
-        self.best_ask = round(initial_price + step, decimals)
-        self.spread_pct = round(((self.best_ask - self.best_bid) / max(initial_price, 1e-8)) * 100.0, 4)
-        self.vwap = initial_price
-        self.step = step
-        self.decimals = decimals
-        self.rsi = 46.0
-        self.prev_rsi = 44.0
-        self.zbb = -0.25
-        self.atr = round(max(initial_price * 0.0055, step * 15), decimals)
-        self.ema_fast = initial_price
-        self.ema_slow = initial_price
-        self.macd_line = 0.0
-        self.macd_signal = 0.0
-        self.macd_hist = 0.0
-        self.prev_macd_hist = 0.0
-        self.impulse_5s_pct = 0.0
-        # Estado do Filtro de Kalman e Derivadas Preditivas (v18.0 Oracle Singularity)
-        self.kalman_price: float = initial_price
-        self.kalman_velocity: float = 0.0
-        self.kalman_cov: float = 1.0
-        self.price_velocity: float = 0.0
-        self.price_acceleration: float = 0.0
-        self.predicted_move_pct_3m: float = 0.0
-        self.win_probability_pct: float = 60.0
-        # Smart Money Radar L2
-        self.ask_thinning_ratio: float = 1.0
-        self.smart_money_ignition: bool = False
-        self.htf_ema_fast = initial_price
-        self.htf_ema_slow = initial_price
-        self.htf_bullish: bool = True
-        self.obi = 0.18
-        self.l2_obi = 0.15
-        self.cvd = 0.15
-        self.whale_wall_status: str = "BOOK_EQUILIBRADO"
-        self.coin_wins: int = 0
-        self.coin_losses: int = 0
-        self.consecutive_losses: int = 0
-        self.ai_trust_bonus: float = 0.0
-        self.suspended_until: float = 0.0
-        self.trend_regime: str = "NEUTRAL"
-        self.long_score = 65.0
-        self.short_score = 35.0
-        self.best_side = "LONG"
-        self.score = 65.0
-        self.history: Deque[float] = deque(maxlen=40)
-        self.highs: Deque[float] = deque(maxlen=40)
-        self.lows: Deque[float] = deque(maxlen=40)
-        self.volumes: Deque[float] = deque(maxlen=40)
-        self.htf_closes: Deque[float] = deque(maxlen=25)
-        self.tick_window_5s: Deque[Tuple[float, float]] = deque(maxlen=40)
-        self.current_bar_high: float = initial_price
-        self.current_bar_low: float = initial_price
-        self.current_bar_vol: float = 1000.0
-        self.last_candle_ts: float = 0.0
-        self.seeded = False
-        self.seed_history(initial_price)
-
-    @property
-    def is_suspended_by_ai(self) -> bool:
-        return time.time() < self.suspended_until
-
-    @property
-    def suspension_remaining_min(self) -> int:
-        if not self.is_suspended_by_ai:
-            return 0
-        return max(1, int(round((self.suspended_until - time.time()) / 60.0)))
-
-    def record_trade_outcome(self, is_win: bool) -> str:
-        if is_win:
-            self.coin_wins += 1
-            self.consecutive_losses = 0
-            self.ai_trust_bonus = min(5.0, round(self.ai_trust_bonus + 2.0, 1))
-            return f"🧠 Oracle v18.0 aumentou confiança em {self.symbol} (Bônus +{self.ai_trust_bonus:.1f} pts • {self.coin_wins}W/{self.coin_losses}L)"
-        else:
-            self.coin_losses += 1
-            self.consecutive_losses += 1
-            self.ai_trust_bonus = max(-6.0, round(self.ai_trust_bonus - 3.5, 1))
-            if self.consecutive_losses >= 2:
-                self.suspended_until = time.time() + 7200.0
-                return (
-                    f"🧠 AUTO-DEFESA ORACLE: {self.symbol} teve {self.consecutive_losses} Stops seguidos e foi "
-                    f"SUSPENSA AUTOMATICAMENTE por 2 horas (a menos que atinja Reversão Institucional ≥ 84% Win Prob)!"
-                )
-            return f"🧠 Oracle v18.0 ativou Modo Seletivo em {self.symbol} após 1 Stop (Penalidade {self.ai_trust_bonus:.1f} pts)"
-
-    def on_l2_orderbook_update(self, bids: List[List[Any]], asks: List[List[Any]]) -> None:
-        """
-        INOVAÇÃO #2 — Detector de Absorção Institucional e Vácuo de Liquidez (Smart Money Radar L2):
-        - Calcula `l2_obi` (15 níveis) e `ask_thinning_ratio` (liquidez dos 15 níveis de suporte Bids
-          comparada à resistência dos 5 primeiros níveis de Asks).
-        - Quando há forte suporte comprador nos Bids segurando o preço + parede de Asks fina acima
-          (`l2_obi >= +0.20` e `ask_thinning_ratio >= 1.35`), ativa `self.smart_money_ignition = True`!
-        """
-        if not bids or not asks:
-            return
-        top_bid = safe_float(bids[0][0]) if len(bids[0]) >= 1 else 0.0
-        top_ask = safe_float(asks[0][0]) if len(asks[0]) >= 1 else 0.0
-        if top_bid > 0 and top_ask >= top_bid:
-            self.best_bid = round(top_bid, self.decimals)
-            self.best_ask = round(top_ask, self.decimals)
-            self.spread_pct = round(((top_ask - top_bid) / top_bid) * 100.0, 4)
-
-        bid_vol_15 = sum(safe_float(b[1]) for b in bids[:15] if len(b) >= 2)
-        ask_vol_15 = sum(safe_float(a[1]) for a in asks[:15] if len(a) >= 2)
-        ask_vol_top5 = sum(safe_float(a[1]) for a in asks[:5] if len(a) >= 2)
-        total = bid_vol_15 + ask_vol_15
-        if total <= 0:
-            return
-        raw_l2 = (bid_vol_15 - ask_vol_15) / total
-        self.l2_obi = round(max(-0.90, min(0.90, raw_l2)), 2)
-        self.obi = round(max(-0.88, min(0.88, (self.obi * 0.55) + (self.l2_obi * 0.45))), 2)
-
-        # Razão de Vácuo Superior (suporte médio de 5 blocos de Bids vs 5 primeiros níveis de Asks)
-        normalized_bid_support = bid_vol_15 / 3.0
-        self.ask_thinning_ratio = round(normalized_bid_support / max(ask_vol_top5, 1e-8), 2)
-
-        if self.l2_obi >= 0.20 and self.ask_thinning_ratio >= 1.35:
-            self.smart_money_ignition = True
-            self.whale_wall_status = f"🚀 ABSORÇÃO SMART MONEY (Vácuo {self.ask_thinning_ratio:.1f}x)"
-        elif self.l2_obi >= 0.22:
-            self.smart_money_ignition = True
-            self.whale_wall_status = "🐋 PAREDE COMPRADORA (SUPORTE FORTE)"
-        elif self.l2_obi <= -0.18:
-            self.smart_money_ignition = False
-            self.whale_wall_status = "🧱 PAREDE VENDEDORA (BLOQUEIO DE TOPO)"
-        else:
-            self.smart_money_ignition = False
-            self.whale_wall_status = "⚖️ BOOK EQUILIBRADO"
-
-        # Recalcula a trajetória futura com os novos dados de absorção L2
-        self.predict_future_trajectory(self.price)
-
-    def predict_future_trajectory(self, live_px: float) -> Tuple[float, float]:
-        """
-        INOVAÇÃO #1 — MOTOR PREDITIVO DE FUTURO (Kalman Filter + Velocidade/Aceleração + Regressão Linear Ponderada):
-        1) Atualiza o Filtro de Kalman 1D para estimar estado limpo de preço (`kalman_price`) e derivada (`kalman_velocity`).
-        2) Calcula a 1ª derivada (`price_velocity`, % por minuto) e a 2ª derivada (`price_acceleration`, mudança de velocidade)
-           nas últimas 12 velas + regressão linear ponderada (WLS) + micro-impulso de 5 segundos (`impulse_5s_pct`).
-        3) Projeta `predicted_move_pct_3m` (movimento percentual esperado para os próximos 3 minutos) e
-           `win_probability_pct` (probabilidade matemática de sucesso de 0 a 100%).
-        """
-        hist = list(self.history)
-        if not hist or live_px <= 0:
-            return (0.0, 50.0)
-        hist[-1] = live_px
-        window = hist[-12:] if len(hist) >= 12 else hist
-        m = len(window)
-
-        # 1) Atualização do Filtro de Kalman 1D
-        q_proc = max(live_px * 0.0005, self.step) ** 2
-        r_meas = max(live_px * 0.0012, self.step * 2.0) ** 2
-        pred_px = self.kalman_price + self.kalman_velocity
-        pred_cov = self.kalman_cov + q_proc
-        k_gain = pred_cov / max(pred_cov + r_meas, 1e-12)
-        innovation = live_px - pred_px
-        self.kalman_price = pred_px + (k_gain * innovation)
-        self.kalman_velocity = (self.kalman_velocity * 0.75) + (0.25 * innovation)
-        self.kalman_cov = (1.0 - k_gain) * pred_cov
-
-        # 2) Regressão Linear Ponderada (WLS) nas últimas 12 velas (pesos maiores para as barras mais recentes)
-        weights = [float(i + 1) for i in range(m)]
-        w_sum = sum(weights)
-        x_vals = [float(i) for i in range(m)]
-        x_bar = sum(w * x for w, x in zip(weights, x_vals)) / w_sum
-        y_bar = sum(w * y for w, y in zip(weights, window)) / w_sum
-        num = sum(w * (x - x_bar) * (y - y_bar) for w, x, y in zip(weights, x_vals, window))
-        den = sum(w * ((x - x_bar) ** 2) for w, x in zip(weights, x_vals))
-        wls_slope_per_bar = (num / den) if den > 1e-12 else 0.0
-        wls_slope_pct = (wls_slope_per_bar / live_px) * 100.0
-
-        # 3) 1ª Derivada (Velocidade) e 2ª Derivada (Aceleração)
-        if m >= 3:
-            v_curr = ((window[-1] - window[-2]) / max(window[-2], 1e-8)) * 100.0
-            v_prev = ((window[-2] - window[-3]) / max(window[-3], 1e-8)) * 100.0
-            self.price_velocity = round((v_curr * 0.65) + (wls_slope_pct * 0.35), 4)
-            self.price_acceleration = round(v_curr - v_prev, 4)
-        else:
-            self.price_velocity = round(wls_slope_pct, 4)
-            self.price_acceleration = 0.0
-
-        kalman_vel_pct = (self.kalman_velocity / live_px) * 100.0
-
-        # 4) Projeção Matemática para os próximos 3 minutos (`predicted_move_pct_3m`)
-        # Combina potencial de expansão ATR + velocidade Kalman/WLS + aceleração + impulso de 5s + vácuo L2
-        atr_potential_pct = (max(self.atr, live_px * 0.0045) / live_px) * 100.0 * 1.45
-        directional_drive = (
-            (max(0.0, self.price_velocity) * 2.2)
-            + (max(0.0, kalman_vel_pct) * 2.0)
-            + (max(0.0, self.price_acceleration) * 1.8)
-            + (max(0.0, self.impulse_5s_pct) * 3.2)
-        )
-        flow_drive = (max(0.0, self.obi) * 0.65) + (max(0.0, self.cvd) * 0.45)
-        smart_money_boost = 0.25 if self.smart_money_ignition else 0.0
-
-        if (
-            self.ema_fast >= self.ema_slow * 0.9995
-            and live_px >= self.ema_fast * 0.9995
-            and self.obi > 0.04
-            and self.cvd > 0.02
-            and 34.0 <= self.rsi <= 56.0
-        ):
-            raw_proj_3m = atr_potential_pct + directional_drive + flow_drive + smart_money_boost
-        else:
-            raw_proj_3m = (self.price_velocity * 2.0) + (self.impulse_5s_pct * 2.0) + (self.obi * 0.40)
-
-        # Se estiver esticado no topo (RSI > 56 ou Z-Score > 0.25) ou em tendência de baixa, reduz projeção futura
-        if self.rsi > 56.0 or self.zbb > 0.25 or self.ema_fast < self.ema_slow * 0.9995 or self.obi <= 0.02:
-            raw_proj_3m = min(raw_proj_3m, 0.45)
-
-        self.predicted_move_pct_3m = round(max(-2.50, min(3.20, raw_proj_3m)), 2)
-
-        # 5) Probabilidade Matemática de Vitória (`win_probability_pct` de 0 a 99%)
-        prob = 54.0
-        if self.ema_fast >= self.ema_slow * 0.9995 and live_px >= self.ema_fast * 0.9995:
-            prob += 10.5
-        if self.htf_bullish:
-            prob += 5.0
-        if self.macd_hist >= self.prev_macd_hist:
-            prob += 4.5
-        if 34.0 <= self.rsi <= 55.5 and self.rsi >= self.prev_rsi:
-            prob += 8.5
-        if -1.15 <= self.zbb <= 0.22:
-            prob += 4.5
-        if self.obi > 0.04:
-            prob += min(8.0, self.obi * 14.0)
-        if self.cvd > 0.02:
-            prob += min(5.5, self.cvd * 10.0)
-        if self.price_velocity > 0 and self.price_acceleration >= -0.01:
-            prob += 4.0
-        if self.smart_money_ignition:
-            prob += 5.5
-        prob += self.ai_trust_bonus
-
-        # Penalidades rigorosas se houver risco de topo, spread largo ou queda
-        if self.spread_pct > 0.085:
-            prob = min(prob, 58.0)
-        elif self.ema_fast < self.ema_slow * 0.9995 or live_px < self.ema_fast * 0.9995 or self.obi <= 0.04 or self.cvd <= 0.02:
-            prob = min(prob, 62.0)
-        elif self.rsi > 56.0 or self.zbb > 0.25:
-            prob = min(prob, 66.0)
-
-        self.win_probability_pct = round(max(25.0, min(98.5, prob)), 1)
-        return (self.predicted_move_pct_3m, self.win_probability_pct)
-
-    def seed_htf_5m_klines(self, klines_5m: List[List[Any]]) -> None:
-        if not klines_5m or len(klines_5m) < 8:
-            return
-        self.htf_closes.clear()
-        for k in reversed(klines_5m):
-            if len(k) >= 5:
-                c_px = round(safe_float(k[4]), self.decimals)
-                if c_px > 0:
-                    self.htf_closes.append(c_px)
-        if len(self.htf_closes) >= 5:
-            seq = list(self.htf_closes)
-            self.htf_ema_fast = self._compute_ema_series(seq, 7)
-            self.htf_ema_slow = self._compute_ema_series(seq, 16)
-            self.htf_bullish = (self.htf_ema_fast >= self.htf_ema_slow * 0.9990) and (seq[-1] >= self.htf_ema_fast * 0.9985)
-
-    @staticmethod
-    def _compute_ema_series(values: List[float], period: int) -> float:
-        if not values:
-            return 0.0
-        k = 2.0 / (period + 1.0)
-        ema_val = values[0]
-        for v in values[1:]:
-            ema_val = (v * k) + (ema_val * (1.0 - k))
-        return ema_val
-
-    @classmethod
-    def _compute_macd_hist_pair(cls, values: List[float]) -> Tuple[float, float]:
-        if len(values) < 6:
-            return (0.0, 0.0)
-        k12 = 2.0 / 13.0
-        k26 = 2.0 / 27.0
-        k9 = 2.0 / 10.0
-        ema12 = values[0]
-        ema26 = values[0]
-        macd_series: List[float] = []
-        for v in values:
-            ema12 = (v * k12) + (ema12 * (1.0 - k12))
-            ema26 = (v * k26) + (ema26 * (1.0 - k26))
-            macd_series.append(ema12 - ema26)
-        sig = macd_series[0]
-        hist_series: List[float] = []
-        for m in macd_series:
-            sig = (m * k9) + (sig * (1.0 - k9))
-            hist_series.append(m - sig)
-        return (hist_series[-2], hist_series[-1])
-
-    @staticmethod
-    def _compute_wilder_rsi(seq: List[float], period: int = 14) -> float:
-        if len(seq) < 3:
-            return 50.0
-        diffs = [seq[i] - seq[i - 1] for i in range(1, len(seq))]
-        init_len = min(period, len(diffs))
-        avg_gain = sum(max(0.0, d) for d in diffs[:init_len]) / init_len
-        avg_loss = sum(max(0.0, -d) for d in diffs[:init_len]) / init_len
-        for d in diffs[init_len:]:
-            gain = max(0.0, d)
-            loss = max(0.0, -d)
-            avg_gain = ((avg_gain * (period - 1)) + gain) / period
-            avg_loss = ((avg_loss * (period - 1)) + loss) / period
-        if avg_loss <= 1e-12:
-            return 82.0 if avg_gain > 0 else 50.0
-        rs = avg_gain / avg_loss
-        return round(max(12.0, min(88.0, 100.0 - (100.0 / (1.0 + rs)))), 1)
-
-    def get_short_term_change_pct(self, bars_back: int = 2) -> float:
-        if len(self.history) < 2:
-            return 0.0
-        idx = max(0, len(self.history) - bars_back)
-        ref_px = self.history[idx]
-        if ref_px <= 0:
-            return 0.0
-        return round(((self.price - ref_px) / ref_px) * 100.0, 3)
-
-    def seed_from_real_klines(self, klines_list: List[List[Any]]) -> None:
-        if not klines_list or len(klines_list) < 10:
-            return
-        self.history.clear()
-        self.highs.clear()
-        self.lows.clear()
-        self.volumes.clear()
-        chronological = list(reversed(klines_list))
-        for k in chronological:
-            if len(k) >= 6:
-                h_px = round(safe_float(k[2]), self.decimals)
-                l_px = round(safe_float(k[3]), self.decimals)
-                c_px = round(safe_float(k[4]), self.decimals)
-                vol_q = max(1.0, safe_float(k[5]))
-                if c_px > 0:
-                    self.highs.append(h_px if h_px > 0 else c_px)
-                    self.lows.append(l_px if l_px > 0 else c_px)
-                    self.history.append(c_px)
-                    self.volumes.append(vol_q)
-
-        if self.history:
-            hist_list = list(self.history)
-            vol_list = list(self.volumes)
-            last_px = hist_list[-1]
-            self.price = last_px
-            self.kalman_price = last_px
-            self.best_bid = round(last_px - self.step, self.decimals)
-            self.best_ask = round(last_px + self.step, self.decimals)
-            tot_v = sum(vol_list) or 1.0
-            self.vwap = round(sum(p * v for p, v in zip(hist_list, vol_list)) / tot_v, self.decimals)
-            self.ema_fast = self._compute_ema_series(hist_list, 9)
-            self.ema_slow = self._compute_ema_series(hist_list, 21)
-            self.current_bar_high = last_px
-            self.current_bar_low = last_px
-            self.last_candle_ts = time.time()
-            self.atr = self.compute_atr(period=14)
-            self.seeded = True
-            self._recalculate_indicators_from_bars(last_px)
-
-    def seed_history(self, base_px: float) -> None:
-        self.history.clear()
-        self.highs.clear()
-        self.lows.clear()
-        self.volumes.clear()
-        amp = max(base_px * 0.0045, self.step * 12)
-        for i in range(35, 0, -1):
-            drift = -amp * 0.25 * (i / 35.0)
-            wave = math.sin(i * 0.65) * (amp * 0.45)
-            px_i = round(base_px + drift + wave, self.decimals)
-            self.history.append(px_i)
-            self.highs.append(round(px_i + amp * 0.40, self.decimals))
-            self.lows.append(round(px_i - amp * 0.40, self.decimals))
-            self.volumes.append(1000.0 + (i % 5) * 250.0)
-        b_round = round(base_px, self.decimals)
-        self.history.append(b_round)
-        self.highs.append(round(b_round + amp * 0.40, self.decimals))
-        self.lows.append(round(b_round - amp * 0.40, self.decimals))
-        self.volumes.append(1500.0)
-        self.price = b_round
-        self.kalman_price = b_round
-        self.best_bid = round(b_round - self.step, self.decimals)
-        self.best_ask = round(b_round + self.step, self.decimals)
-        hist_list = list(self.history)
-        vol_list = list(self.volumes)
-        self.vwap = round(sum(p * v for p, v in zip(hist_list, vol_list)) / sum(vol_list), self.decimals)
-        self.ema_fast = self._compute_ema_series(hist_list, 9)
-        self.ema_slow = self._compute_ema_series(hist_list, 21)
-        self.current_bar_high = b_round
-        self.current_bar_low = b_round
-        self.last_candle_ts = time.time()
-        self.atr = self.compute_atr(period=14)
-        self.seeded = True
-        self._recalculate_indicators_from_bars(b_round)
-
-    def compute_atr(self, period: int = 14) -> float:
-        if len(self.history) < 3:
-            return max(self.price * 0.0045, self.step * 12)
-        closes = list(self.history)[-(period + 1):]
-        highs = list(self.highs)[-(period + 1):]
-        lows = list(self.lows)[-(period + 1):]
-        trs: List[float] = []
-        for i in range(1, len(closes)):
-            tr = max(
-                highs[i] - lows[i],
-                abs(highs[i] - closes[i - 1]),
-                abs(lows[i] - closes[i - 1]),
-                self.step * 4.0,
-            )
-            trs.append(tr)
-        raw_atr = (sum(trs) / len(trs)) if trs else (self.price * 0.0045)
-        clamped_atr = max(self.price * 0.0040, min(self.price * 0.022, raw_atr))
-        return round(clamped_atr, max(self.decimals, 4))
-
-    def _recalculate_indicators_from_bars(self, live_px: float) -> None:
-        hist = list(self.history)
-        if not hist:
-            return
-        hist[-1] = live_px
-        n = len(hist)
-
-        self.ema_fast = self._compute_ema_series(hist, 9)
-        self.ema_slow = self._compute_ema_series(hist, 21)
-        prev_mh, curr_mh = self._compute_macd_hist_pair(hist)
-        self.prev_macd_hist = prev_mh
-        self.macd_hist = curr_mh
-
-        vols = list(self.volumes)
-        if len(vols) == n and sum(vols) > 0:
-            self.vwap = round(sum(p * v for p, v in zip(hist, vols)) / sum(vols), self.decimals)
-
-        mean = sum(hist) / n
-        variance = sum((x - mean) ** 2 for x in hist) / n
-        std = max(math.sqrt(variance), live_px * 0.0030, self.step * 5.0)
-        self.zbb = round(max(-3.0, min(3.0, (live_px - mean) / std)), 2)
-
-        if n >= 4:
-            self.prev_rsi = self._compute_wilder_rsi(hist[:-1], period=14)
-        self.rsi = self._compute_wilder_rsi(hist, period=14)
-
-        # Atualiza a Previsão Matemática de Futuro (Kalman + 1ª/2ª Derivadas + WLS)
-        pred_3m, win_prob = self.predict_future_trajectory(live_px)
-
-        if self.is_suspended_by_ai:
-            # INOVAÇÃO #5: Se a moeda suspensa apresentar Reversão Institucional Perfeita (Win Prob >= 84%), libera automaticamente!
-            if win_prob >= 84.0 and pred_3m >= 0.95 and self.smart_money_ignition:
-                self.suspended_until = 0.0
-                self.consecutive_losses = 0
-            else:
-                self.trend_regime = f"AI_SUSPENDED ({self.suspension_remaining_min}m)"
-                self.long_score = 50.0
-                self.score = 50.0
-                return
-
-        prev_bar_px = hist[-2] if n >= 2 else live_px
-        is_downtrend = (self.ema_fast < self.ema_slow * 0.9995) or (live_px < self.ema_fast * 0.9995)
-        is_seller_flow = (self.obi <= 0.04) or (self.cvd <= 0.02) or (self.l2_obi <= -0.15)
-        is_macd_weak = self.macd_hist < self.prev_macd_hist - (self.step * 0.2)
-        is_falling_or_flat_rsi = (self.rsi < 34.0) or (self.rsi < self.prev_rsi) or (live_px < prev_bar_px)
-        is_wide_spread = self.spread_pct > 0.085
-        is_late_chasing_top = (self.rsi > 56.0) or (self.zbb > 0.25)
-
-        l_score = 62.0
-        if self.ema_fast >= self.ema_slow * 0.9995 and live_px >= self.ema_fast * 0.9995:
-            l_score += 10.0
-        if self.macd_hist >= self.prev_macd_hist:
-            l_score += 3.5
-        if self.htf_bullish:
-            l_score += 4.5
-        if 34.0 <= self.rsi <= 55.5 and self.rsi >= self.prev_rsi:
-            l_score += 9.5
-        if -1.15 <= self.zbb <= 0.22:
-            l_score += 5.5
-        if self.obi > 0.04:
-            l_score += min(9.5, self.obi * 15.5)
-        if self.cvd > 0.02:
-            l_score += min(7.5, self.cvd * 13.5)
-        if self.impulse_5s_pct > 0.02:
-            l_score += min(3.0, self.impulse_5s_pct * 15.0)
-        if self.smart_money_ignition:
-            l_score += 4.5
-
-        l_score += self.ai_trust_bonus
-
-        if is_wide_spread:
-            self.trend_regime = f"WIDE_SPREAD ({self.spread_pct:.2f}%)"
-            l_score = min(l_score, 62.0)
-        elif is_downtrend or is_seller_flow or is_falling_or_flat_rsi or is_macd_weak:
-            if is_downtrend:
-                self.trend_regime = "BEARISH_TREND"
-            elif is_seller_flow:
-                self.trend_regime = "SELLER_FLOW"
-            else:
-                self.trend_regime = "WAITING_IGNITION"
-            l_score = min(l_score, 64.0)
-        elif is_late_chasing_top:
-            self.trend_regime = "LATE_WAVE_WAIT_PULLBACK"
-            l_score = min(l_score, 68.0)
-        elif pred_3m < 0.85 or win_prob < 76.0:
-            # REGRA DE OURO ORACLE v18.0: Se a projeção 3m for < +0.85% ou Win Prob < 76%, aguarda ignição mais forte!
-            self.trend_regime = "PREDICTIVE_WAIT (<+0.85%)"
-            l_score = min(l_score, 72.0)
-        else:
-            self.trend_regime = "BULLISH_CONFLUENCE"
-
-        self.long_score = round(max(42.0, min(98.5, l_score)), 1)
-        self.short_score = 35.0
-        self.best_side = "LONG"
-        self.score = self.long_score
-
-    def on_price_update(self, new_px: float, volume_bias: float = 0.0, trade_qty: float = 1.0) -> None:
-        new_px = round(new_px, self.decimals)
-        if not self.seeded or abs(new_px - self.price) / max(self.price, 1e-8) > 0.06:
-            self.seed_history(new_px)
-
+class WholeMarketMemoryEngine:
+    def __init__(self):
+        self.price_tape: dict[str, deque] = {c: deque(maxlen=720) for c in GLOBAL_BASKET}
+        self.kalman_state: dict[str, dict[str, float]] = {}
+        self.snapshots_count: int = 0
+        self.last_disk_save_ts: float = 0.0
+        self._load_persisted_memory()
+
+    def _load_persisted_memory(self):
+        try:
+            if os.path.exists(MEMORY_FILE_PATH):
+                with open(MEMORY_FILE_PATH, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                self.snapshots_count = int(data.get("snapshots_count", 0))
+                saved_tape = data.get("price_tape", {})
+                now = time.time()
+                for c, arr in saved_tape.items():
+                    if c in self.price_tape and isinstance(arr, list):
+                        for item in arr[-240:]:
+                            if isinstance(item, list) and len(item) == 2:
+                                ts_v = safe_float(item[0], 0.0)
+                                px_v = safe_float(item[1], 0.0)
+                                if px_v > 0 and (now - ts_v) < 7200:
+                                    self.price_tape[c].append((ts_v, px_v))
+                for k, v in data.get("peak_move_by_coin", {}).items():
+                    BOT_STATE["peak_move_by_coin"][str(k)] = safe_float(v, 0.0)
+                for k, v in data.get("worst_move_by_coin", {}).items():
+                    BOT_STATE["worst_move_by_coin"][str(k)] = safe_float(v, 0.0)
+                for k, v in data.get("partial_taken_by_coin", {}).items():
+                    BOT_STATE["partial_taken_by_coin"][str(k)] = bool(v)
+                for k, v in data.get("opened_ts_by_coin", {}).items():
+                    BOT_STATE["opened_ts_by_coin"][str(k)] = safe_float(v, now)
+                for k, v in data.get("loss_quarantine_until", {}).items():
+                    qv = safe_float(v, 0.0)
+                    if qv > now:
+                        BOT_STATE["loss_quarantine_until"][str(k)] = qv
+                BOT_STATE["stats_reset_ts_ms"] = int(safe_float(data.get("stats_reset_ts_ms", 0), 0))
+                BOT_STATE["starting_equity_usdc"] = safe_float(data.get("starting_equity_usdc", 0.0), 0.0)
+                BOT_STATE["global_long_lock_until"] = safe_float(data.get("global_long_lock_until", 0.0), 0.0)
+                BOT_STATE["global_short_lock_until"] = safe_float(data.get("global_short_lock_until", 0.0), 0.0)
+                BOT_STATE["global_any_lock_until"] = safe_float(data.get("global_any_lock_until", 0.0), 0.0)
+        except Exception:
+            pass
+
+    def save_persisted_memory(self, force: bool = False):
         now = time.time()
-        prev_px = self.price
-        self.price = new_px
-        self.current_bar_high = max(self.current_bar_high, new_px)
-        self.current_bar_low = min(self.current_bar_low, new_px)
-        self.current_bar_vol += max(0.1, trade_qty)
-
-        self.tick_window_5s.append((now, new_px))
-        while self.tick_window_5s and (now - self.tick_window_5s[0][0]) > 5.0:
-            self.tick_window_5s.popleft()
-        if len(self.tick_window_5s) >= 2 and self.tick_window_5s[0][1] > 0:
-            self.impulse_5s_pct = round(((new_px - self.tick_window_5s[0][1]) / self.tick_window_5s[0][1]) * 100.0, 3)
-
-        tick_dir = 1.0 if new_px >= prev_px else -1.0
-        bias = volume_bias if volume_bias != 0.0 else (tick_dir * 0.025)
-        self.obi = round(max(-0.88, min(0.88, self.obi * 0.93 + bias)), 2)
-        self.cvd = round(max(-0.88, min(0.88, self.cvd * 0.93 + bias * 0.9)), 2)
-
-        if (now - self.last_candle_ts) >= self.CANDLE_INTERVAL_SEC:
-            self.history.append(new_px)
-            self.highs.append(round(self.current_bar_high, self.decimals))
-            self.lows.append(round(self.current_bar_low, self.decimals))
-            self.volumes.append(round(self.current_bar_vol, 2))
-            self.current_bar_high = new_px
-            self.current_bar_low = new_px
-            self.current_bar_vol = 100.0
-            self.last_candle_ts = now
-            self.atr = self.compute_atr(period=14)
-
-        self._recalculate_indicators_from_bars(new_px)
-
-
-# =====================================================================
-# 4. ORQUESTRADOR ORACLE SINGULARITY v18.0 (LEAD-LAG + AUTO-TUNING + PREDICTIVE CASH-IN)
-# =====================================================================
-
-class AutonomousSniperOrchestratorV18:
-    def __init__(self) -> None:
-        self.gateway = BybitV5AutonomousGateway()
-        self.ai_running: bool = True
-        self.auto_intelligence_enabled: bool = True
-        self.usd_brl_rate: float = 5.3487
-        self.starting_equity_usd: float = 24.8282
-        self.current_equity_usd: float = 24.8282
-        self.realized_daily_pnl_usd: float = 0.0
-        self.peak_daily_pnl_usd: float = 0.0
-        self.floating_pnl_usd: float = 0.0
-        self.saved_fees_usd: float = 0.0
-        self.wins_today: int = 0
-        self.losses_today: int = 0
-        self.risk_per_trade_pct: float = 1.2
-        self.min_confluence_score: float = 78.0
-
-        self.backend_ws_connected: bool = False
-        self.backend_ws_endpoint: str = ""
-        self.ws_ticks_processed: int = 0
-        self.last_ws_tick_ts: float = 0.0
-        self._trade_lock: asyncio.Lock = asyncio.Lock()
-
-        self.enabled_symbols: List[str] = ["SOLUSDT", "XRPUSDT", "DOGEUSDT"]
-        self.max_concurrent_slots: int = 2
-        self.active_positions: Dict[str, Dict[str, Any]] = {}
-        self.global_cooldown_until: float = 0.0
-        self.last_profit_exit_per_sym: Dict[str, float] = {}
-        self.max_stagnant_trade_sec: float = 720.0
-
-        # Radar Lead-Lag + Filtro Macro do Bitcoin (v18.0)
-        self.btc_macro_bearish: bool = False
-        self.btc_1m_change_pct: float = 0.0
-        self.macro_leader_igniting: bool = False
-        self.lead_lag_status: str = "📡 Radar Lead-Lag: Monitorando Ignição BTC/ETH"
-        self.btc_macro_status: str = "🟢 BTC Estável (Compras Liberadas)"
-        self.market_regime: str = "ORACLE_SINGULARITY_V18"
-        self.ai_brain_status: str = "🔮 Oracle v18.0: Kalman 3m (≥ +0.85%) + Win Prob (≥ 76%) + Smart Money L2"
-
-        # Escada de Greens + Saída Preditiva no Topo (+0.42%+)
-        self.atr_stop_multiplier: float = 1.55
-        self.atr_trailing_multiplier: float = 0.85
-        self.atr_tp1_multiplier: float = 1.85
-        self.atr_tp2_multiplier: float = 3.20
-        self.min_stop_pct: float = 0.0062
-        self.ladder_step1_trigger_pct: float = 0.0036
-        self.ladder_step1_lock_pct: float = 0.0021
-        self.predictive_top_min_gain_pct: float = 0.0042  # +0.42% ativa Saída Preditiva no Topo (PREDICTIVE_TOP_CASH_IN)
-        self.ladder_step2_trigger_pct: float = 0.0055
-        self.ladder_step2_lock_pct: float = 0.0038
-        self.peak_exhaustion_trigger_pct: float = 0.0068
-        self.min_tp1_pct: float = 0.0085
-        self.ladder_step3_lock_pct: float = 0.0062
-        self.min_tp2_pct: float = 0.0155
-
-        self.max_daily_drawdown_pct: float = 5.0
-        self.circuit_breaker_tripped: bool = False
-        self.profit_shield_locked: bool = False
-        self.current_utc_day: int = datetime.now(timezone.utc).day
-
-        self.wallet_sync_source: str = "Bybit Spot Unificada"
-        self.selected_symbol: str = "SOLUSDT"
-        self.last_order_warning_ts: float = 0.0
-        self.equity_curve_brl: List[float] = [132.80, 132.80, 132.80]
-        self.decision_logs: Deque[Dict[str, str]] = deque(maxlen=35)
-
-        self.assets: Dict[str, CloudAssetTelemetry] = {
-            "SOLUSDT":  CloudAssetTelemetry("SOLUSDT",  94.46,   0.03,    2),
-            "XRPUSDT":  CloudAssetTelemetry("XRPUSDT",  1.2178,  0.0005,  4),
-            "DOGEUSDT": CloudAssetTelemetry("DOGEUSDT", 0.07427, 0.00005, 5),
-            "BNBUSDT":  CloudAssetTelemetry("BNBUSDT",  698.62,  0.10,    2),
-            "ETHUSDT":  CloudAssetTelemetry("ETHUSDT",  2213.88, 0.40,    2),
-            "BTCUSDT":  CloudAssetTelemetry("BTCUSDT",  77111.2, 4.0,     1),
-        }
-
-        self.load_persisted_brain_state()
-
-        self.add_log(
-            "🔮 ORACLE SINGULARITY v18.0 ATIVADO (PREVISÃO DE FUTURO KALMAN + SMART MONEY L2 + LEAD-LAG)",
-            "As 6 inovações preditivas estão rodando: "
-            "(1) <strong>Motor Preditivo Kalman 3m</strong> (só entra se <code>Projeção ≥ +0.85%</code> e <code>Win Prob ≥ 76%</code>), "
-            "(2) <strong>Radar Smart Money L2</strong> (detecta absorção institucional e vácuo de Asks <code>≥ 1.35x</code>), "
-            "(3) <strong>Radar Lead-Lag BTC/ETH</strong> (antecipa explosão nas altcoins no segundo zero), "
-            "(4) <strong>Saída Preditiva no Topo (`PREDICTIVE_TOP_CASH_IN` aos `+0.42%+`)</strong>, "
-            "(5) <strong>Auto-Tuning Neural do Gatilho (`76` a `85`)</strong> e "
-            "(6) <strong>Painel Oracle Singularity v18.0</strong>!",
-            "emerald",
-        )
-
-    def save_persisted_brain_state(self) -> None:
+        if not force and (now - self.last_disk_save_ts) < 25.0:
+            return
+        self.last_disk_save_ts = now
         try:
-            payload = {
-                "enabled_symbols": self.enabled_symbols,
-                "min_confluence_score": self.min_confluence_score,
-                "global_cooldown_until": self.global_cooldown_until,
-                "coins": {
-                    sym: {
-                        "wins": a.coin_wins,
-                        "losses": a.coin_losses,
-                        "consecutive_losses": a.consecutive_losses,
-                        "trust_bonus": a.ai_trust_bonus,
-                        "suspended_until": a.suspended_until,
-                    }
-                    for sym, a in self.assets.items()
-                },
+            serializable_tape = {
+                c: [[round(ts, 1), px] for ts, px in list(dq)[-120:] if math.isfinite(px) and px > 0]
+                for c, dq in self.price_tape.items()
+                if len(dq) > 0
             }
-            BRAIN_STATE_FILE.write_text(json.dumps(payload), encoding="utf-8")
+            payload = {
+                "snapshots_count": self.snapshots_count,
+                "saved_at": now,
+                "price_tape": serializable_tape,
+                "peak_move_by_coin": BOT_STATE.get("peak_move_by_coin", {}),
+                "worst_move_by_coin": BOT_STATE.get("worst_move_by_coin", {}),
+                "partial_taken_by_coin": BOT_STATE.get("partial_taken_by_coin", {}),
+                "opened_ts_by_coin": BOT_STATE.get("opened_ts_by_coin", {}),
+                "loss_quarantine_until": BOT_STATE.get("loss_quarantine_until", {}),
+                "stats_reset_ts_ms": BOT_STATE.get("stats_reset_ts_ms", 0),
+                "starting_equity_usdc": BOT_STATE.get("starting_equity_usdc", 0.0),
+                "global_long_lock_until": BOT_STATE.get("global_long_lock_until", 0.0),
+                "global_short_lock_until": BOT_STATE.get("global_short_lock_until", 0.0),
+                "global_any_lock_until": BOT_STATE.get("global_any_lock_until", 0.0),
+            }
+            with open(MEMORY_FILE_PATH, "w", encoding="utf-8") as f:
+                json.dump(payload, f)
         except Exception:
             pass
 
-    def load_persisted_brain_state(self) -> None:
-        try:
-            if not BRAIN_STATE_FILE.exists():
-                return
-            data = json.loads(BRAIN_STATE_FILE.read_text(encoding="utf-8"))
-            if isinstance(data.get("enabled_symbols"), list) and data["enabled_symbols"]:
-                self.enabled_symbols = [s for s in data["enabled_symbols"] if s in BYBIT_CONTRACTS]
-            if isinstance(data.get("min_confluence_score"), (int, float)):
-                self.min_confluence_score = float(data["min_confluence_score"])
-            if isinstance(data.get("global_cooldown_until"), (int, float)):
-                self.global_cooldown_until = float(data["global_cooldown_until"])
-            coins_map = data.get("coins", {})
-            for sym, c_info in coins_map.items():
-                if sym in self.assets and isinstance(c_info, dict):
-                    a = self.assets[sym]
-                    a.coin_wins = int(c_info.get("wins", 0))
-                    a.coin_losses = int(c_info.get("losses", 0))
-                    a.consecutive_losses = int(c_info.get("consecutive_losses", 0))
-                    a.ai_trust_bonus = float(c_info.get("trust_bonus", 0.0))
-                    a.suspended_until = float(c_info.get("suspended_until", 0.0))
-        except Exception:
-            pass
+    def record_all_mids(self, all_mids: dict[str, Any]) -> dict[str, Any]:
+        now = time.time()
+        self.snapshots_count += 1
+        up_real = 0
+        down_real = 0
+        valid_coins = 0
+        top_mover_coin = "ETH"
+        top_mover_ret = 0.0
 
-    @property
-    def active_position(self) -> Optional[Dict[str, Any]]:
-        if not self.active_positions:
-            return None
-        if self.selected_symbol in self.active_positions:
-            return self.active_positions[self.selected_symbol]
-        first_sym = next(iter(self.active_positions))
-        return self.active_positions[first_sym]
-
-    @property
-    def daily_drawdown_pct(self) -> float:
-        if self.starting_equity_usd <= 0:
-            return 0.0
-        net_daily_usd = self.realized_daily_pnl_usd + self.floating_pnl_usd
-        return round(max(0.0, (-net_daily_usd / self.starting_equity_usd) * 100.0), 2)
-
-    @property
-    def global_cooldown_remaining_sec(self) -> int:
-        rem = int(round(self.global_cooldown_until - time.time()))
-        return max(0, rem)
-
-    def check_lead_lag_radar(self) -> bool:
-        """
-        INOVAÇÃO #3 — Radar Lead-Lag (Antecipação pela Ignição do BTC/ETH):
-        Monitora o impulso de 5 segundos (`impulse_5s_pct`) e o fluxo (`obi`) do `BTCUSDT` e `ETHUSDT`.
-        Quando o BTC ou ETH iniciam uma ignição compradora (`impulse_5s_pct >= +0.06%` e `obi > 0.10`),
-        ativa `self.macro_leader_igniting = True`, priorizando a compra imediata na altcoin ativa de
-        maior `win_probability_pct` e menor spread!
-        """
-        btc = self.assets.get("BTCUSDT")
-        eth = self.assets.get("ETHUSDT")
-        btc_igniting = bool(btc and btc.impulse_5s_pct >= 0.06 and btc.obi > 0.10)
-        eth_igniting = bool(eth and eth.impulse_5s_pct >= 0.06 and eth.obi > 0.10)
-
-        if btc_igniting or eth_igniting:
-            leader_name = "BTC+ETH" if (btc_igniting and eth_igniting) else ("BTC" if btc_igniting else "ETH")
-            leader_imp = max(btc.impulse_5s_pct if btc else 0.0, eth.impulse_5s_pct if eth else 0.0)
-            self.macro_leader_igniting = True
-            self.lead_lag_status = f"🚀 IGNIÇÃO LEAD-LAG ({leader_name} +{leader_imp:.2f}% em 5s) — Surfe Antecipado Ativo!"
-            return True
-
-        self.macro_leader_igniting = False
-        self.lead_lag_status = "📡 Radar Lead-Lag: Monitorando Ignição BTC/ETH"
-        return False
-
-    def auto_tune_neural_parameters(self) -> None:
-        """
-        INOVAÇÃO #5 — Cérebro Auto-Adaptativo de Gatilho (100% Autônomo sem Intervenção Manual):
-        - Analisa a força média do mercado (média de `obi`, `cvd` e `win_probability_pct` das 6 moedas)
-          e ajusta sozinho `self.min_confluence_score` entre `76.0` (explosão compradora sincronizada)
-          e `85.0` (mercado travado ou traiçoeiro).
-        - Reabilita automaticamente qualquer moeda suspensa que apresente uma reversão institucional
-          perfeita com `win_probability_pct >= 84.0%`!
-        """
-        if not self.auto_intelligence_enabled:
-            return
-
-        all_assets = list(self.assets.values())
-        avg_obi = sum(a.obi for a in all_assets) / len(all_assets)
-        avg_cvd = sum(a.cvd for a in all_assets) / len(all_assets)
-        bullish_count = sum(1 for a in all_assets if a.trend_regime == "BULLISH_CONFLUENCE")
-
-        # Reabilitação automática de moeda com reversão institucional perfeita (Win Prob >= 84%)
-        for a in all_assets:
-            if a.is_suspended_by_ai and a.win_probability_pct >= 84.0 and a.predicted_move_pct_3m >= 0.90:
-                a.suspended_until = 0.0
-                a.consecutive_losses = 0
-                self.add_log(
-                    f"🔮 REABILITAÇÃO NEURAL ORACLE ({a.symbol} • WIN PROB {a.win_probability_pct:.1f}%)",
-                    f"A moeda <strong>{a.symbol}</strong> apresentou reversão institucional perfeita "
-                    f"(Projeção 3m: <strong>+{a.predicted_move_pct_3m:.2f}%</strong>, Win Prob: <strong>{a.win_probability_pct:.1f}%</strong>) "
-                    f"e foi liberada automaticamente pelo Cérebro Oracle!",
-                    "cyan",
-                )
-
-        if self.btc_macro_bearish:
-            self.min_confluence_score = 85.0
-        elif (avg_obi >= 0.16 and avg_cvd >= 0.12 and bullish_count >= 3) or self.macro_leader_igniting:
-            self.min_confluence_score = 76.0
-        elif avg_obi >= 0.08 and avg_cvd >= 0.05 and bullish_count >= 1:
-            self.min_confluence_score = 78.0
-        elif avg_obi < 0.02 or avg_cvd < 0.0:
-            self.min_confluence_score = 84.0
-        else:
-            self.min_confluence_score = 80.0
-
-    def check_btc_macro_filter(self) -> bool:
-        btc = self.assets.get("BTCUSDT")
-        if not btc:
-            self.btc_macro_bearish = False
-            return False
-
-        self.btc_1m_change_pct = btc.get_short_term_change_pct(bars_back=2)
-        sharp_1m_drop = self.btc_1m_change_pct <= -0.25
-        macro_downtrend = (btc.price < btc.ema_slow * 0.9994) and (btc.ema_fast < btc.ema_slow) and (btc.obi <= -0.05)
-
-        self.check_lead_lag_radar()
-
-        if sharp_1m_drop or macro_downtrend:
-            self.btc_macro_bearish = True
-            self.market_regime = "MACRO_BEAR_SHIELD"
-            self.btc_macro_status = (
-                f"🛑 BTC EM QUEDA ({self.btc_1m_change_pct:+.2f}% • Abaixo da EMA) — Novas Compras Pausadas"
-            )
-            self.ai_brain_status = f"🛡️ Defesa Macro BTC Ativa • Gatilho Auto-Ajustado p/ ≥ {self.min_confluence_score:.0f}"
-            self.auto_tune_neural_parameters()
-            return True
-
-        self.btc_macro_bearish = False
-        self.auto_tune_neural_parameters()
-        if self.macro_leader_igniting:
-            self.market_regime = "LEAD_LAG_IGNITION"
-            self.ai_brain_status = f"🚀 {self.lead_lag_status} • Gatilho Oracle ≥ {self.min_confluence_score:.0f}"
-        elif not btc.htf_bullish:
-            self.market_regime = "CAUTIOUS_1SLOT"
-            self.ai_brain_status = f"🔮 Modo Cautela (1 Slot): Só Compra Projeção ≥ +0.85% e Win Prob ≥ 76% (Gatilho ≥ {self.min_confluence_score:.0f})"
-        else:
-            self.market_regime = "ORACLE_SINGULARITY_V18"
-            self.ai_brain_status = f"🔮 Oracle v18.0: Kalman 3m (≥ +0.85%) + Win Prob (≥ 76%) • Gatilho Auto ≥ {self.min_confluence_score:.0f}"
-
-        self.btc_macro_status = f"🟢 BTC Estável ({self.btc_1m_change_pct:+.2f}%) — Compras Liberadas"
-        return False
-
-    def compute_volatility_lot_scale(self, sym: str, entry: float, atr_val: float) -> float:
-        if entry <= 0:
-            return 1.0
-        atr_pct = atr_val / entry
-        if atr_pct <= 0.0045:
-            return 1.0
-        excess = min(1.0, (atr_pct - 0.0045) / 0.0085)
-        scale = 1.0 - (0.20 * excess)
-        return round(max(0.80, min(1.00, scale)), 2)
-
-    def get_effective_max_slots(self) -> int:
-        unlocked_count = max(1, len(self.get_unlocked_symbols()))
-        btc = self.assets.get("BTCUSDT")
-        if (btc and not btc.htf_bullish) or self.current_equity_usd < 28.0:
-            safe_cap = 1
-        elif self.current_equity_usd <= 45.0:
-            safe_cap = 2
-        else:
-            safe_cap = self.max_concurrent_slots
-        return min(self.max_concurrent_slots, safe_cap, unlocked_count)
-
-    def add_log(self, tag: str, message: str, tone: str = "emerald") -> None:
-        now_str = datetime.now(timezone.utc).strftime("%H:%M:%S")
-        self.decision_logs.appendleft({
-            "tag": tag,
-            "message": message,
-            "tone": tone,
-            "time": now_str,
-        })
-
-    def get_dynamic_leverage(self) -> int:
-        return 1
-
-    def get_unlocked_symbols(self) -> List[str]:
-        active = [s for s in self.enabled_symbols if s in BYBIT_CONTRACTS]
-        return active if active else ["SOLUSDT"]
-
-    def pick_best_opportunity(self) -> CloudAssetTelemetry:
-        """
-        INOVAÇÃO #3 (Radar Lead-Lag + Seleção Preditiva):
-        Prioriza a altcoin ativa com maior `win_probability_pct`, maior `predicted_move_pct_3m`,
-        absorção `smart_money_ignition` e menor `spread_pct`!
-        """
-        unlocked = self.get_unlocked_symbols()
-        free_candidates = [
-            self.assets[s]
-            for s in unlocked
-            if s in self.assets and s not in self.active_positions and not self.assets[s].is_suspended_by_ai
-        ]
-        if free_candidates:
-            free_candidates.sort(
-                key=lambda a: (
-                    1 if a.smart_money_ignition else 0,
-                    a.win_probability_pct,
-                    a.predicted_move_pct_3m,
-                    a.score,
-                    -a.spread_pct,
-                ),
-                reverse=True,
-            )
-            return free_candidates[0]
-        candidates = [self.assets[s] for s in unlocked if s in self.assets]
-        candidates.sort(key=lambda a: (a.win_probability_pct, a.score), reverse=True)
-        return candidates[0] if candidates else self.assets["SOLUSDT"]
-
-    def build_targets_for_asset(self, sym: str, entry: float) -> Dict[str, float]:
-        asset = self.assets[sym]
-        spec = BYBIT_CONTRACTS[sym]
-        dec = spec.price_decimals
-
-        atr_val = max(asset.atr, entry * 0.0040, spec.tick_size * 12)
-        stop_dist = max(atr_val * self.atr_stop_multiplier, entry * self.min_stop_pct, spec.tick_size * 20)
-        tp1_dist = max(atr_val * self.atr_tp1_multiplier, entry * self.min_tp1_pct, stop_dist * 1.30)
-        tp2_dist = max(atr_val * self.atr_tp2_multiplier, entry * self.min_tp2_pct, stop_dist * 2.45)
-
-        return {
-            "atr_val": round(atr_val, dec),
-            "stop_dist": stop_dist,
-            "stop_px": round(entry - stop_dist, dec),
-            "step1_px": round(entry * (1.0 + self.ladder_step1_trigger_pct), dec),
-            "step2_px": round(entry * (1.0 + self.ladder_step2_trigger_pct), dec),
-            "tp1_px": round(entry + tp1_dist, dec),
-            "tp2_px": round(entry + tp2_dist, dec),
-        }
-
-    async def hydrate_klines_from_bybit(self) -> None:
-        client = await self.gateway.ensure_http()
-        for sym, asset in self.assets.items():
-            for base in self.gateway.get_candidate_urls():
-                try:
-                    r1 = await client.get(f"{base}/v5/market/kline?category=spot&symbol={sym}&interval=1&limit=40")
-                    if r1.status_code == 200 and "application/json" in r1.headers.get("content-type", ""):
-                        k_list = r1.json().get("result", {}).get("list", [])
-                        if k_list and len(k_list) >= 10:
-                            asset.seed_from_real_klines(k_list)
-                    r5 = await client.get(f"{base}/v5/market/kline?category=spot&symbol={sym}&interval=5&limit=25")
-                    if r5.status_code == 200 and "application/json" in r5.headers.get("content-type", ""):
-                        k5_list = r5.json().get("result", {}).get("list", [])
-                        if k5_list and len(k5_list) >= 8:
-                            asset.seed_htf_5m_klines(k5_list)
-                    rob = await client.get(f"{base}/v5/market/orderbook?category=spot&symbol={sym}&limit=25")
-                    if rob.status_code == 200 and "application/json" in rob.headers.get("content-type", ""):
-                        ob_res = rob.json().get("result", {})
-                        asset.on_l2_orderbook_update(ob_res.get("b", []), ob_res.get("a", []))
-                    break
-                except Exception:
-                    continue
-        self.check_btc_macro_filter()
-
-    async def reconcile_existing_spot_holdings(self) -> None:
-        if self.gateway.exec_mode not in ("BYBIT_REAL", "BYBIT_DEMO"):
-            return
-
-        for sym, spec in BYBIT_CONTRACTS.items():
-            if sym in self.active_positions:
+        for coin in GLOBAL_BASKET:
+            raw_px = all_mids.get(coin)
+            if raw_px is None:
                 continue
-            coin_qty = self.gateway.coin_balances.get(spec.base_coin, 0.0)
-            if coin_qty <= 0:
-                continue
-            px = self.assets[sym].price
+            px = safe_float(raw_px, 0.0)
             if px <= 0:
                 continue
-            usd_val = max(self.gateway.coin_usd_values.get(spec.base_coin, 0.0), coin_qty * px)
-            if usd_val >= 5.20:
-                qty_str = format_bybit_qty(coin_qty, spec.qty_step)
-                qty_float = float(qty_str)
-                if qty_float < spec.min_qty:
-                    continue
-                dec = spec.price_decimals
-                t = self.build_targets_for_asset(sym, px)
-                actual_risk_usd = round(qty_float * t["stop_dist"], 2)
-                order_id = f"RECONCILE_{spec.base_coin}_{int(time.time())}"
+            dq = self.price_tape[coin]
+            dq.append((now, px))
+            self._update_kalman(coin, px, now)
 
-                if sym not in self.enabled_symbols:
-                    self.enabled_symbols.append(sym)
+            if coin in BOT_STATE["radar"]:
+                BOT_STATE["radar"][coin]["price"] = px
+                BOT_STATE["radar"][coin]["vel_1m_pct"] = self.kalman_state.get(coin, {}).get("v", 0.0)
 
-                self.active_positions[sym] = {
-                    "symbol": sym,
-                    "side": "LONG",
-                    "openedAt": time.time(),
-                    "initialQty": qty_float,
-                    "remainingQty": qty_float,
-                    "entry": round(px, dec),
-                    "highestPrice": round(px, dec),
-                    "atrAtEntry": t["atr_val"],
-                    "stop": t["stop_px"],
-                    "earlyTrailTrigger": t["step1_px"],
-                    "step2Trigger": t["step2_px"],
-                    "tp1": t["tp1_px"],
-                    "tp2": t["tp2_px"],
-                    "decimals": dec,
-                    "riskUsd": actual_risk_usd,
-                    "ladderStage": 0,
-                    "tp1Hit": False,
-                    "earlyTrailingActivated": False,
-                    "trailingActive": False,
-                    "singleLotProtected": (usd_val < 12.0),
-                    "volatilityScale": 1.0,
-                    "floatingPnlUsd": 0.0,
-                    "realizedPartialUsd": 0.0,
-                    "srvStopOrderId": order_id,
-                    "realBybitOrder": True,
-                }
-                self.add_log(
-                    f"🔄 MOEDA RECONCILIADA DA CARTEIRA ({qty_str} {spec.base_coin})",
-                    f"Encontramos <strong>{coin_qty:.4f} {spec.base_coin} (≈ ${usd_val:.2f} USDT)</strong> na sua carteira Spot! "
-                    f"Posição protegida com Saída Preditiva no Topo (+0.42%+) e Escada v18.0!",
-                    "emerald",
-                )
-        self._recalculate_total_floating_pnl()
+            # Rastreamento Sub-Segundo de Pico/Fundo para Posição Aberta:
+            for op in BOT_STATE.get("open_positions", []):
+                if op.get("coin") == coin:
+                    epx = safe_float(op.get("entry_px", 0.0), 0.0)
+                    if epx > 0:
+                        live_mv = ((px - epx) / epx) if op.get("side") == "LONG" else ((epx - px) / epx)
+                        if live_mv > safe_float(BOT_STATE["peak_move_by_coin"].get(coin, 0.0), 0.0):
+                            BOT_STATE["peak_move_by_coin"][coin] = live_mv
+                        if live_mv < safe_float(BOT_STATE["worst_move_by_coin"].get(coin, 0.0), 0.0):
+                            BOT_STATE["worst_move_by_coin"][coin] = live_mv
 
-    async def check_daily_circuit_breaker(self) -> bool:
-        now_day = datetime.now(timezone.utc).day
-        if now_day != self.current_utc_day:
-            self.current_utc_day = now_day
-            self.starting_equity_usd = self.current_equity_usd
-            self.realized_daily_pnl_usd = 0.0
-            self.peak_daily_pnl_usd = 0.0
-            self.profit_shield_locked = False
-            self.wins_today = 0
-            self.losses_today = 0
-            for a in self.assets.values():
-                a.consecutive_losses = 0
-                a.suspended_until = 0.0
-            self.save_persisted_brain_state()
-            if self.circuit_breaker_tripped:
-                self.circuit_breaker_tripped = False
-                self.ai_running = True
-                self.add_log(
-                    "🌅 VIRADA DE DIA UTC — CIRCUIT BREAKER E MEMÓRIA RESETADOS",
-                    f"Novo dia iniciado! Banca base atualizada para <strong>${self.starting_equity_usd:.4f} USDT</strong> e motor reativado.",
-                    "emerald",
-                )
+            ret_3m = self.get_return_pct(coin, 180.0)
+            valid_coins += 1
+            if abs(ret_3m) > abs(top_mover_ret):
+                top_mover_ret = ret_3m
+                top_mover_coin = coin
 
-        if self.realized_daily_pnl_usd > self.peak_daily_pnl_usd:
-            self.peak_daily_pnl_usd = self.realized_daily_pnl_usd
+            r_entry = BOT_STATE["radar"].get(coin, {})
+            htf_str = str(r_entry.get("htf_15m", ""))
+            if htf_str == "ALTA 15M":
+                up_real += 1
+            elif htf_str == "BAIXA 15M":
+                down_real += 1
 
-        peak_pct = (self.peak_daily_pnl_usd / max(self.starting_equity_usd, 1.0)) * 100.0
-        current_net_pct = ((self.realized_daily_pnl_usd + self.floating_pnl_usd) / max(self.starting_equity_usd, 1.0)) * 100.0
-        if not self.profit_shield_locked and peak_pct >= 1.80 and current_net_pct <= (peak_pct * 0.50):
-            self.profit_shield_locked = True
-            self.global_cooldown_until = time.time() + 3600.0
-            self.add_log(
-                f"👑 ESCUDO ORACLE DE LUCRO DIÁRIO ATIVADO (+{current_net_pct:.2f}%)",
-                f"Você já atingiu pico de <strong>+{peak_pct:.2f}%</strong> hoje! Para garantir que o dia termine no <strong>GREEN</strong>, "
-                f"o robô protegeu seu lucro acumulado e pausou novas entradas por 1 hora.",
-                "emerald",
+        denom = max(1, valid_coins)
+        breadth_bull = round((up_real / denom) * 100.0, 1)
+        breadth_bear = round((down_real / denom) * 100.0, 1)
+
+        btc_imp_3m = round(self.get_return_pct("BTC", 180.0), 3)
+        eth_imp_3m = round(self.get_return_pct("ETH", 180.0), 3)
+
+        long_lock_rem = max(0.0, BOT_STATE.get("global_long_lock_until", 0.0) - now)
+        short_lock_rem = max(0.0, BOT_STATE.get("global_short_lock_until", 0.0) - now)
+        any_lock_rem = max(0.0, BOT_STATE.get("global_any_lock_until", 0.0) - now)
+
+        if any_lock_rem > 0:
+            regime = f"🧊 PAUSA DE SEGURANÇA PÓS-STOP ({int(any_lock_rem // 60) + 1}m RESTANTES)"
+            regime_color = "#f59e0b"
+            allowed_dir = "PAUSA ANTI-CASCATA ATIVA"
+            summary = "Aguardando a poeira do mercado baixar após o último Stop para não entrar em cascata!"
+        elif long_lock_rem > 0:
+            regime = f"🛡️ TRAVA ANTI-CASCATA EM LONG ({int(long_lock_rem // 60) + 1}m RESTANTES)"
+            regime_color = "#f59e0b"
+            allowed_dir = "SOMENTE SHORT NO TOPO (>= 85%)"
+            summary = "Compras bloqueadas temporariamente após Stop em LONG — operando apenas SHORT no topo!"
+        elif short_lock_rem > 0:
+            regime = f"🛡️ TRAVA ANTI-CASCATA EM SHORT ({int(short_lock_rem // 60) + 1}m RESTANTES)"
+            regime_color = "#f59e0b"
+            allowed_dir = "SOMENTE LONG NO FUNDO (<= 15%)"
+            summary = "Vendas bloqueadas temporariamente após Stop em SHORT — operando apenas LONG no fundo!"
+        else:
+            regime = "🎯 SNIPER ALPHA v40.0: COMPRA 6%-15% BANDA • VENDA 85%-94% BANDA (BTC = SÓ BÚSSOLA)"
+            regime_color = "#10b981"
+            allowed_dir = "EXTREMO REAL + VELA CONFIRMADA + MARÉ 15M"
+            summary = "BTC fixado como Bússola Exclusiva — operando apenas as Altcoins campeãs (ETH, SUI, AVAX, HYPE, AAVE, INJ)!"
+
+        brain = {
+            "regime": regime,
+            "regime_color": regime_color,
+            "allowed_direction": allowed_dir,
+            "breadth_bull_pct": breadth_bull,
+            "breadth_bear_pct": breadth_bear,
+            "btc_impulse_3m_pct": btc_imp_3m,
+            "eth_impulse_3m_pct": eth_imp_3m,
+            "top_mover_coin": top_mover_coin,
+            "top_mover_ret_3m": round(top_mover_ret, 2),
+            "market_sync_score": round(max(breadth_bull, breadth_bear), 1),
+            "snapshots_recorded": self.snapshots_count,
+            "coins_tracked": len(GLOBAL_BASKET),
+            "second_slot_status": BOT_STATE["market_brain"].get("second_slot_status", "MODO FOCO ÚNICO"),
+            "summary": summary,
+        }
+        BOT_STATE["market_brain"] = brain
+        self.save_persisted_memory(force=False)
+        return brain
+
+    def _update_kalman(self, coin: str, price: float, now: float):
+        st = self.kalman_state.get(coin)
+        if not st or not math.isfinite(st.get("x", 0.0)) or not math.isfinite(st.get("v", 0.0)):
+            self.kalman_state[coin] = {"x": price, "v": 0.0, "acc": 0.0, "ts": now}
+            return
+        dt = max(0.5, now - st.get("ts", now - 1.0))
+        prev_x = st["x"]
+        prev_v = st["v"]
+        raw_vel_pct_per_min = (((price - prev_x) / max(1e-9, prev_x)) * 100.0) * (60.0 / max(1.0, dt))
+        raw_vel_pct_per_min = float(np.clip(raw_vel_pct_per_min, -3.5, 3.5))
+        new_x = prev_x + 0.45 * (price - prev_x)
+        new_v = prev_v + 0.28 * (raw_vel_pct_per_min - prev_v)
+        new_acc = new_v - prev_v
+        self.kalman_state[coin] = {
+            "x": new_x,
+            "v": round(new_v, 4),
+            "acc": round(new_acc, 4),
+            "ts": now,
+        }
+
+    def get_return_pct(self, coin: str, lookback_sec: float) -> float:
+        dq = self.price_tape.get(coin)
+        if not dq or len(dq) < 2:
+            return 0.0
+        now_ts, now_px = dq[-1]
+        target_ts = now_ts - lookback_sec
+        base_px = dq[0][1]
+        for ts, px in reversed(dq):
+            base_px = px
+            if ts <= target_ts:
+                break
+        if base_px <= 0 or not math.isfinite(base_px) or not math.isfinite(now_px):
+            return 0.0
+        return safe_float(((now_px - base_px) / base_px) * 100.0, 0.0)
+
+    def get_kalman_telemetry(self, coin: str) -> dict[str, float]:
+        st = self.kalman_state.get(coin, {})
+        v = safe_float(st.get("v", 0.0), 0.0)
+        acc = safe_float(st.get("acc", 0.0), 0.0)
+        dq = self.price_tape.get(coin)
+        live_px = safe_float(dq[-1][1], 0.0) if (dq and len(dq) > 0) else 0.0
+        return {
+            "live_px": live_px,
+            "vel_1m_pct": round(v, 3),
+            "acc_1m_pct": round(acc, 3),
+            "ret_1m_pct": round(self.get_return_pct(coin, 60.0), 3),
+            "ret_3m_pct": round(self.get_return_pct(coin, 180.0), 3),
+            "ret_10m_pct": round(self.get_return_pct(coin, 600.0), 3),
+        }
+
+
+class QuantumOracleEngine:
+    @staticmethod
+    def compute_rsi(closes: np.ndarray, period: int = 14) -> float:
+        if len(closes) < period + 1:
+            return 50.0
+        deltas = np.diff(closes)
+        seed = deltas[:period]
+        up = float(seed[seed >= 0].sum()) / period
+        down = float(-seed[seed < 0].sum()) / period
+        if down == 0:
+            return 100.0 if up > 0 else 50.0
+        for delta in deltas[period:]:
+            upval = float(delta) if delta > 0 else 0.0
+            downval = float(-delta) if delta < 0 else 0.0
+            up = (up * (period - 1) + upval) / period
+            down = (down * (period - 1) + downval) / period
+        rs = up / (down + 1e-9)
+        return float(100.0 - (100.0 / (1.0 + rs)))
+
+    @staticmethod
+    def compute_ema(closes: np.ndarray, span: int) -> float:
+        if len(closes) == 0:
+            return 0.0
+        alpha = 2.0 / (span + 1.0)
+        ema = float(closes[0])
+        for price in closes[1:]:
+            ema = (float(price) - ema) * alpha + ema
+        return ema
+
+    @staticmethod
+    def compute_atr_pct(highs: np.ndarray, lows: np.ndarray, closes: np.ndarray, period: int = 14) -> float:
+        if len(closes) < period + 1:
+            return 0.0045
+        trs = []
+        for i in range(1, len(closes)):
+            tr = max(
+                float(highs[i] - lows[i]),
+                abs(float(highs[i] - closes[i - 1])),
+                abs(float(lows[i] - closes[i - 1])),
             )
+            trs.append(tr)
+        atr = float(np.mean(trs[-period:]))
+        last_px = float(closes[-1])
+        if last_px <= 0:
+            return 0.0045
+        return max(0.0020, min(0.0250, atr / last_px))
 
-        if not self.circuit_breaker_tripped and self.daily_drawdown_pct >= self.max_daily_drawdown_pct:
-            self.circuit_breaker_tripped = True
-            self.ai_running = False
-            dd_brl = abs((self.realized_daily_pnl_usd + self.floating_pnl_usd) * self.usd_brl_rate)
-            self.add_log(
-                f"🛑 CIRCUIT BREAKER DEFINITIVO ACIONADO (-{self.daily_drawdown_pct:.2f}%)",
-                f"Limite diário de segurança (<strong>-{self.max_daily_drawdown_pct:.1f}% / -R$ {dd_brl:.2f}</strong>) atingido! "
-                f"Motor pausado (`ai_running = False`) até a meia-noite para blindar seu capital.",
-                "rose",
+    @staticmethod
+    def compute_vwap_and_vol_zscore(highs: np.ndarray, lows: np.ndarray, closes: np.ndarray, volumes: np.ndarray) -> tuple[float, float]:
+        window = min(24, len(closes))
+        typ = (highs[-window:] + lows[-window:] + closes[-window:]) / 3.0
+        vols = volumes[-window:]
+        tot_v = float(np.sum(vols))
+        vwap = float(np.sum(typ * vols) / tot_v) if tot_v > 0 else float(np.mean(closes[-window:]))
+        if len(volumes) >= 10:
+            v_mean = float(np.mean(volumes[-20:-1])) if len(volumes) > 20 else float(np.mean(volumes[:-1]))
+            v_std = float(np.std(volumes[-20:-1])) + 1e-9 if len(volumes) > 20 else float(np.std(volumes[:-1])) + 1e-9
+            vol_z = float(np.clip((float(volumes[-1]) - v_mean) / v_std, -2.5, 4.5))
+        else:
+            vol_z = 0.0
+        return vwap, vol_z
+
+    @classmethod
+    def compute_macd_hist(cls, closes: np.ndarray) -> tuple[float, float]:
+        if len(closes) < 26:
+            return (0.0, 0.0)
+        alpha12 = 2.0 / 13.0
+        alpha26 = 2.0 / 27.0
+        alpha9 = 2.0 / 10.0
+        e12 = float(closes[0])
+        e26 = float(closes[0])
+        macd_series = []
+        for px in closes:
+            p = float(px)
+            e12 = (p - e12) * alpha12 + e12
+            e26 = (p - e26) * alpha26 + e26
+            macd_series.append(e12 - e26)
+        sig = macd_series[0]
+        hist = []
+        for m in macd_series:
+            sig = (m - sig) * alpha9 + sig
+            hist.append(m - sig)
+        return (float(hist[-2]), float(hist[-1]))
+
+    @classmethod
+    def analyze_omni_intelligence(
+        cls,
+        coin: str,
+        candles_5m: list,
+        candles_15m: list,
+        l2_obi: float,
+        funding_rate: float,
+        kalman_info: dict[str, float],
+        market_brain: dict[str, Any],
+    ) -> dict[str, Any]:
+        now = time.time()
+        if not candles_5m or len(candles_5m) < 25:
+            return {
+                "price": 0.0,
+                "vwap": 0.0,
+                "rsi": 50.0,
+                "band_pos": 0.50,
+                "trend": "NEUTRO",
+                "htf_15m": "NEUTRO",
+                "l2_obi": 0.0,
+                "vol_z": 0.0,
+                "vel_1m_pct": 0.0,
+                "atr_pct": 0.0045,
+                "room_pct": 0.75,
+                "strategy": "AGUARDANDO DADOS",
+                "score": 50.0,
+                "signal": "AGUARDANDO DADOS",
+                "updated_ts": now,
+            }
+
+        closes = np.array([float(c["c"]) for c in candles_5m], dtype=float)
+        highs = np.array([float(c["h"]) for c in candles_5m], dtype=float)
+        lows = np.array([float(c["l"]) for c in candles_5m], dtype=float)
+        opens = np.array([float(c["o"]) for c in candles_5m], dtype=float)
+        volumes = np.array([float(c.get("v", 1.0)) for c in candles_5m], dtype=float)
+
+        # Fusão Tick-a-Tick em Tempo Real: injeta o preço mid ao vivo na vela atual antes de calcular RSI/Banda/MACD!
+        live_tick_px = safe_float(kalman_info.get("live_px", 0.0), 0.0)
+        if live_tick_px > 0:
+            closes[-1] = live_tick_px
+            if live_tick_px > highs[-1]:
+                highs[-1] = live_tick_px
+            if live_tick_px < lows[-1]:
+                lows[-1] = live_tick_px
+
+        price = float(closes[-1])
+        rsi = cls.compute_rsi(closes, 14)
+        prev_rsi = cls.compute_rsi(closes[:-1], 14)
+        ema9_5m = cls.compute_ema(closes[-35:], 9)
+        ema21_5m = cls.compute_ema(closes[-35:], 21)
+        prev_mh, curr_mh = cls.compute_macd_hist(closes)
+        atr_pct = cls.compute_atr_pct(highs, lows, closes, 14)
+        vwap, vol_z = cls.compute_vwap_and_vol_zscore(highs, lows, closes, volumes)
+
+        htf_15m_state = "NEUTRO"
+        htf_bull = False
+        htf_bear = False
+        if candles_15m and len(candles_15m) >= 15:
+            c15 = np.array([float(c["c"]) for c in candles_15m], dtype=float)
+            if live_tick_px > 0:
+                c15[-1] = live_tick_px
+            o15_curr = float(candles_15m[-1].get("o", c15[-1]))
+            e9_15 = cls.compute_ema(c15, 9)
+            e21_15 = cls.compute_ema(c15, 21)
+            rsi_15m = cls.compute_rsi(c15, 14)
+            htf_bull = (
+                (e9_15 >= e21_15)
+                and (price >= e21_15 * 0.9985)
+                and (rsi_15m >= 47.5)
+                and ((price - o15_curr) / max(1e-9, o15_curr) > -0.0028)
             )
-            for sym_open in list(self.active_positions.keys()):
-                await self.close_specific_position(sym_open, reason="CIRCUIT_BREAKER_HALT")
-            return True
+            htf_bear = (
+                (e9_15 < e21_15)
+                and (price <= e21_15 * 1.0015)
+                and (rsi_15m <= 52.5)
+                and ((price - o15_curr) / max(1e-9, o15_curr) < 0.0028)
+            )
+            if htf_bull:
+                htf_15m_state = "ALTA 15M"
+            elif htf_bear:
+                htf_15m_state = "BAIXA 15M"
+            else:
+                htf_15m_state = "TRANSIÇÃO 15M"
 
-        return self.circuit_breaker_tripped
+        sma20 = float(np.mean(closes[-20:]))
+        std20 = float(np.std(closes[-20:])) + 1e-9
+        lower_bb = sma20 - (2.0 * std20)
+        upper_bb = sma20 + (2.0 * std20)
+        bb_width = max(upper_bb - lower_bb, price * 0.002)
+        bb_width_pct = (upper_bb - lower_bb) / max(1e-9, price)
+        band_pos = float(np.clip((price - lower_bb) / bb_width, 0.0, 1.0))
 
-    async def on_realtime_ws_tick(self, symbol: str, price: float, is_buy: bool, trade_qty: float = 1.0) -> None:
-        if symbol not in self.assets or price <= 0:
+        c_range = max(1e-9, float(highs[-1] - lows[-1]))
+        lower_wick_ratio = (min(float(opens[-1]), price) - float(lows[-1])) / c_range
+        upper_wick_ratio = (float(highs[-1]) - max(float(opens[-1]), price)) / c_range
+
+        is_bull_5m = ema9_5m >= ema21_5m
+        vel_1m = safe_float(kalman_info.get("vel_1m_pct", 0.0), 0.0)
+        ret_3m = safe_float(kalman_info.get("ret_3m_pct", 0.0), 0.0)
+        l2_obi = safe_float(l2_obi, 0.0)
+
+        is_compass_only = coin in COMPASS_ONLY_COINS
+        quarantine_rem = BOT_STATE.get("loss_quarantine_until", {}).get(coin, 0.0) - now
+        in_quarantine = quarantine_rem > 0
+        gm_now = time.gmtime(now)
+        is_hour_turn = (gm_now.tm_min >= 58 or gm_now.tm_min <= 2)
+        long_locked_global = now < BOT_STATE.get("global_long_lock_until", 0.0) or now < BOT_STATE.get("global_any_lock_until", 0.0)
+        short_locked_global = now < BOT_STATE.get("global_short_lock_until", 0.0) or now < BOT_STATE.get("global_any_lock_until", 0.0)
+
+        trend_label = f"{'🟢 ALTA 5M' if is_bull_5m else '🔴 BAIXA 5M'} ({htf_15m_state})"
+        macd_rising = curr_mh >= prev_mh
+        macd_falling = curr_mh <= prev_mh
+
+        room_to_upper_pct = max((upper_bb - price) / price, atr_pct * 1.5, 0.0040)
+        room_to_lower_pct = max((price - lower_bb) / price, atr_pct * 1.5, 0.0040)
+        has_safe_band_width = 0.0035 <= bb_width_pct <= 0.0135
+        band_too_wide = bb_width_pct > 0.0135
+
+        body_pct = abs(price - float(opens[-1])) / max(1e-9, price)
+        prev_candle_green = float(closes[-2]) >= float(opens[-2])
+        prev_candle_red = float(closes[-2]) <= float(opens[-2])
+
+        ret_1m = safe_float(kalman_info.get("ret_1m_pct", 0.0), 0.0)
+        pierced_lower_band = float(lows[-1]) < lower_bb
+        pierced_upper_band = float(highs[-1]) > upper_bb
+
+        safe_from_bottom_wick = (not pierced_lower_band) or (band_pos >= 0.11 and ret_1m >= 0.01 and l2_obi >= 0.15)
+        safe_from_top_wick = (not pierced_upper_band) or (band_pos <= 0.89 and ret_1m <= -0.01 and l2_obi <= -0.15)
+
+        no_waterfall_down = (ret_3m > -0.12) or (ret_1m >= 0.015 and vel_1m >= 0.006)
+        no_waterfall_up = (ret_3m < 0.12) or (ret_1m <= -0.015 and vel_1m <= -0.006)
+
+        candle_turning_up = (
+            price > float(opens[-1])
+            and safe_from_bottom_wick
+            and no_waterfall_down
+            and (body_pct >= 0.0004 or (prev_candle_green and lower_wick_ratio >= 0.32))
+        )
+        candle_turning_down = (
+            price < float(opens[-1])
+            and safe_from_top_wick
+            and no_waterfall_up
+            and (body_pct >= 0.0004 or (prev_candle_red and upper_wick_ratio >= 0.32))
+        )
+
+        # Filtro Extra para SOL (exige fundo/topo ainda mais cirúrgico 6%-12% / 88%-94% por causa de pavios longos):
+        max_long_band = 0.12 if coin == "SOL" else 0.15
+        min_short_band = 0.88 if coin == "SOL" else 0.85
+        in_safe_long_zone = 0.06 <= band_pos <= max_long_band
+        in_safe_short_zone = min_short_band <= band_pos <= 0.94
+        outside_band_bottom = band_pos < 0.06
+        outside_band_top = band_pos > 0.94
+
+        btc_imp_3m = safe_float(market_brain.get("btc_impulse_3m_pct", 0.0), 0.0)
+        eth_imp_3m = safe_float(market_brain.get("eth_impulse_3m_pct", 0.0), 0.0)
+        breadth_bull = safe_float(market_brain.get("breadth_bull_pct", 50.0), 50.0)
+        breadth_bear = safe_float(market_brain.get("breadth_bear_pct", 50.0), 50.0)
+        coins_crashing_0pct = sum(1 for r in BOT_STATE.get("radar", {}).values() if safe_float(r.get("band_pos", 0.5), 0.5) <= 0.03)
+        coins_pumping_100pct = sum(1 for r in BOT_STATE.get("radar", {}).values() if safe_float(r.get("band_pos", 0.5), 0.5) >= 0.97)
+
+        # Trava dos Líderes (ETH e SOL): na 2ª entrada da PEPE, o ETH estava em ALTA 15M (Banda 97%) e a SOL em ALTA 15M (Banda 93%)!
+        # Proibido abrir SHORT em qualquer moeda se ETH ou SOL estiverem em ALTA 15M puxando o mercado para cima!
+        # Proibido abrir LONG em qualquer moeda se ETH ou SOL estiverem em BAIXA 15M puxando o mercado para baixo!
+        eth_radar = BOT_STATE.get("radar", {}).get("ETH", {})
+        sol_radar = BOT_STATE.get("radar", {}).get("SOL", {})
+        leaders_pumping_bull = (
+            str(eth_radar.get("htf_15m", "")) == "ALTA 15M"
+            or str(sol_radar.get("htf_15m", "")) == "ALTA 15M"
+        )
+        leaders_dumping_bear = (
+            str(eth_radar.get("htf_15m", "")) == "BAIXA 15M"
+            or str(sol_radar.get("htf_15m", "")) == "BAIXA 15M"
+        )
+
+        market_allows_long = (breadth_bear < 50.0) and (coins_crashing_0pct <= 2) and (not leaders_dumping_bear or coin in ("ETH", "SOL"))
+        market_allows_short = (breadth_bull < 50.0) and (coins_pumping_100pct <= 2) and (not leaders_pumping_bull or coin in ("ETH", "SOL"))
+
+        btc_allows_long = (
+            market_allows_long
+            and (btc_imp_3m >= -0.02)
+            and (eth_imp_3m >= -0.02)
+        )
+        btc_allows_short = (
+            market_allows_short
+            and (btc_imp_3m <= 0.01)
+            and (eth_imp_3m <= 0.01)
+        )
+
+        strategy_name = "🔍 MONITORANDO ZONA DE PREÇO"
+        signal = "NEUTRO"
+        score = 58.0
+
+        min_obi_req = 0.16 if coin == "SOL" else 0.12
+
+        # 1) GATILHOS SNIPER LONG — ESTRITAMENTE NO FUNDO REAL (6% a 15% da Banda)
+        long_base_pullback = (
+            not is_compass_only
+            and not in_quarantine
+            and not is_hour_turn
+            and not long_locked_global
+            and btc_allows_long
+            and htf_bull
+            and has_safe_band_width
+            and in_safe_long_zone
+            and 25.0 <= rsi <= 43.5
+            and rsi > prev_rsi
+            and candle_turning_up
+            and macd_rising
+            and l2_obi >= min_obi_req
+            and vel_1m >= 0.004
+            and funding_rate < 0.0008
+        )
+        long_extreme_spring = (
+            not is_compass_only
+            and not in_quarantine
+            and not is_hour_turn
+            and not long_locked_global
+            and btc_allows_long
+            and htf_bull
+            and has_safe_band_width
+            and 0.06 <= band_pos <= min(0.14, max_long_band)
+            and rsi <= 37.0
+            and rsi > prev_rsi
+            and candle_turning_up
+            and lower_wick_ratio >= 0.32
+            and l2_obi >= 0.18
+            and vel_1m >= 0.006
+        )
+
+        # 2) GATILHOS SNIPER SHORT — ESTRITAMENTE NO TOPO REAL (85% a 94% da Banda)
+        short_top_rally = (
+            not is_compass_only
+            and not in_quarantine
+            and not is_hour_turn
+            and not short_locked_global
+            and btc_allows_short
+            and htf_bear
+            and has_safe_band_width
+            and in_safe_short_zone
+            and 56.5 <= rsi <= 75.0
+            and rsi < prev_rsi
+            and candle_turning_down
+            and macd_falling
+            and l2_obi <= -min_obi_req
+            and vel_1m <= -0.004
+            and funding_rate > -0.0008
+        )
+        short_extreme_upthrust = (
+            not is_compass_only
+            and not in_quarantine
+            and not is_hour_turn
+            and not short_locked_global
+            and btc_allows_short
+            and htf_bear
+            and has_safe_band_width
+            and max(0.86, min_short_band) <= band_pos <= 0.94
+            and rsi >= 63.0
+            and rsi < prev_rsi
+            and candle_turning_down
+            and upper_wick_ratio >= 0.32
+            and l2_obi <= -0.18
+            and vel_1m <= -0.006
+        )
+
+        if in_safe_long_zone and htf_bull and not is_compass_only:
+            dist_from_sweet = abs(band_pos - 0.10)
+            score += max(0.0, (0.16 - dist_from_sweet) * 60.0) + max(0.0, l2_obi * 18.0)
+        elif in_safe_short_zone and htf_bear and not is_compass_only:
+            dist_from_sweet = abs(band_pos - 0.90)
+            score += max(0.0, (0.16 - dist_from_sweet) * 60.0) + max(0.0, -l2_obi * 18.0)
+
+        if is_compass_only:
+            signal = "BÚSSOLA"
+            strategy_name = f"🧭 BÚSSOLA DO MERCADO (BTC 3m: {btc_imp_3m:+.2f}% — SOMENTE LEITURA)"
+            score = 50.0
+        elif long_extreme_spring:
+            signal = "SNIPER LONG"
+            strategy_name = f"💎 FUNDO FORTRESS ({int(band_pos*100)}%) + ALTA 15M"
+            score = max(score, 94.5 + min(4.5, l2_obi * 10.0))
+        elif long_base_pullback:
+            signal = "SNIPER LONG"
+            strategy_name = f"🟢 COMPRA FORTRESS ({int(band_pos*100)}%) + ALTA 15M"
+            score = max(score, 92.0 + min(5.0, l2_obi * 9.0))
+        elif short_extreme_upthrust:
+            signal = "SNIPER SHORT"
+            strategy_name = f"💎 TOPO FORTRESS ({int(band_pos*100)}%) + BAIXA 15M"
+            score = max(score, 94.5 + min(4.5, -l2_obi * 10.0))
+        elif short_top_rally:
+            signal = "SNIPER SHORT"
+            strategy_name = f"🔴 VENDA FORTRESS ({int(band_pos*100)}%) + BAIXA 15M"
+            score = max(score, 92.0 + min(5.0, -l2_obi * 9.0))
+        else:
+            if in_quarantine:
+                strategy_name = f"🧊 QUARENTENA PÓS-STOP ({int(quarantine_rem // 60) + 1}m)"
+                score = 45.0
+            elif is_hour_turn:
+                strategy_name = "🛡️ VIRADA DE HORA INSTITUCIONAL (:58-:02 UTC — FILTRO ATIVO)"
+                score = 50.0
+            elif band_too_wide:
+                strategy_name = f"🛡️ BLOQUEADO (VOLATILIDADE DE PAVIO {bb_width_pct*100:.2f}% > 1.35%)"
+                score = 52.0
+            elif htf_bull and not market_allows_long:
+                if leaders_dumping_bear:
+                    strategy_name = "🛡️ LONG BLOQUEADO (LÍDERES ETH/SOL EM BAIXA 15M PUXANDO MERCADO)"
+                else:
+                    strategy_name = f"🛡️ LONG BLOQUEADO (MARÉ: {breadth_bear:.0f}% DO MERCADO EM BAIXA 15M)"
+                score = 50.0
+            elif htf_bull and not btc_allows_long:
+                strategy_name = f"🛡️ LONG BLOQUEADO (BTC {btc_imp_3m:+.2f}% / ETH {eth_imp_3m:+.2f}% RECUANDO)"
+                score = 55.0
+            elif htf_bear and not market_allows_short:
+                if leaders_pumping_bull:
+                    strategy_name = "🛡️ SHORT BLOQUEADO (LÍDERES ETH/SOL EM ALTA 15M PUXANDO MERCADO)"
+                else:
+                    strategy_name = f"🛡️ SHORT BLOQUEADO (MARÉ: {breadth_bull:.0f}% DO MERCADO EM ALTA 15M)"
+                score = 50.0
+            elif htf_bear and not btc_allows_short:
+                strategy_name = f"🛡️ SHORT BLOQUEADO (BTC {btc_imp_3m:+.2f}% / ETH {eth_imp_3m:+.2f}% SUBINDO)"
+                score = 55.0
+            elif outside_band_bottom:
+                strategy_name = f"⏳ FORA DA BANDA ({int(band_pos*100)}%) — ESPERANDO VOLTAR >= 6%"
+                score = 72.0
+            elif outside_band_top:
+                strategy_name = f"⏳ FORA DA BANDA ({int(band_pos*100)}%) — ESPERANDO VOLTAR <= 94%"
+                score = 72.0
+            elif htf_bull and band_pos > max_long_band:
+                strategy_name = f"🚫 COMPRA BLOQUEADA (BANDA {int(band_pos*100)}% > {int(max_long_band*100)}%)"
+                score = min(score, 62.0)
+            elif htf_bear and band_pos < min_short_band:
+                strategy_name = f"🚫 VENDA BLOQUEADA (BANDA {int(band_pos*100)}% < {int(min_short_band*100)}%)"
+                score = min(score, 62.0)
+            elif htf_bull and in_safe_long_zone and (not candle_turning_up or rsi <= prev_rsi or vel_1m < 0.004):
+                strategy_name = f"⏳ FUNDO ({int(band_pos*100)}%) — AGUARDANDO VELA & MACD VIRAREM"
+                score = min(score, 82.0)
+            elif htf_bear and in_safe_short_zone and (not candle_turning_down or rsi >= prev_rsi or vel_1m > -0.004):
+                strategy_name = f"⏳ TOPO ({int(band_pos*100)}%) — AGUARDANDO VELA & MACD VIRAREM"
+                score = min(score, 82.0)
+            elif htf_bull and l2_obi < min_obi_req:
+                strategy_name = f"⏳ FUNDO ({int(band_pos*100)}%) — AGUARDANDO BOOK >= +{min_obi_req:.2f}"
+                score = min(score, 78.0)
+            elif htf_bear and l2_obi > -min_obi_req:
+                strategy_name = f"⏳ TOPO ({int(band_pos*100)}%) — AGUARDANDO BOOK <= -{min_obi_req:.2f}"
+                score = min(score, 78.0)
+            else:
+                strategy_name = "🔍 AGUARDANDO FUNDO/TOPO CIRÚRGICO (6%-15% OU 85%-94%)"
+
+        active_room = room_to_upper_pct if htf_bull else room_to_lower_pct
+
+        return {
+            "price": price,
+            "vwap": round(vwap, 4),
+            "rsi": round(rsi, 1),
+            "band_pos": round(band_pos, 2),
+            "ema_fast": ema9_5m,
+            "ema_slow": ema21_5m,
+            "trend": trend_label,
+            "htf_15m": htf_15m_state,
+            "htf_bull": htf_bull,
+            "htf_bear": htf_bear,
+            "tf_conflict": False,
+            "l2_obi": round(l2_obi, 2),
+            "vol_z": round(vol_z, 2),
+            "vel_1m_pct": round(vel_1m, 3),
+            "ret_3m_pct": round(ret_3m, 2),
+            "atr_pct": round(atr_pct, 4),
+            "room_pct": round(active_room * 100.0, 2),
+            "strategy": strategy_name,
+            "score": round(min(99.0, score), 1),
+            "signal": signal,
+            "updated_ts": now,
+        }
+
+
+class HyperliquidDeFiGateway:
+    def __init__(self, memory_engine: WholeMarketMemoryEngine):
+        self.memory = memory_engine
+        self.account_address = BOT_STATE["account_address"].lower()
+        raw_key = os.getenv(
+            "HYPERLIQUID_AGENT_KEY",
+            "0xdb66798e5ade2d8e35a57a9b833e21ac02a01ce9a9f908ede16c8a61312ba9ee"
+        ).strip()
+        if not raw_key:
+            raise ValueError("HYPERLIQUID_AGENT_KEY ausente nas variáveis de ambiente!")
+        if not raw_key.startswith("0x"):
+            raw_key = "0x" + raw_key
+        self.agent_wallet: LocalAccount = Account.from_key(raw_key)
+        BOT_STATE["agent_address"] = self.agent_wallet.address
+        self.info = Info(constants.MAINNET_API_URL, skip_ws=True)
+        self.exchange = Exchange(
+            wallet=self.agent_wallet,
+            base_url=constants.MAINNET_API_URL,
+            account_address=self.account_address
+        )
+        self.meta = self.info.meta()
+        self.sz_decimals = {asset["name"]: asset["szDecimals"] for asset in self.meta["universe"]}
+        self.cooldowns: dict[str, float] = {}
+        self.configured_leverage: dict[str, int] = {}
+        self.cache_5m: dict[str, tuple[float, list]] = {}
+        self.cache_15m: dict[str, tuple[float, list]] = {}
+        self.cache_l2: dict[str, tuple[float, float]] = {}
+        self.last_ctx_sync_ts: float = 0.0
+        self.last_fills_sync_ts: float = 0.0
+        add_log(
+            f"🎯 Sovereign Compass & Alpha v40.0 Conectado | Conta: {self.account_address[:8]}... | "
+            f"BTC = Bússola + AAVE & INJ Ativas + Anti-Violinada 180s!"
+        )
+        threading.Thread(target=self.preconfigure_watchlist_leverage, daemon=True).start()
+
+    def _hl_coin(self, coin: str) -> str:
+        if coin in self.sz_decimals:
+            return coin
+        k_sym = f"k{coin}"
+        if k_sym in self.sz_decimals:
+            return k_sym
+        return coin
+
+    def preconfigure_watchlist_leverage(self):
+        lev = BOT_STATE["leverage"]
+        for coin in BOT_STATE["watchlist"]:
+            if coin in COMPASS_ONLY_COINS:
+                continue
+            if self.configured_leverage.get(coin) == lev:
+                continue
+            try:
+                hl_c = self._hl_coin(coin)
+                with GATEWAY_LOCK:
+                    self.exchange.update_leverage(lev, hl_c, is_cross=True)
+                self.configured_leverage[coin] = lev
+            except Exception:
+                pass
+            time.sleep(0.15)
+
+    def sync_global_market_tape(self) -> dict[str, Any]:
+        try:
+            all_mids = self.info.all_mids()
+            if isinstance(all_mids, dict):
+                if "PEPE" not in all_mids and "kPEPE" in all_mids:
+                    all_mids["PEPE"] = all_mids["kPEPE"]
+                return self.memory.record_all_mids(all_mids)
+        except Exception as e:
+            logger.debug(f"Aviso ao gravar fita global all_mids: {e}")
+        return BOT_STATE["market_brain"]
+
+    def can_open_next_position(self, open_positions: list, effective_max_pos: int) -> tuple[bool, str]:
+        now = time.time()
+        any_rem = BOT_STATE.get("global_any_lock_until", 0.0) - now
+        if any_rem > 0:
+            BOT_STATE["market_brain"]["second_slot_status"] = f"🧊 PAUSA PÓS-STOP ({int(any_rem // 60) + 1}m RESTANTES)"
+            return (False, "POST_STOP_PAUSE")
+
+        if len(open_positions) == 0:
+            BOT_STATE["market_brain"]["second_slot_status"] = "SLOT ÚNICO LIVRE (CAÇANDO EXTREMO 6%-15% OU 85%-94%)"
+            return (True, "SLOT_1_OPEN")
+        else:
+            p0 = open_positions[0]
+            BOT_STATE["market_brain"]["second_slot_status"] = f"🔒 FOCADO 100% EM {p0['coin']} (PROIBIDO ABRIR 2ª POSIÇÃO)"
+            return (False, "SINGLE_FOCUS_MODE")
+
+    def sync_onchain_trade_history(self, force: bool = False):
+        now = time.time()
+        if not force and (now - self.last_fills_sync_ts) < 20.0:
             return
-        self.ws_ticks_processed += 1
-        self.last_ws_tick_ts = time.time()
-        asset = self.assets[symbol]
-        asset.on_price_update(price, volume_bias=(0.03 if is_buy else -0.03), trade_qty=trade_qty)
-
-        if symbol in ("BTCUSDT", "ETHUSDT"):
-            self.check_btc_macro_filter()
-
-        if await self.check_daily_circuit_breaker():
-            return
-        if not self.ai_running:
-            return
-
-        if symbol in self.active_positions:
-            async with self._trade_lock:
-                if symbol in self.active_positions:
-                    await self.evaluate_single_position(symbol)
-            return
-
-        if time.time() < self.global_cooldown_until:
-            return
-        if self.check_btc_macro_filter():
-            return
-
-        max_slots = self.get_effective_max_slots()
-        # INOVAÇÃO #3 (Radar Lead-Lag): Se BTC/ETH dispararam ignição agora, busca imediatamente a melhor altcoin ativa!
-        if self.macro_leader_igniting and len(self.active_positions) < max_slots:
-            best_alt = self.pick_best_opportunity()
-            if (
-                best_alt.symbol not in self.active_positions
-                and best_alt.predicted_move_pct_3m >= 0.85
-                and best_alt.win_probability_pct >= 76.0
-                and best_alt.score >= self.min_confluence_score
-            ):
-                async with self._trade_lock:
-                    if best_alt.symbol not in self.active_positions and len(self.active_positions) < max_slots:
-                        await self.open_sniper_trade(is_manual=False, requested_symbol=best_alt.symbol)
+        try:
+            fills = self.info.user_fills(self.account_address)
+            self.last_fills_sync_ts = now
+            if not isinstance(fills, list):
                 return
 
-        if asset.is_suspended_by_ai:
+            wins_all = 0
+            losses_all = 0
+            sum_wins_usdc = 0.0
+            sum_losses_usdc = 0.0
+            net_pnl_all = 0.0
+            wins_24h = 0
+            losses_24h = 0
+            net_pnl_24h = 0.0
+            cutoff_24h_ms = int((now - 86400) * 1000)
+
+            grouped_by_oid: dict[Any, dict[str, Any]] = {}
+            for f in fills:
+                closed_pnl = float(f.get("closedPnl", 0.0))
+                if abs(closed_pnl) < 1e-7:
+                    continue
+                oid = f.get("oid") or f"{f.get('coin')}_{f.get('time')}"
+                fee = float(f.get("fee", 0.0))
+                net_fill = closed_pnl - fee
+                t_ms = int(f.get("time", 0))
+                raw_c = str(f.get("coin", "?"))
+                coin = "PEPE" if raw_c == "kPEPE" and "PEPE" in GLOBAL_BASKET else raw_c
+                px = float(f.get("px", 0.0))
+                sz = float(f.get("sz", 0.0))
+                dir_str = str(f.get("dir", f.get("side", "")))
+
+                if oid not in grouped_by_oid:
+                    grouped_by_oid[oid] = {
+                        "time_ms": t_ms,
+                        "coin": coin,
+                        "px": px,
+                        "sz": sz,
+                        "net_usdc": net_fill,
+                        "dir": dir_str,
+                    }
+                else:
+                    grouped_by_oid[oid]["net_usdc"] += net_fill
+                    grouped_by_oid[oid]["sz"] += sz
+                    grouped_by_oid[oid]["time_ms"] = max(grouped_by_oid[oid]["time_ms"], t_ms)
+
+            all_events = sorted(grouped_by_oid.values(), key=lambda x: x["time_ms"], reverse=True)
+
+            # Consolida fills do mesmo fechamento (janela de 12s na mesma moeda)
+            merged_events: list[dict[str, Any]] = []
+            for ev in all_events:
+                if (
+                    merged_events
+                    and merged_events[-1]["coin"] == ev["coin"]
+                    and abs(merged_events[-1]["time_ms"] - ev["time_ms"]) <= 12000
+                ):
+                    merged_events[-1]["net_usdc"] += ev["net_usdc"]
+                    merged_events[-1]["sz"] += ev["sz"]
+                else:
+                    merged_events.append(dict(ev))
+
+            reset_ts_ms = int(BOT_STATE.get("stats_reset_ts_ms", 0))
+            if reset_ts_ms <= 0 and len(merged_events) > 2:
+                # Mantém desde o início da Era v30+ por padrão se não foi zerado manualmente
+                reset_ts_ms = 0
+
+            filtered_events = [
+                ev for ev in merged_events
+                if (reset_ts_ms <= 0 or ev["time_ms"] >= reset_ts_ms)
+            ]
+
+            coin_stats: dict[str, dict[str, float]] = {}
+            recent_formatted = []
+
+            for ev in filtered_events:
+                net_v = round(float(ev["net_usdc"]), 4)
+                c_sym = ev["coin"]
+                is_scratch_breakeven = (-0.045 <= net_v < 0.0)
+
+                if c_sym not in coin_stats:
+                    coin_stats[c_sym] = {"w": 0, "l": 0, "net": 0.0}
+                coin_stats[c_sym]["net"] += net_v
+
+                if net_v >= 0:
+                    wins_all += 1
+                    sum_wins_usdc += net_v
+                    coin_stats[c_sym]["w"] += 1
+                    res_label = "🏆 VITÓRIA (GREEN)"
+                elif is_scratch_breakeven:
+                    res_label = "🛡️ ZERO-A-ZERO (TAXA)"
+                else:
+                    losses_all += 1
+                    sum_losses_usdc += abs(net_v)
+                    coin_stats[c_sym]["l"] += 1
+                    res_label = "🔴 DERROTA (RED)"
+
+                net_pnl_all += net_v
+                if ev["time_ms"] >= cutoff_24h_ms:
+                    net_pnl_24h += net_v
+                    if net_v >= 0:
+                        wins_24h += 1
+                    elif not is_scratch_breakeven:
+                        losses_24h += 1
+
+                if len(recent_formatted) < 18:
+                    dt_str = time.strftime("%d/%m %H:%M:%S", time.gmtime(ev["time_ms"] / 1000.0))
+                    recent_formatted.append({
+                        "time_str": dt_str,
+                        "coin": c_sym,
+                        "result": res_label,
+                        "px": ev["px"],
+                        "net_usdc": round(net_v, 2),
+                        "net_brl": round(net_v * USD_BRL_RATE, 2),
+                        "is_win": net_v >= 0,
+                        "is_scratch": is_scratch_breakeven,
+                    })
+
+            tot_decisions = wins_all + losses_all
+            win_rate = (wins_all / tot_decisions * 100.0) if tot_decisions > 0 else 0.0
+            avg_win = (sum_wins_usdc / wins_all) if wins_all > 0 else 0.0
+            avg_loss = (sum_losses_usdc / losses_all) if losses_all > 0 else 0.0
+            payoff = (avg_win / avg_loss) if avg_loss > 0 else (avg_win if avg_win > 0 else 1.0)
+
+            BOT_STATE["wins_total"] = wins_all
+            BOT_STATE["losses_total"] = losses_all
+            BOT_STATE["win_rate_pct"] = round(win_rate, 1)
+            BOT_STATE["avg_win_usdc"] = round(avg_win, 2)
+            BOT_STATE["avg_loss_usdc"] = round(avg_loss, 2)
+            BOT_STATE["payoff_ratio"] = round(payoff, 2)
+            BOT_STATE["realized_profit_usdc"] = round(net_pnl_all, 2)
+            BOT_STATE["realized_profit_brl"] = round(net_pnl_all * USD_BRL_RATE, 2)
+            BOT_STATE["wins_24h"] = wins_24h
+            BOT_STATE["losses_24h"] = losses_24h
+            BOT_STATE["realized_24h_usdc"] = round(net_pnl_24h, 2)
+
+            goal_u = max(0.10, float(BOT_STATE.get("daily_goal_usdc", 1.50)))
+            prog_pct = max(0.0, min(100.0, (net_pnl_all / goal_u) * 100.0))
+            BOT_STATE["daily_progress_pct"] = round(prog_pct, 1)
+
+            if coin_stats:
+                sorted_coins = sorted(coin_stats.items(), key=lambda x: x[1]["net"], reverse=True)
+                parts = []
+                for cn, st in sorted_coins:
+                    tot_c = int(st["w"] + st["l"])
+                    wr_c = int(round((st["w"] / tot_c) * 100)) if tot_c > 0 else 100
+                    parts.append(f"{cn}: {int(st['w'])}W/{int(st['l'])}L ({wr_c}% | ${st['net']:+.2f})")
+                BOT_STATE["top_coins_summary"] = " • ".join(parts)
+            else:
+                BOT_STATE["top_coins_summary"] = "Placar zerado — aguardando o 1º trade do novo ciclo!"
+
+            BOT_STATE["recent_closed_trades"] = recent_formatted
+        except Exception as e:
+            logger.debug(f"Aviso ao sincronizar histórico user_fills: {e}")
+
+    def refresh_funding_and_open_interest(self):
+        now = time.time()
+        if (now - self.last_ctx_sync_ts) < 60.0:
             return
+        try:
+            meta_ctx = self.info.meta_and_asset_ctxs()
+            self.last_ctx_sync_ts = now
+            if isinstance(meta_ctx, list) and len(meta_ctx) >= 2:
+                universe = meta_ctx[0].get("universe", [])
+                ctxs = meta_ctx[1]
+                for idx, asset_info in enumerate(universe):
+                    c_name = asset_info.get("name")
+                    norm_name = "PEPE" if c_name == "kPEPE" and "PEPE" in GLOBAL_BASKET else c_name
+                    if norm_name in GLOBAL_BASKET and idx < len(ctxs):
+                        ctx = ctxs[idx]
+                        BOT_STATE["funding_by_coin"][norm_name] = float(ctx.get("funding", 0.0))
+                        BOT_STATE["open_interest_by_coin"][norm_name] = float(ctx.get("openInterest", 0.0))
+        except Exception:
+            pass
 
-        # REGRA DE OURO ORACLE v18.0: `predicted_move_pct_3m >= 0.85` E `win_probability_pct >= 76.0`
-        if (
-            symbol in self.get_unlocked_symbols()
-            and len(self.active_positions) < max_slots
-            and asset.predicted_move_pct_3m >= 0.85
-            and asset.win_probability_pct >= 76.0
-            and asset.score >= self.min_confluence_score
-            and asset.trend_regime == "BULLISH_CONFLUENCE"
-        ):
-            async with self._trade_lock:
-                if symbol not in self.active_positions and len(self.active_positions) < max_slots:
-                    await self.open_sniper_trade(is_manual=False, requested_symbol=symbol)
+    def fetch_l2_obi_cached(self, coin: str, ttl_sec: float = 20.0) -> float:
+        now = time.time()
+        cached = self.cache_l2.get(coin)
+        if cached and (now - cached[0]) < ttl_sec:
+            return cached[1]
+        try:
+            snap = self.info.l2_snapshot(self._hl_coin(coin))
+            levels = snap.get("levels", [])
+            if len(levels) >= 2:
+                bids = levels[0][:15]
+                asks = levels[1][:15]
+                bid_vol = sum(float(b.get("sz", 0.0)) * (1.5 if i < 5 else 1.0) for i, b in enumerate(bids))
+                ask_vol = sum(float(a.get("sz", 0.0)) * (1.5 if i < 5 else 1.0) for i, a in enumerate(asks))
+                tot = bid_vol + ask_vol
+                if tot > 0:
+                    val = round((bid_vol - ask_vol) / tot, 2)
+                    self.cache_l2[coin] = (now, val)
+                    return val
+        except Exception:
+            pass
+        return cached[1] if cached else 0.0
 
-    async def refresh_market_prices_and_klines(self) -> None:
-        client = await self.gateway.ensure_http()
-        updated = False
-        for base in self.gateway.get_candidate_urls():
+    def fetch_candles_cached(self, coin: str, interval: str = "5m", count: int = 45, ttl_override: float | None = None) -> list:
+        now = time.time()
+        if interval == "15m":
+            ttl = ttl_override if ttl_override is not None else 150.0
+            cached_15 = self.cache_15m.get(coin)
+            if cached_15 and (now - cached_15[0]) < ttl:
+                return cached_15[1]
+            now_ms = int(now * 1000)
+            start_ms = now_ms - (count * 15 * 60 * 1000)
+            data = self.info.candles_snapshot(self._hl_coin(coin), "15m", start_ms, now_ms)
+            if data:
+                self.cache_15m[coin] = (now, data)
+            return data or (cached_15[1] if cached_15 else [])
+        else:
+            ttl = ttl_override if ttl_override is not None else 20.0
+            cached_5 = self.cache_5m.get(coin)
+            if cached_5 and (now - cached_5[0]) < ttl:
+                return cached_5[1]
+            now_ms = int(now * 1000)
+            start_ms = now_ms - (count * 5 * 60 * 1000)
+            data = self.info.candles_snapshot(self._hl_coin(coin), "5m", start_ms, now_ms)
+            if data:
+                self.cache_5m[coin] = (now, data)
+            return data or (cached_5[1] if cached_5 else [])
+
+    def sync_portfolio(self):
+        try:
+            now = time.time()
+            user_state = self.info.user_state(self.account_address)
+            margin_summary = user_state.get("marginSummary", {})
+            cross_summary = user_state.get("crossMarginSummary", {})
+            perp_equity = max(
+                float(margin_summary.get("accountValue", 0.0)),
+                float(cross_summary.get("accountValue", 0.0)),
+            )
+            total_margin_used = max(
+                float(margin_summary.get("totalMarginUsed", 0.0)),
+                float(cross_summary.get("totalMarginUsed", 0.0)),
+            )
+            withdrawable = float(user_state.get("withdrawable", 0.0))
+
+            spot_usdc = 0.0
             try:
-                r = await client.get(f"{base}/v5/market/tickers?category=spot")
-                if r.status_code == 200 and "application/json" in r.headers.get("content-type", ""):
-                    j = r.json()
-                    items = j.get("result", {}).get("list", [])
-                    if items:
-                        for it in items:
-                            sym = it.get("symbol")
-                            if sym in self.assets and it.get("lastPrice"):
-                                px = safe_float(it["lastPrice"])
-                                b1 = safe_float(it.get("bid1Price"))
-                                a1 = safe_float(it.get("ask1Price"))
-                                if b1 > 0 and a1 >= b1:
-                                    self.assets[sym].best_bid = round(b1, self.assets[sym].decimals)
-                                    self.assets[sym].best_ask = round(a1, self.assets[sym].decimals)
-                                    self.assets[sym].spread_pct = round(((a1 - b1) / b1) * 100.0, 4)
-                                if px > 0:
-                                    self.assets[sym].on_price_update(px)
-                                    updated = True
-                        if updated:
-                            self.check_btc_macro_filter()
-                            break
-            except Exception:
-                continue
-
-        if not updated:
-            try:
-                r_bin = await client.get("https://api.binance.com/api/v3/ticker/price")
-                if r_bin.status_code == 200:
-                    for it in r_bin.json():
-                        sym = it.get("symbol")
-                        if sym in self.assets and it.get("price"):
-                            px = safe_float(it["price"])
-                            if px > 0:
-                                self.assets[sym].on_price_update(px)
-                                updated = True
-                    if updated:
-                        self.check_btc_macro_filter()
+                spot_state = self.info.spot_user_state(self.account_address)
+                for bal in spot_state.get("balances", []):
+                    if bal.get("coin") == "USDC":
+                        spot_usdc = float(bal.get("total", 0.0))
+                        break
             except Exception:
                 pass
 
-    async def sync_wallet_from_bybit(self) -> Dict[str, Any]:
-        res = await self.gateway.fetch_wallet_balance_v5(usd_brl_rate=self.usd_brl_rate)
-        if res.get("ok") and safe_float(res.get("equity_usd")) > 0:
-            eq_usd = float(res["equity_usd"])
-            self.current_equity_usd = eq_usd
-            self.wallet_sync_source = str(res.get("source", "Bybit Spot Unificada"))
-            brl = round(eq_usd * self.usd_brl_rate, 2)
-            if not self.equity_curve_brl:
-                self.equity_curve_brl = [brl, brl, brl]
-            await self.reconcile_existing_spot_holdings()
-        return res
+            open_pos = []
+            active_symbols_now = set()
+            floating_sum = 0.0
+            pos_margin_sum = 0.0
+            peak_upgraded = False
 
-    async def open_sniper_trade(self, is_manual: bool = False, requested_symbol: Optional[str] = None) -> Dict[str, Any]:
-        if await self.check_daily_circuit_breaker():
-            return {"ok": False, "error": "Circuit Breaker Diário ativo (-5%). Novas ordens bloqueadas até meia-noite."}
+            for pos in user_state.get("assetPositions", []):
+                item = pos.get("position", {})
+                szi = float(item.get("szi", 0.0))
+                if szi != 0:
+                    raw_pos_c = item.get("coin")
+                    coin = "PEPE" if raw_pos_c == "kPEPE" and "PEPE" in GLOBAL_BASKET else raw_pos_c
+                    active_symbols_now.add(coin)
+                    if coin not in BOT_STATE["opened_ts_by_coin"]:
+                        BOT_STATE["opened_ts_by_coin"][coin] = now
+                    entry_px = float(item.get("entryPx", 0.0))
+                    pnl = float(item.get("unrealizedPnl", 0.0))
+                    margin_used_pos = float(item.get("marginUsed", 0.0))
+                    floating_sum += pnl
+                    pos_margin_sum += margin_used_pos
+                    side = "LONG" if szi > 0 else "SHORT"
+                    pos_val = abs(szi) * entry_px
+                    eff_lev = max(1.0, round(pos_val / margin_used_pos, 1)) if margin_used_pos > 0 else float(BOT_STATE["leverage"])
 
-        if not is_manual and time.time() < self.global_cooldown_until:
-            rem_s = self.global_cooldown_remaining_sec
-            return {
-                "ok": False,
-                "error": f"Quarentena Global Pós-Stop ativa! Aguardando {rem_s}s para proteger sua banca contra reentradas em queda.",
-            }
+                    oracle_move_pct = (pnl / pos_val) if pos_val > 0 else 0.0
+                    dq_live = self.memory.price_tape.get(coin)
+                    if dq_live and len(dq_live) > 0 and (now - dq_live[-1][0]) < 8.0 and entry_px > 0:
+                        live_mid = float(dq_live[-1][1])
+                        live_move = ((live_mid - entry_px) / entry_px) if side == "LONG" else ((entry_px - live_mid) / entry_px)
+                        move_pct = live_move
+                        pnl = round(move_pct * pos_val, 4)
+                    else:
+                        move_pct = oracle_move_pct
 
-        if not is_manual and self.check_btc_macro_filter():
-            return {
-                "ok": False,
-                "error": f"Filtro Macro BTC ativo ({self.btc_macro_status}). Compras em altcoins pausadas até o Bitcoin estabilizar.",
-            }
+                    if margin_used_pos > 0:
+                        roe_pct = (pnl / margin_used_pos) * 100.0
+                    else:
+                        roe_pct = move_pct * BOT_STATE["leverage"] * 100.0
 
-        max_slots = self.get_effective_max_slots()
+                    coin_atr = BOT_STATE["radar"].get(coin, {}).get("atr_pct", 0.0045)
+                    dyn_tp_move = max(0.0070, min(BOT_STATE["tp_move_pct"], coin_atr * 2.10))
+                    dyn_sl_move = BOT_STATE["sl_move_pct"]
 
-        if requested_symbol and requested_symbol in BYBIT_CONTRACTS and requested_symbol not in self.active_positions:
-            target_asset = self.assets[requested_symbol]
-        else:
-            target_asset = self.pick_best_opportunity()
+                    prev_peak = safe_float(BOT_STATE["peak_move_by_coin"].get(coin, 0.0), 0.0)
+                    peak_move = max(prev_peak, move_pct)
+                    prev_worst = safe_float(BOT_STATE["worst_move_by_coin"].get(coin, 0.0), 0.0)
+                    worst_move = min(prev_worst, move_pct)
+                    if peak_move > prev_peak + 0.0004 or worst_move < prev_worst - 0.0004:
+                        peak_upgraded = True
+                    BOT_STATE["peak_move_by_coin"][coin] = peak_move
+                    BOT_STATE["worst_move_by_coin"][coin] = worst_move
+                    peak_roe = peak_move * eff_lev * 100.0
+                    partial_done = BOT_STATE["partial_taken_by_coin"].get(coin, False)
 
-        sym = target_asset.symbol
-        if sym in self.active_positions:
-            return {"ok": False, "error": f"Já existe uma posição ativa aberta em {sym}. Ative outra moeda se quiser abrir mais um slot!"}
-        if len(self.active_positions) >= max_slots:
-            return {"ok": False, "error": f"Limite seguro de {max_slots} slot(s) para o regime atual já está ocupado ({', '.join(self.active_positions.keys())})."}
+                    current_step = 0
+                    if peak_move >= BOT_STATE["trail_step3_trigger_pct"]:
+                        current_step = 4
+                        dyn_stop_move = max(0.0058, peak_move - BOT_STATE["trail_step3_dist_pct"])
+                        shield_tag = f"💎 DEGRAU 4 CIRÚRGICO (+{dyn_stop_move * eff_lev * 100:.1f}% ROE GARANTIDO)"
+                    elif peak_move >= BOT_STATE["trail_step2_trigger_pct"]:
+                        current_step = 3
+                        dyn_stop_move = max(0.0044, peak_move - BOT_STATE["trail_step2_dist_pct"])
+                        shield_tag = f"🔥 DEGRAU 3 APERTADO (+{dyn_stop_move * eff_lev * 100:.1f}% ROE GARANTIDO)"
+                    elif peak_move >= BOT_STATE["trail_step1_trigger_pct"]:
+                        current_step = 2
+                        dyn_stop_move = max(BOT_STATE["breakeven_lock_pct"], peak_move - BOT_STATE["trail_step1_dist_pct"])
+                        shield_tag = f"🚀 DEGRAU 2 SURFANDO (+{dyn_stop_move * eff_lev * 100:.1f}% ROE GARANTIDO)"
+                    elif peak_move >= BOT_STATE["breakeven_trigger_pct"] or partial_done:
+                        current_step = 1
+                        dyn_stop_move = BOT_STATE["breakeven_lock_pct"]
+                        shield_tag = f"🟢 DEGRAU 1 LUCRO TRAVADO (+{dyn_stop_move * eff_lev * 100:.1f}% ROE)"
+                    elif peak_move >= BOT_STATE["zero_risk_trigger_pct"]:
+                        current_step = 1
+                        dyn_stop_move = BOT_STATE["zero_risk_lock_pct"]
+                        shield_tag = f"🛡️ PROTEÇÃO ZERO-PERDA ATIVA (Stop na Entrada +{dyn_stop_move * eff_lev * 100:.1f}% ROE — Proibido dar Red!)"
+                    elif peak_move >= BOT_STATE["micro_shield_trigger_pct"]:
+                        current_step = 0
+                        dyn_stop_move = BOT_STATE["micro_shield_lock_pct"]
+                        shield_tag = f"🛡️ MICRO-ESCUDO ATIVO (Stop Cortado p/ {dyn_stop_move * eff_lev * 100:.1f}% ROE — Risco Mínimo!)"
+                    elif worst_move <= BOT_STATE["recovery_drawdown_pct"]:
+                        dyn_stop_move = -dyn_sl_move
+                        shield_tag = f"🛟 MODO RECUPERAÇÃO 0x0 ATIVO (Sai no Preço de Entrada assim que voltar!)"
+                    else:
+                        dyn_stop_move = -dyn_sl_move
+                        shield_tag = f"🛡️ SL TÉCNICO ({dyn_stop_move * eff_lev * 100:.1f}% ROE | Anti-Agulhada 180s Ativo)"
 
-        if not is_manual:
-            if target_asset.is_suspended_by_ai:
-                return {"ok": False, "error": f"{sym} está suspensa pela Auto-Inteligência por {target_asset.suspension_remaining_min}m após 2 Stops."}
-            if target_asset.spread_pct > 0.085:
-                return {"ok": False, "error": f"Spread de {sym} ({target_asset.spread_pct:.3f}%) acima do limite seguro de 0.085%."}
-            # REGRA DE OURO ORACLE v18.0: `predicted_move_pct_3m >= +0.85%` E `win_probability_pct >= 76.0%`
-            if target_asset.predicted_move_pct_3m < 0.85 or target_asset.win_probability_pct < 76.0:
-                return {
-                    "ok": False,
-                    "error": (
-                        f"Filtro Preditivo Oracle bloqueou {sym}: Projeção 3m (+{target_asset.predicted_move_pct_3m:.2f}%) < +0.85% "
-                        f"ou Win Prob ({target_asset.win_probability_pct:.1f}%) < 76.0%."
-                    ),
-                }
-            if target_asset.score < self.min_confluence_score or target_asset.trend_regime != "BULLISH_CONFLUENCE":
-                return {
-                    "ok": False,
-                    "error": f"Filtro Oracle bloqueou compra em {sym} (Regime: {target_asset.trend_regime}, RSI: {target_asset.rsi}, Score: {target_asset.score}).",
-                }
-            last_win_closed = self.last_profit_exit_per_sym.get(sym, 0.0)
-            if (time.time() - last_win_closed) < 45.0:
-                return {"ok": False, "error": f"Aguardando resfriamento pós-lucro (45s) em {sym}."}
+                    prev_notified_step = int(BOT_STATE["notified_step_by_coin"].get(coin, 0))
+                    if current_step > prev_notified_step:
+                        BOT_STATE["notified_step_by_coin"][coin] = current_step
+                        est_fee_usd = pos_val * BOT_STATE["round_trip_fee_pct"]
+                        net_pnl_now = max(0.01, pnl - est_fee_usd)
+                        pnl_brl_now = net_pnl_now * USD_BRL_RATE
+                        locked_roe = dyn_stop_move * eff_lev * 100.0
+                        if current_step == 1:
+                            step_desc = "🛡️ Risco 100% Zerado (com folga anti-violinada) — deixando subir até o alvo de +2.7% ROE+!"
+                        else:
+                            step_desc = f"🔥 Lucro Gordo Travado em +{locked_roe:.1f}% ROE garantido — surfando o topo!"
+                        send_mobile_alert(
+                            f"🚀 {coin} ({side}) SUBINDO — DEGRAU {current_step} ATIVO!",
+                            f"A operação em {coin} ({side} {eff_lev:.0f}x) bateu +{roe_pct:.2f}% ROE (Líquido ~+${net_pnl_now:.2f} USDC / R$ +{pnl_brl_now:.2f} já descontando taxa)!"
+                            f"{step_desc}",
+                            priority="high",
+                            tags="rocket,moneybag",
+                        )
 
-        self.selected_symbol = sym
-        side = "LONG"
-        spec = BYBIT_CONTRACTS[sym]
-        dec = spec.price_decimals
-        entry = (
-            target_asset.best_ask
-            if (target_asset.best_ask > 0 and abs(target_asset.best_ask - target_asset.price) / target_asset.price < 0.003)
-            else target_asset.price
-        )
+                    open_pos.append({
+                        "coin": coin,
+                        "size": szi,
+                        "pos_val_usd": round(pos_val, 2),
+                        "margin_used": round(margin_used_pos, 2),
+                        "eff_lev": eff_lev,
+                        "entry_px": entry_px,
+                        "pnl": pnl,
+                        "move_pct": move_pct,
+                        "peak_move_pct": peak_move,
+                        "worst_move_pct": worst_move,
+                        "peak_roe_pct": peak_roe,
+                        "tp_target_move_pct": dyn_tp_move,
+                        "sl_limit_move_pct": dyn_sl_move,
+                        "dynamic_stop_move_pct": dyn_stop_move,
+                        "partial_done": partial_done,
+                        "opened_ts": BOT_STATE["opened_ts_by_coin"].get(coin, now),
+                        "shield_tag": shield_tag,
+                        "roe_pct": roe_pct,
+                        "side": side
+                    })
 
-        t = self.build_targets_for_asset(sym, entry)
-        atr_val = t["atr_val"]
-        stop_dist = t["stop_dist"]
-        stop_px = t["stop_px"]
-        step1_px = t["step1_px"]
-        step2_px = t["step2_px"]
-        tp1_px = t["tp1_px"]
-        tp2_px = t["tp2_px"]
-
-        if self.gateway.api_key and self.gateway.api_secret and self.gateway.exec_mode in ("BYBIT_REAL", "BYBIT_DEMO"):
-            await self.sync_wallet_from_bybit()
-            if sym in self.active_positions:
-                return {"ok": True, "position": self.active_positions[sym], "real_bybit": True}
-
-        free_usdt = self.gateway.coin_balances.get("USDT", 0.0)
-        remaining_slots = max(1, max_slots - len(self.active_positions))
-
-        if self.gateway.exec_mode in ("BYBIT_REAL", "BYBIT_DEMO"):
-            if not self.gateway.api_key or not self.gateway.api_secret:
-                return {"ok": False, "real_bybit": False, "error": "Configure BYBIT_API_SECRET nas Variables do Railway."}
-            if free_usdt < 5.50:
-                msg = f"Saldo livre em USDT (${free_usdt:.2f}) insuficiente para nova compra em {sym} (mínimo $5.50 USDT)."
-                return {"ok": False, "real_bybit": False, "error": msg}
-            slot_usdt = (free_usdt * 0.92) / remaining_slots
-            if slot_usdt < 6.80:
-                base_usable_usdt = free_usdt * 0.92
+            effective_margin_used = max(total_margin_used, pos_margin_sum)
+            # Sistema de Fallback de Leitura de Saldo da Conta Unificada Hyperliquid (Intacto!)
+            if spot_usdc > 0 and perp_equity > 0 and abs(spot_usdc - perp_equity) > 2.0:
+                total_equity = max(perp_equity, spot_usdc + floating_sum)
+            elif perp_equity > 0:
+                total_equity = perp_equity
             else:
-                base_usable_usdt = slot_usdt
-        else:
-            base_usable_usdt = (self.current_equity_usd * 0.90) / remaining_slots
+                total_equity = max(withdrawable, spot_usdc)
 
-        vol_scale = self.compute_volatility_lot_scale(sym, entry, atr_val)
-        scaled_usdt = base_usable_usdt * vol_scale
-        if self.gateway.exec_mode in ("BYBIT_REAL", "BYBIT_DEMO"):
-            target_notional = min(free_usdt * 0.96, max(spec.min_notional_usd * 1.12, scaled_usdt))
-        else:
-            target_notional = max(spec.min_notional_usd * 1.12, scaled_usdt)
+            if BOT_STATE["starting_equity_usdc"] <= 0.0 and total_equity > 0.0:
+                BOT_STATE["starting_equity_usdc"] = total_equity
 
-        raw_qty = max(spec.min_qty, target_notional / entry)
-        qty_str = format_bybit_qty(raw_qty, spec.qty_step)
-        qty_float = float(qty_str)
-        actual_risk_usd = round(qty_float * stop_dist, 2)
+            BOT_STATE["perp_equity_usdc"] = round(perp_equity, 2)
+            BOT_STATE["spot_equity_usdc"] = round(spot_usdc, 2)
+            BOT_STATE["equity_usdc"] = round(total_equity, 2)
+            BOT_STATE["equity_brl"] = round(total_equity * USD_BRL_RATE, 2)
+            BOT_STATE["margin_used_usdc"] = round(effective_margin_used, 2)
+            BOT_STATE["free_margin_usdc"] = round(max(0.0, total_equity - effective_margin_used), 2)
+            BOT_STATE["floating_pnl_usdc"] = round(floating_sum, 2)
 
-        if self.gateway.exec_mode in ("BYBIT_REAL", "BYBIT_DEMO"):
-            bybit_res = await self.gateway.place_real_bybit_order(
-                symbol=sym,
-                side=side,
-                qty_float=qty_float,
-                stop_loss=stop_px,
-                take_profit=tp2_px,
-                leverage=1,
-            )
-            if not bybit_res.get("ok"):
-                err_note = str(bybit_res.get("error", "Falha ao enviar ordem Spot para Bybit"))
-                if is_manual or (time.time() - self.last_order_warning_ts > 60):
-                    self.last_order_warning_ts = time.time()
-                    self.add_log(f"⚠️ AVISO ORDEM SPOT BYBIT ({sym})", err_note, "amber")
-                return {"ok": False, "real_bybit": False, "error": err_note}
+            calculated_notional = max(13.5, total_equity * 0.38 * BOT_STATE["leverage"])
+            BOT_STATE["order_notional"] = round(calculated_notional, 2)
 
-            order_id = str(bybit_res["order_id"])
-            net_qty = float(bybit_res.get("net_sellable_qty", qty_float))
-            real_executed = True
-        else:
-            order_id = f"TREINO_SPOT_{int(time.time())}"
-            net_qty = qty_float
-            real_executed = False
+            state_changed = peak_upgraded
+            for old_c in list(BOT_STATE["peak_move_by_coin"].keys()):
+                if old_c not in active_symbols_now:
+                    BOT_STATE["peak_move_by_coin"].pop(old_c, None)
+                    BOT_STATE["worst_move_by_coin"].pop(old_c, None)
+                    BOT_STATE["partial_taken_by_coin"].pop(old_c, None)
+                    BOT_STATE["opened_ts_by_coin"].pop(old_c, None)
+                    BOT_STATE["notified_step_by_coin"].pop(old_c, None)
+                    state_changed = True
+            if state_changed:
+                self.memory.save_persisted_memory(force=True)
 
-        notional_val = net_qty * entry
-        self.saved_fees_usd = round(self.saved_fees_usd + (notional_val * 0.0003), 3)
-        pos_obj = {
-            "symbol": sym,
-            "side": side,
-            "openedAt": time.time(),
-            "initialQty": net_qty,
-            "remainingQty": net_qty,
-            "entry": round(entry, dec),
-            "highestPrice": round(entry, dec),
-            "atrAtEntry": atr_val,
-            "stop": stop_px,
-            "earlyTrailTrigger": step1_px,
-            "step2Trigger": step2_px,
-            "tp1": tp1_px,
-            "tp2": tp2_px,
-            "decimals": dec,
-            "riskUsd": actual_risk_usd,
-            "ladderStage": 0,
-            "tp1Hit": False,
-            "earlyTrailingActivated": False,
-            "trailingActive": False,
-            "singleLotProtected": (notional_val < 12.0),
-            "volatilityScale": vol_scale,
-            "predictedMoveAtEntry": target_asset.predicted_move_pct_3m,
-            "winProbAtEntry": target_asset.win_probability_pct,
-            "floatingPnlUsd": 0.0,
-            "realizedPartialUsd": 0.0,
-            "srvStopOrderId": order_id,
-            "realBybitOrder": real_executed,
-        }
-        self.active_positions[sym] = pos_obj
-        self._recalculate_total_floating_pnl()
+            BOT_STATE["open_positions"] = open_pos
+            BOT_STATE["last_update"] = time.strftime("%H:%M:%S UTC", time.gmtime())
+            BOT_STATE["status"] = "OPERACIONAL — SNIPER ALPHA v40 CAÇANDO 6%-15% / 85%-94% (BTC = BÚSSOLA)" if BOT_STATE["trading_enabled"] else "PAUSADO PELO OPERADOR"
 
-        sm_badge = " • 🚀 Smart Money L2" if target_asset.smart_money_ignition else ""
-        tag_title = (
-            f"🔥 COMPRA ORACLE SPOT ({sym} • WIN PROB {target_asset.win_probability_pct:.1f}% • PROJ +{target_asset.predicted_move_pct_3m:.2f}%)"
-            if real_executed
-            else f"🟢 COMPRA ORACLE TREINO ({sym} • WIN PROB {target_asset.win_probability_pct:.1f}%)"
-        )
-        self.add_log(
-            tag_title,
-            f"Comprou <strong>{net_qty} {spec.base_coin} (${notional_val:.2f} USDT{sm_badge})</strong> a <strong>${entry:.{dec}f}</strong> | "
-            f"Projeção 3m: <strong>+{target_asset.predicted_move_pct_3m:.2f}%</strong> | "
-            f"Saída Preditiva Armada (<strong>+0.42%+</strong>) | TP1: <strong>${tp1_px:.{dec}f}</strong> | Stop: <strong>${stop_px:.{dec}f}</strong>.",
-            "emerald" if real_executed else "cyan",
-        )
-        return {"ok": True, "position": pos_obj, "real_bybit": real_executed}
-
-    def _recalculate_total_floating_pnl(self) -> None:
-        total_fl = 0.0
-        for sym, pos in self.active_positions.items():
-            asset = self.assets[sym]
-            exit_px = (
-                asset.best_bid
-                if (asset.best_bid > 0 and abs(asset.best_bid - asset.price) / max(asset.price, 1e-8) < 0.003)
-                else asset.price
-            )
-            gross = (exit_px - pos["entry"]) * pos["remainingQty"]
-            fee = (pos["entry"] + exit_px) * pos["remainingQty"] * 0.001
-            fl = round(gross - fee, 2)
-            pos["floatingPnlUsd"] = fl
-            total_fl += fl
-        self.floating_pnl_usd = round(total_fl, 2)
-
-    async def evaluate_single_position(self, sym: str) -> None:
-        if sym not in self.active_positions:
-            return
-        p = self.active_positions[sym]
-        asset = self.assets[sym]
-        px = asset.price
-        spec = BYBIT_CONTRACTS[sym]
-        dec = spec.price_decimals
-
-        if px > p.get("highestPrice", p["entry"]):
-            p["highestPrice"] = px
-
-        current_atr = max(asset.atr, p.get("atrAtEntry", px * 0.0045))
-        gain_pct = (px - p["entry"]) / max(p["entry"], 1e-8)
-        peak_gain_pct = (p["highestPrice"] - p["entry"]) / max(p["entry"], 1e-8)
-        stage = int(p.get("ladderStage", 0))
-        age_sec = time.time() - float(p.get("openedAt", time.time()))
-
-        # DEGRAU 1 (+0.36%): Trava o Stop em +0.21% (Green Garantido!)
-        if stage < 1 and gain_pct >= self.ladder_step1_trigger_pct:
-            p["ladderStage"] = 1
-            p["earlyTrailingActivated"] = True
-            p["trailingActive"] = True
-            lock1_stop = round(p["entry"] * (1.0 + self.ladder_step1_lock_pct), dec)
-            if lock1_stop > p["stop"]:
-                p["stop"] = lock1_stop
-            self.add_log(
-                f"🟢 DEGRAU 1 DA ESCADA (+0.36% EM {sym}) — GREEN GARANTIDO!",
-                f"Preço bateu <strong>${px:.{dec}f} (+{gain_pct*100:.2f}%)</strong>! "
-                f"Stop subiu para <strong>${p['stop']:.{dec}f} (+0.21%)</strong> — risco zero de loss!",
-                "cyan",
-            )
-
-        # DEGRAU 2 (+0.55%): Trava +0.38% líquido e aperta o Trailing Stop a 0.18% do topo!
-        if stage < 2 and gain_pct >= self.ladder_step2_trigger_pct:
-            p["ladderStage"] = 2
-            p["trailingActive"] = True
-            lock2_stop = round(p["entry"] * (1.0 + self.ladder_step2_lock_pct), dec)
-            if lock2_stop > p["stop"]:
-                p["stop"] = lock2_stop
-            self.add_log(
-                f"🔥 DEGRAU 2 DA ESCADA (+0.55% EM {sym}) — LUCRO TRAVADO + TRAILING COLADO!",
-                f"Preço avançou para <strong>${px:.{dec}f} (+{gain_pct*100:.2f}%)</strong>! "
-                f"Stop travado em <strong>${p['stop']:.{dec}f} (+0.38% líquido)</strong> com Trailing curto (0.18%)!",
-                "emerald",
-            )
-
-        if p.get("tp1Hit") or p.get("trailingActive"):
-            p["trailingActive"] = True
-            if int(p.get("ladderStage", 0)) >= 2:
-                trail_dist = max(px * 0.0018, spec.tick_size * 6)
+            self.sync_onchain_trade_history()
+            return total_equity, open_pos
+        except Exception as e:
+            err_str = str(e)
+            if "429" in err_str:
+                time.sleep(10.0)
             else:
-                trail_dist = max(current_atr * self.atr_trailing_multiplier, px * 0.0028)
-            candidate_stop = round(p["highestPrice"] - trail_dist, dec)
-            if candidate_stop > p["stop"]:
-                p["stop"] = candidate_stop
+                add_log(f"⚠️ Aviso na leitura L1: {err_str[:80]}")
+            return BOT_STATE["equity_usdc"], BOT_STATE["open_positions"]
 
-        self._recalculate_total_floating_pnl()
-        pos_fl_usd = p.get("floatingPnlUsd", 0.0)
-
-        # INOVAÇÃO #4 (v18.0): SAÍDA PREDITIVA NO TOPO DA ONDA (`PREDICTIVE_TOP_CASH_IN` em 0ms)
-        # Se a operação já estiver no lucro líquido (`gain_pct >= +0.42%`) e a aceleração/impulso 5s
-        # virar negativa (`impulse_5s_pct < -0.02%`) OU surgir parede vendedora institucional no Book (`l2_obi <= -0.18`),
-        # vende 100% em 0ms no topo da vela antes de qualquer recuo!
-        if gain_pct >= self.predictive_top_min_gain_pct:
-            predictive_reversal = (asset.impulse_5s_pct < -0.02) or (asset.l2_obi <= -0.18) or (asset.price_acceleration < -0.04 and asset.obi < 0.05)
-            if predictive_reversal:
-                if p.get("realBybitOrder"):
-                    await self.gateway.close_real_bybit_position(sym, p["side"], p["remainingQty"], current_price=px)
-                total_op = round(p["realizedPartialUsd"] + pos_fl_usd, 2)
-                self.current_equity_usd = round(self.current_equity_usd + pos_fl_usd, 4)
-                self.realized_daily_pnl_usd = round(self.realized_daily_pnl_usd + pos_fl_usd, 2)
-                self.wins_today += 1
-                self.last_profit_exit_per_sym[sym] = time.time()
-                ai_note = asset.record_trade_outcome(is_win=True)
-                self.save_persisted_brain_state()
-                self.equity_curve_brl.append(round(self.current_equity_usd * self.usd_brl_rate, 2))
-                if len(self.equity_curve_brl) > 30:
-                    self.equity_curve_brl.pop(0)
-                reason_badge = "Parede Vendedora L2" if asset.l2_obi <= -0.18 else f"Inversão de Impulso 5s ({asset.impulse_5s_pct:+.2f}%)"
-                self.add_log(
-                    f"🔮 PREDICTIVE_TOP_CASH_IN EM 0ms ({sym} • +{gain_pct*100:.2f}%)",
-                    f"Saída Preditiva acionada no topo da vela (<strong>{reason_badge}</strong>) em <code>${px:.{dec}f}</code>! "
-                    f"Green cheio embolsado: <strong>+R$ {(total_op * self.usd_brl_rate):.2f} (+${total_op:.2f} USDT)</strong> com zero devolução! {ai_note}",
-                    "emerald",
-                )
-                self.active_positions.pop(sym, None)
-                self._recalculate_total_floating_pnl()
-                return
-
-        # TIME-STOP INTELIGENTE ANTI-TRADE ZUMBI (12 Minutos Estagnado)
-        if stage == 0 and age_sec >= self.max_stagnant_trade_sec and -0.0015 <= gain_pct < 0.0030 and asset.obi < 0.0:
-            if p.get("realBybitOrder"):
-                await self.gateway.close_real_bybit_position(sym, p["side"], p["remainingQty"], current_price=px)
-            self.current_equity_usd = round(self.current_equity_usd + pos_fl_usd, 4)
-            self.realized_daily_pnl_usd = round(self.realized_daily_pnl_usd + pos_fl_usd, 2)
-            self.last_profit_exit_per_sym[sym] = time.time()
-            self.add_log(
-                f"⏱️ TIME-STOP INTELIGENTE (12M ESTAGNADO EM {sym})",
-                f"A posição ficou {int(age_sec // 60)} minutos sem explodir e o fluxo virou vendedor. "
-                f"Encerrada preventivamente perto do zero-a-zero (<code>${px:.{dec}f}</code>)!",
-                "amber",
-            )
-            self.active_positions.pop(sym, None)
-            self._recalculate_total_floating_pnl()
+    def execute_partial_take_profit(self, pos: dict):
+        coin = pos["coin"]
+        if BOT_STATE["partial_taken_by_coin"].get(coin, False):
+            return
+        if pos.get("pos_val_usd", 0.0) < 24.0:
+            BOT_STATE["partial_taken_by_coin"][coin] = True
             return
 
-        # CASH-IN DE PICO (>= +0.68% com desaceleração):
-        pullback_from_peak_pct = (p["highestPrice"] - px) / max(p["highestPrice"], 1e-8)
-        if peak_gain_pct >= self.peak_exhaustion_trigger_pct and gain_pct >= 0.0052:
-            if asset.obi < 0.06 or pullback_from_peak_pct >= 0.0014 or asset.rsi >= 64.0:
-                if p.get("realBybitOrder"):
-                    await self.gateway.close_real_bybit_position(sym, p["side"], p["remainingQty"], current_price=px)
-                total_op = round(p["realizedPartialUsd"] + pos_fl_usd, 2)
-                self.current_equity_usd = round(self.current_equity_usd + pos_fl_usd, 4)
-                self.realized_daily_pnl_usd = round(self.realized_daily_pnl_usd + pos_fl_usd, 2)
-                self.wins_today += 1
-                self.last_profit_exit_per_sym[sym] = time.time()
-                ai_note = asset.record_trade_outcome(is_win=True)
-                self.save_persisted_brain_state()
-                self.equity_curve_brl.append(round(self.current_equity_usd * self.usd_brl_rate, 2))
-                if len(self.equity_curve_brl) > 30:
-                    self.equity_curve_brl.pop(0)
-                self.add_log(
-                    f"💰 CASH-IN ORACLE NO PICO DA ONDA ({sym} • +{gain_pct*100:.2f}%)",
-                    f"Vendeu 100% em 0ms no pico em <code>${px:.{dec}f}</code> embolsando lucro líquido de "
-                    f"<strong>+R$ {(total_op * self.usd_brl_rate):.2f} (+${total_op:.2f} USDT)</strong>! {ai_note}",
-                    "emerald",
+        with GATEWAY_LOCK:
+            try:
+                hl_c = self._hl_coin(coin)
+                decimals = self.sz_decimals.get(hl_c, self.sz_decimals.get(coin, 2))
+                abs_sz = abs(float(pos["size"]))
+                half_sz = round(abs_sz * 0.5, decimals)
+                if half_sz <= 0 or half_sz >= abs_sz:
+                    BOT_STATE["partial_taken_by_coin"][coin] = True
+                    return
+                res = self.exchange.market_close(hl_c, sz=half_sz)
+                BOT_STATE["partial_taken_by_coin"][coin] = True
+                self.memory.save_persisted_memory(force=True)
+                add_log(
+                    f"💰 PARCIAL 50% REDUCE-ONLY em {coin} (+{pos['roe_pct']:.1f}% ROE)! "
+                    f"Metade no bolso ({half_sz} {coin}) e restante protegido! ({str(res)[:70]})"
                 )
-                self.active_positions.pop(sym, None)
-                self._recalculate_total_floating_pnl()
-                return
+                self.sync_onchain_trade_history(force=True)
+                send_mobile_alert(
+                    f"💰 PARCIAL 50% NO BOLSO: {coin} (+{pos['roe_pct']:.1f}% ROE)",
+                    f"Metade do lote realizada com lucro (+{pos['roe_pct']:.1f}% ROE)! Restante 100% blindado no Zero-Loss (+0.96% ROE garantido) surfando o alvo!",
+                    priority="high",
+                    tags="money_mouth_face,chart_with_upwards_trend",
+                )
+            except Exception as e:
+                BOT_STATE["partial_taken_by_coin"][coin] = True
+                logger.warning(f"Aviso ao executar parcial em {coin}: {e}")
 
-        # 1) Verifica se atingiu o Stop-Loss (ou Trailing Stop na Escada de Greens)
-        if px <= p["stop"]:
-            if p.get("realBybitOrder"):
-                await self.gateway.close_real_bybit_position(sym, p["side"], p["remainingQty"], current_price=px)
-            total_trade_usd = round(p["realizedPartialUsd"] + pos_fl_usd, 2)
-            self.current_equity_usd = round(self.current_equity_usd + pos_fl_usd, 4)
-            self.realized_daily_pnl_usd = round(self.realized_daily_pnl_usd + pos_fl_usd, 2)
+    def audit_and_protect_positions(self, open_positions: list):
+        brain = BOT_STATE.get("market_brain", {})
 
-            if (p["tp1Hit"] or p.get("trailingActive")) and total_trade_usd >= 0:
-                self.wins_today += 1
-                self.last_profit_exit_per_sym[sym] = time.time()
-                ai_note = asset.record_trade_outcome(is_win=True)
-                self.save_persisted_brain_state()
-                self.add_log(
-                    f"🏆 GREEN REALIZADO NA ESCADA / TRAILING STOP ({sym})",
-                    f"Vendeu 100% para USDT em <code>${p['stop']:.{dec}f}</code> com lucro líquido de "
-                    f"<strong>+R$ {(total_trade_usd * self.usd_brl_rate):.2f} (+${total_trade_usd:.2f} USDT)</strong>! {ai_note}",
-                    "emerald",
+        for p in open_positions:
+            coin = p["coin"]
+            try:
+                c_5m = self.fetch_candles_cached(coin, "5m", 45, ttl_override=12.0)
+                c_15m = self.fetch_candles_cached(coin, "15m", 35, ttl_override=90.0)
+                c_obi = self.fetch_l2_obi_cached(coin, ttl_sec=10.0)
+                c_fund = BOT_STATE["funding_by_coin"].get(coin, 0.0)
+                k_info = self.memory.get_kalman_telemetry(coin)
+                BOT_STATE["radar"][coin] = QuantumOracleEngine.analyze_omni_intelligence(
+                    coin, c_5m, c_15m, c_obi, c_fund, k_info, brain
                 )
-            else:
-                self.losses_today += 1
-                self.global_cooldown_until = time.time() + 300.0
-                ai_note = asset.record_trade_outcome(is_win=False)
-                self.save_persisted_brain_state()
-                self.add_log(
-                    f"🛑 STOP DE PROTEÇÃO ({sym}) + QUARENTENA 5M + AJUSTE NEURAL",
-                    f"Vendida 100% para USDT em <code>${p['stop']:.{dec}f}</code> (<strong>-R$ {abs(total_trade_usd * self.usd_brl_rate):.2f}</strong>). "
-                    f"Quarentena Global de 5m ativada. {ai_note}",
-                    "rose",
+            except Exception:
+                pass
+
+            side = p["side"]
+            move = p["move_pct"]
+            peak_move = p.get("peak_move_pct", move)
+            worst_move = p.get("worst_move_pct", move)
+            tp_target = p.get("tp_target_move_pct", BOT_STATE["tp_move_pct"])
+            sl_limit = p.get("sl_limit_move_pct", BOT_STATE["sl_move_pct"])
+            dyn_stop = p.get("dynamic_stop_move_pct", -sl_limit)
+
+            now_audit = time.time()
+            age_sec = now_audit - safe_float(p.get("opened_ts", now_audit), now_audit)
+            radar_info = BOT_STATE["radar"].get(coin, {})
+            band_pos = safe_float(radar_info.get("band_pos", 0.50), 0.50)
+            rsi_now = safe_float(radar_info.get("rsi", 50.0), 50.0)
+            l2_obi = safe_float(radar_info.get("l2_obi", 0.0), 0.0)
+            vel_1m = safe_float(radar_info.get("vel_1m_pct", 0.0), 0.0)
+
+            # 1) RECUPERAÇÃO INTELIGENTE PÓS-AGULHADA (0x0 se fluxo fraco OU Trava Zero-Loss e Surfa se fluxo forte!):
+            if worst_move <= BOT_STATE["recovery_drawdown_pct"] and move >= BOT_STATE["recovery_exit_pct"]:
+                strong_whale_reversal = (
+                    (side == "LONG" and l2_obi >= 0.18 and vel_1m >= 0.006)
+                    or (side == "SHORT" and l2_obi <= -0.18 and vel_1m <= -0.006)
                 )
-            self.equity_curve_brl.append(round(self.current_equity_usd * self.usd_brl_rate, 2))
-            if len(self.equity_curve_brl) > 30:
-                self.equity_curve_brl.pop(0)
-            self.active_positions.pop(sym, None)
-            self._recalculate_total_floating_pnl()
-            await self.check_daily_circuit_breaker()
+                if strong_whale_reversal:
+                    if BOT_STATE["peak_move_by_coin"].get(coin, 0.0) < BOT_STATE["zero_risk_trigger_pct"]:
+                        BOT_STATE["peak_move_by_coin"][coin] = BOT_STATE["zero_risk_trigger_pct"]
+                        add_log(
+                            f"🚀 REVERSÃO FORTE PÓS-AGULHADA em {coin} (Book {l2_obi:+.2f} | Vel {vel_1m:+.3f}%/m)! "
+                            f"Stop travado no 0x0 e surfando a explosão!"
+                        )
+                else:
+                    add_log(
+                        f"🛟 SAÍDA DE RECUPERAÇÃO 0x0 BLINDADA em {coin} ({p['roe_pct']:+.2f}% ROE / ${p['pnl']:+.2f})! "
+                        f"Operação recuperou da agulhada ({worst_move*100:.2f}%) e fechou no 0x0 sem prejuízo!"
+                    )
+                    self.close_position(coin, is_loss=False, side_closed=side)
+                    continue
+
+            # 2) CASH-IN DIRETO NO PICO (>= +0.28% move / +2.24% ROE):
+            if move >= BOT_STATE["cash_in_band_move_pct"]:
+                cash_in_long = (side == "LONG") and (
+                    band_pos >= 0.62
+                    or rsi_now >= 58.0
+                    or vel_1m <= 0.002
+                )
+                cash_in_short = (side == "SHORT") and (
+                    band_pos <= 0.38
+                    or rsi_now <= 42.0
+                    or vel_1m >= -0.002
+                )
+                if cash_in_long or cash_in_short:
+                    add_log(
+                        f"💰 CASH-IN NO PICO DO MOVIMENTO em {coin} (+{p['roe_pct']:.2f}% ROE / +${p['pnl']:.2f} bruto)! "
+                        f"Green cheio trancado no topo antes de devolver qualquer centavo!"
+                    )
+                    self.close_position(coin, is_loss=False, side_closed=side)
+                    continue
+
+            # 3) DEFESA DE INVERSÃO REAL DO 15M (Só após 180s se o 15M virar contra):
+            htf_15m_now = str(radar_info.get("htf_15m", ""))
+            if age_sec >= 180.0 and move <= -0.0011:
+                trend_flipped_against_long = (side == "LONG") and (
+                    htf_15m_now == "BAIXA 15M" and l2_obi <= -0.10 and vel_1m <= -0.005
+                )
+                trend_flipped_against_short = (side == "SHORT") and (
+                    htf_15m_now == "ALTA 15M" and l2_obi >= 0.10 and vel_1m >= 0.005
+                )
+                if trend_flipped_against_long or trend_flipped_against_short:
+                    add_log(
+                        f"🛡️ DEFESA IRON SHIELD 15M em {coin} ({p['roe_pct']:.2f}% ROE)! "
+                        f"Tendência de 15M inverteu contra ({htf_15m_now}, Book {l2_obi:+.2f}) — abortando antes do stop cheio!"
+                    )
+                    self.close_position(coin, is_loss=True, side_closed=side)
+                    continue
+
+            # 3.5) TIME-STOP ANTI-ZUMBI (15 minutos / 900s):
+            if age_sec >= 900.0 and move < BOT_STATE["zero_risk_trigger_pct"]:
+                is_stagnant = (
+                    abs(vel_1m) <= 0.003
+                    or (0.35 <= band_pos <= 0.65)
+                    or (-0.0008 <= move <= 0.0008)
+                )
+                if is_stagnant:
+                    add_log(
+                        f"⏱️ TIME-STOP ANTI-ZUMBI em {coin} ({p['roe_pct']:+.2f}% ROE | {int(age_sec//60)}m aberta)! "
+                        f"Operação estagnada sem momentum — encerrando no Zero a Zero para liberar margem!"
+                    )
+                    self.close_position(coin, is_loss=False, side_closed=side)
+                    continue
+
+            # 4) Parcial de 50% no bolso aos +0.25% move (+2.00% ROE)
+            if move >= BOT_STATE["partial_tp_trigger_pct"] and not p.get("partial_done", False):
+                self.execute_partial_take_profit(p)
+
+            # 5) Take Profit Cheio, Escada de Lucro (Degraus 0 a 4) e Stop Loss c/ Absorção de Agulhada 180s
+            if move >= tp_target:
+                add_log(f"🎯 TAKE PROFIT ATINGIDO em {coin} (+{p['roe_pct']:.2f}% ROE / +${p['pnl']:.2f})! Fechando a mercado...")
+                self.close_position(coin, is_loss=False, side_closed=side)
+            elif peak_move >= BOT_STATE["trail_step1_trigger_pct"] and move <= dyn_stop:
+                add_log(
+                    f"🔥 ESCADA DE LUCRO ACIONADA em {coin} (+{p['roe_pct']:.2f}% ROE | Pico foi +{p['peak_roe_pct']:.1f}% ROE)! "
+                    f"Embolsando +${p['pnl']:.2f}..."
+                )
+                self.close_position(coin, is_loss=False, side_closed=side)
+            elif peak_move >= BOT_STATE["breakeven_trigger_pct"] and move <= dyn_stop:
+                add_log(
+                    f"🟢 DEGRAU 1 (GREEN TRAVADO) em {coin} (+{p['roe_pct']:.2f}% ROE)! "
+                    f"Operação encerrada no lucro após atingir +{p['peak_roe_pct']:.1f}% ROE..."
+                )
+                self.close_position(coin, is_loss=False, side_closed=side)
+            elif peak_move >= BOT_STATE["zero_risk_trigger_pct"] and move <= dyn_stop:
+                add_log(
+                    f"🛡️ PROTEÇÃO ZERO-PERDA ACIONADA em {coin} (+{p['roe_pct']:.2f}% ROE)! "
+                    f"Operação bateu +{p['peak_roe_pct']:.1f}% ROE e foi encerrada no Zero-a-Zero antes de virar Red!"
+                )
+                self.close_position(coin, is_loss=False, side_closed=side)
+            elif peak_move >= BOT_STATE["micro_shield_trigger_pct"] and move <= dyn_stop:
+                add_log(
+                    f"🛡️ MICRO-ESCUDO ACIONADO em {coin} ({p['roe_pct']:.2f}% ROE | Pico foi +{p['peak_roe_pct']:.1f}% ROE)! "
+                    f"Operação recuou após subir e foi encerrada com micro-stop reduzido (~-$0.04)!"
+                )
+                self.close_position(coin, is_loss=False, side_closed=side)
+            elif move <= -sl_limit:
+                # Só dá folga anti-agulhada até -0.16% se o livro L2 continuar a favor da posição!
+                # Se o livro L2 estiver contra (como na PEPE rompendo 98% da banda), corta cravado em -0.12% sem esperar!
+                htf_and_book_intact = (
+                    (side == "LONG" and htf_15m_now == "ALTA 15M" and l2_obi >= 0.05)
+                    or (side == "SHORT" and htf_15m_now == "BAIXA 15M" and l2_obi <= -0.05)
+                )
+                if age_sec < 120.0 and htf_and_book_intact and move > -0.0016:
+                    pass
+                else:
+                    add_log(
+                        f"🛡️ STOP LOSS TÉCNICO em {coin} ({p['roe_pct']:.2f}% ROE)! "
+                        f"Ativando Disjuntor Anti-Cascata (20m de trava em {side} + 5m de pausa geral)..."
+                    )
+                    self.close_position(coin, is_loss=True, side_closed=side)
+
+    def open_sniper_order(self, coin: str, is_buy: bool, strategy_label: str = "", score: float = 90.0) -> bool:
+        if coin in COMPASS_ONLY_COINS:
+            return False
+        now = time.time()
+        if now - self.cooldowns.get(coin, 0) < 1800:
+            return False
+        gm_order = time.gmtime(now)
+        if gm_order.tm_min >= 58 or gm_order.tm_min <= 2:
+            return False
+        if now < BOT_STATE.get("loss_quarantine_until", {}).get(coin, 0.0):
+            return False
+        if now < BOT_STATE.get("global_any_lock_until", 0.0):
+            return False
+        if is_buy and now < BOT_STATE.get("global_long_lock_until", 0.0):
+            return False
+        if (not is_buy) and now < BOT_STATE.get("global_short_lock_until", 0.0):
+            return False
+
+        new_side = "LONG" if is_buy else "SHORT"
+        if len(BOT_STATE["open_positions"]) >= 1:
+            return False
+
+        with GATEWAY_LOCK:
+            try:
+                lev = BOT_STATE["leverage"]
+                hl_coin = self._hl_coin(coin)
+                if self.configured_leverage.get(coin) != lev:
+                    self.exchange.update_leverage(lev, hl_coin, is_cross=True)
+                    self.configured_leverage[coin] = lev
+
+                mid_px = 0.0
+                dq_coin = self.memory.price_tape.get(coin)
+                if dq_coin and len(dq_coin) > 0 and (time.time() - dq_coin[-1][0]) < 5.0:
+                    mid_px = float(dq_coin[-1][1])
+                if mid_px <= 0:
+                    all_mids = self.info.all_mids()
+                    mid_px = float(all_mids.get(hl_coin) or all_mids.get(coin))
+
+                decimals = self.sz_decimals.get(hl_coin, self.sz_decimals.get(coin, 2))
+                notional = BOT_STATE["order_notional"]
+                size = round(notional / mid_px, decimals)
+                if size <= 0:
+                    return False
+                add_log(
+                    f"⚡ SNIPER PRIME ELITE DISPARANDO {new_side} ({lev}x) em {coin} [{strategy_label} | Score {score:.1f}] | "
+                    f"Qtd: {size} (~${notional}) @ ${mid_px:.4f}"
+                )
+                res = self.exchange.market_open(hl_coin, is_buy, size, mid_px, 0.015)
+                res_str = str(res)
+                if "error" in res_str.lower() and "filled" not in res_str.lower():
+                    add_log(f"⚠️ Ordem rejeitada pela L1 em {coin}: {res_str[:110]}")
+                    self.cooldowns[coin] = now - 180.0
+                    return False
+
+                self.cooldowns[coin] = now
+                BOT_STATE["peak_move_by_coin"][coin] = 0.0
+                BOT_STATE["worst_move_by_coin"][coin] = 0.0
+                BOT_STATE["partial_taken_by_coin"][coin] = False
+                BOT_STATE["notified_step_by_coin"][coin] = 0
+                BOT_STATE["opened_ts_by_coin"][coin] = now
+                self.memory.save_persisted_memory(force=True)
+                add_log(f"✅ Execução Confirmada L1 {coin}: {res_str[:100]}")
+                send_mobile_alert(
+                    f"⚡ NOVA ENTRADA: {new_side} ({lev}x) em {coin}",
+                    f"🎯 Estratégia: {strategy_label} (Score {score:.1f})"
+                    f"💵 Preço de Entrada: ${mid_px:.4f} | Lote: ~${notional:.2f} ({size} {coin})"
+                    f"💰 Banca Atual: ${BOT_STATE['equity_usdc']:.2f} USDC (R$ {BOT_STATE['equity_brl']:.2f})",
+                    priority="high",
+                    tags="zap,chart_with_upwards_trend",
+                )
+                return True
+            except Exception as e:
+                add_log(f"❌ Erro ao abrir ordem em {coin}: {e}")
+                return False
+
+    def close_position(self, coin: str, is_loss: bool = False, side_closed: str = ""):
+        with GATEWAY_LOCK:
+            try:
+                pos_snap = next((p for p in BOT_STATE.get("open_positions", []) if p.get("coin") == coin), None)
+                est_pnl = float(pos_snap["pnl"]) if pos_snap else 0.0
+                est_roe = float(pos_snap["roe_pct"]) if pos_snap else 0.0
+
+                res = self.exchange.market_close(self._hl_coin(coin))
+                now = time.time()
+                self.cooldowns[coin] = now
+                # REGRA ANTI-REENTRADA NA MESMA MOEDA (Evita o que aconteceu na PEPE às 22:20 -> 22:30):
+                # Toda moeda operada entra em quarentena mínima de 35m (2100s) se voltou no 0x0/Degrau 1 curto (< $0.06),
+                # ou 45m (2700s) se deu Stop Loss, proibindo insistir no mesmo ativo em seguida!
+                if is_loss:
+                    BOT_STATE["loss_quarantine_until"][coin] = now + 2700.0
+                    BOT_STATE["global_any_lock_until"] = now + 300.0
+                    if side_closed == "LONG":
+                        BOT_STATE["global_long_lock_until"] = now + 1200.0
+                    elif side_closed == "SHORT":
+                        BOT_STATE["global_short_lock_until"] = now + 1200.0
+                elif est_pnl < 0.06:
+                    BOT_STATE["loss_quarantine_until"][coin] = now + 2100.0
+                BOT_STATE["peak_move_by_coin"].pop(coin, None)
+                BOT_STATE["worst_move_by_coin"].pop(coin, None)
+                BOT_STATE["partial_taken_by_coin"].pop(coin, None)
+                BOT_STATE["notified_step_by_coin"].pop(coin, None)
+                BOT_STATE["opened_ts_by_coin"].pop(coin, None)
+                self.memory.save_persisted_memory(force=True)
+                add_log(f"🔒 Posição encerrada em {coin}: {str(res)[:90]}")
+                self.sync_onchain_trade_history(force=True)
+
+                recent = BOT_STATE.get("recent_closed_trades", [])
+                net_u = recent[0]["net_usdc"] if (recent and recent[0].get("coin") == coin) else round(est_pnl, 2)
+                net_b = round(net_u * USD_BRL_RATE, 2)
+                w_tot = BOT_STATE.get("wins_total", 0)
+                l_tot = BOT_STATE.get("losses_total", 0)
+                wr = BOT_STATE.get("win_rate_pct", 0.0)
+
+                if not is_loss and net_u >= 0:
+                    send_mobile_alert(
+                        f"🏆 VITÓRIA GREEN EM {coin}: +${net_u:.2f} USDC (R$ +{net_b:.2f})",
+                        f"✅ Lucro Líquido no Bolso: +${net_u:.2f} USDC (R$ +{net_b:.2f} | {est_roe:+.2f}% ROE)"
+                        f"🏆 Placar On-Chain: {w_tot} Vitórias x {l_tot} Derrotas ({wr:.1f}%)"
+                        f"💰 Banca Atual: ${BOT_STATE['equity_usdc']:.2f} USDC (R$ {BOT_STATE['equity_brl']:.2f})",
+                        priority="high",
+                        tags="trophy,money_with_wings",
+                    )
+                elif not is_loss and net_u >= -0.045:
+                    send_mobile_alert(
+                        f"🛡️ ZERO-A-ZERO PROTEGIDO EM {coin} (${net_u:+.2f} taxa)",
+                        f"⚖️ Posição encerrada no preço de entrada em {coin} (Zero perda de gráfico, apenas ${abs(net_u):.2f} de taxa da corretora)."
+                        f"🏆 Placar Mantido: {w_tot} Vitórias x {l_tot} Derrotas ({wr:.1f}%) | Banca: ${BOT_STATE['equity_usdc']:.2f} USDC",
+                        priority="default",
+                        tags="shield",
+                    )
+                else:
+                    send_mobile_alert(
+                        f"🛑 SAÍDA DE PROTEÇÃO (RED) EM {coin}: ${net_u:+.2f} USDC",
+                        f"🛡️ Posição encerrada em {coin} ({net_u:+.2f} USDC / R$ {net_b:+.2f})."
+                        f"🧊 Moeda {coin} em quarentena por 45m + Disjuntor Geral (5m pausa + 20m na direção)."
+                        f"🏆 Placar: {w_tot}W x {l_tot}L ({wr:.1f}%) | Banca: ${BOT_STATE['equity_usdc']:.2f} USDC",
+                        priority="high",
+                        tags="shield,warning",
+                    )
+            except Exception as e:
+                add_log(f"❌ Erro ao encerrar {coin}: {e}")
+
+
+GLOBAL_GATEWAY: HyperliquidDeFiGateway | None = None
+
+
+class SovereignWebServer(BaseHTTPRequestHandler):
+    def do_GET(self):
+        global GLOBAL_GATEWAY
+        parsed = urlparse(self.path)
+        if parsed.path == "/api/state":
+            self.send_response(200)
+            self.send_header("Content-type", "application/json; charset=utf-8")
+            self.end_headers()
+            BOT_STATE["logs"] = list(LOG_BUFFER)
+            self.wfile.write(json.dumps(BOT_STATE).encode("utf-8"))
             return
 
-        # 2) DEGRAU 3 — TP1 (+0.85%): Se lote < $12, VENDE 100% DIRETO E PÕE O GREEN NO BOLSO!
-        if not p["tp1Hit"] and px >= p["tp1"]:
-            p["tp1Hit"] = True
-            p["ladderStage"] = 3
-            p["trailingActive"] = True
-
-            position_total_usd = p["remainingQty"] * px
-            raw_half = p["initialQty"] * 0.5
-            half_str = format_bybit_qty(raw_half, spec.qty_step)
-            half_qty = float(half_str)
-            leftover_qty = round(p["remainingQty"] - half_qty, 6)
-
-            if position_total_usd >= 12.0 and (half_qty * px >= 6.0) and (leftover_qty * px >= 6.0):
-                guaranteed_profit_stop = round(p["entry"] * (1.0 + self.ladder_step3_lock_pct), dec)
-                if guaranteed_profit_stop > p["stop"]:
-                    p["stop"] = guaranteed_profit_stop
-                if p.get("realBybitOrder"):
-                    await self.gateway.close_real_bybit_position(sym, p["side"], half_qty, current_price=px)
-                p["remainingQty"] = leftover_qty
-                p["singleLotProtected"] = False
-                partial_net = round(((px - p["entry"]) * half_qty) - ((p["entry"] + px) * half_qty * 0.001), 2)
-                p["realizedPartialUsd"] = partial_net
-                self.current_equity_usd = round(self.current_equity_usd + partial_net, 4)
-                self.realized_daily_pnl_usd = round(self.realized_daily_pnl_usd + partial_net, 2)
-                self.add_log(
-                    f"💰 TP1 ATINGIDO EM {sym} — 50% NO BOLSO + STOP EM +0.62%",
-                    f"Embolsou <strong>+R$ {(partial_net * self.usd_brl_rate):.2f}</strong> e cravou o Stop da metade restante em <code>${p['stop']:.{dec}f} (+0.62%)</code>!",
-                    "cyan",
+        if parsed.path == "/api/action":
+            qs = parse_qs(parsed.query)
+            cmd = qs.get("cmd", [""])[0]
+            coin = qs.get("coin", [""])[0]
+            if cmd == "toggle_bot":
+                BOT_STATE["trading_enabled"] = not BOT_STATE["trading_enabled"]
+                add_log(f"Operador alterou status do robô para: {'ATIVO' if BOT_STATE['trading_enabled'] else 'PAUSADO'}")
+            elif cmd == "test_alert":
+                send_mobile_alert(
+                    "🔔 TESTE DE ALERTA NO CELULAR — SNIPER v40.0",
+                    f"🏆 Placar: {BOT_STATE['wins_total']} Vitórias x {BOT_STATE['losses_total']} Derrotas ({BOT_STATE['win_rate_pct']:.1f}%)\n"
+                    f"💰 Banca Atual: ${BOT_STATE['equity_usdc']:.2f} USDC (R$ {BOT_STATE['equity_brl']:.2f})",
+                    priority="high",
+                    tags="bell,white_check_mark",
                 )
-            else:
-                if p.get("realBybitOrder"):
-                    await self.gateway.close_real_bybit_position(sym, p["side"], p["remainingQty"], current_price=px)
-                total_op = round(p["realizedPartialUsd"] + pos_fl_usd, 2)
-                self.current_equity_usd = round(self.current_equity_usd + pos_fl_usd, 4)
-                self.realized_daily_pnl_usd = round(self.realized_daily_pnl_usd + pos_fl_usd, 2)
-                self.wins_today += 1
-                self.last_profit_exit_per_sym[sym] = time.time()
-                ai_note = asset.record_trade_outcome(is_win=True)
-                self.save_persisted_brain_state()
-                self.equity_curve_brl.append(round(self.current_equity_usd * self.usd_brl_rate, 2))
-                if len(self.equity_curve_brl) > 30:
-                    self.equity_curve_brl.pop(0)
-                self.add_log(
-                    f"🏁 GREEN 100% NO BOLSO NO TP1 ({sym} • +{gain_pct*100:.2f}%)",
-                    f"Como o lote é único (<strong>${position_total_usd:.2f} USDT</strong>), vendeu 100% no alvo em <code>${px:.{dec}f}</code> "
-                    f"garantindo <strong>+R$ {(total_op * self.usd_brl_rate):.2f} (+${total_op:.2f} USDT)</strong> no bolso! {ai_note}",
-                    "emerald",
-                )
-                self.active_positions.pop(sym, None)
-                self._recalculate_total_floating_pnl()
-                return
+                add_log("🔔 Alerta de teste enviado para o aplicativo ntfy no celular!")
+            elif cmd == "reset_stats" and GLOBAL_GATEWAY is not None:
+                now_ms = int(time.time() * 1000)
+                BOT_STATE["stats_reset_ts_ms"] = now_ms
+                BOT_STATE["reset_mode_label"] = f"ZERADO EM {time.strftime('%d/%m %H:%M UTC', time.gmtime())}"
+                BOT_STATE["wins_total"] = 0
+                BOT_STATE["losses_total"] = 0
+                BOT_STATE["win_rate_pct"] = 0.0
+                BOT_STATE["avg_win_usdc"] = 0.0
+                BOT_STATE["avg_loss_usdc"] = 0.0
+                BOT_STATE["realized_profit_usdc"] = 0.0
+                BOT_STATE["realized_profit_brl"] = 0.0
+                BOT_STATE["wins_24h"] = 0
+                BOT_STATE["losses_24h"] = 0
+                BOT_STATE["realized_24h_usdc"] = 0.0
+                BOT_STATE["daily_progress_pct"] = 0.0
+                BOT_STATE["top_coins_summary"] = "Placar zerado — aguardando o 1º trade do novo ciclo!"
+                BOT_STATE["recent_closed_trades"] = []
+                GLOBAL_GATEWAY.memory.save_persisted_memory(force=True)
+                add_log("🆕 Placar de Vitórias/Derrotas, Lucro Acumulado, Histórico e Logs ZERADOS pelo operador!")
+            elif cmd == "era_v30" and GLOBAL_GATEWAY is not None:
+                BOT_STATE["stats_reset_ts_ms"] = 0
+                BOT_STATE["reset_mode_label"] = "ERA OMEGA v30+ (HISTÓRICO COMPLETO)"
+                GLOBAL_GATEWAY.sync_onchain_trade_history(force=True)
+                GLOBAL_GATEWAY.memory.save_persisted_memory(force=True)
+                add_log("💎 Histórico completo restaurado pelo operador!")
+            elif cmd == "clear_quarantine" and GLOBAL_GATEWAY is not None:
+                BOT_STATE["loss_quarantine_until"].clear()
+                BOT_STATE["global_long_lock_until"] = 0.0
+                BOT_STATE["global_short_lock_until"] = 0.0
+                BOT_STATE["global_any_lock_until"] = 0.0
+                GLOBAL_GATEWAY.cooldowns.clear()
+                GLOBAL_GATEWAY.memory.save_persisted_memory(force=True)
+                add_log("🔓 Todas as quarentenas e travas pós-stop foram limpas pelo operador!")
+            elif cmd == "close" and coin and GLOBAL_GATEWAY is not None:
+                threading.Thread(target=GLOBAL_GATEWAY.close_position, args=(coin, False, ""), daemon=True).start()
 
-        # 3) TP2 Final (+1.55% mínimo) -> Vende 100% do lote restante
-        if px >= p["tp2"]:
-            if p.get("realBybitOrder"):
-                await self.gateway.close_real_bybit_position(sym, p["side"], p["remainingQty"], current_price=px)
-            runner_net = p.get("floatingPnlUsd", 0.0)
-            total_op = round(p["realizedPartialUsd"] + runner_net, 2)
-            self.current_equity_usd = round(self.current_equity_usd + runner_net, 4)
-            self.realized_daily_pnl_usd = round(self.realized_daily_pnl_usd + runner_net, 2)
-            self.wins_today += 1
-            self.last_profit_exit_per_sym[sym] = time.time()
-            ai_note = asset.record_trade_outcome(is_win=True)
-            self.save_persisted_brain_state()
-            self.equity_curve_brl.append(round(self.current_equity_usd * self.usd_brl_rate, 2))
-            if len(self.equity_curve_brl) > 30:
-                self.equity_curve_brl.pop(0)
-            self.add_log(
-                f"🏁 ALVO FINAL TP2 SPOT ATINGIDO ({sym})",
-                f"Venda 100% concluída com lucro líquido de <strong>+R$ {(total_op * self.usd_brl_rate):.2f} (+${total_op:.2f} USDT)</strong>! {ai_note}",
-                "emerald",
-            )
-            self.active_positions.pop(sym, None)
-            self._recalculate_total_floating_pnl()
-
-    async def close_specific_position(self, sym: str, reason: str = "MANUAL") -> None:
-        if sym not in self.active_positions:
+            self.send_response(302)
+            self.send_header("Location", "/")
+            self.end_headers()
             return
-        p = self.active_positions[sym]
-        px = self.assets[sym].price
-        if p.get("realBybitOrder"):
-            await self.gateway.close_real_bybit_position(sym, p["side"], p["remainingQty"], current_price=px)
-        net = p.get("floatingPnlUsd", 0.0)
-        self.current_equity_usd = round(self.current_equity_usd + net, 4)
-        self.realized_daily_pnl_usd = round(self.realized_daily_pnl_usd + net, 2)
-        if net + p.get("realizedPartialUsd", 0.0) >= 0:
-            self.wins_today += 1
-            self.last_profit_exit_per_sym[sym] = time.time()
-            self.assets[sym].record_trade_outcome(is_win=True)
-        else:
-            self.losses_today += 1
-            if reason != "MANUAL":
-                self.global_cooldown_until = time.time() + 300.0
-                self.assets[sym].record_trade_outcome(is_win=False)
-        self.save_persisted_brain_state()
-        self.equity_curve_brl.append(round(self.current_equity_usd * self.usd_brl_rate, 2))
-        self.add_log(
-            f"🛑 POSIÇÃO SPOT VENDIDA P/ USDT ({sym} • {reason})",
-            f"Vendida 100% a mercado no Spot com resultado líquido de <strong>R$ {(net * self.usd_brl_rate):+.2f}</strong>. Saldo convertido para USDT sem poeira!",
-            "amber",
+
+        self.send_response(200)
+        self.send_header("Content-type", "text/html; charset=utf-8")
+        self.end_headers()
+
+        pos_rows = ""
+        for p in BOT_STATE["open_positions"]:
+            c_col = "#10b981" if p["pnl"] >= 0 else "#ef4444"
+            pos_rows += f"""
+            <tr>
+                <td><b>{p['coin']}</b> <span style="color:#94a3b8;font-size:11px;">({p['eff_lev']:.0f}x)</span></td>
+                <td style="color:{'#10b981' if p['side']=='LONG' else '#ef4444'};font-weight:bold;">{p['side']}</td>
+                <td>{p['size']} <span style="color:#94a3b8;font-size:11px;">(${p['pos_val_usd']:.2f})</span></td>
+                <td>${p['entry_px']:.4f}</td>
+                <td style="color:{c_col};font-weight:bold;">
+                    ${p['pnl']:+.4f} ({p['roe_pct']:+.2f}% ROE)<br>
+                    <span style="font-size:11px;color:#fbbf24;">{p['shield_tag']}</span>
+                </td>
+                <td><a href="/api/action?cmd=close&coin={p['coin']}" style="background:#ef4444;color:#fff;padding:5px 10px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:bold;">Fechar L1</a></td>
+            </tr>"""
+        if not pos_rows:
+            pos_rows = "<tr><td colspan='6' style='text-align:center;color:#94a3b8;padding:12px;'>Aguardando moeda tocar no EXTREMO REAL da banda (6%-15% p/ LONG ou 85%-94% p/ SHORT) com vela virando...</td></tr>"
+
+        radar_rows = ""
+        sorted_radar = sorted(
+            BOT_STATE["radar"].items(),
+            key=lambda kv: (kv[0] in COMPASS_ONLY_COINS, -safe_float(kv[1].get("score", 0.0), 0.0))
         )
-        self.active_positions.pop(sym, None)
-        self._recalculate_total_floating_pnl()
+        for c_sym, r in sorted_radar:
+            obi_val = safe_float(r.get("l2_obi", 0.0), 0.0)
+            obi_col = "#10b981" if obi_val > 0 else ("#ef4444" if obi_val < 0 else "#94a3b8")
+            sig_str = str(r.get("signal", "NEUTRO"))
+            sig_col = "#10b981" if "LONG" in sig_str else ("#ef4444" if "SHORT" in sig_str else ("#38bdf8" if sig_str == "BÚSSOLA" else "#94a3b8"))
+            b_pct = int(safe_float(r.get("band_pos", 0.5), 0.5) * 100)
+            radar_rows += f"""
+            <tr>
+                <td><b>{c_sym}</b></td>
+                <td>${safe_float(r.get('price', 0.0)):.4f}<br><span style="font-size:10.5px;color:#64748b;">VWAP ${safe_float(r.get('vwap', 0.0)):.4f}</span></td>
+                <td>RSI {safe_float(r.get('rsi', 50.0)):.1f} <b>(Banda {b_pct}%)</b><br><span style="font-size:10.5px;color:#38bdf8;">Espaço Banda: +{safe_float(r.get('room_pct', 0.0)):.2f}%</span></td>
+                <td style="color:{obi_col};font-weight:bold;">Book {obi_val:+.2f}<br><span style="font-size:10.5px;color:#94a3b8;">Vel: {safe_float(r.get('vel_1m_pct', 0.0)):+.3f}%/m</span></td>
+                <td>{r.get('trend', 'NEUTRO')}<br><span style="font-size:10.5px;color:#94a3b8;">{r.get('strategy', '')}</span></td>
+                <td style="color:{sig_col};font-weight:bold;">{sig_str} ({safe_float(r.get('score', 50.0)):.1f})</td>
+            </tr>"""
 
-    async def step_autonomous_cycle(self) -> None:
-        if not self.backend_ws_connected or (time.time() - self.last_ws_tick_ts) > 3.0:
-            await self.refresh_market_prices_and_klines()
+        hist_rows = ""
+        for h in BOT_STATE.get("recent_closed_trades", []):
+            h_col = "#10b981" if h.get("is_win") else ("#38bdf8" if h.get("is_scratch") else "#ef4444")
+            hist_rows += f"""
+            <tr>
+                <td>{h['time_str']}</td>
+                <td><b>{h['coin']}</b></td>
+                <td style="color:{h_col};font-weight:bold;">{h['result']}</td>
+                <td>${h['px']:.4f}</td>
+                <td style="color:{h_col};font-weight:bold;">${h['net_usdc']:+.2f} USDC (R$ {h['net_brl']:+.2f})</td>
+            </tr>"""
+        if not hist_rows:
+            hist_rows = "<tr><td colspan='5' style='text-align:center;color:#94a3b8;padding:10px;'>Sincronizando histórico de trades da blockchain...</td></tr>"
 
-        self.check_btc_macro_filter()
-        self.auto_tune_neural_parameters()
+        mb = BOT_STATE.get("market_brain", {})
+        reg_col = mb.get("regime_color", "#10b981")
+        realized_u = BOT_STATE["realized_profit_usdc"]
+        realized_b = BOT_STATE["realized_profit_brl"]
+        float_u = BOT_STATE["floating_pnl_usdc"]
+        float_b = round(float_u * USD_BRL_RATE, 2)
+        pnl_col = "#10b981" if realized_u >= 0 else "#ef4444"
+        fl_col = "#10b981" if float_u >= 0 else "#ef4444"
+        logs_txt = "\n".join(LOG_BUFFER)
 
-        if await self.check_daily_circuit_breaker():
-            return
-        if not self.ai_running:
-            return
+        html = f"""<!DOCTYPE html>
+        <html lang="pt-BR">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="refresh" content="4">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>{BOT_STATE['version']}</title>
+            <style>
+                body {{ background:#060911; color:#f8fafc; font-family:Inter,system-ui,sans-serif; margin:0; padding:12px; }}
+                .card {{ background:#0d1322; border:1px solid #1e293b; border-radius:10px; padding:12px; margin-bottom:12px; }}
+                .kpi-grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:10px; margin-bottom:12px; }}
+                .kpi-box {{ background:#0d1322; border:1px solid #1e293b; border-radius:10px; padding:12px; }}
+                .kpi-title {{ font-size:11px; color:#94a3b8; text-transform:uppercase; margin-bottom:4px; }}
+                .kpi-big {{ font-size:20px; font-weight:800; margin-bottom:4px; }}
+                .kpi-sub {{ font-size:11.5px; color:#cbd5e1; }}
+                table {{ width:100%; border-collapse:collapse; font-size:12px; }}
+                th, td {{ padding:8px 6px; text-align:left; border-bottom:1px solid #1e293b; }}
+                th {{ color:#94a3b8; font-size:11px; text-transform:uppercase; }}
+                pre {{ background:#04070d; padding:10px; border-radius:8px; font-size:11px; color:#10b981; overflow-x:auto; max-height:220px; }}
+            </style>
+        </head>
+        <body>
+        <div class="card" style="border-color:#10b981;">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <div>
+              <h2 style="margin:0;font-size:15px;color:#10b981;">🎯 {BOT_STATE['version']}</h2>
+              <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                <a href="/api/action?cmd=reset_stats" style="background:#ef4444;color:#fff;padding:5px 10px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:bold;">🆕 Zerar Placar &amp; Histórico (0x0)</a>
+                <a href="/api/action?cmd=era_v30" style="background:#8b5cf6;color:#fff;padding:5px 10px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:bold;">💎 Só Era v30</a>
+                <a href="/api/action?cmd=test_alert" style="background:#10b981;color:#060911;padding:5px 10px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:bold;">🔔 Testar Aviso</a>
+                <a href="/api/action?cmd=clear_quarantine" style="background:#38bdf8;color:#060911;padding:5px 10px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:bold;">🔓 Limpar Quarentenas</a>
+                <a href="/api/action?cmd=toggle_bot" style="background:#f59e0b;color:#060911;padding:5px 10px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:bold;">{'⏸️ Pausar Novas Entradas' if BOT_STATE['trading_enabled'] else '▶️ Retomar Entradas'}</a>
+              </div>
+              <div style="font-size:11px;color:#94a3b8;margin-top:6px;">
+                Status: <b style="color:#10b981;">{BOT_STATE['status']}</b> | Atualizado: {BOT_STATE['last_update']} | App <b>ntfy</b> no Celular: <code>{BOT_STATE['ntfy_topic']}</code>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        for sym_open in list(self.active_positions.keys()):
-            async with self._trade_lock:
-                await self.evaluate_single_position(sym_open)
+        <div class="kpi-grid">
+          <div class="kpi-box" style="border-color:#38bdf8;">
+            <div class="kpi-title">💰 Quanto a Banca Está Agora</div>
+            <div class="kpi-big" style="color:#38bdf8;">${BOT_STATE['equity_usdc']:.2f} USDC</div>
+            <div class="kpi-sub">≈ <b>R$ {BOT_STATE['equity_brl']:.2f}</b> | Em Uso: ${BOT_STATE['margin_used_usdc']:.2f} | Livre: <b style="color:#10b981;">${BOT_STATE['free_margin_usdc']:.2f}</b></div>
+          </div>
 
-        if time.time() < self.global_cooldown_until:
-            return
-        if self.btc_macro_bearish:
-            return
+          <div class="kpi-box" style="border-color:#10b981;">
+            <div class="kpi-title">🏆 Placar de Vitórias x Derrotas</div>
+            <div class="kpi-big">
+              <span style="color:#10b981;">{BOT_STATE['wins_total']} Vitórias</span>
+              <span style="color:#64748b;font-size:15px;"> x </span>
+              <span style="color:#ef4444;">{BOT_STATE['losses_total']} Derrotas</span>
+            </div>
+            <div class="kpi-sub">Acerto: <b style="color:#10b981;">{BOT_STATE['win_rate_pct']:.1f}%</b> | Média W: <b style="color:#10b981;">+${BOT_STATE['avg_win_usdc']:.2f}</b> vs L: <b style="color:#ef4444;">-${BOT_STATE['avg_loss_usdc']:.2f}</b></div>
+          </div>
 
-        unlocked = self.get_unlocked_symbols()
-        max_slots = self.get_effective_max_slots()
-        if len(self.active_positions) < max_slots:
-            for sym_cand in unlocked:
-                if sym_cand not in self.active_positions and len(self.active_positions) < max_slots:
-                    cand_asset = self.assets[sym_cand]
-                    if (
-                        not cand_asset.is_suspended_by_ai
-                        and cand_asset.predicted_move_pct_3m >= 0.85
-                        and cand_asset.win_probability_pct >= 76.0
-                        and cand_asset.score >= self.min_confluence_score
-                        and cand_asset.trend_regime == "BULLISH_CONFLUENCE"
-                    ):
-                        async with self._trade_lock:
-                            await self.open_sniper_trade(is_manual=False, requested_symbol=sym_cand)
+          <div class="kpi-box" style="border-color:{pnl_col};">
+            <div class="kpi-title">💵 Quanto Ganhamos (Realizado + Aberto)</div>
+            <div class="kpi-big" style="color:{pnl_col};">${realized_u:+.2f} USDC <span style="font-size:14px;">(R$ {realized_b:+.2f})</span></div>
+            <div class="kpi-sub">Em Aberto Agora: <b style="color:{fl_col};">${float_u:+.2f} (R$ {float_b:+.2f})</b> | 24h: <b>${BOT_STATE['realized_24h_usdc']:+.2f}</b></div>
+          </div>
 
-    def get_full_state_snapshot(self) -> Dict[str, Any]:
-        best = self.pick_best_opportunity()
-        max_slots = self.get_effective_max_slots()
-        return {
-            "version": "18.0.0-ORACLE-SINGULARITY-KALMAN-L2-LEAD-LAG",
-            "aiRunning": self.ai_running,
-            "autoIntelligenceEnabled": self.auto_intelligence_enabled,
-            "marketRegime": self.market_regime,
-            "aiBrainStatus": self.ai_brain_status,
-            "macroLeaderIgniting": self.macro_leader_igniting,
-            "leadLagStatus": self.lead_lag_status,
-            "execMode": self.gateway.exec_mode,
-            "usdBrlRate": self.usd_brl_rate,
-            "backendWsConnected": self.backend_ws_connected,
-            "backendWsEndpoint": self.backend_ws_endpoint,
-            "wsTicksProcessed": self.ws_ticks_processed,
-            "enabledSymbols": list(self.enabled_symbols),
-            "maxConcurrentSlots": max_slots,
-            "openSlotsCount": len(self.active_positions),
-            "activePositions": self.active_positions,
-            "activePosition": self.active_position,
-            "dailyDrawdownPct": self.daily_drawdown_pct,
-            "maxDailyDrawdownPct": self.max_daily_drawdown_pct,
-            "circuitBreakerTripped": self.circuit_breaker_tripped,
-            "profitShieldLocked": self.profit_shield_locked,
-            "peakDailyPnlUsd": self.peak_daily_pnl_usd,
-            "btcMacroBearish": self.btc_macro_bearish,
-            "btc1mChangePct": self.btc_1m_change_pct,
-            "btcMacroStatus": self.btc_macro_status,
-            "globalCooldownRemainingSec": self.global_cooldown_remaining_sec,
-            "coinBalances": dict(self.gateway.coin_balances),
-            "coinUsdValues": dict(self.gateway.coin_usd_values),
-            "holdingSummary": self.gateway.build_dynamic_holding_summary(),
-            "hasApiKeysConfigured": bool(self.gateway.api_key and self.gateway.api_secret),
-            "maskedApiKey": (self.gateway.api_key[:6] + "..." + self.gateway.api_key[-4:]) if len(self.gateway.api_key) > 10 else self.gateway.api_key,
-            "apiStatusText": self.gateway.last_api_status,
-            "activeBybitDomain": self.gateway.active_base_url,
-            "isUsWestGeoblocked": self.gateway.is_us_west_geoblocked,
-            "walletSyncSource": self.wallet_sync_source,
-            "startingEquityUsd": self.starting_equity_usd,
-            "currentEquityUsd": self.current_equity_usd,
-            "realizedDailyPnlUsd": self.realized_daily_pnl_usd,
-            "floatingPnlUsd": self.floating_pnl_usd,
-            "savedFeesUsd": self.saved_fees_usd,
-            "winsToday": self.wins_today,
-            "lossesToday": self.losses_today,
-            "riskPerTradePct": self.risk_per_trade_pct,
-            "minConfluenceScore": self.min_confluence_score,
-            "autoLeverage": self.get_dynamic_leverage(),
-            "selectedSymbol": self.selected_symbol,
-            "bestAutoSymbol": best.symbol,
-            "bestAutoSide": "LONG",
-            "bestAutoScore": best.score,
-            "bestAutoWinProb": best.win_probability_pct,
-            "bestAutoPredMove3m": best.predicted_move_pct_3m,
-            "equityCurveBrl": self.equity_curve_brl,
-            "decisionLogs": list(self.decision_logs),
-            "assets": {
-                sym: {
-                    "symbol": a.symbol,
-                    "price": a.price,
-                    "bestBid": a.best_bid,
-                    "bestAsk": a.best_ask,
-                    "spreadPct": a.spread_pct,
-                    "vwap": a.vwap,
-                    "emaFast": round(a.ema_fast, a.decimals),
-                    "emaSlow": round(a.ema_slow, a.decimals),
-                    "macdHist": round(a.macd_hist, 5),
-                    "impulse5sPct": a.impulse_5s_pct,
-                    "kalmanPrice": round(a.kalman_price, a.decimals),
-                    "priceVelocity": a.price_velocity,
-                    "priceAcceleration": a.price_acceleration,
-                    "predictedMovePct3m": a.predicted_move_pct_3m,
-                    "winProbabilityPct": a.win_probability_pct,
-                    "askThinningRatio": a.ask_thinning_ratio,
-                    "smartMoneyIgnition": a.smart_money_ignition,
-                    "htfBullish": a.htf_bullish,
-                    "rsi": a.rsi,
-                    "prevRsi": a.prev_rsi,
-                    "zbb": a.zbb,
-                    "atr": a.atr,
-                    "obi": a.obi,
-                    "l2Obi": a.l2_obi,
-                    "cvd": a.cvd,
-                    "whaleWallStatus": a.whale_wall_status,
-                    "coinWins": a.coin_wins,
-                    "coinLosses": a.coin_losses,
-                    "aiTrustBonus": a.ai_trust_bonus,
-                    "isSuspendedByAi": a.is_suspended_by_ai,
-                    "suspensionRemainingMin": a.suspension_remaining_min,
-                    "trendRegime": a.trend_regime,
-                    "score": a.score,
-                    "bestSide": "LONG",
-                    "step": a.step,
-                    "decimals": a.decimals,
-                    "qtyStep": BYBIT_CONTRACTS[sym].qty_step,
-                    "enabled": sym in self.enabled_symbols,
-                    "hasOpenPosition": sym in self.active_positions,
-                    "minNotionalUsd": BYBIT_CONTRACTS[sym].min_notional_usd,
-                    "minEquityRecommendedUsd": BYBIT_CONTRACTS[sym].min_equity_usd,
-                }
-                for sym, a in self.assets.items()
-            },
-        }
+          <div class="kpi-box" style="border-color:#8b5cf6;">
+            <div class="kpi-title">🛡️ Extremo Real &amp; Greens Cheios</div>
+            <div class="kpi-big" style="color:#f59e0b;">${BOT_STATE['order_notional']:.2f} <span style="font-size:13px;color:#94a3b8;">({BOT_STATE['leverage']}x)</span></div>
+            <div class="kpi-sub">Trava Zero-Perda: <b>+0.13%</b> | Alvo: <b>+0.28%+</b> | Stop: <b>-0.12%</b></div>
+          </div>
+        </div>
 
+        <!-- PAINEL DO CÉREBRO GLOBAL -->
+        <div class="card" style="border-color:{reg_col};background:#09101f;">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+            <h3 style="margin:0;font-size:13.5px;color:{reg_col};">🌐 {mb.get('regime', 'MAPEANDO...')}</h3>
+            <span style="font-size:11px;background:#1e293b;padding:4px 8px;border-radius:5px;color:#e2e8f0;">
+              Regra: <b>{mb.get('allowed_direction', 'EXTREMO REAL')}</b>
+            </span>
+          </div>
+          <div style="font-size:12px;color:#cbd5e1;">
+            📊 <b>Tendência 15m Intacta ({len(GLOBAL_BASKET)} Moedas):</b> <span style="color:#10b981;font-weight:bold;">{mb.get('breadth_bull_pct', 50):.0f}% em Alta 15m</span> vs <span style="color:#ef4444;font-weight:bold;">{mb.get('breadth_bear_pct', 50):.0f}% em Baixa 15m</span>
+            &nbsp;|&nbsp; ⚡ <b>BTC 3m (Bússola):</b> <b>{mb.get('btc_impulse_3m_pct', 0.0):+.2f}%</b> • <b>ETH 3m:</b> <b>{mb.get('eth_impulse_3m_pct', 0.0):+.2f}%</b><br>
+            🛡️ <b>Modo Foco Único:</b> <b style="color:#38bdf8;">{mb.get('second_slot_status', 'ATIVO')}</b> — <span style="color:#94a3b8;font-size:11.5px;">{mb.get('summary', '')}</span>
+          </div>
+        </div>
 
-# =====================================================================
-# 5. WORKERS ASSÍNCRONOS: WEBSOCKET DIVIDIDO EM BLOCOS DE 6 TÓPICOS
-# =====================================================================
+        <div class="card"><h3 style="margin-top:0;font-size:13.5px;color:#38bdf8;">🎯 POSIÇÃO PERPÉTUA ATIVA (ALVO BANDA OPOSTA +2.6% ROE+ • ANTI-VIOLINADA 180s)</h3>
+        <table><thead><tr><th>Ativo</th><th>Lado</th><th>Qtd (Valor)</th><th>Entrada</th><th>Lucro Aberto / ROE &amp; Escudo</th><th>Ação</th></tr></thead><tbody>{pos_rows}</tbody></table></div>
 
-orchestrator = AutonomousSniperOrchestratorV18()
-_bg_worker_task: Optional[asyncio.Task] = None
-_bg_ws_task: Optional[asyncio.Task] = None
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+            <h3 style="margin:0;font-size:13.5px;color:#10b981;">📊 HISTÓRICO DO CICLO ATUAL ({BOT_STATE.get('reset_mode_label', 'ERA OMEGA v30+')})</h3>
+            <span style="font-size:11px;background:#1e293b;padding:4px 8px;border-radius:5px;color:#38bdf8;">
+              🎯 <b>Meta do Ciclo (+${BOT_STATE.get('daily_goal_usdc', 1.50):.2f} USDC):</b> <b style="color:#10b981;">{BOT_STATE.get('daily_progress_pct', 0.0):.1f}% Concluída</b>
+            </span>
+          </div>
+          <div style="background:#1e293b;border-radius:6px;height:8px;width:100%;margin-bottom:8px;overflow:hidden;">
+            <div style="background:linear-gradient(90deg,#10b981,#38bdf8);height:100%;width:{BOT_STATE.get('daily_progress_pct', 0.0)}%;"></div>
+          </div>
+          <div style="font-size:11.5px;color:#cbd5e1;margin-bottom:10px;">
+            🏅 <b>Taxa de Vitória/Derrota por Moeda neste Ciclo:</b> <span style="color:#a78bfa;font-weight:bold;">{BOT_STATE.get('top_coins_summary', '')}</span>
+          </div>
+          <table><thead><tr><th>Data / Hora (UTC)</th><th>Moeda</th><th>Resultado</th><th>Preço Saída</th><th>Lucro / Prejuízo Líquido</th></tr></thead><tbody>{hist_rows}</tbody></table>
+        </div>
 
+        <div class="card"><h3 style="margin-top:0;font-size:13.5px;color:#a78bfa;">📡 RADAR SNIPER ALPHA v40 (COMPRA 6%-15% BANDA • VENDA 85%-94% BANDA • BTC = BÚSSOLA)</h3>
+        <table><thead><tr><th>Ativo</th><th>Preço &amp; VWAP</th><th>RSI &amp; Posição na Banda</th><th>Fluxo L2 &amp; Kalman</th><th>Tendência &amp; Filtro de Zona</th><th>Sinal &amp; Score</th></tr></thead><tbody>{radar_rows}</tbody></table></div>
 
-async def backend_bybit_spot_ws_listener() -> None:
-    if websockets is None:
-        logger.warning("Biblioteca `websockets` não encontrada; operando via HTTP polling.")
+        <div class="card"><h3 style="margin-top:0;font-size:13.5px;color:#94a3b8;">📜 LOGS DE EXECUÇÃO ON-CHAIN</h3><pre>{logs_txt}</pre></div>
+        </body></html>"""
+        self.wfile.write(html.encode("utf-8"))
+
+    def log_message(self, format, *args):
         return
 
-    trade_topics = [f"publicTrade.{sym}" for sym in BYBIT_CONTRACTS.keys()]
-    depth_topics = [f"orderbook.50.{sym}" for sym in BYBIT_CONTRACTS.keys()]
-    ep_idx = 0
 
+def autonomous_sniper_loop():
+    global GLOBAL_GATEWAY
+    time.sleep(2)
+    memory_engine = WholeMarketMemoryEngine()
     while True:
-        ws_url = BybitV5AutonomousGateway.WS_SPOT_ENDPOINTS[ep_idx % len(BybitV5AutonomousGateway.WS_SPOT_ENDPOINTS)]
-        ep_idx += 1
         try:
-            async with websockets.connect(ws_url, ping_interval=18, ping_timeout=10, close_timeout=5) as ws:
-                orchestrator.backend_ws_connected = True
-                orchestrator.backend_ws_endpoint = ws_url
-                logger.info(f"⚡ [BACKEND WEBSOCKET ORACLE v18.0 CONECTADO] Inscrevendo 6 pares em pacotes separados via {ws_url}")
-                await ws.send(json.dumps({"op": "subscribe", "args": trade_topics}))
-                await asyncio.sleep(0.15)
-                await ws.send(json.dumps({"op": "subscribe", "args": depth_topics}))
+            gw = HyperliquidDeFiGateway(memory_engine)
+            GLOBAL_GATEWAY = gw
 
-                async for raw_msg in ws:
+            gw.sync_global_market_tape()
+            gw.refresh_funding_and_open_interest()
+            gw.sync_onchain_trade_history(force=True)
+            for init_coin in BOT_STATE["watchlist"]:
+                try:
+                    c_5m = gw.fetch_candles_cached(init_coin, "5m", 45)
+                    c_15m = gw.fetch_candles_cached(init_coin, "15m", 35)
+                    c_obi = gw.fetch_l2_obi_cached(init_coin)
+                    c_fund = BOT_STATE["funding_by_coin"].get(init_coin, 0.0)
+                    k_info = memory_engine.get_kalman_telemetry(init_coin)
+                    BOT_STATE["radar"][init_coin] = QuantumOracleEngine.analyze_omni_intelligence(
+                        init_coin, c_5m, c_15m, c_obi, c_fund, k_info, BOT_STATE["market_brain"]
+                    )
+                except Exception:
+                    pass
+                time.sleep(0.15)
+
+            while True:
+                now_loop = time.time()
+                brain_state = gw.sync_global_market_tape()
+
+                equity, open_positions = gw.sync_portfolio()
+                gw.audit_and_protect_positions(open_positions)
+                active_coins = {p["coin"] for p in open_positions}
+
+                gw.refresh_funding_and_open_interest()
+
+                for idx_c, coin in enumerate(BOT_STATE["watchlist"]):
                     try:
-                        msg = json.loads(raw_msg)
-                        topic = str(msg.get("topic", ""))
-                        if topic.startswith("publicTrade."):
-                            data_list = msg.get("data")
-                            if isinstance(data_list, list) and data_list:
-                                last_trade = data_list[-1]
-                                sym = str(last_trade.get("s", ""))
-                                px = safe_float(last_trade.get("p"))
-                                qty_v = safe_float(last_trade.get("v"), 1.0)
-                                is_buy = str(last_trade.get("S", "Buy")) == "Buy"
-                                if sym and px > 0:
-                                    await orchestrator.on_realtime_ws_tick(sym, px, is_buy, trade_qty=qty_v)
-                        elif topic.startswith("orderbook."):
-                            ob_data = msg.get("data", {})
-                            sym = str(ob_data.get("s", ""))
-                            if sym in orchestrator.assets:
-                                orchestrator.assets[sym].on_l2_orderbook_update(
-                                    ob_data.get("b", []),
-                                    ob_data.get("a", []),
-                                )
-                    except Exception:
-                        continue
-        except asyncio.CancelledError:
-            break
-        except Exception as exc:
-            orchestrator.backend_ws_connected = False
-            logger.debug(f"Reconectando WebSocket Backend ({ws_url}): {exc}")
-            await asyncio.sleep(3.0)
+                        c_5m = gw.fetch_candles_cached(coin, "5m", 45)
+                        c_15m = gw.fetch_candles_cached(coin, "15m", 35)
+                        c_obi = gw.fetch_l2_obi_cached(coin)
+                        c_fund = BOT_STATE["funding_by_coin"].get(coin, 0.0)
+                        k_info = memory_engine.get_kalman_telemetry(coin)
+                        analysis = QuantumOracleEngine.analyze_omni_intelligence(
+                            coin, c_5m, c_15m, c_obi, c_fund, k_info, brain_state
+                        )
+                        BOT_STATE["radar"][coin] = analysis
+                    except Exception as ce:
+                        if "429" in str(ce):
+                            time.sleep(6.0)
+                        else:
+                            logger.warning(f"Aviso ao analisar {coin}: {ce}")
+                    time.sleep(0.15)
 
+                    if open_positions and (idx_c + 1) % 4 == 0:
+                        brain_state = gw.sync_global_market_tape()
+                        equity, open_positions = gw.sync_portfolio()
+                        gw.audit_and_protect_positions(open_positions)
+                        active_coins = {p["coin"] for p in open_positions}
 
-async def background_sniper_worker() -> None:
-    await orchestrator.gateway.sync_spot_instruments_precision()
-    await orchestrator.hydrate_klines_from_bybit()
-    await orchestrator.refresh_market_prices_and_klines()
-    if orchestrator.gateway.api_key and orchestrator.gateway.api_secret:
-        await orchestrator.sync_wallet_from_bybit()
+                can_enter, slot_reason = gw.can_open_next_position(open_positions, 1)
 
-    tick_counter = 0
-    while True:
-        try:
-            await orchestrator.step_autonomous_cycle()
-            tick_counter += 1
-            if tick_counter % 15 == 0 and orchestrator.gateway.api_key and orchestrator.gateway.api_secret:
-                await orchestrator.sync_wallet_from_bybit()
-            if tick_counter % 24 == 0:
-                await orchestrator.hydrate_klines_from_bybit()
-        except Exception as exc:
-            logger.warning(f"Erro no loop de manutenção: {exc}")
-        await asyncio.sleep(2.5)
+                if (
+                    BOT_STATE["trading_enabled"]
+                    and equity >= 3.5
+                    and can_enter
+                ):
+                    candidates = []
+                    for r_coin, r_data in BOT_STATE["radar"].items():
+                        if r_coin in active_coins or r_coin in COMPASS_ONLY_COINS:
+                            continue
+                        if (now_loop - safe_float(r_data.get("updated_ts", 0.0), 0.0)) > 45.0:
+                            continue
+                        if r_data.get("signal") in ("SNIPER LONG", "SNIPER SHORT"):
+                            k_now = memory_engine.get_kalman_telemetry(r_coin)
+                            v_now = safe_float(k_now.get("vel_1m_pct", 0.0), 0.0)
+                            if r_data["signal"] == "SNIPER LONG" and v_now >= 0.004:
+                                candidates.append((safe_float(r_data.get("score", 0.0), 0.0), r_coin, True, r_data))
+                            elif r_data["signal"] == "SNIPER SHORT" and v_now <= -0.004:
+                                candidates.append((safe_float(r_data.get("score", 0.0), 0.0), r_coin, False, r_data))
 
+                    if candidates:
+                        candidates.sort(key=lambda x: x[0], reverse=True)
+                        for best_score, best_coin, best_is_buy, best_data in candidates:
+                            opened_ok = gw.open_sniper_order(
+                                best_coin,
+                                is_buy=best_is_buy,
+                                strategy_label=best_data.get("strategy", "ELITE"),
+                                score=best_score,
+                            )
+                            if opened_ok:
+                                active_coins.add(best_coin)
+                                break
 
-@asynccontextmanager
-async def lifespan(app_instance: FastAPI):
-    global _bg_worker_task, _bg_ws_task
-    _bg_worker_task = asyncio.create_task(background_sniper_worker())
-    _bg_ws_task = asyncio.create_task(backend_bybit_spot_ws_listener())
-    yield
-    for t in (_bg_worker_task, _bg_ws_task):
-        if t:
-            t.cancel()
-
-
-app = FastAPI(
-    title="Sniper Quant AI v18.0 — ORACLE SINGULARITY (Kalman Future Prediction + Smart Money L2 + Lead-Lag Radar)",
-    version="18.0.0",
-    lifespan=lifespan,
-)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-class ConfigUpdateRequest(BaseModel):
-    api_key: Optional[str] = None
-    api_secret: Optional[str] = None
-    exec_mode: Optional[str] = None
-    custom_equity_usd: Optional[float] = None
-    risk_per_trade_pct: Optional[float] = None
-    min_confluence_score: Optional[float] = None
-    max_daily_drawdown_pct: Optional[float] = None
-    max_concurrent_slots: Optional[int] = None
-    ai_running: Optional[bool] = None
-    selected_symbol: Optional[str] = None
-    enabled_symbols: Optional[List[str]] = None
-    toggle_symbol: Optional[str] = None
-    clear_cooldown: Optional[bool] = False
-    reset_daily_stats: Optional[bool] = False
-
-
-class ForceEntryRequest(BaseModel):
-    symbol: Optional[str] = None
-
-
-class ClosePositionRequest(BaseModel):
-    symbol: Optional[str] = None
-
-
-class BrowserRelayReport(BaseModel):
-    equity_usd: Optional[float] = None
-    account_type: Optional[str] = "UNIFIED"
-    order_id: Optional[str] = None
-    position: Optional[Dict[str, Any]] = None
-
-
-@app.get("/", response_class=HTMLResponse)
-async def serve_command_center() -> HTMLResponse:
-    html_path = Path(__file__).parent / "sniper_ai_command_center.html"
-    if html_path.exists():
-        return HTMLResponse(content=html_path.read_text(encoding="utf-8"), status_code=200)
-    return HTMLResponse(content="<h1>Sniper Quant AI v18.0 Oracle Singularity Spot Online</h1>", status_code=200)
-
-
-@app.get("/api/v1/cloud/state")
-async def get_cloud_state() -> JSONResponse:
-    return JSONResponse(content=orchestrator.get_full_state_snapshot())
-
-
-@app.get("/api/v1/cloud/sign-check")
-async def get_signed_browser_check() -> JSONResponse:
-    if not orchestrator.gateway.api_key or not orchestrator.gateway.api_secret:
-        return JSONResponse(content={"ok": False, "error": "API Key/Secret não configurados."})
-
-    await orchestrator.gateway.sync_server_time()
-    q_unified = "accountType=UNIFIED&coin=USDT,SOL,XRP,DOGE,BNB,ETH,BTC"
-    ts = orchestrator.gateway.current_ts_ms()
-    headers = orchestrator.gateway.sign_v5_headers(q_unified, ts_ms=ts)
-    return JSONResponse(content={
-        "ok": True,
-        "query": q_unified,
-        "headers": headers,
-        "urls": [
-            f"https://api.bytick.com/v5/account/wallet-balance?{q_unified}",
-            f"https://api.bybit.com/v5/account/wallet-balance?{q_unified}",
-        ],
-    })
-
-
-@app.post("/api/v1/cloud/browser-relay-report")
-async def receive_browser_relay_report(rep: BrowserRelayReport) -> JSONResponse:
-    if rep.equity_usd is not None and rep.equity_usd > 0:
-        eq = round(float(rep.equity_usd), 4)
-        orchestrator.starting_equity_usd = eq
-        orchestrator.current_equity_usd = eq
-        brl = round(eq * orchestrator.usd_brl_rate, 2)
-        orchestrator.equity_curve_brl = [brl, brl, brl]
-        orchestrator.wallet_sync_source = f"Bybit Spot ({eq:.4f} USDT)"
-        orchestrator.gateway.last_api_status = (
-            f"✅ CONECTADO AO SPOT BYBIT ({rep.account_type}): {eq:.4f} USDT (≈ R$ {brl:.2f})!"
-        )
-
-    if rep.order_id and rep.position:
-        pos = rep.position
-        pos["srvStopOrderId"] = rep.order_id
-        pos["realBybitOrder"] = True
-        sym = str(pos.get("symbol", "SOLUSDT"))
-        orchestrator.active_positions[sym] = pos
-
-    return JSONResponse(content={"ok": True, "state": orchestrator.get_full_state_snapshot()})
-
-
-@app.post("/api/v1/cloud/configure")
-async def configure_cloud_bot(req: ConfigUpdateRequest) -> JSONResponse:
-    if req.api_key is not None and req.api_key.strip():
-        typed_key = req.api_key.strip()
-        if orchestrator.gateway.env_api_key and typed_key == "2Q9GwuhSJ7x87HqIEN":
-            orchestrator.gateway.api_key = orchestrator.gateway.env_api_key
-        else:
-            orchestrator.gateway.api_key = typed_key
-    if req.api_secret is not None and req.api_secret.strip():
-        orchestrator.gateway.api_secret = req.api_secret.strip()
-    if req.exec_mode is not None:
-        orchestrator.gateway.exec_mode = req.exec_mode
-    if req.risk_per_trade_pct is not None:
-        orchestrator.risk_per_trade_pct = max(0.5, min(3.0, req.risk_per_trade_pct))
-    if req.min_confluence_score is not None:
-        orchestrator.min_confluence_score = max(65.0, min(95.0, req.min_confluence_score))
-    if req.max_daily_drawdown_pct is not None:
-        orchestrator.max_daily_drawdown_pct = max(1.0, min(15.0, req.max_daily_drawdown_pct))
-    if req.max_concurrent_slots is not None:
-        orchestrator.max_concurrent_slots = max(1, min(6, req.max_concurrent_slots))
-    if req.ai_running is not None:
-        orchestrator.ai_running = req.ai_running
-        if req.ai_running:
-            orchestrator.circuit_breaker_tripped = False
-    if req.clear_cooldown:
-        orchestrator.global_cooldown_until = 0.0
-        orchestrator.profit_shield_locked = False
-        for a in orchestrator.assets.values():
-            a.suspended_until = 0.0
-            a.consecutive_losses = 0
-    if req.selected_symbol is not None and req.selected_symbol in orchestrator.assets:
-        orchestrator.selected_symbol = req.selected_symbol
-
-    if req.enabled_symbols is not None:
-        valid = [s.upper() for s in req.enabled_symbols if s.upper() in BYBIT_CONTRACTS]
-        if valid:
-            orchestrator.enabled_symbols = valid
-            orchestrator.selected_symbol = valid[0]
-            orchestrator.add_log(
-                "🎯 MOEDAS ATIVAS ATUALIZADAS PELO USUÁRIO",
-                f"Portfólio operando em: <strong>{', '.join(valid)}</strong> (Máx {orchestrator.get_effective_max_slots()} slot(s)).",
-                "emerald",
-            )
-
-    if req.toggle_symbol is not None:
-        sym_t = req.toggle_symbol.upper()
-        if sym_t in BYBIT_CONTRACTS:
-            if sym_t in orchestrator.enabled_symbols:
-                if len(orchestrator.enabled_symbols) > 1:
-                    orchestrator.enabled_symbols.remove(sym_t)
-            else:
-                orchestrator.enabled_symbols.append(sym_t)
-                orchestrator.selected_symbol = sym_t
-            orchestrator.add_log(
-                f"🔘 BOTÃO DE MOEDA ACIONADO ({sym_t})",
-                f"Moedas ativas no Portfólio Spot: <strong>{', '.join(orchestrator.enabled_symbols)}</strong>.",
-                "cyan",
-            )
-
-    if req.reset_daily_stats:
-        orchestrator.realized_daily_pnl_usd = 0.0
-        orchestrator.peak_daily_pnl_usd = 0.0
-        orchestrator.profit_shield_locked = False
-        orchestrator.floating_pnl_usd = 0.0
-        orchestrator.wins_today = 0
-        orchestrator.losses_today = 0
-        orchestrator.circuit_breaker_tripped = False
-        orchestrator.global_cooldown_until = 0.0
-        for a in orchestrator.assets.values():
-            a.suspended_until = 0.0
-            a.consecutive_losses = 0
-        orchestrator.ai_running = True
-        orchestrator.active_positions.clear()
-
-    orchestrator.save_persisted_brain_state()
-
-    wallet_res = {}
-    if orchestrator.gateway.api_key and orchestrator.gateway.api_secret:
-        wallet_res = await orchestrator.sync_wallet_from_bybit()
-
-    if req.custom_equity_usd is not None and req.custom_equity_usd > 0 and not wallet_res.get("ok"):
-        orchestrator.starting_equity_usd = round(req.custom_equity_usd, 4)
-        orchestrator.current_equity_usd = round(req.custom_equity_usd, 4)
-        orchestrator.realized_daily_pnl_usd = 0.0
-        orchestrator.peak_daily_pnl_usd = 0.0
-        orchestrator.floating_pnl_usd = 0.0
-        orchestrator.wins_today = 0
-        orchestrator.losses_today = 0
-        orchestrator.circuit_breaker_tripped = False
-        orchestrator.active_positions.clear()
-        brl = round(req.custom_equity_usd * orchestrator.usd_brl_rate, 2)
-        orchestrator.equity_curve_brl = [brl, brl, brl]
-        orchestrator.wallet_sync_source = f"Bybit Spot ({req.custom_equity_usd:.4f} USDT)"
-
-    return JSONResponse(content={
-        "ok": True,
-        "wallet_sync": wallet_res,
-        "state": orchestrator.get_full_state_snapshot(),
-    })
-
-
-@app.post("/api/v1/cloud/force-entry")
-async def force_cloud_entry(req: Optional[ForceEntryRequest] = None) -> JSONResponse:
-    req_sym = req.symbol if req and req.symbol else None
-    async with orchestrator._trade_lock:
-        result = await orchestrator.open_sniper_trade(is_manual=True, requested_symbol=req_sym)
-    return JSONResponse(content={**result, "state": orchestrator.get_full_state_snapshot()})
-
-
-@app.post("/api/v1/cloud/close-position")
-async def close_cloud_position(req: Optional[ClosePositionRequest] = None) -> JSONResponse:
-    target_sym = req.symbol if req and req.symbol else None
-    async with orchestrator._trade_lock:
-        if target_sym and target_sym in orchestrator.active_positions:
-            await orchestrator.close_specific_position(target_sym, reason="FECHAMENTO_MANUAL")
-        else:
-            for sym_open in list(orchestrator.active_positions.keys()):
-                await orchestrator.close_specific_position(sym_open, reason="FECHAMENTO_MANUAL_TOTAL")
-    return JSONResponse(content={"ok": True, "state": orchestrator.get_full_state_snapshot()})
+                time.sleep(2.0)
+        except Exception as e:
+            BOT_STATE["status"] = f"RECONECTANDO: {str(e)[:45]}"
+            add_log(f"⚠️ Erro no loop principal: {e}")
+            time.sleep(10)
 
 
 if __name__ == "__main__":
-    import uvicorn
-
-    if os.getenv("SNIPER_RUN_SELFTEST", "1") == "1" and not os.getenv("PORT"):
-        test_orch = AutonomousSniperOrchestratorV18()
-        sol = test_orch.assets["SOLUSDT"]
-        # 1) Testa Detector de Absorção Institucional Smart Money L2 (ask_thinning_ratio >= 1.35 + l2_obi >= 0.20)
-        sol.on_l2_orderbook_update(
-            [[94.45, 500.0], [94.44, 500.0], [94.43, 500.0]],
-            [[94.46, 50.0], [94.47, 50.0]],
-        )
-        assert sol.smart_money_ignition is True, "Deve ativar smart_money_ignition quando há absorção nos Bids e vácuo nos Asks"
-        assert sol.ask_thinning_ratio >= 1.35, f"ask_thinning_ratio deve ser >= 1.35, deu {sol.ask_thinning_ratio}"
-        # 2) Testa Motor Preditivo de Futuro (predict_future_trajectory)
-        pred_3m, win_prob = sol.predict_future_trajectory(94.46)
-        assert isinstance(pred_3m, float) and isinstance(win_prob, float)
-        # 3) Testa Radar Lead-Lag (ignição no BTC/ETH)
-        btc = test_orch.assets["BTCUSDT"]
-        btc.impulse_5s_pct = 0.09
-        btc.obi = 0.25
-        assert test_orch.check_lead_lag_radar() is True, "Deve detectar ignição Lead-Lag no BTC"
-        # 4) Testa Saída Preditiva no Topo (PREDICTIVE_TOP_CASH_IN em +0.42%+ quando surge parede vendedora L2)
-        test_orch.active_positions["SOLUSDT"] = {
-            "symbol": "SOLUSDT",
-            "side": "LONG",
-            "openedAt": time.time() - 60.0,
-            "initialQty": 0.120,
-            "remainingQty": 0.120,
-            "entry": 100.00,
-            "highestPrice": 100.50,
-            "atrAtEntry": 0.45,
-            "stop": 99.38,
-            "earlyTrailTrigger": 100.36,
-            "step2Trigger": 100.55,
-            "tp1": 100.85,
-            "tp2": 101.55,
-            "decimals": 2,
-            "riskUsd": 0.07,
-            "ladderStage": 1,
-            "tp1Hit": False,
-            "earlyTrailingActivated": True,
-            "trailingActive": True,
-            "singleLotProtected": True,
-            "volatilityScale": 1.0,
-            "floatingPnlUsd": 0.0,
-            "realizedPartialUsd": 0.0,
-            "srvStopOrderId": "TEST_ORACLE_TOP",
-            "realBybitOrder": False,
-        }
-        sol.price = 100.48  # +0.48% de lucro (>= +0.42%)
-        sol.best_bid = 100.47
-        sol.l2_obi = -0.22  # Surgiu parede vendedora institucional no Book!
-        asyncio.run(test_orch.evaluate_single_position("SOLUSDT"))
-        assert "SOLUSDT" not in test_orch.active_positions, "PREDICTIVE_TOP_CASH_IN deve vender 100% em 0ms no topo!"
-        # 5) Testa Auto-Tuning Neural de Gatilho
-        test_orch.auto_tune_neural_parameters()
-        assert 76.0 <= test_orch.min_confluence_score <= 85.0
-        print("✅ [SELF-TEST v18.0 ORACLE SINGULARITY PASSOU 100%] Todas as 6 inovações preditivas validadas!")
-    else:
-        port = int(os.getenv("PORT", "8080"))
-        uvicorn.run("sniper_hft_engine:app", host="0.0.0.0", port=port, log_level="info")
+    worker = threading.Thread(target=autonomous_sniper_loop, daemon=True)
+    worker.start()
+    port = int(os.getenv("PORT", 8080))
+    add_log(f"Painel Web HTML v40.0 Sovereign Compass & Alpha Basket ativo na porta {port}")
+    server = ThreadingHTTPServer(("0.0.0.0", port), SovereignWebServer)
+    server.serve_forever()
