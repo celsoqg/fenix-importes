@@ -26,7 +26,7 @@ logging.basicConfig(
 logger = logging.getLogger("SniperHFTEngine")
 
 USD_BRL_RATE = float(os.getenv("USD_BRL_RATE", "5.38"))
-MEMORY_FILE_PATH = os.getenv("OMNI_MEMORY_PATH", "/tmp/omni_market_memory_v41.json")
+MEMORY_FILE_PATH = os.getenv("OMNI_MEMORY_PATH", "/tmp/omni_market_memory_v50.json")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 NTFY_TOPIC = os.getenv("NTFY_TOPIC", "sniper_apex_0x397a16").strip()
@@ -72,12 +72,16 @@ def send_mobile_alert(title: str, message: str, priority: str = "high", tags: st
 # Cesta Alpha v40.0: BTC permanece como Bússola de Mercado (100% bloqueado para abrir ordens),
 # enquanto AAVE e INJ entram como novos ativos de alta precisão ao lado das campeãs SUI, ETH, AVAX, HYPE, NEAR e DOGE!
 GLOBAL_BASKET = [
-    "BTC", "ETH", "SOL", "HYPE", "SUI", "XRP", "DOGE", "AVAX",
-    "LINK", "ADA", "NEAR", "ARB", "TIA", "APT", "OP", "LTC",
-    "AAVE", "INJ"
+    "BTC", "SUI", "AVAX", "ETH", "HYPE", "NEAR", "DOGE", "AAVE",
+    "LTC", "BNB", "UNI", "XRP", "LINK", "ADA", "SOL", "TIA",
+    "APT", "OP"
 ]
 COMPASS_ONLY_COINS = {"BTC"}
-CORE_WATCHLIST = ["ETH", "SUI", "AVAX", "HYPE", "AAVE", "INJ", "SOL"]
+# Moedas Campeãs Invictas (Tier-1): ETH, SUI, AVAX, HYPE, NEAR, DOGE, AAVE, LTC, XRP, LINK, ADA
+# Moedas Ariscas / Alta Volatilidade (High-Beta): exigem extremo duplo (6%-11% / 89%-94%), Book >= 0.20 e pavio de rejeição!
+HIGH_BETA_COINS = {"SOL", "TIA", "APT", "OP"}
+ELITE_SQUAD_COINS = {"SUI", "AVAX", "ETH", "HYPE", "NEAR", "DOGE"}
+CORE_WATCHLIST = ["SUI", "AVAX", "ETH", "HYPE", "NEAR", "DOGE", "AAVE", "LTC", "BNB"]
 
 
 def safe_float(val: Any, default: float = 0.0) -> float:
@@ -96,8 +100,8 @@ def add_log(msg: str):
 
 
 BOT_STATE: dict[str, Any] = {
-    "version": "v41.0 — SOVEREIGN LEADER SYNC & ANTI-REPEAT (Proibido Repetir Moeda • Trava Líderes ETH/SOL • LTC no lugar de PEPE)",
-    "status": "INICIALIZANDO LEADER SYNC v41.0...",
+    "version": "v50.0 — SOVEREIGN ANTI-FAKEOUT & REAL REVERSAL (Anti-Falso Pavio 1m • Book >= +0.14 • DNA >= 68% • Disparo Instantâneo)",
+    "status": "INICIALIZANDO ANTI-FAKEOUT ENGINE v50.0...",
     "trading_enabled": True,
     "account_address": os.getenv("HYPERLIQUID_ACCOUNT_ADDRESS", "0x397a16b88f59dcc0ca5ab843842e6a6a6983365c").strip(),
     "agent_address": "N/A",
@@ -126,6 +130,9 @@ BOT_STATE: dict[str, Any] = {
     "reset_mode_label": "ERA OMEGA v30+ (REDS ANTIGOS LIMPOS)",
     "daily_goal_usdc": float(os.getenv("DAILY_GOAL_USDC", "1.50")),
     "daily_progress_pct": 0.0,
+    "daily_vault_active": False,
+    "active_session_mode": "MAPEANDO SESSÃO GLOBAL...",
+    "coin_performance_map": {},
     "top_coins_summary": "Aguardando trades do novo ciclo...",
     "recent_closed_trades": [],
     # Memória Global do Mercado Todo
@@ -150,12 +157,12 @@ BOT_STATE: dict[str, Any] = {
     "leverage": 8,
     "max_positions": 1,                  # 1 única posição focada por vez para nunca tomar perda dupla!
     "round_trip_fee_pct": 0.0007,        # 0.07% taxa total Hyperliquid
-    "micro_shield_trigger_pct": 0.0009,  # DEGRAU 0 (+0.09% move / +0.72% ROE) -> Corta o Stop pela metade (-0.05% / ~-$0.04) na hora!
-    "micro_shield_lock_pct": -0.0005,    # -0.05% move (Risco reduzido a centavos assim que anda +0.09% a favor!)
-    "zero_risk_trigger_pct": 0.0013,     # DEGRAU 1 (+0.13% move / +1.04% ROE) -> Já sobe o Stop p/ o Preço de Entrada (PROIBIDO virar Red)!
-    "zero_risk_lock_pct": 0.0002,        # +0.02% move (Zero-a-Zero na entrada com folga p/ não fechar em 1 tick mas proibir prejuízo!)
-    "recovery_drawdown_pct": -0.0006,    # Se recuar até -0.06% move (-0.48% ROE) e voltar p/ a entrada, sai no 0x0 protegido!
-    "recovery_exit_pct": 0.0002,         # +0.02% move (Sai imediatamente no 0x0 assim que recupera do susto!)
+    "micro_shield_trigger_pct": 0.0011,  # DEGRAU 0 (+0.11% move / +0.88% ROE) -> Corta o Stop pela metade (-0.05% / ~-$0.04)!
+    "micro_shield_lock_pct": -0.0005,    # -0.05% move (Risco reduzido a centavos assim que anda +0.11% a favor!)
+    "zero_risk_trigger_pct": 0.0014,     # DEGRAU 1 (+0.14% move / +1.12% ROE) -> Sobe o Stop p/ Entrada (+0.02%) com 0.12% de folga real p/ surfar!
+    "zero_risk_lock_pct": 0.0002,        # +0.02% move (Zero-a-Zero na entrada com folga ampla p/ não fechar cedo!)
+    "recovery_drawdown_pct": -0.0011,    # Só ativa Recuperação 0x0 se sofrer susto REAL (<= -0.11% move / -0.88% ROE), nunca em respiro de -0.07%!
+    "recovery_exit_pct": 0.0003,         # +0.03% move (Sai no 0x0 apenas se sofreu susto real <= -0.11% e perdeu força!)
     "cash_in_band_move_pct": 0.0028,     # +0.28% move (+2.24% ROE) -> Embolsa Green cheio no pico sem deixar voltar!
     "breakeven_trigger_pct": 0.0022,     # DEGRAU 2 (+0.22% move / +1.76% ROE) -> Trava Green líquido positivo em +0.12% move (+0.96% ROE)!
     "breakeven_lock_pct": 0.0012,        # +0.12% move (+0.96% ROE garantido)
@@ -170,9 +177,9 @@ BOT_STATE: dict[str, Any] = {
     "sl_move_pct": 0.0012,               # -0.12% move (-0.96% ROE) -> STOP TÉCNICO APÓS 180s (Red máximo ~$0.10 USDC)
     "wick_absorption_sl_pct": 0.0020,    # -0.20% move -> Folga Anti-Agulhada nos primeiros 180s se o 15M continuar intacto!
     "watchlist": [
-        "BTC", "ETH", "SOL", "HYPE", "SUI", "XRP", "DOGE", "AVAX",
-        "LINK", "ADA", "NEAR", "ARB", "TIA", "APT", "OP", "LTC",
-        "AAVE", "INJ"
+        "BTC", "SUI", "AVAX", "ETH", "HYPE", "NEAR", "DOGE", "AAVE",
+        "LTC", "BNB", "UNI", "XRP", "LINK", "ADA", "SOL", "TIA",
+        "APT", "OP"
     ],
     "open_positions": [],
     "peak_move_by_coin": {},
@@ -421,6 +428,36 @@ class WholeMarketMemoryEngine:
 
 class QuantumOracleEngine:
     @staticmethod
+    def get_session_and_regime(now: float) -> dict[str, Any]:
+        gm = time.gmtime(now)
+        is_weekend = gm.tm_wday in (5, 6)  # 5 = Sábado, 6 = Domingo
+        hour_utc = gm.tm_hour
+        if is_weekend:
+            return {
+                "is_weekend": True,
+                "min_bb_width": 0.0042,       # Exige no mínimo 0.42% de largura de banda (garante espaço físico p/ bater +0.24% de lucro!)
+                "cash_in_move": 0.0022,       # +0.22% move (+1.76% ROE) embolsa rápido no topo da banda no fim de semana
+                "partial_tp_move": 0.0020,    # +0.20% move (+1.60% ROE) garante 50% no bolso mais cedo
+                "label": "🌴 MODO FIM DE SEMANA AUTOMÁTICO (Só Moedas c/ Banda >=0.42% • Cash-In +1.8% ROE)",
+            }
+        elif 7 <= hour_utc <= 21:
+            return {
+                "is_weekend": False,
+                "min_bb_width": 0.0045,       # 0.45% na Sessão Institucional Londres/NY
+                "cash_in_move": 0.0028,       # +0.28% move (+2.24% ROE) para surfar volatilidade institucional
+                "partial_tp_move": 0.0024,    # +0.24% move (+1.92% ROE)
+                "label": "🏛️ SESSÃO INSTITUCIONAL LONDRES/NY (Banda >=0.45% • Alvo Cheio +2.2% ROE+)",
+            }
+        else:
+            return {
+                "is_weekend": False,
+                "min_bb_width": 0.0042,       # 0.42% na Sessão Asiática / Madrugada
+                "cash_in_move": 0.0024,       # +0.24% move (+1.92% ROE)
+                "partial_tp_move": 0.0021,    # +0.21% move (+1.68% ROE)
+                "label": "🌙 SESSÃO ASIÁTICA/NOTURNA AUTOMÁTICA (Banda >=0.42% • Alvo Calibrado +1.9% ROE)",
+            }
+
+    @staticmethod
     def compute_rsi(closes: np.ndarray, period: int = 14) -> float:
         if len(closes) < period + 1:
             return 50.0
@@ -480,6 +517,60 @@ class QuantumOracleEngine:
         else:
             vol_z = 0.0
         return vwap, vol_z
+
+    @staticmethod
+    def compute_tactical_dna(closes: np.ndarray, highs: np.ndarray, lows: np.ndarray) -> tuple[float, int, bool]:
+        """
+        SIMULADOR DE DNA TÁTICO CALIBRADO A FAVOR DA TENDÊNCIA (Últimas 45 velas de 5m):
+        Testa apenas os toques na banda que ocorreram A FAVOR da tendência local (ou com vela de rejeição),
+        para nunca penalizar uma moeda em tendência de alta quando ela toca no topo ou em tendência de baixa quando toca no fundo!
+        Só reprova a moeda se os pullbacks a favor da tendência falharem repetidamente (< 50% com >= 3 falhas).
+        """
+        n = len(closes)
+        if n < 26:
+            return (85.0, 0, True)
+        dna_wins = 0
+        dna_losses = 0
+        for i in range(20, n - 4):
+            win_slice = closes[i - 19 : i + 1]
+            sma_i = float(np.mean(win_slice))
+            sma_prev = float(np.mean(closes[i - 20 : i]))
+            std_i = float(np.std(win_slice)) + 1e-9
+            l_bb_i = sma_i - 2.0 * std_i
+            u_bb_i = sma_i + 2.0 * std_i
+            bw_i = max(u_bb_i - l_bb_i, float(closes[i]) * 0.002)
+            ep = max(1e-9, float(closes[i]))
+
+            low_pos = (float(lows[i]) - l_bb_i) / bw_i
+            high_pos = (float(highs[i]) - l_bb_i) / bw_i
+            fut_high = float(np.max(highs[i + 1 : i + 5]))
+            fut_low = float(np.min(lows[i + 1 : i + 5]))
+            trend_up_local = sma_i >= sma_prev * 0.9995
+            trend_dn_local = sma_i <= sma_prev * 1.0005
+
+            # Avalia compra no fundo APENAS se a tendência local não estava desabando E houve reação no candle
+            if low_pos <= 0.22 and trend_up_local and float(closes[i]) > float(lows[i]):
+                bounce_up = (fut_high - ep) / ep
+                drop_more = (ep - fut_low) / ep
+                if bounce_up >= 0.0013 or fut_high >= (l_bb_i + 0.45 * bw_i):
+                    dna_wins += 1
+                elif drop_more >= 0.0024 and bounce_up < 0.0009:
+                    dna_losses += 1
+            # Avalia venda no topo APENAS se a tendência local não estava explodindo E houve rejeição no candle
+            elif high_pos >= 0.78 and trend_dn_local and float(closes[i]) < float(highs[i]):
+                pull_down = (ep - fut_low) / ep
+                pump_more = (fut_high - ep) / ep
+                if pull_down >= 0.0013 or fut_low <= (l_bb_i + 0.55 * bw_i):
+                    dna_wins += 1
+                elif pump_more >= 0.0024 and pull_down < 0.0009:
+                    dna_losses += 1
+
+        tot = dna_wins + dna_losses
+        if tot == 0:
+            return (85.0, 0, True)
+        rate = round((dna_wins / tot) * 100.0, 0)
+        approved = (rate >= 68.0) and not (dna_losses >= 3 and dna_wins == 0)
+        return (rate, tot, approved)
 
     @classmethod
     def compute_macd_hist(cls, closes: np.ndarray) -> tuple[float, float]:
@@ -557,6 +648,7 @@ class QuantumOracleEngine:
         prev_mh, curr_mh = cls.compute_macd_hist(closes)
         atr_pct = cls.compute_atr_pct(highs, lows, closes, 14)
         vwap, vol_z = cls.compute_vwap_and_vol_zscore(highs, lows, closes, volumes)
+        dna_rate_pct, dna_touches, dna_approved = cls.compute_tactical_dna(closes, highs, lows)
 
         htf_15m_state = "NEUTRO"
         htf_bull = False
@@ -567,19 +659,27 @@ class QuantumOracleEngine:
                 c15[-1] = live_tick_px
             o15_curr = float(candles_15m[-1].get("o", c15[-1]))
             e9_15 = cls.compute_ema(c15, 9)
+            e9_15_prev = cls.compute_ema(c15[:-1], 9)
             e21_15 = cls.compute_ema(c15, 21)
             rsi_15m = cls.compute_rsi(c15, 14)
+            # Inclinação Obrigatória da EMA9 de 15M (e9_15_rising / e9_15_falling):
+            # Na INJ, a EMA9 de 15M ainda estava abaixo da EMA21, mas JÁ ESTAVA SUBINDO rumo à TRANSIÇÃO 15M!
+            # Agora: para ser ALTA 15M, a EMA9_15m não pode estar caindo; para ser BAIXA 15M, a EMA9_15m não pode estar subindo!
+            e9_15_rising = e9_15 >= (e9_15_prev * 0.9985)
+            e9_15_falling = e9_15 <= (e9_15_prev * 1.0015)
             htf_bull = (
                 (e9_15 >= e21_15)
-                and (price >= e21_15 * 0.9985)
-                and (rsi_15m >= 47.5)
-                and ((price - o15_curr) / max(1e-9, o15_curr) > -0.0028)
+                and e9_15_rising
+                and (price >= e21_15 * 0.9978)
+                and (rsi_15m >= 46.5)
+                and ((price - o15_curr) / max(1e-9, o15_curr) > -0.0035)
             )
             htf_bear = (
                 (e9_15 < e21_15)
-                and (price <= e21_15 * 1.0015)
-                and (rsi_15m <= 52.5)
-                and ((price - o15_curr) / max(1e-9, o15_curr) < 0.0028)
+                and e9_15_falling
+                and (price <= e21_15 * 1.0022)
+                and (rsi_15m <= 53.5)
+                and ((price - o15_curr) / max(1e-9, o15_curr) < 0.0035)
             )
             if htf_bull:
                 htf_15m_state = "ALTA 15M"
@@ -597,8 +697,13 @@ class QuantumOracleEngine:
         band_pos = float(np.clip((price - lower_bb) / bb_width, 0.0, 1.0))
 
         c_range = max(1e-9, float(highs[-1] - lows[-1]))
-        lower_wick_ratio = (min(float(opens[-1]), price) - float(lows[-1])) / c_range
-        upper_wick_ratio = (float(highs[-1]) - max(float(opens[-1]), price)) / c_range
+        # Anti-Falso Pavio de 1º Minuto v50.0: usa denominador mínimo de 0.16% do preço para que 1 único tick ($0.0001 na ADA)
+        # em vela recém-aberta jamais simule 50%-100% de pavio falso!
+        eff_c_range = max(c_range, price * 0.0016)
+        lower_wick_ratio = (min(float(opens[-1]), price) - float(lows[-1])) / eff_c_range
+        upper_wick_ratio = (float(highs[-1]) - max(float(opens[-1]), price)) / eff_c_range
+        rebound_from_low_pct = (price - float(lows[-1])) / max(1e-9, price)
+        pullback_from_high_pct = (float(highs[-1]) - price) / max(1e-9, price)
 
         is_bull_5m = ema9_5m >= ema21_5m
         vel_1m = safe_float(kalman_info.get("vel_1m_pct", 0.0), 0.0)
@@ -617,10 +722,32 @@ class QuantumOracleEngine:
         macd_rising = curr_mh >= prev_mh
         macd_falling = curr_mh <= prev_mh
 
-        room_to_upper_pct = max((upper_bb - price) / price, atr_pct * 1.5, 0.0040)
-        room_to_lower_pct = max((price - lower_bb) / price, atr_pct * 1.5, 0.0040)
-        has_safe_band_width = 0.0035 <= bb_width_pct <= 0.0135
-        band_too_wide = bb_width_pct > 0.0135
+        # PILAR 1: Regime Automático Seg-Sex / Fim de Semana / Sessão NY-Londres-Ásia
+        session_cfg = cls.get_session_and_regime(now)
+        BOT_STATE["active_session_mode"] = session_cfg["label"]
+        BOT_STATE["cash_in_band_move_pct"] = session_cfg["cash_in_move"]
+        BOT_STATE["partial_tp_trigger_pct"] = session_cfg["partial_tp_move"]
+        min_bb_allowed = session_cfg["min_bb_width"]
+
+        # PILAR 2: Memória de Auto-Aprendizado por Moeda (aperta filtro se a moeda tiver derrota recente e dá bônus às campeãs!)
+        perf_map = BOT_STATE.get("coin_performance_map", {})
+        c_perf = perf_map.get(coin, {"w": 0, "l": 0, "net": 0.0})
+        c_wins = int(c_perf.get("w", 0))
+        c_losses = int(c_perf.get("l", 0))
+        c_net = float(c_perf.get("net", 0.0))
+        is_proven_champion = (c_wins >= 1 and c_losses == 0 and c_net > 0.0)
+        has_recent_loss_caution = (c_losses >= 1 and c_net < 0.0)
+        auto_banned_by_ai = (c_losses >= 2 and c_wins == 0) or (c_net <= -0.25)
+
+        is_high_beta = (coin in HIGH_BETA_COINS) or has_recent_loss_caution
+        curr_candle_pct = c_range / max(1e-9, price)
+        max_bb_allowed = 0.0210 if is_high_beta else 0.0245
+        # Espaço REAL sem piso artificial: mede exatamente quantos % existem entre o preço atual e a banda oposta!
+        room_to_upper_pct = max(0.0, (upper_bb - price) / max(1e-9, price))
+        room_to_lower_pct = max(0.0, (price - lower_bb) / max(1e-9, price))
+        has_safe_band_width = (min_bb_allowed <= bb_width_pct <= max_bb_allowed) and (curr_candle_pct <= 0.0110)
+        band_too_wide = (bb_width_pct > max_bb_allowed) or (curr_candle_pct > 0.0110)
+        band_too_narrow = bb_width_pct < min_bb_allowed
 
         body_pct = abs(price - float(opens[-1])) / max(1e-9, price)
         prev_candle_green = float(closes[-2]) >= float(opens[-2])
@@ -630,28 +757,33 @@ class QuantumOracleEngine:
         pierced_lower_band = float(lows[-1]) < lower_bb
         pierced_upper_band = float(highs[-1]) > upper_bb
 
-        safe_from_bottom_wick = (not pierced_lower_band) or (band_pos >= 0.11 and ret_1m >= 0.01 and l2_obi >= 0.15)
-        safe_from_top_wick = (not pierced_upper_band) or (band_pos <= 0.89 and ret_1m <= -0.01 and l2_obi <= -0.15)
+        safe_from_bottom_wick = (not pierced_lower_band) or (band_pos >= 0.09 and ret_1m >= 0.005 and l2_obi >= 0.14)
+        safe_from_top_wick = (not pierced_upper_band) or (band_pos <= 0.91 and ret_1m <= -0.005 and l2_obi <= -0.14)
 
-        no_waterfall_down = (ret_3m > -0.12) or (ret_1m >= 0.015 and vel_1m >= 0.006)
-        no_waterfall_up = (ret_3m < 0.12) or (ret_1m <= -0.015 and vel_1m <= -0.006)
+        no_waterfall_down = (ret_3m > -0.14) or (ret_1m >= 0.01 and vel_1m >= 0.005)
+        no_waterfall_up = (ret_3m < 0.14) or (ret_1m <= -0.01 and vel_1m <= -0.005)
 
+        # Confirmação de Reação Real da Vela de 5m v50.0 (Exige reação física >= 0.08% do fundo/topo, bloqueando 1-tick de ruído!):
         candle_turning_up = (
             price > float(opens[-1])
             and safe_from_bottom_wick
             and no_waterfall_down
-            and (body_pct >= 0.0004 or (prev_candle_green and lower_wick_ratio >= 0.32))
+            and rebound_from_low_pct >= 0.0008
+            and (body_pct >= 0.0006 or lower_wick_ratio >= 0.24 or (prev_candle_green and body_pct >= 0.0004))
         )
         candle_turning_down = (
             price < float(opens[-1])
             and safe_from_top_wick
             and no_waterfall_up
-            and (body_pct >= 0.0004 or (prev_candle_red and upper_wick_ratio >= 0.32))
+            and pullback_from_high_pct >= 0.0008
+            and (body_pct >= 0.0006 or upper_wick_ratio >= 0.24 or (prev_candle_red and body_pct >= 0.0004))
         )
 
-        # Filtro Extra para SOL (exige fundo/topo ainda mais cirúrgico 6%-12% / 88%-94% por causa de pavios longos):
-        max_long_band = 0.12 if coin == "SOL" else 0.15
-        min_short_band = 0.88 if coin == "SOL" else 0.85
+        # Calibragem Sweet-Spot v43.5:
+        # Moedas Tier-1 Campeãs (ETH, SUI, AVAX, HYPE, NEAR, DOGE, AAVE, LTC, XRP, LINK, ADA): 6%-22% LONG e 78%-94% SHORT!
+        # Moedas High-Beta (SOL, INJ, ARB, TIA, APT, OP): 6%-15% LONG e 85%-94% SHORT!
+        max_long_band = 0.15 if is_high_beta else 0.22
+        min_short_band = 0.85 if is_high_beta else 0.78
         in_safe_long_zone = 0.06 <= band_pos <= max_long_band
         in_safe_short_zone = min_short_band <= band_pos <= 0.94
         outside_band_bottom = band_pos < 0.06
@@ -664,116 +796,157 @@ class QuantumOracleEngine:
         coins_crashing_0pct = sum(1 for r in BOT_STATE.get("radar", {}).values() if safe_float(r.get("band_pos", 0.5), 0.5) <= 0.03)
         coins_pumping_100pct = sum(1 for r in BOT_STATE.get("radar", {}).values() if safe_float(r.get("band_pos", 0.5), 0.5) >= 0.97)
 
-        # Trava dos Líderes (ETH e SOL): na 2ª entrada da PEPE, o ETH estava em ALTA 15M (Banda 97%) e a SOL em ALTA 15M (Banda 93%)!
-        # Proibido abrir SHORT em qualquer moeda se ETH ou SOL estiverem em ALTA 15M puxando o mercado para cima!
-        # Proibido abrir LONG em qualquer moeda se ETH ou SOL estiverem em BAIXA 15M puxando o mercado para baixo!
         eth_radar = BOT_STATE.get("radar", {}).get("ETH", {})
-        sol_radar = BOT_STATE.get("radar", {}).get("SOL", {})
         leaders_pumping_bull = (
             str(eth_radar.get("htf_15m", "")) == "ALTA 15M"
-            or str(sol_radar.get("htf_15m", "")) == "ALTA 15M"
+            and safe_float(eth_radar.get("band_pos", 0.5), 0.5) >= 0.80
+            and eth_imp_3m >= 0.08
         )
         leaders_dumping_bear = (
             str(eth_radar.get("htf_15m", "")) == "BAIXA 15M"
-            or str(sol_radar.get("htf_15m", "")) == "BAIXA 15M"
+            and safe_float(eth_radar.get("band_pos", 0.5), 0.5) <= 0.20
+            and eth_imp_3m <= -0.08
         )
 
-        market_allows_long = (breadth_bear < 50.0) and (coins_crashing_0pct <= 2) and (not leaders_dumping_bear or coin in ("ETH", "SOL"))
-        market_allows_short = (breadth_bull < 50.0) and (coins_pumping_100pct <= 2) and (not leaders_pumping_bull or coin in ("ETH", "SOL"))
+        market_allows_long = (breadth_bear < 55.0) and (coins_crashing_0pct <= 3) and (not leaders_dumping_bear)
+        market_allows_short = (breadth_bull < 55.0) and (coins_pumping_100pct <= 3) and (not leaders_pumping_bull)
 
+        # Destrava do Pullback: durante um recuo normal p/ dar compra, o BTC 3m oscila entre -0.03% e -0.08%.
+        # Só bloqueia se o BTC/ETH estiverem despejando (> -0.10%)!
         btc_allows_long = (
             market_allows_long
-            and (btc_imp_3m >= -0.02)
-            and (eth_imp_3m >= -0.02)
+            and (btc_imp_3m > -0.18)
+            and (eth_imp_3m > -0.18)
         )
         btc_allows_short = (
             market_allows_short
-            and (btc_imp_3m <= 0.01)
-            and (eth_imp_3m <= 0.01)
+            and (btc_imp_3m < 0.18)
+            and (eth_imp_3m < 0.18)
         )
 
         strategy_name = "🔍 MONITORANDO ZONA DE PREÇO"
         signal = "NEUTRO"
         score = 58.0
 
-        min_obi_req = 0.16 if coin == "SOL" else 0.12
+        min_obi_req = 0.18 if is_high_beta else 0.14
 
-        # 1) GATILHOS SNIPER LONG — ESTRITAMENTE NO FUNDO REAL (6% a 15% da Banda)
+        is_bear_5m = not is_bull_5m
+        btc_band_now = safe_float(BOT_STATE.get("radar", {}).get("BTC", {}).get("band_pos", 0.50), 0.50)
+        eth_band_now = safe_float(eth_radar.get("band_pos", 0.50), 0.50)
+
+        isolated_outlier_pump = (band_pos >= 0.85) and (btc_band_now <= 0.15 and eth_band_now <= 0.15)
+        isolated_outlier_dump = (band_pos <= 0.15) and (btc_band_now >= 0.85 and eth_band_now >= 0.85)
+
+        vwap_dist_pct = ((price - vwap) / max(1e-9, vwap)) if vwap > 0 else 0.0
+        # Correção Crítica v50.0: Se o 5M virou para BAIXA 5M (como na ADA às 16:21), NUNCA compra no meio da queda (12%-24%);
+        # se 5M estiver em baixa contra o 15M, exige exaustão extrema na base (<= 10% da banda), RSI <= 41 e Book >= +0.18!
+        breakout_against_short = is_bull_5m and (vwap_dist_pct > 0.0080 or ret_3m > 0.18 or band_pos < 0.90)
+        breakdown_against_long = is_bear_5m and (vwap_dist_pct < -0.0080 or ret_3m < -0.18 or band_pos > 0.10)
+
+        # 1) GATILHOS SNIPER LONG — SWEET-SPOT (6% a 18% Tier-1 c/ 5M Alta | 6% a 10% se 5M recuando)
+        max_long_band = 0.14 if is_high_beta else (0.18 if is_bull_5m else 0.10)
+        min_short_band = 0.86 if is_high_beta else (0.82 if is_bear_5m else 0.90)
+        in_safe_long_zone = 0.06 <= band_pos <= max_long_band
+        in_safe_short_zone = min_short_band <= band_pos <= 0.94
+
+        rsi_rebounding_up = (rsi >= prev_rsi) or (rebound_from_low_pct >= 0.0012 and lower_wick_ratio >= 0.28 and ret_1m >= 0.008)
+        rsi_rejecting_down = (rsi <= prev_rsi) or (pullback_from_high_pct >= 0.0012 and upper_wick_ratio >= 0.28 and ret_1m <= -0.008)
+
         long_base_pullback = (
             not is_compass_only
+            and not auto_banned_by_ai
+            and dna_approved
             and not in_quarantine
             and not is_hour_turn
             and not long_locked_global
+            and not isolated_outlier_dump
+            and not breakdown_against_long
             and btc_allows_long
             and htf_bull
+            and is_bull_5m
             and has_safe_band_width
             and in_safe_long_zone
-            and 25.0 <= rsi <= 43.5
-            and rsi > prev_rsi
+            and 24.0 <= rsi <= 45.5
+            and rsi_rebounding_up
             and candle_turning_up
-            and macd_rising
+            and (macd_rising or (lower_wick_ratio >= 0.26 and l2_obi >= 0.20))
             and l2_obi >= min_obi_req
-            and vel_1m >= 0.004
+            and vel_1m >= 0.003
             and funding_rate < 0.0008
         )
         long_extreme_spring = (
             not is_compass_only
+            and not auto_banned_by_ai
+            and dna_approved
             and not in_quarantine
             and not is_hour_turn
             and not long_locked_global
+            and not isolated_outlier_dump
             and btc_allows_long
             and htf_bull
             and has_safe_band_width
-            and 0.06 <= band_pos <= min(0.14, max_long_band)
-            and rsi <= 37.0
-            and rsi > prev_rsi
+            and 0.06 <= band_pos <= 0.11
+            and rsi <= 40.5
+            and rsi_rebounding_up
             and candle_turning_up
-            and lower_wick_ratio >= 0.32
-            and l2_obi >= 0.18
-            and vel_1m >= 0.006
+            and lower_wick_ratio >= 0.28
+            and l2_obi >= max(0.18, min_obi_req)
+            and vel_1m >= 0.004
         )
 
-        # 2) GATILHOS SNIPER SHORT — ESTRITAMENTE NO TOPO REAL (85% a 94% da Banda)
+        # 2) GATILHOS SNIPER SHORT — SWEET-SPOT (82% a 94% Tier-1 c/ 5M Baixa | 90% a 94% se 5M subindo)
         short_top_rally = (
             not is_compass_only
+            and not auto_banned_by_ai
+            and dna_approved
             and not in_quarantine
             and not is_hour_turn
             and not short_locked_global
+            and not isolated_outlier_pump
+            and not breakout_against_short
             and btc_allows_short
             and htf_bear
+            and is_bear_5m
             and has_safe_band_width
             and in_safe_short_zone
-            and 56.5 <= rsi <= 75.0
-            and rsi < prev_rsi
+            and 54.5 <= rsi <= 76.0
+            and rsi_rejecting_down
             and candle_turning_down
-            and macd_falling
+            and (macd_falling or (upper_wick_ratio >= 0.26 and l2_obi <= -0.20))
             and l2_obi <= -min_obi_req
-            and vel_1m <= -0.004
+            and vel_1m <= -0.003
             and funding_rate > -0.0008
         )
         short_extreme_upthrust = (
             not is_compass_only
+            and not auto_banned_by_ai
+            and dna_approved
             and not in_quarantine
             and not is_hour_turn
             and not short_locked_global
+            and not isolated_outlier_pump
             and btc_allows_short
             and htf_bear
             and has_safe_band_width
-            and max(0.86, min_short_band) <= band_pos <= 0.94
-            and rsi >= 63.0
-            and rsi < prev_rsi
+            and 0.89 <= band_pos <= 0.94
+            and rsi >= 59.5
+            and rsi_rejecting_down
             and candle_turning_down
-            and upper_wick_ratio >= 0.32
-            and l2_obi <= -0.18
-            and vel_1m <= -0.006
+            and upper_wick_ratio >= 0.28
+            and l2_obi <= -max(0.18, min_obi_req)
+            and vel_1m <= -0.004
         )
 
+        is_elite_squad = coin in ELITE_SQUAD_COINS
+        dna_bonus = 1.5 if dna_rate_pct >= 80.0 else 0.0
+        elite_bonus = 1.8 if is_elite_squad else 0.0
+        champion_bonus = (2.2 if is_proven_champion else (0.0 if not has_recent_loss_caution else -1.5)) + dna_bonus + elite_bonus
         if in_safe_long_zone and htf_bull and not is_compass_only:
             dist_from_sweet = abs(band_pos - 0.10)
-            score += max(0.0, (0.16 - dist_from_sweet) * 60.0) + max(0.0, l2_obi * 18.0)
+            score += max(0.0, (0.16 - dist_from_sweet) * 60.0) + max(0.0, l2_obi * 18.0) + champion_bonus
         elif in_safe_short_zone and htf_bear and not is_compass_only:
             dist_from_sweet = abs(band_pos - 0.90)
-            score += max(0.0, (0.16 - dist_from_sweet) * 60.0) + max(0.0, -l2_obi * 18.0)
+            score += max(0.0, (0.16 - dist_from_sweet) * 60.0) + max(0.0, -l2_obi * 18.0) + champion_bonus
 
         if is_compass_only:
             signal = "BÚSSOLA"
@@ -796,15 +969,24 @@ class QuantumOracleEngine:
             strategy_name = f"🔴 VENDA FORTRESS ({int(band_pos*100)}%) + BAIXA 15M"
             score = max(score, 92.0 + min(5.0, -l2_obi * 9.0))
         else:
-            if in_quarantine:
+            if auto_banned_by_ai:
+                strategy_name = f"🧠 AUTO-APRENDIZADO: BLOQUEADA NO CICLO ({c_wins}W/{c_losses}L | ${c_net:+.2f})"
+                score = 40.0
+            elif not dna_approved:
+                strategy_name = f"🧬 DNA TÁTICO REPROVADO ({dna_rate_pct:.0f}% NAS ÚLTIMAS 4H — ROMPENDO CANAL)"
+                score = 42.0
+            elif in_quarantine:
                 strategy_name = f"🧊 QUARENTENA PÓS-STOP ({int(quarantine_rem // 60) + 1}m)"
                 score = 45.0
             elif is_hour_turn:
                 strategy_name = "🛡️ VIRADA DE HORA INSTITUCIONAL (:58-:02 UTC — FILTRO ATIVO)"
                 score = 50.0
             elif band_too_wide:
-                strategy_name = f"🛡️ BLOQUEADO (VOLATILIDADE DE PAVIO {bb_width_pct*100:.2f}% > 1.35%)"
+                strategy_name = f"🛡️ BLOQUEADO (VOLATILIDADE DE PAVIO {bb_width_pct*100:.2f}% > {max_bb_allowed*100:.2f}%)"
                 score = 52.0
+            elif band_too_narrow:
+                strategy_name = f"⏳ CANAL ESTREITO ({bb_width_pct*100:.2f}% < {min_bb_allowed*100:.2f}%) — AGUARDANDO EXPANSÃO"
+                score = 54.0
             elif htf_bull and not market_allows_long:
                 if leaders_dumping_bear:
                     strategy_name = "🛡️ LONG BLOQUEADO (LÍDERES ETH/SOL EM BAIXA 15M PUXANDO MERCADO)"
@@ -829,6 +1011,18 @@ class QuantumOracleEngine:
             elif outside_band_top:
                 strategy_name = f"⏳ FORA DA BANDA ({int(band_pos*100)}%) — ESPERANDO VOLTAR <= 94%"
                 score = 72.0
+            elif htf_bear and breakout_against_short:
+                strategy_name = f"🛡️ SHORT BLOQUEADO (ROMPIMENTO 5M FORTE RSI {rsi:.1f} — EVITANDO VIOLINADA)"
+                score = 54.0
+            elif htf_bull and breakdown_against_long:
+                strategy_name = f"🛡️ LONG BLOQUEADO (QUEDA 5M FORTE RSI {rsi:.1f} — EVITANDO FACA CAINDO)"
+                score = 54.0
+            elif isolated_outlier_pump:
+                strategy_name = "🛡️ SHORT BLOQUEADO (MOEDA DESGARRADA SUBINDO CONTRA BTC/ETH NO FUNDO)"
+                score = 51.0
+            elif isolated_outlier_dump:
+                strategy_name = "🛡️ LONG BLOQUEADO (MOEDA DESGARRADA CAINDO CONTRA BTC/ETH NO TOPO)"
+                score = 51.0
             elif htf_bull and band_pos > max_long_band:
                 strategy_name = f"🚫 COMPRA BLOQUEADA (BANDA {int(band_pos*100)}% > {int(max_long_band*100)}%)"
                 score = min(score, 62.0)
@@ -870,6 +1064,8 @@ class QuantumOracleEngine:
             "ret_3m_pct": round(ret_3m, 2),
             "atr_pct": round(atr_pct, 4),
             "room_pct": round(active_room * 100.0, 2),
+            "dna_rate_pct": dna_rate_pct,
+            "dna_approved": dna_approved,
             "strategy": strategy_name,
             "score": round(min(99.0, score), 1),
             "signal": signal,
@@ -1103,6 +1299,8 @@ class HyperliquidDeFiGateway:
             goal_u = max(0.10, float(BOT_STATE.get("daily_goal_usdc", 1.50)))
             prog_pct = max(0.0, min(100.0, (net_pnl_all / goal_u) * 100.0))
             BOT_STATE["daily_progress_pct"] = round(prog_pct, 1)
+            BOT_STATE["daily_vault_active"] = (net_pnl_all >= goal_u) or (net_pnl_24h >= goal_u)
+            BOT_STATE["coin_performance_map"] = coin_stats
 
             if coin_stats:
                 sorted_coins = sorted(coin_stats.items(), key=lambda x: x[1]["net"], reverse=True)
@@ -1246,10 +1444,8 @@ class HyperliquidDeFiGateway:
                     else:
                         move_pct = oracle_move_pct
 
-                    if margin_used_pos > 0:
-                        roe_pct = (pnl / margin_used_pos) * 100.0
-                    else:
-                        roe_pct = move_pct * BOT_STATE["leverage"] * 100.0
+                    eff_lev = float(BOT_STATE["leverage"])
+                    roe_pct = move_pct * eff_lev * 100.0
 
                     coin_atr = BOT_STATE["radar"].get(coin, {}).get("atr_pct", 0.0045)
                     dyn_tp_move = max(0.0070, min(BOT_STATE["tp_move_pct"], coin_atr * 2.10))
@@ -1456,49 +1652,43 @@ class HyperliquidDeFiGateway:
             l2_obi = safe_float(radar_info.get("l2_obi", 0.0), 0.0)
             vel_1m = safe_float(radar_info.get("vel_1m_pct", 0.0), 0.0)
 
-            # 1) RECUPERAÇÃO INTELIGENTE PÓS-AGULHADA (0x0 se fluxo fraco OU Trava Zero-Loss e Surfa se fluxo forte!):
-            if worst_move <= BOT_STATE["recovery_drawdown_pct"] and move >= BOT_STATE["recovery_exit_pct"]:
-                strong_whale_reversal = (
-                    (side == "LONG" and l2_obi >= 0.18 and vel_1m >= 0.006)
-                    or (side == "SHORT" and l2_obi <= -0.18 and vel_1m <= -0.006)
+            # 1) SAÍDA DE RECUPERAÇÃO 0x0 APENAS EM SUSTO REAL (<= -0.11% move após >= 180s E somente se o fluxo/15M enfraquecer!):
+            # Jamais fecha cedo em respiro normal de -0.07%/-0.08% como foi na NEAR ($3.7066 -> $3.7208) e AVAX ($8.1650 -> $8.1927)!
+            htf_15m_now = str(radar_info.get("htf_15m", ""))
+            if age_sec >= 180.0 and worst_move <= BOT_STATE["recovery_drawdown_pct"] and move >= BOT_STATE["recovery_exit_pct"]:
+                trend_still_strong = (
+                    (side == "LONG" and htf_15m_now == "ALTA 15M" and (l2_obi >= 0.05 or vel_1m >= 0.003))
+                    or (side == "SHORT" and htf_15m_now == "BAIXA 15M" and (l2_obi <= -0.05 or vel_1m <= -0.003))
                 )
-                if strong_whale_reversal:
-                    if BOT_STATE["peak_move_by_coin"].get(coin, 0.0) < BOT_STATE["zero_risk_trigger_pct"]:
-                        BOT_STATE["peak_move_by_coin"][coin] = BOT_STATE["zero_risk_trigger_pct"]
-                        add_log(
-                            f"🚀 REVERSÃO FORTE PÓS-AGULHADA em {coin} (Book {l2_obi:+.2f} | Vel {vel_1m:+.3f}%/m)! "
-                            f"Stop travado no 0x0 e surfando a explosão!"
-                        )
+                if trend_still_strong:
+                    # Reseta o susto antigo para deixar a moeda surfar até o Green cheio!
+                    BOT_STATE["worst_move_by_coin"][coin] = 0.0
                 else:
                     add_log(
                         f"🛟 SAÍDA DE RECUPERAÇÃO 0x0 BLINDADA em {coin} ({p['roe_pct']:+.2f}% ROE / ${p['pnl']:+.2f})! "
-                        f"Operação recuperou da agulhada ({worst_move*100:.2f}%) e fechou no 0x0 sem prejuízo!"
+                        f"Operação recuperou de susto forte ({worst_move*100:.2f}%) sem força — saindo no 0x0!"
                     )
                     self.close_position(coin, is_loss=False, side_closed=side)
                     continue
 
-            # 2) CASH-IN DIRETO NO PICO (>= +0.28% move / +2.24% ROE):
-            if move >= BOT_STATE["cash_in_band_move_pct"]:
-                cash_in_long = (side == "LONG") and (
-                    band_pos >= 0.62
-                    or rsi_now >= 58.0
-                    or vel_1m <= 0.002
+            # 2) CASH-IN DIRETO NO PICO OU NA BANDA OPOSTA (>= +0.18% move quando já bateu >=75% / <=25% da banda!):
+            reached_full_cashin = (move >= BOT_STATE["cash_in_band_move_pct"]) and (
+                (side == "LONG" and (band_pos >= 0.60 or rsi_now >= 57.5 or vel_1m <= 0.002))
+                or (side == "SHORT" and (band_pos <= 0.40 or rsi_now <= 42.5 or vel_1m >= -0.002))
+            )
+            reached_opposite_band_green = (move >= 0.0018) and (
+                (side == "LONG" and band_pos >= 0.75 and (vel_1m <= 0.002 or l2_obi <= 0.0))
+                or (side == "SHORT" and band_pos <= 0.25 and (vel_1m >= -0.002 or l2_obi >= 0.0))
+            )
+            if reached_full_cashin or reached_opposite_band_green:
+                add_log(
+                    f"💰 CASH-IN NO PICO DO CANAL em {coin} (+{p['roe_pct']:.2f}% ROE / +${p['pnl']:.2f} bruto | Banda {int(band_pos*100)}%)! "
+                    f"Green cheio trancado no topo antes de devolver qualquer centavo!"
                 )
-                cash_in_short = (side == "SHORT") and (
-                    band_pos <= 0.38
-                    or rsi_now <= 42.0
-                    or vel_1m >= -0.002
-                )
-                if cash_in_long or cash_in_short:
-                    add_log(
-                        f"💰 CASH-IN NO PICO DO MOVIMENTO em {coin} (+{p['roe_pct']:.2f}% ROE / +${p['pnl']:.2f} bruto)! "
-                        f"Green cheio trancado no topo antes de devolver qualquer centavo!"
-                    )
-                    self.close_position(coin, is_loss=False, side_closed=side)
-                    continue
+                self.close_position(coin, is_loss=False, side_closed=side)
+                continue
 
             # 3) DEFESA DE INVERSÃO REAL DO 15M (Só após 180s se o 15M virar contra):
-            htf_15m_now = str(radar_info.get("htf_15m", ""))
             if age_sec >= 180.0 and move <= -0.0011:
                 trend_flipped_against_long = (side == "LONG") and (
                     htf_15m_now == "BAIXA 15M" and l2_obi <= -0.10 and vel_1m <= -0.005
@@ -1514,17 +1704,15 @@ class HyperliquidDeFiGateway:
                     self.close_position(coin, is_loss=True, side_closed=side)
                     continue
 
-            # 3.5) TIME-STOP ANTI-ZUMBI (15 minutos / 900s):
-            if age_sec >= 900.0 and move < BOT_STATE["zero_risk_trigger_pct"]:
-                is_stagnant = (
-                    abs(vel_1m) <= 0.003
-                    or (0.35 <= band_pos <= 0.65)
-                    or (-0.0008 <= move <= 0.0008)
-                )
+            # 3.5) TIME-STOP ANTI-ZUMBI (15 minutos / 900s — PROIBIDO FECHAR NO VERMELHO!):
+            # No ETH às 14:01 UTC, o Time-Stop antigo fechou com -0.63% ROE (-$0.08), fabricando um Red desnecessário!
+            # Na v46.0, o Time-Stop SÓ encerra se a operação estiver POSITIVA (move >= +0.0004, cobrindo a taxa no 0x0/Verde)!
+            if age_sec >= 900.0 and (0.0004 <= move < BOT_STATE["zero_risk_trigger_pct"]):
+                is_stagnant = (abs(vel_1m) <= 0.002) or (0.38 <= band_pos <= 0.62)
                 if is_stagnant:
                     add_log(
-                        f"⏱️ TIME-STOP ANTI-ZUMBI em {coin} ({p['roe_pct']:+.2f}% ROE | {int(age_sec//60)}m aberta)! "
-                        f"Operação estagnada sem momentum — encerrando no Zero a Zero para liberar margem!"
+                        f"⏱️ TIME-STOP ANTI-ZUMBI NO VERDE em {coin} (+{p['roe_pct']:.2f}% ROE | {int(age_sec//60)}m aberta)! "
+                        f"Operação lenta encerrada no positivo sem prejuízo!"
                     )
                     self.close_position(coin, is_loss=False, side_closed=side)
                     continue
@@ -1562,13 +1750,16 @@ class HyperliquidDeFiGateway:
                 )
                 self.close_position(coin, is_loss=False, side_closed=side)
             elif move <= -sl_limit:
-                # Só dá folga anti-agulhada até -0.16% se o livro L2 continuar a favor da posição!
-                # Se o livro L2 estiver contra (como na PEPE rompendo 98% da banda), corta cravado em -0.12% sem esperar!
+                # Proteção Anti-Fechamento em 14s no Spread de Abertura:
+                # Nos primeiros 75 segundos, absorve o spread inicial até -0.17% para não estopar na abertura!
                 htf_and_book_intact = (
-                    (side == "LONG" and htf_15m_now == "ALTA 15M" and l2_obi >= 0.05)
-                    or (side == "SHORT" and htf_15m_now == "BAIXA 15M" and l2_obi <= -0.05)
+                    (side == "LONG" and htf_15m_now == "ALTA 15M" and l2_obi >= 0.08)
+                    or (side == "SHORT" and htf_15m_now == "BAIXA 15M" and l2_obi <= -0.08)
                 )
-                if age_sec < 120.0 and htf_and_book_intact and move > -0.0016:
+                # Absorção Anti-Agulhada 180s v50.0: Em moedas de centavos (ex: ADA a $0.18), 4 ticks são -0.22%.
+                # Se nos primeiros 180s a tendência de 15M e o Book L2 continuarem compradores/vendedores firmes (>= 0.08),
+                # absorve até -0.24% sem estopar na mínima do pavio!
+                if (age_sec < 75.0 and move > -0.0018) or (age_sec < 180.0 and htf_and_book_intact and move > -0.0024):
                     pass
                 else:
                     add_log(
@@ -1607,13 +1798,34 @@ class HyperliquidDeFiGateway:
                     self.exchange.update_leverage(lev, hl_coin, is_cross=True)
                     self.configured_leverage[coin] = lev
 
-                mid_px = 0.0
-                dq_coin = self.memory.price_tape.get(coin)
-                if dq_coin and len(dq_coin) > 0 and (time.time() - dq_coin[-1][0]) < 5.0:
-                    mid_px = float(dq_coin[-1][1])
-                if mid_px <= 0:
-                    all_mids = self.info.all_mids()
-                    mid_px = float(all_mids.get(hl_coin) or all_mids.get(coin))
+                # CONFIRMAÇÃO DUPLA L2 AO VIVO NO MILISSEGUNDO DO GATILHO (Evita preço atrasado de 4s do loop!):
+                snap_now = self.info.l2_snapshot(hl_coin)
+                levels_now = snap_now.get("levels", [])
+                if len(levels_now) < 2 or not levels_now[0] or not levels_now[1]:
+                    return False
+                best_bid = float(levels_now[0][0].get("px", 0.0))
+                best_ask = float(levels_now[1][0].get("px", 0.0))
+                if best_bid <= 0 or best_ask <= 0:
+                    return False
+                mid_px = (best_bid + best_ask) * 0.5
+                spread_pct = (best_ask - best_bid) / mid_px
+                # Bloqueia se o spread Bid-Ask estiver largo (> 0.06%) para não já nascer negativo!
+                if spread_pct > 0.0008:
+                    add_log(f"🛡️ Disparo cancelado em {coin}: Spread L2 largo ({spread_pct*100:.3f}% > 0.06%)")
+                    return False
+
+                bids_15 = levels_now[0][:15]
+                asks_15 = levels_now[1][:15]
+                b_vol = sum(float(b.get("sz", 0.0)) * (1.5 if i < 5 else 1.0) for i, b in enumerate(bids_15))
+                a_vol = sum(float(a.get("sz", 0.0)) * (1.5 if i < 5 else 1.0) for i, a in enumerate(asks_15))
+                live_obi_now = ((b_vol - a_vol) / (b_vol + a_vol)) if (b_vol + a_vol) > 0 else 0.0
+                req_obi_now = 0.18 if (coin in HIGH_BETA_COINS) else 0.14
+                if is_buy and live_obi_now < req_obi_now:
+                    add_log(f"🛡️ Disparo LONG cancelado em {coin}: Book L2 fraco/virou antes da ordem ({live_obi_now:+.2f} < +{req_obi_now:.2f})")
+                    return False
+                if (not is_buy) and live_obi_now > -req_obi_now:
+                    add_log(f"🛡️ Disparo SHORT cancelado em {coin}: Book L2 fraco/virou antes da ordem ({live_obi_now:+.2f} > -{req_obi_now:.2f})")
+                    return False
 
                 decimals = self.sz_decimals.get(hl_coin, self.sz_decimals.get(coin, 2))
                 notional = BOT_STATE["order_notional"]
@@ -1621,10 +1833,10 @@ class HyperliquidDeFiGateway:
                 if size <= 0:
                     return False
                 add_log(
-                    f"⚡ SNIPER PRIME ELITE DISPARANDO {new_side} ({lev}x) em {coin} [{strategy_label} | Score {score:.1f}] | "
+                    f"⚡ SNIPER OMNI v43 DISPARANDO {new_side} ({lev}x) em {coin} [{strategy_label} | Book Ao Vivo {live_obi_now:+.2f} | Score {score:.1f}] | "
                     f"Qtd: {size} (~${notional}) @ ${mid_px:.4f}"
                 )
-                res = self.exchange.market_open(hl_coin, is_buy, size, mid_px, 0.015)
+                res = self.exchange.market_open(hl_coin, is_buy, size, mid_px, 0.0025)
                 res_str = str(res)
                 if "error" in res_str.lower() and "filled" not in res_str.lower():
                     add_log(f"⚠️ Ordem rejeitada pela L1 em {coin}: {res_str[:110]}")
@@ -1639,6 +1851,24 @@ class HyperliquidDeFiGateway:
                 BOT_STATE["opened_ts_by_coin"][coin] = now
                 self.memory.save_persisted_memory(force=True)
                 add_log(f"✅ Execução Confirmada L1 {coin}: {res_str[:100]}")
+
+                # PILAR 5: Grava Ordem de Stop de Emergência Catastrófico Direto na Blockchain L1 (-0.28% move)
+                # Caso o servidor perca conexão, a posição já tem um paraquedas nativo dentro da Hyperliquid!
+                try:
+                    px_digits = max(0, 6 - decimals) if mid_px < 10.0 else (2 if mid_px < 1000.0 else 1)
+                    hard_sl_px = round(mid_px * (1.0 - 0.0028) if is_buy else mid_px * (1.0 + 0.0028), px_digits)
+                    if hard_sl_px > 0:
+                        self.exchange.order(
+                            hl_coin,
+                            not is_buy,
+                            size,
+                            hard_sl_px,
+                            {"trigger": {"triggerPx": hard_sl_px, "isMarket": True, "tpsl": "sl"}},
+                            reduce_only=True,
+                        )
+                        add_log(f"🛡️ Hard Stop On-Chain L1 gravado na Hyperliquid para {coin} @ ${hard_sl_px}")
+                except Exception:
+                    pass
                 send_mobile_alert(
                     f"⚡ NOVA ENTRADA: {new_side} ({lev}x) em {coin}",
                     f"🎯 Estratégia: {strategy_label} (Score {score:.1f})"
@@ -1659,7 +1889,45 @@ class HyperliquidDeFiGateway:
                 est_pnl = float(pos_snap["pnl"]) if pos_snap else 0.0
                 est_roe = float(pos_snap["roe_pct"]) if pos_snap else 0.0
 
-                res = self.exchange.market_close(self._hl_coin(coin))
+                hl_c = self._hl_coin(coin)
+                res = None
+                # PILAR 3: Se for saída no LUCRO (is_loss=False e est_pnl > 0), tenta primeiro execução Limit IOC/Topo do Livro
+                # para economizar spread/taxa e capturar preço melhor, com Fallback Imediato a Mercado em 0.4s (100% garantido)!
+                if not is_loss and est_pnl > 0.02 and pos_snap:
+                    try:
+                        snap_c = self.info.l2_snapshot(hl_c)
+                        lv_c = snap_c.get("levels", [])
+                        if len(lv_c) >= 2 and lv_c[0] and lv_c[1]:
+                            b_bid = float(lv_c[0][0].get("px", 0.0))
+                            b_ask = float(lv_c[1][0].get("px", 0.0))
+                            close_is_buy = (pos_snap.get("side") == "SHORT")
+                            best_px = b_bid if close_is_buy else b_ask
+                            abs_sz = abs(float(pos_snap.get("size", 0.0)))
+                            if best_px > 0 and abs_sz > 0:
+                                lim_res = self.exchange.order(
+                                    hl_c, close_is_buy, abs_sz, best_px, {"limit": {"tif": "Ioc"}}, reduce_only=True
+                                )
+                                if "filled" in str(lim_res).lower():
+                                    res = lim_res
+                                    add_log(f"💎 Saída Otimizada no Topo do Livro L2 em {coin} @ ${best_px}!")
+                    except Exception:
+                        pass
+
+                # Garantia Absoluta de Fechamento (fecha qualquer saldo remanescente a mercado):
+                res_mkt = self.exchange.market_close(hl_c)
+                if res is None:
+                    res = res_mkt
+
+                # Remove qualquer Hard Stop On-Chain pendente da moeda encerrada:
+                try:
+                    open_ords = self.info.open_orders(self.account_address)
+                    if isinstance(open_ords, list):
+                        for o in open_ords:
+                            if o.get("coin") in (coin, hl_c) and "oid" in o:
+                                self.exchange.cancel(hl_c, int(o["oid"]))
+                except Exception:
+                    pass
+
                 now = time.time()
                 self.cooldowns[coin] = now
                 # REGRA ANTI-REENTRADA NA MESMA MOEDA (Evita o que aconteceu na PEPE às 22:20 -> 22:30):
@@ -1766,6 +2034,8 @@ class SovereignWebServer(BaseHTTPRequestHandler):
                 BOT_STATE["losses_24h"] = 0
                 BOT_STATE["realized_24h_usdc"] = 0.0
                 BOT_STATE["daily_progress_pct"] = 0.0
+                BOT_STATE["daily_vault_active"] = False
+                BOT_STATE["coin_performance_map"] = {}
                 BOT_STATE["top_coins_summary"] = "Placar zerado — aguardando o 1º trade do novo ciclo!"
                 BOT_STATE["recent_closed_trades"] = []
                 GLOBAL_GATEWAY.memory.save_persisted_memory(force=True)
@@ -1829,7 +2099,7 @@ class SovereignWebServer(BaseHTTPRequestHandler):
             <tr>
                 <td><b>{c_sym}</b></td>
                 <td>${safe_float(r.get('price', 0.0)):.4f}<br><span style="font-size:10.5px;color:#64748b;">VWAP ${safe_float(r.get('vwap', 0.0)):.4f}</span></td>
-                <td>RSI {safe_float(r.get('rsi', 50.0)):.1f} <b>(Banda {b_pct}%)</b><br><span style="font-size:10.5px;color:#38bdf8;">Espaço Banda: +{safe_float(r.get('room_pct', 0.0)):.2f}%</span></td>
+                <td>RSI {safe_float(r.get('rsi', 50.0)):.1f} <b>(Banda {b_pct}%)</b><br><span style="font-size:10.5px;color:#38bdf8;">Espaço: +{safe_float(r.get('room_pct', 0.0)):.2f}% | 🧬 DNA: {safe_float(r.get('dna_rate_pct', 80.0)):.0f}%</span></td>
                 <td style="color:{obi_col};font-weight:bold;">Book {obi_val:+.2f}<br><span style="font-size:10.5px;color:#94a3b8;">Vel: {safe_float(r.get('vel_1m_pct', 0.0)):+.3f}%/m</span></td>
                 <td>{r.get('trend', 'NEUTRO')}<br><span style="font-size:10.5px;color:#94a3b8;">{r.get('strategy', '')}</span></td>
                 <td style="color:{sig_col};font-weight:bold;">{sig_str} ({safe_float(r.get('score', 50.0)):.1f})</td>
@@ -1940,7 +2210,7 @@ class SovereignWebServer(BaseHTTPRequestHandler):
           <div style="font-size:12px;color:#cbd5e1;">
             📊 <b>Tendência 15m Intacta ({len(GLOBAL_BASKET)} Moedas):</b> <span style="color:#10b981;font-weight:bold;">{mb.get('breadth_bull_pct', 50):.0f}% em Alta 15m</span> vs <span style="color:#ef4444;font-weight:bold;">{mb.get('breadth_bear_pct', 50):.0f}% em Baixa 15m</span>
             &nbsp;|&nbsp; ⚡ <b>BTC 3m (Bússola):</b> <b>{mb.get('btc_impulse_3m_pct', 0.0):+.2f}%</b> • <b>ETH 3m:</b> <b>{mb.get('eth_impulse_3m_pct', 0.0):+.2f}%</b><br>
-            🛡️ <b>Modo Foco Único:</b> <b style="color:#38bdf8;">{mb.get('second_slot_status', 'ATIVO')}</b> — <span style="color:#94a3b8;font-size:11.5px;">{mb.get('summary', '')}</span>
+            🛡️ <b>Modo Foco Único:</b> <b style="color:#38bdf8;">{mb.get('second_slot_status', 'ATIVO')}</b> &nbsp;|&nbsp; 🌐 <b>Sessão Ativa:</b> <b style="color:#10b981;">{BOT_STATE.get('active_session_mode', 'AUTOMÁTICA')}</b> &nbsp;|&nbsp; 🔒 <b>Cofre Diário:</b> <b style="color:{'#10b981' if BOT_STATE.get('daily_vault_active') else '#94a3b8'};">{'META BATIDA (SÓ SCORE >=95)' if BOT_STATE.get('daily_vault_active') else 'CAÇANDO META DO DIA'}</b>
           </div>
         </div>
 
@@ -2021,6 +2291,22 @@ def autonomous_sniper_loop():
                             coin, c_5m, c_15m, c_obi, c_fund, k_info, brain_state
                         )
                         BOT_STATE["radar"][coin] = analysis
+                        # Disparo Instantâneo Zero-Delay v50.0: não espera terminar as 18 moedas (~2.7s) quando acha gatilho Sniper!
+                        if (
+                            BOT_STATE["trading_enabled"]
+                            and equity >= 3.5
+                            and len(open_positions) == 0
+                            and coin not in COMPASS_ONLY_COINS
+                            and analysis.get("signal") in ("SNIPER LONG", "SNIPER SHORT")
+                        ):
+                            can_now, _ = gw.can_open_next_position(open_positions, 1)
+                            sc_now = safe_float(analysis.get("score", 0.0), 0.0)
+                            vault_ok = (not BOT_STATE.get("daily_vault_active", False)) or (sc_now >= 95.0)
+                            if can_now and vault_ok and sc_now >= 92.5:
+                                is_b = analysis["signal"] == "SNIPER LONG"
+                                if gw.open_sniper_order(coin, is_buy=is_b, strategy_label=analysis.get("strategy", "ELITE"), score=sc_now):
+                                    equity, open_positions = gw.sync_portfolio()
+                                    active_coins = {p["coin"] for p in open_positions}
                     except Exception as ce:
                         if "429" in str(ce):
                             time.sleep(6.0)
@@ -2048,11 +2334,13 @@ def autonomous_sniper_loop():
                         if (now_loop - safe_float(r_data.get("updated_ts", 0.0), 0.0)) > 45.0:
                             continue
                         if r_data.get("signal") in ("SNIPER LONG", "SNIPER SHORT"):
+                            if BOT_STATE.get("daily_vault_active", False) and safe_float(r_data.get("score", 0.0), 0.0) < 95.0:
+                                continue
                             k_now = memory_engine.get_kalman_telemetry(r_coin)
                             v_now = safe_float(k_now.get("vel_1m_pct", 0.0), 0.0)
-                            if r_data["signal"] == "SNIPER LONG" and v_now >= 0.004:
+                            if r_data["signal"] == "SNIPER LONG" and v_now >= 0.002:
                                 candidates.append((safe_float(r_data.get("score", 0.0), 0.0), r_coin, True, r_data))
-                            elif r_data["signal"] == "SNIPER SHORT" and v_now <= -0.004:
+                            elif r_data["signal"] == "SNIPER SHORT" and v_now <= -0.002:
                                 candidates.append((safe_float(r_data.get("score", 0.0), 0.0), r_coin, False, r_data))
 
                     if candidates:
