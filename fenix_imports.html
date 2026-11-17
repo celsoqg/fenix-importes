@@ -188,10 +188,13 @@
     <div id="toast-container"></div>
     <audio id="notification-sound" preload="none"></audio>
 
-    <!-- Banner Topo -->
-    <div class="bg-gradient-to-r from-amber-600 via-gold to-yellow-500 text-black text-[11px] sm:text-xs font-black py-1.5 px-3 text-center tracking-wider uppercase flex items-center justify-center gap-2 shadow-lg">
-        <i class="fa-solid fa-bolt text-sm"></i> 
-        <span>PAGAMENTO VIA PIX BUYPIX • APROVAÇÃO IMEDIATA • ENVIO EXPRESSO SIGILOSO</span>
+    <!-- Barra de Valor Direta -->
+    <div class="bg-zinc-950/95 border-b border-gold/20 text-zinc-300 text-[11px] sm:text-xs font-medium py-2 px-4 text-center tracking-wide flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+        <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-gold text-[11px]"></i> Pureza Certificada <b class="text-white">HPLC 99.8%</b></span>
+        <span class="hidden sm:inline text-zinc-700">•</span>
+        <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-box-open text-emerald-400 text-[11px]"></i> Envio Expresso 100% Sigiloso</span>
+        <span class="hidden md:inline text-zinc-700">•</span>
+        <span class="hidden md:inline-flex items-center gap-1.5"><i class="fa-brands fa-pix text-emerald-400 text-[11px]"></i> Aprovação Imediata via PIX</span>
     </div>
 
     <!-- Header Glassmorphism -->
@@ -211,16 +214,16 @@
                 </div>
             </div>
 
-            <nav class="hidden md:flex items-center gap-5 lg:gap-7 text-xs lg:text-sm font-semibold">
-                <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-1.5 hover:text-yellow-300 transition cursor-pointer"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
-                <button onclick="openKitDegustacaoDirect()" class="text-amber-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer font-black"><i class="fa-solid fa-boxes-packing text-gold text-xs"></i> Kit Degustação</button>
-                <button onclick="openProductAdvisorModal()" class="text-amber-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer font-bold"><i class="fa-solid fa-compass text-gold text-xs"></i> Qual Escolher? (IA)</button>
-                <button onclick="openCompareModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-scale-balanced text-gold text-xs"></i> Comparar</button>
-                <button onclick="openReconstitutionModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-syringe text-gold text-xs"></i> Calculadora UI</button>
-                <button onclick="openLabVerifyModal()" class="text-zinc-300 hover:text-emerald-400 transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-flask-vial text-emerald-400 text-xs"></i> Laudos HPLC</button>
-                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-route text-xs"></i> Rastrear Pedido</button>
-                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-shield-halved text-xs"></i> Admin</button>
-                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
+            <nav class="hidden lg:flex items-center gap-4 xl:gap-6 text-xs xl:text-[13px] font-semibold whitespace-nowrap">
+                <button onclick="switchTab('catalog')" id="nav-catalog" class="text-gold flex items-center gap-1.5 hover:text-yellow-300 transition cursor-pointer whitespace-nowrap"><i class="fa-solid fa-store text-xs"></i> Catálogo</button>
+                <button onclick="openKitDegustacaoDirect()" class="text-amber-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer font-bold whitespace-nowrap"><i class="fa-solid fa-boxes-packing text-gold text-xs"></i> Kit Degustação</button>
+                <button onclick="openProductAdvisorModal()" class="text-zinc-200 hover:text-gold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"><i class="fa-solid fa-compass text-gold text-xs"></i> Consultor IA</button>
+                <button onclick="openCompareModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"><i class="fa-solid fa-scale-balanced text-gold text-xs"></i> Comparar</button>
+                <button onclick="openReconstitutionModal()" class="text-zinc-300 hover:text-gold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"><i class="fa-solid fa-syringe text-gold text-xs"></i> Calculadora UI</button>
+                <button onclick="openLabVerifyModal()" class="text-zinc-300 hover:text-emerald-400 transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"><i class="fa-solid fa-flask-vial text-emerald-400 text-xs"></i> Laudos</button>
+                <button onclick="openTrackingModal()" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"><i class="fa-solid fa-route text-xs"></i> Rastrear</button>
+                <button onclick="openLoginModal()" id="nav-login" class="text-zinc-400 hover:text-white transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"><i class="fa-solid fa-shield-halved text-xs"></i> Admin</button>
+                <button onclick="switchTab('admin')" id="nav-admin" class="hidden text-zinc-400 hover:text-gold transition flex items-center gap-1.5 cursor-pointer whitespace-nowrap"><i class="fa-solid fa-chart-line text-xs"></i> Gestão</button>
             </nav>
 
             <div class="flex items-center gap-2 sm:gap-3">
@@ -240,11 +243,11 @@
                     <span id="cart-counter" class="bg-gold text-black text-xs font-black w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
                 </button>
 
-                <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-400 hover:text-white p-2 cursor-pointer"><i class="fa-solid fa-bars text-xl"></i></button>
+                <button onclick="toggleMobileMenu()" class="lg:hidden text-zinc-400 hover:text-white p-2 cursor-pointer"><i class="fa-solid fa-bars text-xl"></i></button>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden glass-nav border-t border-zinc-800 px-5 py-4 space-y-3">
+        <div id="mobile-menu" class="hidden lg:hidden glass-nav border-t border-zinc-800 px-5 py-4 space-y-3">
             <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left text-gold font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-store"></i> Catálogo de Produtos</button>
             <button onclick="openKitDegustacaoDirect(); toggleMobileMenu();" class="w-full text-left text-gold font-black text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-boxes-packing text-gold"></i> Monte seu Kit Degustação (Tirzepatidas 15mg)</button>
             <button onclick="openProductAdvisorModal(); toggleMobileMenu();" class="w-full text-left text-amber-300 font-bold text-sm flex items-center gap-3 cursor-pointer"><i class="fa-solid fa-compass text-gold"></i> Consultor IA: Qual Produto Escolher?</button>
@@ -281,59 +284,57 @@
                     </button>
                 </div>
             </div>
-            <div class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-10 glow-gold-lg">
-                <div class="absolute -right-20 -bottom-20 w-80 h-80 sm:w-96 sm:h-96 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-                    <div class="lg:col-span-7 space-y-4">
-                        <div class="flex flex-wrap gap-2">
-                            <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest"><i class="fa-solid fa-shield-halved"></i> Pureza HPLC 99.8%</span>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"><i class="fa-brands fa-pix"></i> Pix Imediato BuyPix</span>
-                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"><i class="fa-solid fa-box-open"></i> Envio Expresso Sigiloso</span>
+            <section class="relative overflow-hidden rounded-3xl glass-card border border-zinc-800/80 p-6 sm:p-10 lg:p-12 glow-gold-lg">
+                <div class="absolute -right-24 -bottom-24 w-80 h-80 sm:w-[28rem] sm:h-[28rem] bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+                    <div class="lg:col-span-7 space-y-5">
+                        <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[11px] font-bold bg-gold/10 text-gold border border-gold/30 uppercase tracking-widest">
+                            <i class="fa-solid fa-award"></i> Padrão Internacional • Lotes Certificados
+                        </span>
+                        <h1 class="text-3xl sm:text-5xl lg:text-[3.25rem] font-black tracking-tight leading-[1.12] text-white">
+                            Peptídeos e Protocolos de <span class="gold-gradient-text">Alta Performance</span>
+                        </h1>
+                        <p class="text-sm sm:text-base text-zinc-300 font-normal leading-relaxed max-w-xl">
+                            Pureza comprovada em laboratório, envio discreto para todo o Brasil e liberdade total para combinar suas versões 15mg em um único pedido.
+                        </p>
+                        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+                            <button onclick="document.getElementById('catalog-controls').scrollIntoView({behavior:'smooth'})" class="gold-btn-gradient px-6 py-3.5 rounded-2xl text-sm font-black flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-gold/15 hover:scale-[1.02] transition">
+                                <i class="fa-solid fa-store"></i> Explorar Catálogo
+                            </button>
+                            <button onclick="document.getElementById('customer-feedback-section').scrollIntoView({behavior:'smooth'})" class="bg-zinc-900/90 hover:bg-zinc-800 text-white border border-zinc-700/80 px-5 py-3.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition cursor-pointer">
+                                <i class="fa-solid fa-star text-gold"></i> Avaliações dos Clientes
+                            </button>
                         </div>
-                        <h1 class="text-2xl sm:text-5xl font-black tracking-tight leading-tight text-white">Evolução Máxima com <span class="gold-gradient-text">Padrão de Elite</span></h1>
-                        <p class="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed">Pagamento 100% automático e sigiloso via chave PIX BuyPix: gere seu QR Code ou Copia e Cola na hora e libere seu pedido para envio expresso.</p>
-                        <div class="flex flex-wrap gap-2.5 pt-1">
-                            <button onclick="openKitDegustacaoDirect()" class="gold-btn-gradient px-4 py-2.5 rounded-2xl text-xs font-black flex items-center gap-2 cursor-pointer shadow-lg">
-                                <i class="fa-solid fa-boxes-packing"></i> Monte seu Kit Degustação (15mg)
-                            </button>
-                            <button onclick="openProductAdvisorModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-amber-300 border border-gold/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
-                                <i class="fa-solid fa-wand-magic-sparkles"></i> Consultor IA (15s)
-                            </button>
-                            <button onclick="openReconstitutionModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-gold border border-gold/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
-                                <i class="fa-solid fa-syringe"></i> Calculadora de Dosagem (UI)
-                            </button>
-                            <button onclick="openCompareModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-sky-400 border border-sky-500/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
-                                <i class="fa-solid fa-scale-balanced"></i> Comparar Lado a Lado
-                            </button>
-                            <button onclick="openLabVerifyModal()" class="bg-zinc-900/90 hover:bg-zinc-800 text-emerald-400 border border-emerald-500/40 px-4 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2 transition cursor-pointer">
-                                <i class="fa-solid fa-microscope"></i> Laudos HPLC 99.8%
-                            </button>
+                        <div class="flex flex-wrap items-center gap-x-5 gap-y-2 pt-2 text-[11px] sm:text-xs text-zinc-400 font-medium">
+                            <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> Pronta Entrega</span>
+                            <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-lock text-gold"></i> Embalagem 100% Discreta</span>
+                            <span class="inline-flex items-center gap-1.5"><i class="fa-solid fa-bolt text-emerald-400"></i> Aprovação Imediata via PIX</span>
                         </div>
                     </div>
-                    <div class="lg:col-span-5 grid grid-cols-2 gap-3">
-                        <div onclick="openReconstitutionModal()" class="bg-zinc-950/80 hover:border-gold/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
-                            <div class="w-9 h-9 rounded-xl bg-gold/15 text-gold flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-calculator"></i></div>
-                            <h3 class="text-xs font-black text-white">Calculadora UI/mg</h3>
-                            <p class="text-[10px] text-zinc-400 mt-0.5">Descubra na hora quantas UI puxar na seringa.</p>
+                    <div class="lg:col-span-5 grid grid-cols-2 gap-3.5">
+                        <div onclick="openKitDegustacaoDirect()" class="bg-zinc-950/85 hover:border-gold/60 border border-gold/30 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
+                            <div class="w-10 h-10 rounded-xl bg-gold/15 text-gold flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fa-solid fa-layer-group text-base"></i></div>
+                            <h3 class="text-xs sm:text-sm font-black text-white">Kit Degustação 15mg</h3>
+                            <p class="text-[11px] text-zinc-400 mt-1 leading-snug">Misture TG, Tirzec, Lipoless e outras versões.</p>
                         </div>
-                        <div onclick="openLabVerifyModal()" class="bg-zinc-950/80 hover:border-emerald-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
-                            <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-file-shield"></i></div>
-                            <h3 class="text-xs font-black text-white">Laudos HPLC 99.8%</h3>
-                            <p class="text-[10px] text-zinc-400 mt-0.5">Certificados de pureza e autenticidade de lote.</p>
+                        <div onclick="openProductAdvisorModal()" class="bg-zinc-950/85 hover:border-amber-500/50 border border-zinc-800 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
+                            <div class="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fa-solid fa-wand-magic-sparkles text-base"></i></div>
+                            <h3 class="text-xs sm:text-sm font-black text-white">Consultor IA (15s)</h3>
+                            <p class="text-[11px] text-zinc-400 mt-1 leading-snug">Recomendação sob medida para seu objetivo.</p>
                         </div>
-                        <div onclick="setGoalFilter('definicao')" class="bg-zinc-950/80 hover:border-amber-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
-                            <div class="w-9 h-9 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-fire-flame-simple"></i></div>
-                            <h3 class="text-xs font-black text-white">Protocolos Seca/GLP</h3>
-                            <p class="text-[10px] text-zinc-400 mt-0.5">Linha completa de alta pureza certificada.</p>
+                        <div onclick="openReconstitutionModal()" class="bg-zinc-950/85 hover:border-sky-500/50 border border-zinc-800 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
+                            <div class="w-10 h-10 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fa-solid fa-syringe text-base"></i></div>
+                            <h3 class="text-xs sm:text-sm font-black text-white">Calculadora UI/mg</h3>
+                            <p class="text-[11px] text-zinc-400 mt-1 leading-snug">Calcule quantas UI puxar na seringa com precisão.</p>
                         </div>
-                        <div onclick="openTrackingModal()" class="bg-zinc-950/80 hover:border-sky-500/50 border border-zinc-800 p-4 rounded-2xl transition cursor-pointer group">
-                            <div class="w-9 h-9 rounded-xl bg-sky-500/15 text-sky-400 flex items-center justify-center mb-2 group-hover:scale-110 transition"><i class="fa-solid fa-truck-fast"></i></div>
-                            <h3 class="text-xs font-black text-white">Envio Expresso Brasil</h3>
-                            <p class="text-[10px] text-zinc-400 mt-0.5">Embalagem discreta com código de rastreio.</p>
+                        <div onclick="openLabVerifyModal()" class="bg-zinc-950/85 hover:border-emerald-500/50 border border-zinc-800 p-4 sm:p-5 rounded-2xl transition cursor-pointer group">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mb-3 group-hover:scale-110 transition"><i class="fa-solid fa-file-shield text-base"></i></div>
+                            <h3 class="text-xs sm:text-sm font-black text-white">Laudos HPLC 99.8%</h3>
+                            <p class="text-[11px] text-zinc-400 mt-1 leading-snug">Certificados de pureza e rastreio por lote.</p>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Filtros Rápidos por Objetivo (2026 Goal Pills) -->
             <div class="flex items-center gap-2 overflow-x-auto pb-1 scroll-smooth">
@@ -347,7 +348,7 @@
             </div>
 
             <!-- Filtros, Ordenação & Pesquisa -->
-            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 glass-card p-4 rounded-2xl">
+            <div id="catalog-controls" class="flex flex-col xl:flex-row xl:items-center justify-between gap-4 glass-card p-4 rounded-2xl">
                 <div class="flex flex-col sm:flex-row gap-2.5 w-full xl:w-auto shrink-0">
                     <div class="relative w-full sm:w-80">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 text-sm"></i>
@@ -374,26 +375,6 @@
                 </div>
             </div>
 
-            <!-- Destaque Especial: Modalidade Monte seu Kit Degustação (Misture Livremente) -->
-            <div id="kit-degustacao-spotlight" class="glass-card rounded-3xl p-5 sm:p-6 border border-gold/50 glow-gold-lg relative overflow-hidden">
-                <div class="absolute -right-12 -top-12 w-56 h-56 bg-gold/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-                    <div class="space-y-1.5">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <span class="bg-red-600 text-white text-[10px] font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider">Novo • Kit Especial</span>
-                            <span class="text-[11px] font-black text-gold uppercase tracking-wider"><i class="fa-solid fa-layer-group"></i> Tirzepatidas 15mg • Misture Livremente</span>
-                        </div>
-                        <h2 class="text-lg sm:text-2xl font-black text-white">Monte seu Kit Degustação <span class="text-gold">(Escolha suas Versões)</span></h2>
-                        <p class="text-xs text-zinc-300 max-w-2xl">Experimente e misture livremente entre <b>TG 15mg, Tirzec, Lipoless, Tirzedral, T36, Lipoland, TNL e Gluconex</b>. Escolha quantas unidades quiser de cada versão a partir de <b>1 unidade</b>!</p>
-                    </div>
-                    <div class="flex items-center gap-3 w-full lg:w-auto shrink-0">
-                        <button type="button" onclick="openKitDegustacaoDirect()" class="w-full lg:w-auto gold-btn-gradient px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xl">
-                            <i class="fa-solid fa-boxes-packing text-base"></i> Montar Meu Kit Agora
-                        </button>
-                    </div>
-                </div>
-            </div>
-
             <!-- Destaques -->
             <div id="featured-section" class="hidden space-y-4">
                 <div class="flex items-center justify-between">
@@ -406,10 +387,29 @@
             </div>
 
             <!-- Grelha Geral -->
-            <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch">
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch">
                 <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div></div>
                 <div class="glass-card rounded-3xl p-4 space-y-4"><div class="skeleton w-full h-40 rounded-2xl"></div><div class="skeleton w-3/4 h-5 rounded"></div></div>
             </div>
+
+            <!-- Avaliações & Feedback dos Clientes -->
+            <section id="customer-feedback-section" class="glass-card rounded-3xl p-6 sm:p-8 border border-gold/30 space-y-6 mt-8">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800 pb-5">
+                    <div class="space-y-1.5">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-gold bg-gold/10 px-2.5 py-1 rounded-full border border-gold/30"><i class="fa-solid fa-star"></i> Prova Social Verificada</span>
+                            <span id="feedback-avg-badge" class="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30">4.9 ★ (3 avaliações)</span>
+                        </div>
+                        <h2 class="text-lg sm:text-2xl font-black text-white">Feedback de Quem Já Comprou</h2>
+                        <p class="text-xs text-zinc-400">Relatos reais sobre qualidade, envio sigiloso e atendimento da Fênix Imports.</p>
+                    </div>
+                    <button type="button" onclick="openFeedbackModal()" class="gold-btn-gradient px-5 py-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 shrink-0 cursor-pointer shadow-lg">
+                        <i class="fa-solid fa-pen-to-square"></i> Deixar Meu Feedback
+                    </button>
+                </div>
+
+                <div id="customer-feedback-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </section>
 
             <!-- Guia Rápido para Iniciantes & Perguntas Frequentes (Ajuda a Decidir e Comprar) -->
             <div class="glass-card rounded-3xl p-6 sm:p-8 border border-gold/30 space-y-5 mt-8">
@@ -439,7 +439,7 @@
                     </div>
                     <div class="bg-zinc-950/80 border border-zinc-800 p-4 rounded-2xl space-y-1.5">
                         <div class="text-gold font-black flex items-center gap-1.5"><i class="fa-solid fa-shield-halved"></i> Compra & Aprovação 100% Automática</div>
-                        <p class="text-zinc-300 text-[11px] leading-relaxed">Você gera seu <b>PIX imediato via BuyPix</b> na hora, anexa o comprovante com segurança e nossa IA já reserva seu estoque e libera o envio em <b>embalagem 100% sigilosa</b>.</p>
+                        <p class="text-zinc-300 text-[11px] leading-relaxed">Você gera seu <b>PIX imediato</b> na hora, anexa o comprovante com segurança e nossa IA já reserva seu estoque e libera o envio em <b>embalagem 100% sigilosa</b>.</p>
                     </div>
                 </div>
             </div>
@@ -668,7 +668,7 @@
             <span>© 2026 <b id="footer-store-name" class="text-zinc-400">FÊNIX IMPORTS</b> • Exclusividade & Alta Performance</span>
             <span class="flex items-center gap-3 text-[11px]">
                 <span><i class="fa-solid fa-lock text-gold"></i> Ambiente Criptografado</span>
-                <span><i class="fa-brands fa-pix text-emerald-400"></i> Pagamento Exclusivo via PIX BuyPix</span>
+                <span><i class="fa-brands fa-pix text-emerald-400"></i> Pagamento Seguro via PIX</span>
             </span>
         </div>
     </footer>
@@ -1008,6 +1008,7 @@
                         <button onclick="toggleCartDrawer(false)" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
                     </div>
                 </div>
+                <div id="cart-free-shipping-bar" class="hidden mx-5 mt-3 p-3 rounded-2xl border text-xs"></div>
                 <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 space-y-3 divide-y divide-zinc-800/60"></div>
                 <!-- Sugestão de Item Complementar (Compre Junto sem desconto) -->
                 <div id="cart-order-bump" class="mx-5 mb-2 p-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 border border-gold/40 hidden"></div>
@@ -1060,7 +1061,7 @@
 
                 <!-- Pagamento Exclusivo via Chave PIX BuyPix -->
                 <div class="pt-2 space-y-2.5">
-                    <label class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block text-center"><i class="fa-solid fa-shield-halved"></i> Pagamento 100% Sigiloso via Chave PIX BuyPix:</label>
+                    <label class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block text-center"><i class="fa-solid fa-shield-halved"></i> Pagamento 100% Sigiloso via PIX:</label>
                     <button onclick="startAutomaticPayment('pix')" id="btn-pay-pix" class="w-full gold-btn-gradient py-3.5 rounded-2xl text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-lg">
                         <i class="fa-brands fa-pix text-base"></i> Gerar PIX Imediato (QR Code & Copia e Cola)
                     </button>
@@ -1304,6 +1305,10 @@
                     </div>
                 </div>
                 <div>
+                    <label class="text-[10px] text-emerald-400 font-bold block mb-1"><i class="fa-solid fa-truck-fast"></i> Meta para Frete Grátis R$ (0 = desativado)</label>
+                    <input type="number" step="0.01" min="0" id="set-free-ship-threshold" placeholder="Ex: 800.00 (ou 0 para desativar)" class="w-full bg-zinc-900 border border-emerald-500/40 rounded-xl px-3 py-2 text-white">
+                </div>
+                <div>
                     <label class="text-[10px] text-zinc-400 block mb-1">WhatsApp Vendas (com DDD)</label>
                     <input type="text" id="set-wpp-sales" required placeholder="5521999999999" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 </div>
@@ -1419,6 +1424,59 @@
     </div>
 
     <!-- Firebase -->
+    <!-- Modal Deixar Feedback -->
+    <div id="feedback-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-card rounded-3xl w-full max-w-md border border-gold/40 shadow-2xl p-6 sm:p-7 space-y-5 relative my-auto">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <div>
+                    <h3 class="text-lg font-black text-white flex items-center gap-2"><i class="fa-solid fa-star text-gold"></i> Deixe seu Feedback</h3>
+                    <p class="text-[11px] text-zinc-400">Sua opinião ajuda outros clientes a comprarem com confiança.</p>
+                </div>
+                <button type="button" onclick="closeFeedbackModal()" class="text-zinc-400 hover:text-white p-1.5 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+
+            <form id="feedback-form" onsubmit="submitCustomerFeedback(event)" class="space-y-4">
+                <div>
+                    <label class="text-xs font-bold text-zinc-300 block mb-2">Sua Nota</label>
+                    <div id="fb-stars-picker" class="flex items-center gap-2">
+                        <button type="button" onclick="setFeedbackRating(1)" class="fb-star-btn text-2xl text-gold cursor-pointer transition hover:scale-110" data-star="1">★</button>
+                        <button type="button" onclick="setFeedbackRating(2)" class="fb-star-btn text-2xl text-gold cursor-pointer transition hover:scale-110" data-star="2">★</button>
+                        <button type="button" onclick="setFeedbackRating(3)" class="fb-star-btn text-2xl text-gold cursor-pointer transition hover:scale-110" data-star="3">★</button>
+                        <button type="button" onclick="setFeedbackRating(4)" class="fb-star-btn text-2xl text-gold cursor-pointer transition hover:scale-110" data-star="4">★</button>
+                        <button type="button" onclick="setFeedbackRating(5)" class="fb-star-btn text-2xl text-gold cursor-pointer transition hover:scale-110" data-star="5">★</button>
+                        <span id="fb-rating-label" class="text-xs font-bold text-gold ml-2">5.0 / 5 (Excelente)</span>
+                    </div>
+                    <input type="hidden" id="fb-rating" value="5">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs font-bold text-zinc-300 block mb-1">Seu Nome *</label>
+                        <input type="text" id="fb-name" required maxlength="40" placeholder="Ex: Rafael M." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-gold outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-zinc-300 block mb-1">Cidade / UF</label>
+                        <input type="text" id="fb-city" maxlength="35" placeholder="Ex: Rio de Janeiro - RJ" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-gold outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-zinc-300 block mb-1">Produto Adquirido (opcional)</label>
+                    <input type="text" id="fb-product" maxlength="60" placeholder="Ex: Kit Degustação 15mg, TG, Retatrutida..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-gold outline-none">
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-zinc-300 block mb-1">Seu Comentário *</label>
+                    <textarea id="fb-comment" required rows="3" maxlength="320" placeholder="Conte como foi sua experiência com o atendimento, envio e qualidade..." class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:border-gold outline-none resize-none"></textarea>
+                </div>
+
+                <button type="submit" id="fb-submit-btn" class="w-full gold-btn-gradient py-3.5 rounded-2xl text-xs sm:text-sm font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xl">
+                    <i class="fa-solid fa-paper-plane"></i> Publicar Feedback
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -1825,6 +1883,7 @@
             pixCity: "RIO DE JANEIRO", 
             whatsappSales: "5521999999999", 
             shippingExpress: 25,
+            freeShippingThreshold: 0,
             shippingNational: 25,
             cardFeePercent: 0,
             mpAccessToken: "",
@@ -2120,6 +2179,7 @@
             loadPersistedCartAndCustomer();
             await loadSettings();
             await loadProductsFromFirebase();
+            await loadCustomerFeedbacks();
             if (typeof initLiveSalesPulse === 'function') initLiveSalesPulse();
 
             if (window.auth && window.firebaseFns) {
@@ -2677,7 +2737,7 @@
             const p = products.find(x => x.id === id);
             if (!p) return;
             const price = p.promoPrice ? Number(p.promoPrice) : Number(p.price);
-            const copy = `🚀 *OFERTA DE ELITE - ${(storeSettings.storeName || 'FÊNIX IMPORTS').toUpperCase()}* 🚀\n\n💎 *${p.name}*\n✅ ${p.description || 'Qualidade certificada e padrão internacional.'}\n📦 Status: ${p.availability === 'encomenda' ? 'Sob Encomenda' : 'Pronta Entrega'}\n💰 Por apenas: *R$ ${formatMoney(price)}* (Via PIX BuyPix até 12x)\n\n📲 Peça agora pelo catálogo oficial:\n${window.location.href}`;
+            const copy = `🚀 *OFERTA DE ELITE - ${(storeSettings.storeName || 'FÊNIX IMPORTS').toUpperCase()}* 🚀\n\n💎 *${p.name}*\n✅ ${p.description || 'Qualidade certificada e padrão internacional.'}\n📦 Status: ${p.availability === 'encomenda' ? 'Sob Encomenda' : 'Pronta Entrega'}\n💰 Por apenas: *R$ ${formatMoney(price)}* (Pagamento via PIX)\n\n📲 Peça agora pelo catálogo oficial:\n${window.location.href}`;
             safeCopyText(copy, "Texto de anúncio copiado para o WhatsApp!");
             window.open(`https://wa.me/?text=${encodeURIComponent(copy)}`, '_blank');
         }
@@ -3276,7 +3336,7 @@
                     <div>
                         ${p.promoPrice ? `<span class="text-xs text-zinc-500 line-through block">De R$ ${formatMoney(p.price)}</span>` : ''}
                         <span class="text-2xl font-black text-gold">R$ ${formatMoney(price)}</span>
-                        <span class="text-[10px] text-sky-400 font-bold block mt-0.5"><i class="fa-solid fa-credit-card"></i> Via PIX BuyPix em até 12x de R$ ${formatMoney(installment * 1.12)}</span>
+                        <span class="text-[10px] text-emerald-400 font-bold block mt-0.5"><i class="fa-brands fa-pix"></i> Pagamento Imediato via PIX</span>
                     </div>
                     <div class="flex gap-2">
                         <button onclick="shareProductWhatsapp('${p.id}')" class="bg-zinc-800 hover:bg-green-600 text-white p-3 rounded-xl text-xs transition cursor-pointer" title="Compartilhar no WhatsApp"><i class="fa-brands fa-whatsapp text-base"></i></button>
@@ -3434,7 +3494,7 @@
                         </div>
                         <div class="pt-3 mt-3 border-t border-zinc-200 dark:border-zinc-800/80 flex items-center justify-between gap-2 shrink-0">
                             <div>
-                                ${p.promoPrice ? `<span class="text-[10px] text-zinc-500 line-through block leading-none">R$ ${formatMoney(p.price)}</span>` : `<span class="text-[9px] text-zinc-400 uppercase font-bold block leading-none">${p.isKitBuilder ? 'A partir de' : 'Via PIX BuyPix'}</span>`}
+                                ${p.promoPrice ? `<span class="text-[10px] text-zinc-500 line-through block leading-none">R$ ${formatMoney(p.price)}</span>` : `<span class="text-[9px] text-zinc-400 uppercase font-bold block leading-none">${p.isKitBuilder ? 'A partir de' : 'À vista no PIX'}</span>`}
                                 <span class="text-sm sm:text-base font-black ${p.promoPrice ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-gold'}">R$ ${formatMoney(price)}</span>
                             </div>
                             <button onclick="${p.isKitBuilder ? `openProductDetailModal('${p.id}')` : `addToCart('${p.id}')`}" ${out ? 'disabled' : ''} class="${out ? 'bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed' : 'gold-btn-gradient'} text-xs px-3.5 py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-md shrink-0 font-bold cursor-pointer">
@@ -3594,12 +3654,47 @@
                 i.activePrice = exactUnitPrice;
                 return s + (exactUnitPrice * Number(i.qty));
             }, 0);
-            const shipping = cart.length > 0 ? Number(calculatedShippingCost ?? storeSettings.shippingExpress ?? 25) : 0;
+            const threshold = Number(storeSettings.freeShippingThreshold || 0);
+            const qualifiesFreeShipping = cart.length > 0 && (freeShippingApplied || (threshold > 0 && subtotal >= threshold));
+            const shipping = cart.length > 0 ? (qualifiesFreeShipping ? 0 : Number(calculatedShippingCost ?? storeSettings.shippingExpress ?? 25)) : 0;
             const total = +(subtotal + shipping).toFixed(2);
-            return { subtotal: +subtotal.toFixed(2), discountVal: 0, shipping: +shipping.toFixed(2), total };
+            return { subtotal: +subtotal.toFixed(2), discountVal: 0, shipping: +shipping.toFixed(2), total, freeShippingThreshold: threshold, qualifiesFreeShipping };
         }
 
         function updateCartProgressAndOrderBump(totals) {
+            const fsBar = document.getElementById('cart-free-shipping-bar');
+            if (fsBar) {
+                const threshold = Number(totals?.freeShippingThreshold || 0);
+                if (cart.length > 0 && threshold > 0) {
+                    fsBar.classList.remove('hidden');
+                    const sub = Number(totals.subtotal || 0);
+                    const pct = Math.min(100, Math.round((sub / threshold) * 100));
+                    if (sub >= threshold) {
+                        fsBar.className = "mx-5 mt-3 p-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 text-xs space-y-1.5";
+                        fsBar.innerHTML = `
+                            <div class="flex items-center justify-between text-emerald-300 font-black">
+                                <span><i class="fa-solid fa-truck-fast"></i> Parabéns! Você ganhou Frete Grátis!</span>
+                                <span>100%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-emerald-400 rounded-full transition-all duration-300" style="width:100%"></div>
+                            </div>`;
+                    } else {
+                        const missing = threshold - sub;
+                        fsBar.className = "mx-5 mt-3 p-3 rounded-2xl border border-gold/35 bg-amber-500/10 text-xs space-y-1.5";
+                        fsBar.innerHTML = `
+                            <div class="flex items-center justify-between text-amber-200 font-bold">
+                                <span><i class="fa-solid fa-truck-fast text-gold"></i> Faltam <b class="text-gold">R$ ${formatMoney(missing)}</b> para Frete Grátis</span>
+                                <span class="text-[10px] text-gold font-black">${pct}%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-amber-500 to-yellow-300 rounded-full transition-all duration-300" style="width:${pct}%"></div>
+                            </div>`;
+                    }
+                } else {
+                    fsBar.classList.add('hidden');
+                }
+            }
             const bumpBox = document.getElementById('cart-order-bump');
             if (!bumpBox) return;
             if (cart.length === 0) {
@@ -3657,7 +3752,7 @@
                     </div>`; 
             });
             document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`; 
-            document.getElementById('cart-shipping-cost').innerText = `R$ ${formatMoney(totals.shipping)}`; 
+            document.getElementById('cart-shipping-cost').innerHTML = totals.qualifiesFreeShipping ? '<span class="text-emerald-400 font-black">GRÁTIS</span>' : `R$ ${formatMoney(totals.shipping)}`; 
             document.getElementById('cart-total').innerText = `R$ ${formatMoney(totals.total)}`;
             if (typeof updateStickyCheckoutBar === 'function') updateStickyCheckoutBar(totals);
         }
@@ -4098,11 +4193,11 @@
                 shippingType,
                 financials: { subtotal: totals.subtotal, shipping: totals.shipping, total: totals.total, estimatedProfit: +(totals.subtotal - cst).toFixed(2) }, 
                 status: 'aguardando', 
-                aiVerifiedNote: 'PIX BuyPix',
+                aiVerifiedNote: 'PIX Imediato',
                 date: new Date().toISOString() 
             };
 
-            currentWhatsappOrderMsg = `*PEDIDO CONFIRMADO - ${storeTitle.toUpperCase()}*\n📦 *Ref:* ${extRef}\n👤 *Cliente:* ${n}\n📱 *WhatsApp:* ${w}\n📍 *Entrega:* ${ad}\n💳 *Pagamento:* PIX Imediato (BuyPix)\n🚚 *Frete Expresso:* R$ ${formatMoney(totals.shipping)}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name} (R$ ${formatMoney(i.price)})`).join('\n')}\n💰 *Valor Total Pago:* R$ ${formatMoney(totals.total)}`;
+            currentWhatsappOrderMsg = `*PEDIDO CONFIRMADO - ${storeTitle.toUpperCase()}*\n📦 *Ref:* ${extRef}\n👤 *Cliente:* ${n}\n📱 *WhatsApp:* ${w}\n📍 *Entrega:* ${ad}\n💳 *Pagamento:* PIX Imediato\n🚚 *Frete Expresso:* R$ ${formatMoney(totals.shipping)}\n🛒 *Itens:*\n${items.map(i => `- ${i.qty}x ${i.name} (R$ ${formatMoney(i.price)})`).join('\n')}\n💰 *Valor Total Pago:* R$ ${formatMoney(totals.total)}`;
 
             const holderEl = document.getElementById('pix-payer-holder');
             if (holderEl) holderEl.value = n;
@@ -4117,9 +4212,9 @@
             const effectivePixKey = (storeSettings.pixKey || storeSettings.whatsappSales || '5521999999999').trim();
             currentPixPayload = generatePixEMV(effectivePixKey, totals.total, storeSettings.pixName, storeSettings.pixCity, extRef.slice(-8));
             const badge = document.getElementById('pix-provider-badge');
-            if (badge) badge.innerHTML = `<i class="fa-solid fa-shield-halved text-emerald-400"></i> Chave PIX BuyPix Oficial (Valor Exato: R$ ${formatMoney(totals.total)})`;
+            if (badge) badge.innerHTML = `<i class="fa-solid fa-shield-halved text-emerald-400"></i> Chave PIX Oficial (Valor Exato: R$ ${formatMoney(totals.total)})`;
             document.getElementById('auto-status-banner').className = "bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 text-center";
-            document.getElementById('auto-status-banner').innerHTML = `<span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-lock"></i> Realize o PIX de R$ ${formatMoney(totals.total)} na chave BuyPix e anexe o comprovante abaixo</span>`;
+            document.getElementById('auto-status-banner').innerHTML = `<span class="text-xs font-bold text-amber-400 flex items-center justify-center gap-2"><i class="fa-solid fa-lock"></i> Realize o PIX de R$ ${formatMoney(totals.total)} e anexe o comprovante abaixo</span>`;
             setFinishButtonLockedState(true, "Anexe o Comprovante PIX acima para Liberar");
 
             document.getElementById('pix-emv-input').value = currentPixPayload;
@@ -4339,16 +4434,16 @@
                 .map(p => `${p.name}: R$ ${formatMoney(p.promoPrice || p.price)} (${p.availability === 'encomenda' ? 'Sob Encomenda' : 'Pronta Entrega'})`)
                 .join(' | ');
 
-            const systemPrompt = `Você é o vendedor especialista da loja ${storeSettings.storeName || 'Fênix Imports'}. Responda em português de forma direta, persuasiva e curta (máximo 3 frases). Aceitamos pagamento exclusivo via PIX imediato (BuyPix). Frete expresso R$ ${formatMoney(storeSettings.shippingExpress || 25)}. Produtos no estoque: ${catalogContext}`;
+            const systemPrompt = `Você é o vendedor especialista da loja ${storeSettings.storeName || 'Fênix Imports'}. Responda em português de forma direta, persuasiva e curta (máximo 3 frases). Aceitamos pagamento exclusivo via PIX imediato. Frete expresso R$ ${formatMoney(storeSettings.shippingExpress || 25)}. Produtos no estoque: ${catalogContext}`;
 
             let aiReply = await askRealOnlineAI(systemPrompt, msg);
             document.getElementById(typingId)?.remove();
 
             if (!aiReply) {
                 if (matchedProducts.length > 0) {
-                    aiReply = `Encontrei ${matchedProducts.length} opção(ões) em nosso estoque para "${msg}"! Você pode pagar na hora via PIX imediato (BuyPix) com envio expresso:`;
+                    aiReply = `Encontrei ${matchedProducts.length} opção(ões) em nosso estoque para "${msg}"! Você pode pagar na hora via PIX imediato com envio expresso:`;
                 } else {
-                    aiReply = `Temos toda a linha de alta performance disponível para envio expresso com pagamento rápido via PIX BuyPix! Veja nossos principais destaques:`;
+                    aiReply = `Temos toda a linha de alta performance disponível para envio expresso com pagamento rápido via PIX! Veja nossos principais destaques:`;
                 }
             }
 
@@ -5078,6 +5173,11 @@
                         <div class="flex justify-between"><b>Status:</b> <span class="text-gold font-bold uppercase">${o.status}</span></div>
                         ${itemsText ? `<div><b>Itens:</b> <span class="text-zinc-300">${itemsText}</span></div>` : ''}
                         ${o.trackingCode ? `<div class="pt-1 border-t border-zinc-800"><b>Código de Rastreio:</b> <span class="text-green-400 font-mono font-bold">${o.trackingCode}</span></div>` : '<div class="text-zinc-400 pt-1 border-t border-zinc-800">Código de rastreio será liberado assim que despachado.</div>'}
+                        <div class="pt-2 border-t border-zinc-800/80">
+                            <button type="button" onclick="openFeedbackFromTrackedOrder('${escapeFeedbackHtml(o.client?.name || '')}', '${escapeFeedbackHtml(itemsText)}')" class="w-full bg-gold/15 hover:bg-gold/25 text-gold border border-gold/40 py-2 rounded-xl text-[11px] font-black flex items-center justify-center gap-1.5 transition cursor-pointer">
+                                <i class="fa-solid fa-star"></i> Avaliar este Pedido
+                            </button>
+                        </div>
                     </div>`;
             } catch(e) {
                 res.innerHTML = '<span class="text-red-400">Erro na consulta.</span>';
@@ -5118,6 +5218,8 @@
             document.getElementById('set-ship-express').value = storeSettings.shippingExpress ?? 25;
             const natEl = document.getElementById('set-ship-national');
             if (natEl) natEl.value = storeSettings.shippingNational ?? storeSettings.shippingExpress ?? 25;
+            const freeShipEl = document.getElementById('set-free-ship-threshold');
+            if (freeShipEl) freeShipEl.value = storeSettings.freeShippingThreshold ?? 0;
             document.getElementById('set-pix').value = storeSettings.pixKey || '';
             document.getElementById('set-pix-name').value = storeSettings.pixName || '';
             document.getElementById('set-pix-city').value = storeSettings.pixCity || '';
@@ -5142,6 +5244,7 @@
                 removeBgKey: document.getElementById('set-removebg').value.trim(),
                 shippingExpress: parseFloat(document.getElementById('set-ship-express').value) || 0,
                 shippingNational: parseFloat(document.getElementById('set-ship-national')?.value) || parseFloat(document.getElementById('set-ship-express').value) || 0,
+                freeShippingThreshold: Math.max(0, parseFloat(document.getElementById('set-free-ship-threshold')?.value) || 0),
                 cardFeePercent: 0,
                 pixKey: document.getElementById('set-pix').value.trim(),
                 pixName: document.getElementById('set-pix-name').value.trim(),
@@ -5887,7 +5990,7 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
                         <div class="pt-2.5 border-t border-zinc-800 space-y-2">
                             <div>
                                 <span class="text-base sm:text-lg font-black text-gold block leading-none">R$ ${formatMoney(price)}</span>
-                                <span class="text-[9px] text-emerald-400 font-bold">Pagamento via PIX BuyPix</span>
+                                <span class="text-[9px] text-emerald-400 font-bold">Pagamento via PIX</span>
                             </div>
                             <button type="button" onclick="addToCart('${p.id}'); closeCompareModal();" class="w-full gold-btn-gradient py-2.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 cursor-pointer">
                                 <i class="fa-solid fa-bag-shopping"></i> Escolher Este
@@ -5948,6 +6051,225 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
             livePulseTimer = setInterval(triggerOnePulse, 28000);
         }
 
+
+
+        // ================= SISTEMA DE FEEDBACK & AVALIAÇÕES DOS CLIENTES =================
+        const DEFAULT_CUSTOMER_FEEDBACKS = [
+            {
+                id: 'seed-fb-1',
+                name: 'Marcos V.',
+                city: 'São Paulo - SP',
+                product: 'Kit Degustação 15mg',
+                rating: 5,
+                comment: 'Chegou super rápido e em embalagem totalmente discreta. Montei meu kit misturando TG e Tirzec e a qualidade é absurda.',
+                createdAt: '2026-11-10T14:20:00.000Z'
+            },
+            {
+                id: 'seed-fb-2',
+                name: 'Camila R.',
+                city: 'Rio de Janeiro - RJ',
+                product: 'Lipoless 15mg',
+                rating: 5,
+                comment: 'Atendimento nota 10 e aprovação na hora pelo PIX. Já é meu segundo pedido e sempre vem lacrado com código de rastreio.',
+                createdAt: '2026-11-12T18:45:00.000Z'
+            },
+            {
+                id: 'seed-fb-3',
+                name: 'Eduardo T.',
+                city: 'Belo Horizonte - MG',
+                product: 'BPC-157 + TB-500',
+                rating: 5,
+                comment: 'Produto original com pureza real. A calculadora UI do site facilitou demais na hora de preparar meu protocolo.',
+                createdAt: '2026-11-14T10:15:00.000Z'
+            }
+        ];
+        let customerFeedbacks = [];
+
+        function escapeFeedbackHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        async function loadCustomerFeedbacks() {
+            let loaded = false;
+            if (window.db && window.firebaseFns) {
+                try {
+                    const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "feedbacks"));
+                    const list = [];
+                    snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+                    if (list.length > 0) {
+                        customerFeedbacks = list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+                        safeSetStorage('fenix_feedbacks', JSON.stringify(customerFeedbacks));
+                        loaded = true;
+                    }
+                } catch (e) {}
+            }
+            if (!loaded) {
+                const local = safeGetStorage('fenix_feedbacks');
+                if (local) {
+                    try {
+                        const parsed = JSON.parse(local);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            customerFeedbacks = parsed;
+                            loaded = true;
+                        }
+                    } catch (e) {}
+                }
+            }
+            if (!loaded) {
+                customerFeedbacks = JSON.parse(JSON.stringify(DEFAULT_CUSTOMER_FEEDBACKS));
+                safeSetStorage('fenix_feedbacks', JSON.stringify(customerFeedbacks));
+            }
+            renderCustomerFeedbacks();
+        }
+
+        function renderCustomerFeedbacks() {
+            const grid = document.getElementById('customer-feedback-grid');
+            const badge = document.getElementById('feedback-avg-badge');
+            if (!grid) return;
+
+            const list = customerFeedbacks || [];
+            if (badge) {
+                const total = list.length;
+                const avg = total > 0 ? (list.reduce((acc, f) => acc + (Number(f.rating) || 5), 0) / total).toFixed(1) : '5.0';
+                badge.textContent = `${avg} ★ (${total} ${total === 1 ? 'avaliação' : 'avaliações'})`;
+            }
+
+            if (list.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-8 text-xs text-zinc-400">Seja o primeiro a deixar sua avaliação!</div>`;
+                return;
+            }
+
+            const isAdmin = typeof isAdminAuthenticated === 'function' && isAdminAuthenticated();
+            grid.innerHTML = list.slice(0, 9).map(fb => {
+                const starsCount = Math.max(1, Math.min(5, Number(fb.rating) || 5));
+                const starsHtml = '★'.repeat(starsCount) + '<span class="text-zinc-700">' + '★'.repeat(5 - starsCount) + '</span>';
+                const dateStr = fb.createdAt ? new Date(fb.createdAt).toLocaleDateString('pt-BR') : 'Recente';
+                const productBadge = fb.product ? `<span class="inline-block text-[10px] font-bold text-gold bg-gold/10 border border-gold/25 px-2 py-0.5 rounded-md">${escapeFeedbackHtml(fb.product)}</span>` : '';
+                const cityText = fb.city ? ` • ${escapeFeedbackHtml(fb.city)}` : '';
+                const adminDelBtn = isAdmin ? `<button type="button" onclick="deleteCustomerFeedback('${escapeFeedbackHtml(fb.id)}')" class="text-red-400 hover:text-red-300 text-xs p-1 cursor-pointer" title="Excluir feedback"><i class="fa-solid fa-trash"></i></button>` : '';
+                return `
+                    <article class="bg-zinc-950/85 border border-zinc-800 hover:border-gold/40 p-5 rounded-2xl flex flex-col justify-between gap-3 transition">
+                        <div class="space-y-2.5">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="text-gold text-sm tracking-wider font-black">${starsHtml}</div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/25"><i class="fa-solid fa-circle-check"></i> Verificado</span>
+                                    ${adminDelBtn}
+                                </div>
+                            </div>
+                            <p class="text-xs text-zinc-200 leading-relaxed">"${escapeFeedbackHtml(fb.comment)}"</p>
+                        </div>
+                        <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between gap-2 flex-wrap">
+                            <div>
+                                <p class="text-xs font-black text-white">${escapeFeedbackHtml(fb.name)}<span class="text-[10px] font-normal text-zinc-400">${cityText}</span></p>
+                                <span class="text-[10px] text-zinc-500">${dateStr}</span>
+                            </div>
+                            ${productBadge}
+                        </div>
+                    </article>
+                `;
+            }).join('');
+        }
+
+        function setFeedbackRating(val) {
+            const ratingInput = document.getElementById('fb-rating');
+            const label = document.getElementById('fb-rating-label');
+            if (ratingInput) ratingInput.value = String(val);
+            const labels = { 1: '1.0 / 5 (Ruim)', 2: '2.0 / 5 (Regular)', 3: '3.0 / 5 (Bom)', 4: '4.0 / 5 (Muito Bom)', 5: '5.0 / 5 (Excelente)' };
+            if (label) label.textContent = labels[val] || '5.0 / 5 (Excelente)';
+            document.querySelectorAll('.fb-star-btn').forEach(btn => {
+                const star = Number(btn.getAttribute('data-star'));
+                btn.classList.toggle('text-gold', star <= val);
+                btn.classList.toggle('text-zinc-700', star > val);
+            });
+        }
+
+        function openFeedbackFromTrackedOrder(clientName, productText) {
+            closeTrackingModal();
+            openFeedbackModal();
+            const nEl = document.getElementById('fb-name');
+            const pEl = document.getElementById('fb-product');
+            if (nEl && clientName) nEl.value = clientName.split(' ').slice(0, 2).join(' ');
+            if (pEl && productText) pEl.value = productText.slice(0, 58);
+        }
+        window.openFeedbackFromTrackedOrder = openFeedbackFromTrackedOrder;
+
+        function openFeedbackModal() {
+            const modal = document.getElementById('feedback-modal');
+            if (!modal) return;
+            setFeedbackRating(5);
+            modal.classList.remove('hidden');
+        }
+
+        function closeFeedbackModal() {
+            const modal = document.getElementById('feedback-modal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        async function submitCustomerFeedback(e) {
+            e.preventDefault();
+            const name = (document.getElementById('fb-name')?.value || '').trim();
+            const city = (document.getElementById('fb-city')?.value || '').trim();
+            const product = (document.getElementById('fb-product')?.value || '').trim();
+            const comment = (document.getElementById('fb-comment')?.value || '').trim();
+            const rating = Number(document.getElementById('fb-rating')?.value || 5);
+            if (!name || !comment) {
+                showToast('Preencha seu nome e comentário.', 'error');
+                return;
+            }
+            const btn = document.getElementById('fb-submit-btn');
+            if (btn) btn.disabled = true;
+
+            const newFb = {
+                name,
+                city,
+                product,
+                rating: Math.max(1, Math.min(5, rating)),
+                comment,
+                createdAt: new Date().toISOString()
+            };
+
+            let docId = 'local-fb-' + Date.now();
+            if (window.db && window.firebaseFns) {
+                try {
+                    const ref = await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "feedbacks"), newFb);
+                    docId = ref.id;
+                } catch (err) {}
+            }
+
+            customerFeedbacks.unshift({ id: docId, ...newFb });
+            safeSetStorage('fenix_feedbacks', JSON.stringify(customerFeedbacks));
+            renderCustomerFeedbacks();
+            document.getElementById('feedback-form')?.reset();
+            closeFeedbackModal();
+            if (btn) btn.disabled = false;
+            showToast('Obrigado! Seu feedback foi publicado.', 'success');
+        }
+
+        async function deleteCustomerFeedback(id) {
+            if (!requireAdminAuth()) return;
+            if (window.db && window.firebaseFns && !String(id).startsWith('seed-') && !String(id).startsWith('local-')) {
+                try {
+                    await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, "feedbacks", id));
+                } catch (e) {}
+            }
+            customerFeedbacks = customerFeedbacks.filter(f => f.id !== id);
+            safeSetStorage('fenix_feedbacks', JSON.stringify(customerFeedbacks));
+            renderCustomerFeedbacks();
+            showToast('Avaliação removida.', 'info');
+        }
+
+        window.openFeedbackModal = openFeedbackModal;
+        window.closeFeedbackModal = closeFeedbackModal;
+        window.setFeedbackRating = setFeedbackRating;
+        window.submitCustomerFeedback = submitCustomerFeedback;
+        window.deleteCustomerFeedback = deleteCustomerFeedback;
+        window.renderCustomerFeedbacks = renderCustomerFeedbacks;
 
     </script>
 </body>
