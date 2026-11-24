@@ -6,19 +6,16 @@
     <title id="page-title">Fênix Imports | Exclusividade & Alta Performance</title>
     
     <meta name="theme-color" content="#d4a017">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fênix Imports">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
     <script>
-        // Limpa automaticamente qualquer Service Worker antigo (sw.js) ou cache travado no navegador
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                for (let registration of registrations) {
-                    registration.unregister();
-                }
-            }).catch(function() {});
-        }
-        if ('caches' in window) {
-            caches.keys().then(function(names) {
-                for (let name of names) caches.delete(name);
-            }).catch(function() {});
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js').catch(function() {});
+            });
         }
     </script>
 
@@ -181,6 +178,28 @@
 
         .skeleton { animation: pulse-skeleton 1.5s infinite; background-color: #181824; }
         @keyframes pulse-skeleton { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @media print {
+            body * { visibility: hidden !important; }
+            #shipping-label-modal, #shipping-label-modal * { visibility: visible !important; }
+            #shipping-label-modal {
+                position: fixed !important;
+                inset: 0 !important;
+                background: #ffffff !important;
+                padding: 0 !important;
+                display: flex !important;
+                align-items: flex-start !important;
+                justify-content: center !important;
+            }
+            #shipping-label-modal .no-print { display: none !important; }
+            #shipping-label-body {
+                border: 2px solid #000000 !important;
+                width: 100% !important;
+                max-width: 105mm !important;
+                margin: 8mm auto !important;
+                color: #000000 !important;
+                background: #ffffff !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-gold selection:text-black relative">
@@ -281,6 +300,30 @@
                     </button>
                     <button type="button" onclick="openTrackingModal()" class="flex-1 sm:flex-initial bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 px-3 py-2 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 cursor-pointer">
                         <i class="fa-solid fa-route text-gold"></i> Rastrear
+                    </button>
+                </div>
+            </div>
+            <!-- Banner Cupom Relâmpago por Horas -->
+            <div id="flash-coupon-banner" class="hidden glass-card border border-amber-500/50 bg-gradient-to-r from-amber-500/15 via-zinc-900/90 to-zinc-900/90 rounded-2xl p-3.5 sm:px-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-gold shrink-0">
+                        <i class="fa-solid fa-hourglass-half animate-pulse"></i>
+                    </div>
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-xs font-black text-white uppercase tracking-wide">Desconto Relâmpago</span>
+                            <span id="flash-banner-badge" class="bg-gold text-black text-[10px] font-black px-2 py-0.5 rounded-md uppercase"></span>
+                        </div>
+                        <p id="flash-banner-text" class="text-[11px] text-zinc-300 mt-0.5"></p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2.5 w-full sm:w-auto shrink-0">
+                    <div class="bg-zinc-950/90 border border-gold/40 px-3 py-1.5 rounded-xl text-center">
+                        <span class="text-[9px] text-zinc-400 uppercase block leading-none">Expira em</span>
+                        <span id="flash-banner-timer" class="text-xs sm:text-sm font-mono font-black text-gold">00:00:00</span>
+                    </div>
+                    <button type="button" onclick="applyFlashCouponFromBanner()" class="flex-1 sm:flex-initial gold-btn-gradient px-4 py-2 rounded-xl text-[11px] font-black cursor-pointer whitespace-nowrap">
+                        <i class="fa-solid fa-tag"></i> Usar Cupom
                     </button>
                 </div>
             </div>
@@ -514,6 +557,7 @@
                         <button onclick="downloadCleanIndexHtml('fenix_imports.html')" class="bg-teal-600 hover:bg-teal-500 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-lg cursor-pointer" title="Baixar arquivo fenix_imports.html"><i class="fa-solid fa-file-code"></i> Baixar fenix_imports.html</button>
                         <button onclick="copyCleanIndexHtmlForGithub()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-lg cursor-pointer" title="Copiar código limpo para colar no GitHub"><i class="fa-regular fa-copy"></i> Copiar p/ GitHub</button>
                         <button onclick="openJsonImportModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-file-code"></i> JSON</button>
+                        <button onclick="openFlashCouponModal()" class="bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black font-black px-3.5 py-2.5 rounded-xl text-xs border border-amber-500/40 flex items-center gap-1.5 cursor-pointer transition"><i class="fa-solid fa-hourglass-half"></i> Cupom p/ Horas</button>
                         <button onclick="openSettingsModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-2.5 rounded-xl text-xs border border-zinc-700 flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-sliders"></i> Configs & Chave PIX BuyPix</button>
                         <button onclick="openProductModal()" class="gold-btn-gradient px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg cursor-pointer"><i class="fa-solid fa-plus"></i> Novo</button>
                     </div>
@@ -583,8 +627,9 @@
                                 <i class="fa-solid fa-box-open text-gold"></i>
                                 <h4 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Fila de Bancada (O Que Separar Hoje)</h4>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-2">
                                 <button type="button" onclick="copyPickingList()" class="text-[10px] font-bold text-gold hover:underline cursor-pointer"><i class="fa-regular fa-copy"></i> Copiar</button>
+                                <button type="button" onclick="printBatchShippingLabels()" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 px-2 py-1 rounded-lg text-[10px] font-black transition cursor-pointer"><i class="fa-solid fa-print"></i> Imprimir Fila</button>
                                 <button type="button" onclick="dispatchAllPaidOrdersOneClick()" class="bg-gold/20 hover:bg-gold text-gold hover:text-black border border-gold/40 px-2 py-1 rounded-lg text-[10px] font-black transition cursor-pointer"><i class="fa-solid fa-truck-fast"></i> Despachar Fila</button>
                             </div>
                         </div>
@@ -602,6 +647,7 @@
                     <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                         <input type="text" id="admin-order-search" oninput="renderOrdersTable()" placeholder="Buscar cliente, titular PIX ou tel..." class="bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-white focus:border-gold outline-none flex-1 sm:w-48">
                         <button onclick="exportOrdersCsv()" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/40 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 cursor-pointer flex items-center gap-1.5" title="Baixar Relatório Financeiro em Planilha CSV/Excel"><i class="fa-solid fa-file-csv"></i> Exportar Planilha</button>
+                        <button onclick="clearPendingOrders()" class="bg-red-600/15 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 cursor-pointer flex items-center gap-1.5" title="Excluir todos os pedidos não concluídos (aguardando)"><i class="fa-solid fa-broom"></i> Limpar Aguardando</button>
                         <button onclick="createSimulatedOrder()" class="bg-zinc-800 hover:bg-zinc-700 text-gold border border-gold/30 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 cursor-pointer" title="Gerar pedido de teste"><i class="fa-solid fa-flask"></i> + Pedido Teste</button>
                     </div>
                 </div>
@@ -618,14 +664,20 @@
 
             <!-- Subtab CRM VIP -->
             <div id="admin-subtab-crm" class="hidden space-y-6">
-                <div class="glass-card p-6 rounded-3xl space-y-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-crown text-gold"></i> Clientes Recorrentes & CRM VIP</h3>
-                        <p class="text-xs text-zinc-300 mt-1">Lista consolidada dos seus compradores calculada automaticamente pelo histórico de pedidos.</p>
+                <div class="glass-card p-6 rounded-3xl space-y-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-base font-bold text-white flex items-center gap-2"><i class="fa-solid fa-crown text-gold"></i> Clientes Recorrentes & CRM VIP</h3>
+                            <p class="text-xs text-zinc-300 mt-1">Lista consolidada com alerta automático de recompra (25+ dias) e cupom ativo integrado.</p>
+                        </div>
+                        <button onclick="sendBulkWhatsappToAll()" class="bg-green-600 hover:bg-green-500 text-white font-black px-5 py-3 rounded-2xl text-xs flex items-center gap-2 shadow-lg transition shrink-0 cursor-pointer">
+                            <i class="fa-brands fa-whatsapp text-base"></i> Enviar para Todos no WhatsApp
+                        </button>
                     </div>
-                    <button onclick="sendBulkWhatsappToAll()" class="bg-green-600 hover:bg-green-500 text-white font-black px-5 py-3 rounded-2xl text-xs flex items-center gap-2 shadow-lg transition shrink-0 cursor-pointer">
-                        <i class="fa-brands fa-whatsapp text-base"></i> Enviar para Todos no WhatsApp
-                    </button>
+                    <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-zinc-800/80">
+                        <button type="button" onclick="setCrmFilter('all')" id="crm-filter-all" class="px-3.5 py-1.5 rounded-xl text-xs font-bold gold-btn-gradient cursor-pointer">Todos os Clientes</button>
+                        <button type="button" onclick="setCrmFilter('repurchase')" id="crm-filter-repurchase" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900 text-amber-300 border border-amber-500/40 cursor-pointer"><i class="fa-solid fa-fire"></i> Recompra (25+ dias)</button>
+                    </div>
                 </div>
                 <div class="glass-card rounded-3xl overflow-hidden border border-zinc-800">
                     <div class="overflow-x-auto">
@@ -666,7 +718,8 @@
     <footer class="border-t border-zinc-800/60 py-6 mt-12 text-center text-xs text-zinc-500">
         <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
             <span>© 2026 <b id="footer-store-name" class="text-zinc-400">FÊNIX IMPORTS</b> • Exclusividade & Alta Performance</span>
-            <span class="flex items-center gap-3 text-[11px]">
+            <span class="flex flex-wrap items-center justify-center gap-3 text-[11px]">
+                <button type="button" id="btn-install-pwa" onclick="triggerPwaInstall()" class="hidden bg-gold/15 hover:bg-gold text-gold hover:text-black border border-gold/40 px-3 py-1 rounded-full font-black transition cursor-pointer"><i class="fa-solid fa-mobile-screen-button"></i> Instalar App</button>
                 <span><i class="fa-solid fa-lock text-gold"></i> Ambiente Criptografado</span>
                 <span><i class="fa-brands fa-pix text-emerald-400"></i> Pagamento Seguro via PIX</span>
             </span>
@@ -835,14 +888,16 @@
     <div id="shipping-label-modal" class="fixed inset-0 z-[65] flex items-center justify-center p-4 hidden">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeShippingLabelModal()"></div>
         <div class="relative glass-card border border-zinc-700 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 space-y-4">
-            <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+            <div class="no-print flex justify-between items-center border-b border-zinc-800 pb-3">
                 <h3 class="text-sm font-black text-white flex items-center gap-2"><i class="fa-solid fa-box text-gold"></i> Etiqueta de Envio Discreto</h3>
                 <button onclick="closeShippingLabelModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="shipping-label-body" class="bg-white text-black p-5 rounded-2xl font-mono text-xs space-y-3 border-2 border-dashed border-zinc-400"></div>
-            <div class="flex gap-2">
-                <button type="button" onclick="closeShippingLabelModal()" class="flex-1 bg-zinc-800 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">Fechar</button>
-                <button type="button" onclick="copyShippingLabelText()" class="flex-1 gold-btn-gradient py-2.5 rounded-xl text-xs font-black cursor-pointer"><i class="fa-regular fa-copy"></i> Copiar Etiqueta</button>
+            <div class="no-print grid grid-cols-2 gap-2">
+                <button type="button" onclick="printShippingLabel()" class="gold-btn-gradient py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 cursor-pointer shadow-lg"><i class="fa-solid fa-print"></i> Imprimir / PDF</button>
+                <button type="button" onclick="downloadShippingLabelFile()" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 cursor-pointer"><i class="fa-solid fa-file-arrow-down"></i> Baixar Arquivo</button>
+                <button type="button" onclick="copyShippingLabelText()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 py-2.5 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"><i class="fa-regular fa-copy"></i> Copiar Texto</button>
+                <button type="button" onclick="closeShippingLabelModal()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs cursor-pointer">Fechar</button>
             </div>
         </div>
     </div>
@@ -1013,8 +1068,16 @@
                 <!-- Sugestão de Item Complementar (Compre Junto sem desconto) -->
                 <div id="cart-order-bump" class="mx-5 mb-2 p-3 rounded-2xl bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 border border-gold/40 hidden"></div>
                 <div class="p-5 border-t border-zinc-800 bg-zinc-950/80 space-y-3">
+                    <div class="flex gap-2">
+                        <input type="text" id="cart-coupon-input" placeholder="Cupom de desconto..." class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-xs text-white uppercase font-mono focus:border-gold outline-none">
+                        <button type="button" onclick="applyCartCoupon()" class="bg-zinc-800 hover:bg-zinc-700 text-gold border border-gold/40 px-3.5 py-2 rounded-xl text-xs font-black cursor-pointer shrink-0">Aplicar</button>
+                    </div>
                     <div class="space-y-1.5 pt-1">
                         <div class="flex justify-between text-xs text-zinc-400"><span>Subtotal dos Produtos</span><span id="cart-subtotal">R$ 0,00</span></div>
+                        <div id="cart-discount-row" class="hidden flex justify-between text-xs text-emerald-400 font-bold">
+                            <span id="cart-discount-label">Desconto Cupom</span>
+                            <span class="flex items-center gap-1.5"><span id="cart-discount-val">- R$ 0,00</span><button type="button" onclick="removeCartCoupon()" class="text-zinc-500 hover:text-red-400 cursor-pointer" title="Remover cupom"><i class="fa-solid fa-xmark"></i></button></span>
+                        </div>
                         <div class="flex justify-between text-xs text-zinc-400"><span>Frete Expresso</span><span id="cart-shipping-cost">R$ 0,00</span></div>
                         <div class="flex justify-between text-base font-black text-white pt-2 border-t border-zinc-800"><span>Total Final</span><span id="cart-total" class="text-gold">R$ 0,00</span></div>
                     </div>
@@ -1424,6 +1487,69 @@
     </div>
 
     <!-- Firebase -->
+    <!-- Modal Cupom Relâmpago por Horas (Admin) -->
+    <div id="flash-coupon-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-card rounded-3xl w-full max-w-md border border-gold/40 shadow-2xl p-6 space-y-4 relative my-auto">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <div>
+                    <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2"><i class="fa-solid fa-hourglass-half text-gold"></i> Desconto por Horas</h3>
+                    <p class="text-[11px] text-zinc-400">Crie uma oferta relâmpago com prazo exato em horas.</p>
+                </div>
+                <button type="button" onclick="closeFlashCouponModal()" class="text-zinc-400 hover:text-white p-1.5 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div id="flash-admin-status" class="hidden p-3 rounded-2xl border text-xs"></div>
+            <form onsubmit="saveFlashCoupon(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="text-[11px] font-bold text-zinc-300 block mb-1">Código do Cupom *</label>
+                    <input type="text" id="fc-code" required maxlength="20" placeholder="Ex: HORA10 ou VIP15" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white uppercase font-mono focus:border-gold outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="text-[11px] font-bold text-zinc-300 block mb-1">Tipo de Desconto</label>
+                        <select id="fc-type" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:border-gold outline-none">
+                            <option value="percent">% (Porcentagem)</option>
+                            <option value="fixed">R$ (Valor Fixo)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-zinc-300 block mb-1">Valor do Desconto *</label>
+                        <input type="number" step="0.01" min="0.01" id="fc-value" required placeholder="Ex: 10" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:border-gold outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-zinc-300 block mb-1.5">Duração (em Horas) *</label>
+                    <div class="flex flex-wrap gap-1.5 mb-2">
+                        <button type="button" onclick="document.getElementById('fc-hours').value=2" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">2h</button>
+                        <button type="button" onclick="document.getElementById('fc-hours').value=6" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">6h</button>
+                        <button type="button" onclick="document.getElementById('fc-hours').value=12" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">12h</button>
+                        <button type="button" onclick="document.getElementById('fc-hours').value=24" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">24h</button>
+                        <button type="button" onclick="document.getElementById('fc-hours').value=48" class="bg-zinc-800 hover:bg-zinc-700 text-gold px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">48h</button>
+                    </div>
+                    <input type="number" step="0.5" min="0.5" id="fc-hours" required value="6" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:border-gold outline-none">
+                </div>
+                <div>
+                    <label class="text-[11px] font-bold text-zinc-300 block mb-1">Onde aplicar o desconto</label>
+                    <select id="fc-scope" onchange="toggleFlashCouponProductsList()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:border-gold outline-none">
+                        <option value="all">Loja Toda (Todos os Produtos)</option>
+                        <option value="selected">Apenas Produtos Selecionados</option>
+                    </select>
+                </div>
+                <div id="fc-products-wrap" class="hidden space-y-1.5">
+                    <label class="text-[11px] font-bold text-gold block">Marque os produtos participantes:</label>
+                    <div id="fc-products-checklist" class="max-h-36 overflow-y-auto bg-zinc-950/90 border border-zinc-800 rounded-xl p-2.5 space-y-1.5"></div>
+                </div>
+                <label class="flex items-center gap-2 text-[11px] text-zinc-300 cursor-pointer pt-1">
+                    <input type="checkbox" id="fc-show-banner" checked class="rounded accent-amber-500">
+                    <span>Mostrar aviso com cronômetro na vitrine</span>
+                </label>
+                <div class="flex gap-2 pt-2">
+                    <button type="button" onclick="disableFlashCoupon()" class="flex-1 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 py-2.5 rounded-xl font-bold cursor-pointer">Encerrar Cupom</button>
+                    <button type="submit" class="flex-1 gold-btn-gradient py-2.5 rounded-xl font-black cursor-pointer shadow-lg">Ativar por Horas</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Deixar Feedback -->
     <div id="feedback-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div class="glass-card rounded-3xl w-full max-w-md border border-gold/40 shadow-2xl p-6 sm:p-7 space-y-5 relative my-auto">
@@ -1884,6 +2010,7 @@
             whatsappSales: "5521999999999", 
             shippingExpress: 25,
             freeShippingThreshold: 0,
+            flashCoupon: null,
             shippingNational: 25,
             cardFeePercent: 0,
             mpAccessToken: "",
@@ -2200,15 +2327,26 @@
         window.initApp = initApp;
 
         async function loadSettings() {
+            let localParsed = null;
             const local = safeGetStorage('fenix_store_settings');
             if (local) {
-                try { storeSettings = { ...storeSettings, ...JSON.parse(local) }; } catch(e) {}
+                try {
+                    localParsed = JSON.parse(local);
+                    storeSettings = { ...storeSettings, ...localParsed };
+                } catch(e) {}
             }
             if (window.db && window.firebaseFns) {
                 try { 
                     const docSnap = await window.firebaseFns.getDoc(window.firebaseFns.doc(window.db, "settings", "config"));
                     if (docSnap.exists()) {
-                        storeSettings = { ...storeSettings, ...docSnap.data() };
+                        const cloudData = docSnap.data() || {};
+                        const localTs = localParsed?.updatedAt ? new Date(localParsed.updatedAt).getTime() : 0;
+                        const cloudTs = cloudData.updatedAt ? new Date(cloudData.updatedAt).getTime() : 0;
+                        if (localTs > cloudTs && localParsed?.pixKey) {
+                            storeSettings = { ...storeSettings, ...cloudData, ...localParsed };
+                        } else {
+                            storeSettings = { ...storeSettings, ...cloudData };
+                        }
                     }
                 } catch (e) {}
             }
@@ -2232,6 +2370,7 @@
             if (supportBtn) {
                 supportBtn.href = `https://wa.me/${cleanSalesWpp}?text=${encodeURIComponent('Olá! Gostaria de tirar uma dúvida sobre os produtos da ' + (storeSettings.storeName || 'Fênix Imports') + '.')}`;
             }
+            if (typeof updateFlashCouponBanner === 'function') updateFlashCouponBanner();
             updateCartUI();
         }
 
@@ -2241,7 +2380,7 @@
                 try {
                     const snapshot = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "products"));
                     const cloudList = [];
-                    snapshot.forEach(doc => cloudList.push({ id: doc.id, ...doc.data() }));
+                    snapshot.forEach(doc => cloudList.push({ ...doc.data(), id: doc.id }));
                     if (cloudList.length > 0) {
                         products = cloudList;
                         loadedFromCloud = true;
@@ -2339,6 +2478,7 @@
                 mobAdmin?.classList.add('hidden');
                 userStatus?.classList.add('hidden'); 
                 userStatus?.classList.remove('flex');
+                if (unsubscribeOrdersSnapshot) { try { unsubscribeOrdersSnapshot(); } catch(e) {} unsubscribeOrdersSnapshot = null; }
                 document.getElementById('tab-admin')?.classList.add('hidden');
                 document.getElementById('tab-catalog')?.classList.remove('hidden');
                 ['admin-product-table', 'admin-orders-table', 'admin-crm-table', 'admin-stock-alerts-table'].forEach(id => {
@@ -2348,30 +2488,58 @@
             }
         }
 
+        let unsubscribeOrdersSnapshot = null;
+
+        function getDeletedOrderIds() {
+            try {
+                const raw = safeGetStorage('fenix_deleted_orders');
+                const arr = raw ? JSON.parse(raw) : [];
+                return Array.isArray(arr) ? arr : [];
+            } catch (e) { return []; }
+        }
+
+        function markOrderDeletedLocally(id, externalRef) {
+            const set = new Set(getDeletedOrderIds());
+            if (id) set.add(String(id));
+            if (externalRef) set.add(String(externalRef));
+            safeSetStorage('fenix_deleted_orders', JSON.stringify([...set]));
+        }
+
         function listenOrdersRealtime() {
             if (!isAdminAuthenticated()) return;
+            const deletedIds = new Set(getDeletedOrderIds());
+            orders = orders.filter(o => !deletedIds.has(String(o.id)) && !deletedIds.has(String(o.externalRef || '')));
             renderOrdersTable();
             renderCrmTable();
 
             if (window.db && window.firebaseFns) {
                 try {
-                    window.firebaseFns.onSnapshot(window.firebaseFns.collection(window.db, "orders"), (snapshot) => {
+                    if (unsubscribeOrdersSnapshot) {
+                        unsubscribeOrdersSnapshot();
+                        unsubscribeOrdersSnapshot = null;
+                    }
+                    unsubscribeOrdersSnapshot = window.firebaseFns.onSnapshot(window.firebaseFns.collection(window.db, "orders"), (snapshot) => {
+                        const delSet = new Set(getDeletedOrderIds());
                         let newOrdersList = [];
-                        snapshot.forEach(doc => newOrdersList.push({ id: doc.id, ...doc.data() }));
-                        
-                        if (newOrdersList.length > 0) {
-                            if (!isFirstLoadOrders && newOrdersList.length > orders.length) {
-                                const latest = newOrdersList.sort((a,b) => new Date(b.date) - new Date(a.date))[0];
-                                if (latest && latest.client) {
-                                    sendNativeNotification(
-                                        `💰 NOVA VENDA: R$ ${formatMoney(latest.financials?.total || 0)}`,
-                                        `Cliente: ${latest.client.name}`
-                                    );
-                                }
+                        snapshot.forEach(d => {
+                            const data = d.data() || {};
+                            const realId = d.id;
+                            if (!delSet.has(String(realId)) && !delSet.has(String(data.externalRef || ''))) {
+                                newOrdersList.push({ ...data, id: realId });
                             }
-                            orders = newOrdersList.sort((a, b) => new Date(b.date) - new Date(a.date));
-                            safeSetStorage('fenix_orders', JSON.stringify(orders));
+                        });
+
+                        if (!isFirstLoadOrders && newOrdersList.length > orders.length) {
+                            const latest = [...newOrdersList].sort((a,b) => new Date(b.date) - new Date(a.date))[0];
+                            if (latest && latest.client) {
+                                sendNativeNotification(
+                                    `💰 NOVA VENDA: R$ ${formatMoney(latest.financials?.total || 0)}`,
+                                    `Cliente: ${latest.client.name}`
+                                );
+                            }
                         }
+                        orders = newOrdersList.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        safeSetStorage('fenix_orders', JSON.stringify(orders));
                         isFirstLoadOrders = false;
                         renderOrdersTable();
                         renderCrmTable();
@@ -2416,6 +2584,29 @@
         }
         window.updateOrderStatus = updateOrderStatus;
 
+        async function permanentlyDeleteOrderRecord(targetOrder) {
+            const id = targetOrder?.id;
+            const extRef = targetOrder?.externalRef;
+            markOrderDeletedLocally(id, extRef);
+            let cloudError = null;
+            if (window.db && window.firebaseFns && id && !String(id).startsWith('local-')) {
+                try {
+                    await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'orders', id));
+                    if (extRef) {
+                        const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, 'orders'));
+                        for (const d of snap.docs) {
+                            if (d.id !== id && d.data()?.externalRef === extRef) {
+                                await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'orders', d.id));
+                            }
+                        }
+                    }
+                } catch (err) {
+                    cloudError = err;
+                }
+            }
+            return cloudError;
+        }
+
         function deleteOrder(id) {
             if (!requireAdminAuth()) return;
             openConfirmModal(
@@ -2423,12 +2614,15 @@
                 "Tem certeza que deseja excluir este pedido permanentemente do histórico?",
                 async () => {
                     try {
-                        if (window.db && window.firebaseFns) {
-                            await window.firebaseFns.deleteDoc(window.firebaseFns.doc(window.db, 'orders', id)).catch(() => {});
-                        }
-                        orders = orders.filter(o => o.id !== id);
+                        const target = orders.find(o => o.id === id) || { id };
+                        const cloudErr = await permanentlyDeleteOrderRecord(target);
+                        orders = orders.filter(o => o.id !== id && (!target.externalRef || o.externalRef !== target.externalRef));
                         safeSetStorage('fenix_orders', JSON.stringify(orders));
-                        showToast('Pedido excluído.', 'info');
+                        if (cloudErr) {
+                            showToast('Excluído da tela. Atenção: Firebase bloqueou exclusão remota (' + (cloudErr.code || 'permissão') + ').', 'info');
+                        } else {
+                            showToast('Pedido excluído permanentemente!', 'success');
+                        }
                         renderOrdersTable();
                         renderCrmTable();
                     } catch(e) {
@@ -2438,6 +2632,37 @@
             );
         }
         window.deleteOrder = deleteOrder;
+
+        function clearPendingOrders() {
+            if (!requireAdminAuth()) return;
+            const pending = orders.filter(o => o.status === 'aguardando');
+            if (pending.length === 0) {
+                showToast('Não há pedidos aguardando para limpar.', 'info');
+                return;
+            }
+            openConfirmModal(
+                "Limpar Pedidos Não Concluídos",
+                `Excluir os ${pending.length} pedido(s) com status AGUARDANDO (mantendo todas as vendas pagas e enviadas intactas)?`,
+                async () => {
+                    let hasCloudErr = false;
+                    for (const o of pending) {
+                        const err = await permanentlyDeleteOrderRecord(o);
+                        if (err) hasCloudErr = true;
+                    }
+                    orders = orders.filter(o => o.status !== 'aguardando');
+                    safeSetStorage('fenix_orders', JSON.stringify(orders));
+                    renderOrdersTable();
+                    renderCrmTable();
+                    showToast(
+                        hasCloudErr
+                            ? `${pending.length} pedido(s) removidos da visualização (verifique regras do Firebase).`
+                            : `${pending.length} pedido(s) não concluído(s) excluído(s) permanentemente!`,
+                        hasCloudErr ? 'info' : 'success'
+                    );
+                }
+            );
+        }
+        window.clearPendingOrders = clearPendingOrders;
 
         function setOrderStatusFilter(status) {
             currentOrderStatusFilter = status;
@@ -2620,9 +2845,7 @@
                 const aiBadge = o.aiVerifiedNote
                     ? `<span class="text-[9px] text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.5 rounded font-bold inline-block mt-0.5"><i class="fa-solid fa-robot"></i> ${o.aiVerifiedNote}</span>`
                     : '';
-                const payMethodBadge = o.paymentMethod === 'card'
-                    ? `<span class="text-[9px] text-sky-400 font-bold block"><i class="fa-solid fa-credit-card"></i> Cartão Camuflado</span>${aiBadge}`
-                    : `<span class="text-[9px] text-emerald-400 font-bold block"><i class="fa-brands fa-pix"></i> PIX</span>${aiBadge}`;
+                const payMethodBadge = `<span class="text-[9px] text-emerald-400 font-bold block"><i class="fa-brands fa-pix"></i> PIX</span>${aiBadge}`;
 
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40 transition">
@@ -3654,11 +3877,37 @@
                 i.activePrice = exactUnitPrice;
                 return s + (exactUnitPrice * Number(i.qty));
             }, 0);
+            let discountVal = 0;
+            let activeCoupon = null;
+            const fc = storeSettings.flashCoupon;
+            if (cart.length > 0 && appliedCouponCode && fc && fc.code && fc.expiresAt && Number(fc.expiresAt) > Date.now()) {
+                if (appliedCouponCode.toUpperCase() === String(fc.code).toUpperCase()) {
+                    let eligibleSubtotal = subtotal;
+                    if (fc.scope === 'selected' && Array.isArray(fc.productIds)) {
+                        const allowedSet = new Set(fc.productIds.map(String));
+                        eligibleSubtotal = cart.reduce((s, item) => {
+                            if (allowedSet.has(String(item.id))) {
+                                return s + (Number(item.activePrice || item.price || 0) * Number(item.qty || 1));
+                            }
+                            return s;
+                        }, 0);
+                    }
+                    if (eligibleSubtotal > 0) {
+                        activeCoupon = fc;
+                        if (fc.type === 'percent') {
+                            discountVal = Math.min(eligibleSubtotal, +(eligibleSubtotal * (Number(fc.value) / 100)).toFixed(2));
+                        } else {
+                            discountVal = Math.min(eligibleSubtotal, +Number(fc.value).toFixed(2));
+                        }
+                    }
+                }
+            }
+            const discountedSubtotal = Math.max(0, +(subtotal - discountVal).toFixed(2));
             const threshold = Number(storeSettings.freeShippingThreshold || 0);
-            const qualifiesFreeShipping = cart.length > 0 && (freeShippingApplied || (threshold > 0 && subtotal >= threshold));
+            const qualifiesFreeShipping = cart.length > 0 && (freeShippingApplied || (threshold > 0 && discountedSubtotal >= threshold));
             const shipping = cart.length > 0 ? (qualifiesFreeShipping ? 0 : Number(calculatedShippingCost ?? storeSettings.shippingExpress ?? 25)) : 0;
-            const total = +(subtotal + shipping).toFixed(2);
-            return { subtotal: +subtotal.toFixed(2), discountVal: 0, shipping: +shipping.toFixed(2), total, freeShippingThreshold: threshold, qualifiesFreeShipping };
+            const total = +(discountedSubtotal + shipping).toFixed(2);
+            return { subtotal: +subtotal.toFixed(2), discountVal: +discountVal.toFixed(2), activeCoupon, shipping: +shipping.toFixed(2), total, freeShippingThreshold: threshold, qualifiesFreeShipping };
         }
 
         function updateCartProgressAndOrderBump(totals) {
@@ -3728,6 +3977,7 @@
             if (cart.length === 0) { 
                 cont.innerHTML = `<div class="py-16 text-center text-zinc-500 text-xs sm:text-sm"><i class="fa-solid fa-bag-shopping text-2xl mb-2 block opacity-40"></i>Seu carrinho está vazio</div>`; 
                 document.getElementById('cart-subtotal').innerText = 'R$ 0,00';
+                document.getElementById('cart-discount-row')?.classList.add('hidden');
                 document.getElementById('cart-shipping-cost').innerText = 'R$ 0,00';
                 document.getElementById('cart-total').innerText = 'R$ 0,00'; 
                 if (typeof updateStickyCheckoutBar === 'function') updateStickyCheckoutBar(totals);
@@ -3751,7 +4001,17 @@
                         </div>
                     </div>`; 
             });
-            document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`; 
+            document.getElementById('cart-subtotal').innerText = `R$ ${formatMoney(totals.subtotal)}`;
+            const discRow = document.getElementById('cart-discount-row');
+            if (discRow) {
+                if (totals.discountVal > 0 && totals.activeCoupon) {
+                    discRow.classList.remove('hidden');
+                    document.getElementById('cart-discount-label').innerText = `Cupom (${totals.activeCoupon.code})`;
+                    document.getElementById('cart-discount-val').innerText = `- R$ ${formatMoney(totals.discountVal)}`;
+                } else {
+                    discRow.classList.add('hidden');
+                }
+            } 
             document.getElementById('cart-shipping-cost').innerHTML = totals.qualifiesFreeShipping ? '<span class="text-emerald-400 font-black">GRÁTIS</span>' : `R$ ${formatMoney(totals.shipping)}`; 
             document.getElementById('cart-total').innerText = `R$ ${formatMoney(totals.total)}`;
             if (typeof updateStickyCheckoutBar === 'function') updateStickyCheckoutBar(totals);
@@ -4641,6 +4901,17 @@
         }
         window.processJsonImport = processJsonImport;
 
+        let currentCrmFilter = 'all';
+        function setCrmFilter(mode) {
+            currentCrmFilter = mode;
+            const bAll = document.getElementById('crm-filter-all');
+            const bRep = document.getElementById('crm-filter-repurchase');
+            if (bAll) bAll.className = mode === 'all' ? 'px-3.5 py-1.5 rounded-xl text-xs font-bold gold-btn-gradient cursor-pointer' : 'px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900 text-zinc-300 border border-zinc-800 cursor-pointer';
+            if (bRep) bRep.className = mode === 'repurchase' ? 'px-3.5 py-1.5 rounded-xl text-xs font-bold gold-btn-gradient cursor-pointer' : 'px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900 text-amber-300 border border-amber-500/40 cursor-pointer';
+            renderCrmTable();
+        }
+        window.setCrmFilter = setCrmFilter;
+
         function renderCrmTable() {
             const tb = document.getElementById('admin-crm-table');
             if(!tb || !isAdminAuthenticated()) { if(tb) tb.innerHTML = ''; return; }
@@ -4652,21 +4923,35 @@
                 const lastItemName = (Array.isArray(o.items) && o.items[0]?.name) ? o.items[0].name : 'seu protocolo';
                 if(!clientMap[phoneKey]) {
                     clientMap[phoneKey] = { name: o.client.name, phone: o.client.phone, totalSpent: 0, count: 0, lastProduct: lastItemName, lastDate: o.date };
+                } else if (o.date && (!clientMap[phoneKey].lastDate || new Date(o.date) > new Date(clientMap[phoneKey].lastDate))) {
+                    clientMap[phoneKey].lastDate = o.date;
+                    clientMap[phoneKey].lastProduct = lastItemName;
                 }
                 clientMap[phoneKey].totalSpent += Number(o.financials?.total || 0);
                 clientMap[phoneKey].count += 1;
             });
             let clients = Object.values(clientMap).sort((a,b) => b.totalSpent - a.totalSpent);
+            if (currentCrmFilter === 'repurchase') {
+                clients = clients.filter(c => {
+                    const days = c.lastDate ? Math.max(0, Math.floor((Date.now() - new Date(c.lastDate).getTime()) / 86400000)) : 0;
+                    return days >= 25;
+                });
+            }
             if(clients.length === 0) {
-                tb.innerHTML = `<tr><td colspan="5" class="py-12 text-center text-zinc-500 text-xs">Nenhum cliente registrado ainda. Gere um pedido para alimentar o CRM VIP.</td></tr>`;
+                tb.innerHTML = `<tr><td colspan="5" class="py-12 text-center text-zinc-500 text-xs">${currentCrmFilter === 'repurchase' ? 'Nenhum cliente com mais de 25 dias desde a última compra no momento.' : 'Nenhum cliente registrado ainda. Gere um pedido para alimentar o CRM VIP.'}</td></tr>`;
                 return;
             }
+            const fc = storeSettings.flashCoupon;
+            const hasLiveCoupon = fc && fc.code && fc.expiresAt && Number(fc.expiresAt) > Date.now();
+            const couponExtra = hasLiveCoupon
+                ? `\n\n🎁 *Cupom relâmpago ativo:* use *${fc.code}* (${fc.type === 'percent' ? fc.value + '% OFF' : 'R$ ' + formatMoney(fc.value) + ' OFF'}) antes que expire!`
+                : '';
             clients.forEach(c => {
                 const daysSince = c.lastDate ? Math.max(0, Math.floor((Date.now() - new Date(c.lastDate).getTime()) / 86400000)) : 0;
-                const cycleBadge = daysSince >= 20
+                const cycleBadge = daysSince >= 25
                     ? `<span class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-black block mt-0.5">🔥 Hora de Repor (${daysSince}d)</span>`
-                    : `<span class="text-[9px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-bold block mt-0.5">🤖 Ciclo Ativo • Último: ${c.lastProduct}</span>`;
-                const aiRepurchaseMsg = `Olá *${c.name}*! Tudo bem? Passando para acompanhar seus resultados com o *${c.lastProduct}* na *${storeSettings.storeName || 'Fênix Imports'}*! 🚀\n\nSe já estiver chegando perto de renovar seu protocolo, deixamos uma unidade reservada para você com envio expresso imediato via PIX imediato!`;
+                    : `<span class="text-[9px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-bold block mt-0.5">🤖 Ciclo Ativo (${daysSince}d) • Último: ${c.lastProduct}</span>`;
+                const aiRepurchaseMsg = `Olá *${c.name}*! Tudo bem? Passando para acompanhar seus resultados com o *${c.lastProduct}* na *${storeSettings.storeName || 'Fênix Imports'}*! 🚀\n\nSe já estiver chegando perto de renovar seu protocolo, deixamos sua reposição pronta com envio expresso discreto via PIX!${couponExtra}`;
                 tb.innerHTML += `
                     <tr class="border-b border-zinc-800/60 hover:bg-zinc-900/40">
                         <td class="p-4 text-xs">
@@ -5235,7 +5520,7 @@
         async function saveSettings(e) {
             e.preventDefault();
             if (!requireAdminAuth()) return;
-            storeSettings = {
+            storeSettings = JSON.parse(JSON.stringify({
                 ...storeSettings,
                 storeName: document.getElementById('set-store-name').value.trim(),
                 logoUrl: document.getElementById('set-store-logo').value.trim(),
@@ -5250,11 +5535,17 @@
                 pixName: document.getElementById('set-pix-name').value.trim(),
                 pixCity: document.getElementById('set-pix-city').value.trim(),
                 whatsappSales: formatWhatsappNumber(document.getElementById('set-wpp-sales').value.trim()),
-                geminiKey: document.getElementById('set-gemini').value.trim()
-            };
+                geminiKey: document.getElementById('set-gemini').value.trim(),
+                updatedAt: new Date().toISOString()
+            }));
             safeSetStorage('fenix_store_settings', JSON.stringify(storeSettings));
+            let settingsSyncErr = null;
             if (window.db && window.firebaseFns) {
-                try { await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings); } catch(err) {}
+                try {
+                    await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), storeSettings, { merge: true });
+                } catch(err) {
+                    settingsSyncErr = err;
+                }
             }
             if (!freeShippingApplied) {
                 calculatedShippingCost = Number(storeSettings.shippingExpress ?? 25);
@@ -5264,7 +5555,11 @@
             if (supportBtn) {
                 supportBtn.href = `https://wa.me/${cleanSalesWpp}?text=${encodeURIComponent('Olá! Gostaria de tirar uma dúvida sobre os produtos da ' + (storeSettings.storeName || 'Fênix Imports') + '.')}`;
             }
-            showToast('Configurações e Chave PIX BuyPix salvas!', 'success');
+            if (settingsSyncErr) {
+                showToast('Salvo localmente, mas o Firebase recusou a gravação (' + (settingsSyncErr.code || 'permissão') + ').', 'error');
+            } else {
+                showToast('Configurações e Chave PIX BuyPix salvas na nuvem!', 'success');
+            }
             applyStoreBranding();
             if (typeof renderEliteReadinessChecklist === 'function') renderEliteReadinessChecklist();
             updateCartUI();
@@ -5574,6 +5869,8 @@
             const senderName = (storeSettings.pixName || "Fenix Logistica Express").toUpperCase();
             const senderCity = (storeSettings.pixCity || "Rio de Janeiro - RJ").toUpperCase();
             const track = o.trackingCode || ("FX" + String(Date.now()).slice(-9) + "BR");
+            const slugName = (o.client?.name || 'cliente').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+            currentShippingLabelFilename = `etiqueta_${slugName || 'pedido'}.html`;
 
             currentShippingLabelText = `DESTINATÁRIO: ${o.client?.name || 'Cliente'}
 ENDEREÇO: ${o.client?.address || ''}
@@ -5614,10 +5911,33 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
         }
         window.closeShippingLabelModal = closeShippingLabelModal;
 
+        let currentShippingLabelFilename = "etiqueta_fenix.html";
         function copyShippingLabelText() {
             safeCopyText(currentShippingLabelText, "Dados da etiqueta copiados para impressão!");
         }
         window.copyShippingLabelText = copyShippingLabelText;
+
+        function printShippingLabel() {
+            window.print();
+        }
+        window.printShippingLabel = printShippingLabel;
+
+        function downloadShippingLabelFile() {
+            const body = document.getElementById('shipping-label-body');
+            if (!body) return;
+            const docHtml = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Etiqueta de Envio - Fênix Imports</title><style>body{font-family:monospace;background:#fff;color:#000;margin:20px;display:flex;justify-content:center}.box{width:105mm;border:2px dashed #000;padding:18px;border-radius:10px;font-size:12px;line-height:1.45}.flex{display:flex;justify-content:space-between;align-items:center}.border-b{border-bottom:1px solid #000;padding-bottom:8px;margin-bottom:8px}.border-t{border-top:1px solid #000;padding-top:8px;margin-top:8px}.text-center{text-align:center}.font-black{font-weight:900}@media print{body{margin:0}.box{border:2px solid #000}}</style></head><body onload="window.print()"><div class="box">${body.innerHTML}</div></body></html>`;
+            const blob = new Blob([docHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = currentShippingLabelFilename || 'etiqueta_envio.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Arquivo da etiqueta baixado pronto para imprimir!', 'success');
+        }
+        window.downloadShippingLabelFile = downloadShippingLabelFile;
 
         // 🧭 CONSULTOR IA DE COMPRA RÁPIDA (QUAL PRODUTO ESCOLHER EM 15 SEGUNDOS)
         function openProductAdvisorModal() {
@@ -6100,7 +6420,7 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
                 try {
                     const snap = await window.firebaseFns.getDocs(window.firebaseFns.collection(window.db, "feedbacks"));
                     const list = [];
-                    snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+                    snap.forEach(d => list.push({ ...d.data(), id: d.id }));
                     if (list.length > 0) {
                         customerFeedbacks = list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
                         safeSetStorage('fenix_feedbacks', JSON.stringify(customerFeedbacks));
@@ -6270,6 +6590,288 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
         window.submitCustomerFeedback = submitCustomerFeedback;
         window.deleteCustomerFeedback = deleteCustomerFeedback;
         window.renderCustomerFeedbacks = renderCustomerFeedbacks;
+
+
+        // ================= CUPOM RELÂMPAGO POR HORAS =================
+        appliedCouponCode = safeGetStorage('fenix_applied_coupon') || '';
+        let flashCouponTimerInterval = null;
+
+        function formatCountdownMs(ms) {
+            const totalSec = Math.max(0, Math.floor(ms / 1000));
+            const h = String(Math.floor(totalSec / 3600)).padStart(2, '0');
+            const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
+            const s = String(totalSec % 60).padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        function updateFlashCouponBanner() {
+            const banner = document.getElementById('flash-coupon-banner');
+            const fc = storeSettings.flashCoupon;
+            if (flashCouponTimerInterval) {
+                clearInterval(flashCouponTimerInterval);
+                flashCouponTimerInterval = null;
+            }
+            if (!banner || !fc || !fc.code || !fc.expiresAt || Number(fc.expiresAt) <= Date.now()) {
+                banner?.classList.add('hidden');
+                return;
+            }
+            if (fc.showBanner === false) {
+                banner.classList.add('hidden');
+                return;
+            }
+            const descVal = fc.type === 'percent' ? `${Number(fc.value)}% OFF` : `R$ ${formatMoney(fc.value)} OFF`;
+            document.getElementById('flash-banner-badge').textContent = `${fc.code} • ${descVal}`;
+            const scopeText = fc.scope === 'selected' && Array.isArray(fc.productIds) && fc.productIds.length > 0
+                ? `Válido para ${fc.productIds.length} produto(s) selecionado(s) — use no carrinho!`
+                : `Válido em toda a loja — use o cupom ${fc.code} no carrinho antes do tempo acabar!`;
+            document.getElementById('flash-banner-text').textContent = scopeText;
+            banner.classList.remove('hidden');
+
+            const tick = () => {
+                const left = Number(fc.expiresAt) - Date.now();
+                if (left <= 0) {
+                    banner.classList.add('hidden');
+                    clearInterval(flashCouponTimerInterval);
+                    flashCouponTimerInterval = null;
+                    updateCartUI();
+                    return;
+                }
+                const timerEl = document.getElementById('flash-banner-timer');
+                if (timerEl) timerEl.textContent = formatCountdownMs(left);
+            };
+            tick();
+            flashCouponTimerInterval = setInterval(tick, 1000);
+        }
+
+        function applyCartCoupon() {
+            const input = document.getElementById('cart-coupon-input');
+            const code = (input?.value || '').trim().toUpperCase();
+            if (!code) return showToast('Digite o código do cupom.', 'error');
+            const fc = storeSettings.flashCoupon;
+            if (!fc || !fc.code || String(fc.code).toUpperCase() !== code) {
+                return showToast('Cupom inválido ou não encontrado.', 'error');
+            }
+            if (!fc.expiresAt || Number(fc.expiresAt) <= Date.now()) {
+                return showToast('Este cupom já expirou!', 'error');
+            }
+            if (fc.scope === 'selected' && Array.isArray(fc.productIds)) {
+                const allowed = new Set(fc.productIds.map(String));
+                const hasEligible = cart.some(item => allowed.has(String(item.id)));
+                if (!hasEligible) {
+                    return showToast('Adicione um produto participante ao carrinho para usar este cupom.', 'error');
+                }
+            }
+            appliedCouponCode = code;
+            safeSetStorage('fenix_applied_coupon', code);
+            updateCartUI();
+            showToast(`Cupom ${code} aplicado com sucesso!`, 'success');
+        }
+
+        function applyFlashCouponFromBanner() {
+            const fc = storeSettings.flashCoupon;
+            if (!fc || !fc.code || Number(fc.expiresAt) <= Date.now()) {
+                return showToast('Oferta expirada.', 'error');
+            }
+            appliedCouponCode = String(fc.code).toUpperCase();
+            safeSetStorage('fenix_applied_coupon', appliedCouponCode);
+            const input = document.getElementById('cart-coupon-input');
+            if (input) input.value = appliedCouponCode;
+            updateCartUI();
+            toggleCartDrawer(true);
+            showToast(`Cupom ${appliedCouponCode} aplicado no seu carrinho!`, 'success');
+        }
+
+        function removeCartCoupon() {
+            appliedCouponCode = '';
+            safeSetStorage('fenix_applied_coupon', '');
+            const input = document.getElementById('cart-coupon-input');
+            if (input) input.value = '';
+            updateCartUI();
+            showToast('Cupom removido.', 'info');
+        }
+
+        function renderFlashCouponProductsChecklist(selectedIds = []) {
+            const listEl = document.getElementById('fc-products-checklist');
+            if (!listEl) return;
+            const selectedSet = new Set((selectedIds || []).map(String));
+            listEl.innerHTML = (products || []).map(p => `
+                <label class="flex items-center gap-2 text-[11px] text-zinc-200 cursor-pointer py-1 px-1.5 rounded-lg hover:bg-zinc-900">
+                    <input type="checkbox" class="fc-prod-cb rounded accent-amber-500" value="${p.id}" ${selectedSet.has(String(p.id)) ? 'checked' : ''}>
+                    <span class="truncate flex-1">${p.name}</span>
+                    <span class="text-[10px] text-gold font-bold shrink-0">R$ ${formatMoney(p.promoPrice || p.price)}</span>
+                </label>
+            `).join('');
+        }
+
+        function toggleFlashCouponProductsList() {
+            const scope = document.getElementById('fc-scope')?.value || 'all';
+            const wrap = document.getElementById('fc-products-wrap');
+            if (wrap) wrap.classList.toggle('hidden', scope !== 'selected');
+        }
+        window.toggleFlashCouponProductsList = toggleFlashCouponProductsList;
+
+        function openFlashCouponModal() {
+            if (!requireAdminAuth()) return;
+            const fc = storeSettings.flashCoupon;
+            const statusBox = document.getElementById('flash-admin-status');
+            const selectedIds = (fc && Array.isArray(fc.productIds)) ? fc.productIds : [];
+            renderFlashCouponProductsChecklist(selectedIds);
+            if (fc && fc.code && Number(fc.expiresAt) > Date.now()) {
+                document.getElementById('fc-code').value = fc.code;
+                document.getElementById('fc-type').value = fc.type || 'percent';
+                document.getElementById('fc-value').value = fc.value || 10;
+                document.getElementById('fc-scope').value = fc.scope || 'all';
+                document.getElementById('fc-show-banner').checked = fc.showBanner !== false;
+                if (statusBox) {
+                    statusBox.className = 'p-3 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 text-xs font-bold';
+                    statusBox.innerHTML = `Ativo agora: <b>${fc.code}</b> (expira em ${formatCountdownMs(Number(fc.expiresAt) - Date.now())})`;
+                    statusBox.classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('fc-scope').value = 'all';
+                if (statusBox) statusBox.classList.add('hidden');
+            }
+            toggleFlashCouponProductsList();
+            document.getElementById('flash-coupon-modal').classList.remove('hidden');
+        }
+
+        function closeFlashCouponModal() {
+            document.getElementById('flash-coupon-modal').classList.add('hidden');
+        }
+
+        async function saveFlashCoupon(e) {
+            e.preventDefault();
+            if (!requireAdminAuth()) return;
+            const code = (document.getElementById('fc-code')?.value || '').trim().toUpperCase();
+            const type = document.getElementById('fc-type')?.value || 'percent';
+            const value = parseFloat(document.getElementById('fc-value')?.value) || 0;
+            const hours = parseFloat(document.getElementById('fc-hours')?.value) || 1;
+            const scope = document.getElementById('fc-scope')?.value || 'all';
+            const productIds = scope === 'selected'
+                ? [...document.querySelectorAll('.fc-prod-cb:checked')].map(cb => cb.value)
+                : [];
+            const showBanner = document.getElementById('fc-show-banner')?.checked !== false;
+            if (!code || value <= 0 || hours <= 0) return showToast('Preencha código, valor e horas válidos.', 'error');
+            if (scope === 'selected' && productIds.length === 0) return showToast('Selecione pelo menos 1 produto para o cupom.', 'error');
+
+            storeSettings.flashCoupon = {
+                code,
+                type,
+                value,
+                hours,
+                scope,
+                productIds,
+                showBanner,
+                expiresAt: Date.now() + Math.round(hours * 3600 * 1000)
+            };
+            storeSettings.updatedAt = new Date().toISOString();
+            const clean = JSON.parse(JSON.stringify(storeSettings));
+            safeSetStorage('fenix_store_settings', JSON.stringify(clean));
+            let syncErr = null;
+            if (window.db && window.firebaseFns) {
+                try {
+                    await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), clean, { merge: true });
+                } catch (err) { syncErr = err; }
+            }
+            updateFlashCouponBanner();
+            updateCartUI();
+            closeFlashCouponModal();
+            showToast(syncErr ? 'Cupom ativado localmente (verifique regras do Firebase).' : `Cupom ${code} ativado por ${hours}h!`, syncErr ? 'info' : 'success');
+        }
+
+        async function disableFlashCoupon() {
+            if (!requireAdminAuth()) return;
+            storeSettings.flashCoupon = null;
+            storeSettings.updatedAt = new Date().toISOString();
+            const clean = JSON.parse(JSON.stringify(storeSettings));
+            safeSetStorage('fenix_store_settings', JSON.stringify(clean));
+            if (window.db && window.firebaseFns) {
+                try { await window.firebaseFns.setDoc(window.firebaseFns.doc(window.db, "settings", "config"), clean, { merge: true }); } catch (err) {}
+            }
+            updateFlashCouponBanner();
+            updateCartUI();
+            closeFlashCouponModal();
+            showToast('Cupom por horas encerrado.', 'info');
+        }
+
+        window.openFlashCouponModal = openFlashCouponModal;
+        window.closeFlashCouponModal = closeFlashCouponModal;
+        window.saveFlashCoupon = saveFlashCoupon;
+        window.disableFlashCoupon = disableFlashCoupon;
+        window.applyCartCoupon = applyCartCoupon;
+        window.applyFlashCouponFromBanner = applyFlashCouponFromBanner;
+        window.removeCartCoupon = removeCartCoupon;
+        window.updateFlashCouponBanner = updateFlashCouponBanner;
+
+
+        // ================= IMPRESSÃO DE ETIQUETAS EM LOTE (FILA DE BANCADA) =================
+        function printBatchShippingLabels() {
+            if (!requireAdminAuth()) return;
+            const paidOrders = orders.filter(o => o.status === 'pago');
+            if (paidOrders.length === 0) {
+                return showToast('Não há pedidos PAGOS na fila para imprimir etiquetas.', 'info');
+            }
+            const senderName = (storeSettings.pixName || "Fenix Logistica Express").toUpperCase();
+            const senderCity = (storeSettings.pixCity || "Rio de Janeiro - RJ").toUpperCase();
+            const labelsHtml = paidOrders.map((o, idx) => {
+                const track = o.trackingCode || ("FX" + String(Date.now() + idx).slice(-9) + "BR");
+                const itemsLine = Array.isArray(o.items) ? o.items.map(i => `${i.qty}x ${i.name}`).join(' • ') : '';
+                return `
+                    <div class="label-card">
+                        <div class="row border-b">
+                            <span class="title">📦 ${o.shippingType ? String(o.shippingType).toUpperCase() : 'SEDEX EXPRESSO'}</span>
+                            <span class="tag">SIGILOSO / DISCRETO</span>
+                        </div>
+                        <div class="block">
+                            <div class="muted">DESTINATÁRIO:</div>
+                            <div class="name">${escapeFeedbackHtml(o.client?.name || 'Cliente')}</div>
+                            <div>${escapeFeedbackHtml(o.client?.address || 'Endereço não informado')}</div>
+                            <div class="bold">Tel: ${escapeFeedbackHtml(o.client?.phone || '')}</div>
+                        </div>
+                        <div class="barcode border-t border-b">
+                            <div class="bars">||| |||| || ||||| ||| ||||</div>
+                            <div class="bold">${escapeFeedbackHtml(track)}</div>
+                        </div>
+                        <div class="footer-info">
+                            <b>Remetente:</b> ${escapeFeedbackHtml(senderName)} • ${escapeFeedbackHtml(senderCity)}<br>
+                            <span>Declaração: Suplementos / Insumos Cosméticos (Uso Pessoal)</span><br>
+                            <span class="muted">Conferência interna: ${escapeFeedbackHtml(itemsLine)}</span>
+                        </div>
+                    </div>`;
+            }).join('');
+
+            const fullHtml = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Lote de Etiquetas (${paidOrders.length}) - Fênix Imports</title><style>body{font-family:monospace;background:#fff;color:#000;margin:16px} .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(95mm,1fr));gap:12px} .label-card{border:2px dashed #000;padding:14px;border-radius:8px;font-size:11px;line-height:1.4;page-break-inside:avoid;break-inside:avoid} .row{display:flex;justify-content:space-between;align-items:center} .border-b{border-bottom:1px solid #000;padding-bottom:6px;margin-bottom:6px} .border-t{border-top:1px solid #000;padding-top:6px;margin-top:6px} .title{font-weight:900;font-size:13px} .tag{background:#000;color:#fff;padding:2px 6px;font-size:9px;font-weight:700} .muted{font-size:9px;color:#444} .name{font-size:13px;font-weight:900} .bold{font-weight:700} .barcode{text-align:center} .bars{letter-spacing:5px;font-weight:900;font-size:14px} .footer-info{font-size:10px} @media print{body{margin:4mm} .label-card{border:2px solid #000}}</style></head><body onload="window.print()"><div class="grid">${labelsHtml}</div></body></html>`;
+            const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `etiquetas_lote_${paidOrders.length}_pedidos.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`Lote com ${paidOrders.length} etiqueta(s) baixado pronto para impressão!`, 'success');
+        }
+        window.printBatchShippingLabels = printBatchShippingLabels;
+
+        // ================= INSTALAÇÃO PWA (APP NA TELA INICIAL) =================
+        let deferredPwaPrompt = null;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPwaPrompt = e;
+            document.getElementById('btn-install-pwa')?.classList.remove('hidden');
+        });
+
+        async function triggerPwaInstall() {
+            if (!deferredPwaPrompt) {
+                return showToast('No menu do navegador, toque em "Adicionar à tela inicial" para instalar o app.', 'info');
+            }
+            deferredPwaPrompt.prompt();
+            await deferredPwaPrompt.userChoice;
+            deferredPwaPrompt = null;
+            document.getElementById('btn-install-pwa')?.classList.add('hidden');
+        }
+        window.triggerPwaInstall = triggerPwaInstall;
 
     </script>
 </body>
