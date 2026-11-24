@@ -646,6 +646,7 @@
                     </div>
                     <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                         <input type="text" id="admin-order-search" oninput="renderOrdersTable()" placeholder="Buscar cliente, titular PIX ou tel..." class="bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs text-white focus:border-gold outline-none flex-1 sm:w-48">
+                        <button onclick="openExternalSaleModal()" class="gold-btn-gradient px-3 py-1.5 rounded-xl text-xs font-black shrink-0 cursor-pointer flex items-center gap-1.5 shadow-md" title="Registrar venda feita fora do site e somar no lucro"><i class="fa-solid fa-cash-register"></i> + Venda Externa</button>
                         <button onclick="exportOrdersCsv()" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/40 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 cursor-pointer flex items-center gap-1.5" title="Baixar Relatório Financeiro em Planilha CSV/Excel"><i class="fa-solid fa-file-csv"></i> Exportar Planilha</button>
                         <button onclick="clearPendingOrders()" class="bg-red-600/15 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/40 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 cursor-pointer flex items-center gap-1.5" title="Excluir todos os pedidos não concluídos (aguardando)"><i class="fa-solid fa-broom"></i> Limpar Aguardando</button>
                         <button onclick="createSimulatedOrder()" class="bg-zinc-800 hover:bg-zinc-700 text-gold border border-gold/30 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 cursor-pointer" title="Gerar pedido de teste"><i class="fa-solid fa-flask"></i> + Pedido Teste</button>
@@ -889,7 +890,7 @@
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeShippingLabelModal()"></div>
         <div class="relative glass-card border border-zinc-700 rounded-3xl max-w-md w-full p-6 shadow-2xl z-10 space-y-4">
             <div class="no-print flex justify-between items-center border-b border-zinc-800 pb-3">
-                <h3 class="text-sm font-black text-white flex items-center gap-2"><i class="fa-solid fa-box text-gold"></i> Etiqueta de Envio Discreto</h3>
+                <h3 class="text-sm font-black text-white flex items-center gap-2"><i class="fa-solid fa-box text-gold"></i> Etiqueta de Envio Padrão</h3>
                 <button onclick="closeShippingLabelModal()" class="text-zinc-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div id="shipping-label-body" class="bg-white text-black p-5 rounded-2xl font-mono text-xs space-y-3 border-2 border-dashed border-zinc-400"></div>
@@ -1379,6 +1380,10 @@
                     <input type="text" id="set-pix-name" required placeholder="Nome Titular Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                     <input type="text" id="set-pix-city" required placeholder="Cidade Pix" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
                 </div>
+                <div>
+                    <label class="text-[10px] text-zinc-400 block mb-1">Remetente Comercial na Etiqueta (Oculta seu nome pessoal)</label>
+                    <input type="text" id="set-label-sender" placeholder="Ex: CD LOGÍSTICA EXPRESSA" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-white">
+                </div>
 
                 <input type="password" id="set-removebg" autocomplete="off" placeholder="Chave Remove.bg (Opcional - Remove fundo da foto)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2 text-amber-300">
                 <input type="password" id="set-gemini" autocomplete="off" placeholder="Chave Gemini (Opcional - IA Online Já Ativa)" class="w-full bg-zinc-950 border border-blue-900/40 rounded-xl px-3 py-2 text-blue-300">
@@ -1487,6 +1492,76 @@
     </div>
 
     <!-- Firebase -->
+    <!-- Modal Lançar Venda Externa (Fora do Site) -->
+    <div id="external-sale-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-card rounded-3xl w-full max-w-md border border-gold/40 shadow-2xl p-6 space-y-4 relative my-auto">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
+                <div>
+                    <h3 class="text-base sm:text-lg font-black text-white flex items-center gap-2"><i class="fa-solid fa-cash-register text-gold"></i> Lançar Venda Externa</h3>
+                    <p class="text-[11px] text-zinc-400">Registre vendas feitas fora do site para somar nos ganhos e abater do estoque.</p>
+                </div>
+                <button type="button" onclick="closeExternalSaleModal()" class="text-zinc-400 hover:text-white p-1.5 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="external-sale-form" onsubmit="saveExternalSale(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="text-[11px] font-bold text-zinc-300 block mb-1">Produto do Estoque</label>
+                    <select id="ext-product-id" onchange="onExternalProductSelect()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:border-gold outline-none"></select>
+                </div>
+                <div id="ext-custom-name-wrap" class="hidden">
+                    <label class="text-[11px] font-bold text-zinc-300 block mb-1">Nome da Mercadoria *</label>
+                    <input type="text" id="ext-custom-name" placeholder="Ex: Kit 2x TG 15mg" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:border-gold outline-none">
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="text-[11px] font-bold text-zinc-300 block mb-1">Qtd *</label>
+                        <input type="number" id="ext-qty" min="1" value="1" required oninput="updateExternalSalePreview()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:border-gold outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-zinc-300 block mb-1">Custo Unit. R$ *</label>
+                        <input type="number" step="0.01" min="0" id="ext-unit-cost" required placeholder="0.00" oninput="updateExternalSalePreview()" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-amber-300 focus:border-gold outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-zinc-300 block mb-1">Venda Unit. R$ *</label>
+                        <input type="number" step="0.01" min="0.01" id="ext-unit-price" required placeholder="0.00" oninput="updateExternalSalePreview()" class="w-full bg-zinc-900 border border-emerald-500/40 rounded-xl px-3 py-2.5 text-emerald-300 focus:border-gold outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[11px] font-bold text-zinc-300 block mb-1">Cliente (Opcional)</label>
+                        <input type="text" id="ext-client-name" placeholder="Ex: João (WhatsApp)" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:border-gold outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[11px] font-bold text-zinc-300 block mb-1">Canal da Venda</label>
+                        <select id="ext-channel" class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-2.5 text-white focus:border-gold outline-none">
+                            <option value="WhatsApp Direto">WhatsApp Direto</option>
+                            <option value="Venda Presencial">Venda Presencial</option>
+                            <option value="Indicação">Indicação</option>
+                            <option value="Outro Canal">Outro Canal</option>
+                        </select>
+                    </div>
+                </div>
+                <label id="ext-deduct-wrap" class="flex items-center gap-2 text-[11px] text-zinc-300 cursor-pointer pt-0.5">
+                    <input type="checkbox" id="ext-deduct-stock" checked class="rounded accent-amber-500">
+                    <span>Abater automaticamente do estoque da loja</span>
+                </label>
+                <div id="ext-profit-preview" class="bg-zinc-950/90 border border-emerald-500/35 rounded-2xl p-3 flex items-center justify-between text-xs">
+                    <div>
+                        <span class="text-[10px] text-zinc-400 uppercase block">Total da Venda</span>
+                        <b id="ext-prev-rev" class="text-white text-sm">R$ 0,00</b>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] text-emerald-400 uppercase block">Lucro Líquido</span>
+                        <b id="ext-prev-profit" class="text-emerald-400 text-sm">R$ 0,00 (0%)</b>
+                    </div>
+                </div>
+                <div class="flex gap-2 pt-1">
+                    <button type="button" onclick="closeExternalSaleModal()" class="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-2.5 rounded-xl font-bold cursor-pointer">Cancelar</button>
+                    <button type="submit" class="flex-1 gold-btn-gradient py-2.5 rounded-xl font-black cursor-pointer shadow-lg">Somar nos Ganhos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Cupom Relâmpago por Horas (Admin) -->
     <div id="flash-coupon-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
         <div class="glass-card rounded-3xl w-full max-w-md border border-gold/40 shadow-2xl p-6 space-y-4 relative my-auto">
@@ -5508,6 +5583,8 @@
             document.getElementById('set-pix').value = storeSettings.pixKey || '';
             document.getElementById('set-pix-name').value = storeSettings.pixName || '';
             document.getElementById('set-pix-city').value = storeSettings.pixCity || '';
+            const lsEl = document.getElementById('set-label-sender');
+            if (lsEl) lsEl.value = storeSettings.labelSenderName || 'CD LOGÍSTICA EXPRESSA';
             document.getElementById('set-wpp-sales').value = storeSettings.whatsappSales || '';
             document.getElementById('set-gemini').value = storeSettings.geminiKey || '';
             document.getElementById('settings-modal').classList.remove('hidden');
@@ -5534,6 +5611,7 @@
                 pixKey: document.getElementById('set-pix').value.trim(),
                 pixName: document.getElementById('set-pix-name').value.trim(),
                 pixCity: document.getElementById('set-pix-city').value.trim(),
+                labelSenderName: (document.getElementById('set-label-sender')?.value || '').trim() || 'CD LOGÍSTICA EXPRESSA',
                 whatsappSales: formatWhatsappNumber(document.getElementById('set-wpp-sales').value.trim()),
                 geminiKey: document.getElementById('set-gemini').value.trim(),
                 updatedAt: new Date().toISOString()
@@ -5863,44 +5941,80 @@
 
         // 🖨️ GERADOR DE ETIQUETA DE ENVIO DISCRETA (ADMIN)
         let currentShippingLabelText = "";
+        function makeStandardBarcodeSvg(code) {
+            const seed = String(code || 'BR000000000');
+            let bars = '';
+            let x = 6;
+            for (let i = 0; i < 42; i++) {
+                const ch = seed.charCodeAt(i % seed.length);
+                const w = ((ch + i * 7) % 3) + 1;
+                if (i % 2 === 0) {
+                    bars += `<rect x="${x}" y="0" width="${w * 2}" height="34" fill="#000"/>`;
+                }
+                x += w * 2 + 2;
+            }
+            return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${x + 6} 34" style="width:100%;max-width:240px;height:34px;display:block;margin:0 auto">${bars}</svg>`;
+        }
+
+        function buildStandardLogisticsLabelHtml(o, idx = 0) {
+            const senderName = (storeSettings.labelSenderName || "CD LOGÍSTICA EXPRESSA").toUpperCase();
+            const track = o.trackingCode || ("BR" + String(Date.now() + idx).slice(-9) + "SP");
+            const orderRef = o.externalRef || ("PED-" + String(o.id || '').slice(-6).toUpperCase());
+            const shipMode = o.shippingType ? String(o.shippingType).toUpperCase() : 'ENVIO PADRÃO';
+            const cepMatch = String(o.client?.address || '').match(/\d{5}-?\d{3}/);
+            const cepHighlight = cepMatch ? cepMatch[0] : 'BRASIL';
+            return `
+                <div style="border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:6px">
+                    <div>
+                        <div style="font-weight:900;font-size:13px;letter-spacing:0.5px">E-COMMERCE EXPRESS</div>
+                        <div style="font-size:9px;font-weight:700">${escapeFeedbackHtml(shipMode)}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <span style="background:#000;color:#fff;padding:2px 6px;font-size:10px;font-weight:900;display:inline-block">VOL 1/1</span>
+                        <div style="font-size:9px;font-weight:700;margin-top:2px">CEP: ${escapeFeedbackHtml(cepHighlight)}</div>
+                    </div>
+                </div>
+                <div style="border-bottom:1.5px solid #000;padding-bottom:8px;margin-bottom:8px;text-align:center">
+                    ${makeStandardBarcodeSvg(track)}
+                    <div style="font-size:11px;font-weight:900;letter-spacing:1.5px;margin-top:4px">${escapeFeedbackHtml(track)}</div>
+                </div>
+                <div style="border:1.5px solid #000;padding:8px;margin-bottom:8px">
+                    <div style="font-size:9px;font-weight:900;text-transform:uppercase;border-bottom:1px solid #000;padding-bottom:2px;margin-bottom:4px">DESTINATÁRIO</div>
+                    <div style="font-size:13px;font-weight:900;margin-bottom:2px">${escapeFeedbackHtml(o.client?.name || 'Cliente')}</div>
+                    <div style="font-size:11px;line-height:1.35">${escapeFeedbackHtml(o.client?.address || 'Endereço não informado')}</div>
+                    <div style="font-size:10px;font-weight:700;margin-top:4px">Contato: ${escapeFeedbackHtml(o.client?.phone || '')}</div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:flex-end;font-size:9.5px;line-height:1.35;border-top:1px dashed #000;padding-top:6px">
+                    <div>
+                        <b>REMETENTE:</b> ${escapeFeedbackHtml(senderName)}<br>
+                        <span>Centro de Distribuição • Logística Integrada</span>
+                    </div>
+                    <div style="text-align:right;font-weight:700">
+                        <div>Ref: ${escapeFeedbackHtml(orderRef)}</div>
+                        <div>Peso: 0,25 kg</div>
+                    </div>
+                </div>
+            `;
+        }
+
         function openShippingLabelModal(orderId) {
             const o = orders.find(x => x.id === orderId);
             if (!o) return;
-            const senderName = (storeSettings.pixName || "Fenix Logistica Express").toUpperCase();
-            const senderCity = (storeSettings.pixCity || "Rio de Janeiro - RJ").toUpperCase();
-            const track = o.trackingCode || ("FX" + String(Date.now()).slice(-9) + "BR");
+            const senderName = (storeSettings.labelSenderName || "CD LOGÍSTICA EXPRESSA").toUpperCase();
+            const track = o.trackingCode || ("BR" + String(Date.now()).slice(-9) + "SP");
             const slugName = (o.client?.name || 'cliente').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
             currentShippingLabelFilename = `etiqueta_${slugName || 'pedido'}.html`;
 
             currentShippingLabelText = `DESTINATÁRIO: ${o.client?.name || 'Cliente'}
 ENDEREÇO: ${o.client?.address || ''}
-FONE: ${o.client?.phone || ''}
-MODALIDADE: ${o.shippingType || 'ENVIO EXPRESSO'}
-CÓDIGO/REF: ${track}
-REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
+CONTATO: ${o.client?.phone || ''}
+MODALIDADE: ${o.shippingType || 'ENVIO PADRÃO'}
+CÓDIGO: ${track}
+REMETENTE: ${senderName} (CENTRO DE DISTRIBUIÇÃO)`;
 
             const body = document.getElementById('shipping-label-body');
             if (body) {
-                body.innerHTML = `
-                    <div class="flex justify-between items-center border-b border-black pb-2">
-                        <span class="font-black text-sm">📦 ${o.shippingType ? o.shippingType.toUpperCase() : 'SEDEX EXPRESSO'}</span>
-                        <span class="bg-black text-white px-2 py-0.5 text-[10px] font-bold">SIGILOSO / DISCRETO</span>
-                    </div>
-                    <div class="space-y-1 pt-1">
-                        <div class="text-[10px] text-zinc-600 font-bold uppercase">Destinatário:</div>
-                        <div class="text-sm font-black">${o.client?.name || 'Cliente'}</div>
-                        <div class="text-xs leading-snug">${o.client?.address || 'Endereço não informado'}</div>
-                        <div class="text-xs font-bold">Tel: ${o.client?.phone || ''}</div>
-                    </div>
-                    <div class="border-t border-b border-black py-2 text-center my-2">
-                        <div class="tracking-[6px] font-black text-base">||| |||| || ||||| ||| ||||</div>
-                        <div class="text-[11px] font-bold mt-0.5">${track}</div>
-                    </div>
-                    <div class="text-[10px] text-zinc-700">
-                        <b>Remetente:</b> ${senderName} • ${senderCity}<br>
-                        <span>Declaração: Suplementos / Insumos Cosméticos (Uso Pessoal)</span>
-                    </div>
-                `;
+                body.innerHTML = buildStandardLogisticsLabelHtml(o, 0);
             }
             document.getElementById('shipping-label-modal').classList.remove('hidden');
         }
@@ -6811,34 +6925,10 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
             if (paidOrders.length === 0) {
                 return showToast('Não há pedidos PAGOS na fila para imprimir etiquetas.', 'info');
             }
-            const senderName = (storeSettings.pixName || "Fenix Logistica Express").toUpperCase();
-            const senderCity = (storeSettings.pixCity || "Rio de Janeiro - RJ").toUpperCase();
-            const labelsHtml = paidOrders.map((o, idx) => {
-                const track = o.trackingCode || ("FX" + String(Date.now() + idx).slice(-9) + "BR");
-                const itemsLine = Array.isArray(o.items) ? o.items.map(i => `${i.qty}x ${i.name}`).join(' • ') : '';
-                return `
+            const labelsHtml = paidOrders.map((o, idx) => `
                     <div class="label-card">
-                        <div class="row border-b">
-                            <span class="title">📦 ${o.shippingType ? String(o.shippingType).toUpperCase() : 'SEDEX EXPRESSO'}</span>
-                            <span class="tag">SIGILOSO / DISCRETO</span>
-                        </div>
-                        <div class="block">
-                            <div class="muted">DESTINATÁRIO:</div>
-                            <div class="name">${escapeFeedbackHtml(o.client?.name || 'Cliente')}</div>
-                            <div>${escapeFeedbackHtml(o.client?.address || 'Endereço não informado')}</div>
-                            <div class="bold">Tel: ${escapeFeedbackHtml(o.client?.phone || '')}</div>
-                        </div>
-                        <div class="barcode border-t border-b">
-                            <div class="bars">||| |||| || ||||| ||| ||||</div>
-                            <div class="bold">${escapeFeedbackHtml(track)}</div>
-                        </div>
-                        <div class="footer-info">
-                            <b>Remetente:</b> ${escapeFeedbackHtml(senderName)} • ${escapeFeedbackHtml(senderCity)}<br>
-                            <span>Declaração: Suplementos / Insumos Cosméticos (Uso Pessoal)</span><br>
-                            <span class="muted">Conferência interna: ${escapeFeedbackHtml(itemsLine)}</span>
-                        </div>
-                    </div>`;
-            }).join('');
+                        ${buildStandardLogisticsLabelHtml(o, idx)}
+                    </div>`).join('');
 
             const fullHtml = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Lote de Etiquetas (${paidOrders.length}) - Fênix Imports</title><style>body{font-family:monospace;background:#fff;color:#000;margin:16px} .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(95mm,1fr));gap:12px} .label-card{border:2px dashed #000;padding:14px;border-radius:8px;font-size:11px;line-height:1.4;page-break-inside:avoid;break-inside:avoid} .row{display:flex;justify-content:space-between;align-items:center} .border-b{border-bottom:1px solid #000;padding-bottom:6px;margin-bottom:6px} .border-t{border-top:1px solid #000;padding-top:6px;margin-top:6px} .title{font-weight:900;font-size:13px} .tag{background:#000;color:#fff;padding:2px 6px;font-size:9px;font-weight:700} .muted{font-size:9px;color:#444} .name{font-size:13px;font-weight:900} .bold{font-weight:700} .barcode{text-align:center} .bars{letter-spacing:5px;font-weight:900;font-size:14px} .footer-info{font-size:10px} @media print{body{margin:4mm} .label-card{border:2px solid #000}}</style></head><body onload="window.print()"><div class="grid">${labelsHtml}</div></body></html>`;
             const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
@@ -6872,6 +6962,153 @@ REMETENTE: ${senderName} (${senderCity}) - EMBALAGEM DISCRETA`;
             document.getElementById('btn-install-pwa')?.classList.add('hidden');
         }
         window.triggerPwaInstall = triggerPwaInstall;
+
+
+        // ================= VENDAS EXTERNAS (FORA DO SITE) NO CÁLCULO DE GANHOS =================
+        function openExternalSaleModal() {
+            if (!requireAdminAuth()) return;
+            const sel = document.getElementById('ext-product-id');
+            if (sel) {
+                const opts = (products || []).map(p => `<option value="${p.id}">${escapeFeedbackHtml(p.name)} (Estoque: ${p.stock ?? 0})</option>`).join('');
+                sel.innerHTML = opts + `<option value="__custom__">+ Outro produto (digitar manualmente)</option>`;
+            }
+            document.getElementById('ext-qty').value = 1;
+            document.getElementById('ext-client-name').value = '';
+            document.getElementById('ext-custom-name').value = '';
+            document.getElementById('ext-deduct-stock').checked = true;
+            onExternalProductSelect();
+            document.getElementById('external-sale-modal').classList.remove('hidden');
+        }
+
+        function closeExternalSaleModal() {
+            document.getElementById('external-sale-modal')?.classList.add('hidden');
+        }
+
+        function onExternalProductSelect() {
+            const val = document.getElementById('ext-product-id')?.value;
+            const customWrap = document.getElementById('ext-custom-name-wrap');
+            const deductWrap = document.getElementById('ext-deduct-wrap');
+            if (val === '__custom__') {
+                customWrap?.classList.remove('hidden');
+                deductWrap?.classList.add('hidden');
+                document.getElementById('ext-unit-cost').value = '';
+                document.getElementById('ext-unit-price').value = '';
+            } else {
+                customWrap?.classList.add('hidden');
+                deductWrap?.classList.remove('hidden');
+                const p = (products || []).find(x => String(x.id) === String(val));
+                if (p) {
+                    document.getElementById('ext-unit-cost').value = Number(p.costPrice || 0).toFixed(2);
+                    document.getElementById('ext-unit-price').value = Number(p.promoPrice || p.price || 0).toFixed(2);
+                }
+            }
+            updateExternalSalePreview();
+        }
+
+        function updateExternalSalePreview() {
+            const qty = Math.max(1, parseInt(document.getElementById('ext-qty')?.value || '1', 10));
+            const unitCost = Math.max(0, parseFloat(document.getElementById('ext-unit-cost')?.value || '0') || 0);
+            const unitPrice = Math.max(0, parseFloat(document.getElementById('ext-unit-price')?.value || '0') || 0);
+            const totalRev = +(qty * unitPrice).toFixed(2);
+            const totalProfit = +((unitPrice - unitCost) * qty).toFixed(2);
+            const margin = totalRev > 0 ? ((totalProfit / totalRev) * 100).toFixed(1) : '0.0';
+            const revEl = document.getElementById('ext-prev-rev');
+            const profEl = document.getElementById('ext-prev-profit');
+            if (revEl) revEl.textContent = `R$ ${formatMoney(totalRev)}`;
+            if (profEl) {
+                profEl.textContent = `R$ ${formatMoney(totalProfit)} (${margin}%)`;
+                profEl.className = totalProfit >= 0 ? 'text-emerald-400 text-sm' : 'text-red-400 text-sm';
+            }
+        }
+
+        async function saveExternalSale(e) {
+            e.preventDefault();
+            if (!requireAdminAuth()) return;
+            const prodVal = document.getElementById('ext-product-id')?.value;
+            const isCustom = prodVal === '__custom__';
+            const prod = !isCustom ? (products || []).find(x => String(x.id) === String(prodVal)) : null;
+            const itemName = isCustom
+                ? (document.getElementById('ext-custom-name')?.value || '').trim()
+                : (prod?.name || 'Mercadoria');
+            if (!itemName) return showToast('Informe o nome da mercadoria.', 'error');
+
+            const qty = Math.max(1, parseInt(document.getElementById('ext-qty')?.value || '1', 10));
+            const unitCost = Math.max(0, parseFloat(document.getElementById('ext-unit-cost')?.value || '0') || 0);
+            const unitPrice = Math.max(0, parseFloat(document.getElementById('ext-unit-price')?.value || '0') || 0);
+            if (unitPrice <= 0) return showToast('Informe o valor de venda.', 'error');
+
+            const clientName = (document.getElementById('ext-client-name')?.value || '').trim() || 'Venda Externa';
+            const channel = document.getElementById('ext-channel')?.value || 'WhatsApp Direto';
+            const deductStock = !isCustom && document.getElementById('ext-deduct-stock')?.checked;
+
+            const total = +(qty * unitPrice).toFixed(2);
+            const totalCost = +(qty * unitCost).toFixed(2);
+            const estimatedProfit = +(total - totalCost).toFixed(2);
+            const extRef = 'EXT-' + Date.now().toString().slice(-6);
+
+            const orderObj = {
+                externalRef: extRef,
+                date: new Date().toISOString(),
+                status: 'enviado',
+                isExternalSale: true,
+                paymentMethod: 'pix',
+                aiVerifiedNote: `Venda Externa • ${channel}`,
+                shippingType: channel,
+                payerHolder: clientName,
+                client: {
+                    name: clientName,
+                    phone: '',
+                    address: `Venda fora do site (${channel})`
+                },
+                items: [{
+                    id: prod?.id || extRef,
+                    name: itemName,
+                    qty,
+                    price: unitPrice,
+                    costPrice: unitCost
+                }],
+                financials: {
+                    subtotal: total,
+                    shipping: 0,
+                    total,
+                    cost: totalCost,
+                    estimatedProfit
+                }
+            };
+
+            let docId = 'local-' + Date.now();
+            if (window.db && window.firebaseFns) {
+                try {
+                    const ref = await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), orderObj);
+                    docId = ref.id;
+                } catch (err) {}
+            }
+
+            orders.unshift({ ...orderObj, id: docId });
+            safeSetStorage('fenix_orders', JSON.stringify(orders));
+
+            if (deductStock && prod && prod.stock !== undefined) {
+                const newStock = Math.max(0, Number(prod.stock) - qty);
+                prod.stock = newStock;
+                safeSetStorage('fenix_products', JSON.stringify(products));
+                if (window.db && window.firebaseFns && !String(prod.id).startsWith('seed-')) {
+                    try { await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", prod.id), { stock: newStock }); } catch (err) {}
+                }
+                renderAdminTable();
+                renderProducts();
+            }
+
+            renderOrdersTable();
+            renderCrmTable();
+            closeExternalSaleModal();
+            showToast(`Venda externa de R$ ${formatMoney(total)} (Lucro R$ ${formatMoney(estimatedProfit)}) somada aos ganhos!`, 'success');
+        }
+
+        window.openExternalSaleModal = openExternalSaleModal;
+        window.closeExternalSaleModal = closeExternalSaleModal;
+        window.onExternalProductSelect = onExternalProductSelect;
+        window.updateExternalSalePreview = updateExternalSalePreview;
+        window.saveExternalSale = saveExternalSale;
 
     </script>
 </body>
