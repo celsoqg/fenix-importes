@@ -2785,7 +2785,9 @@
                     simOrder.id = docRef.id;
                 } catch (e) {}
             }
-            orders.unshift(simOrder);
+            if (!orders.some(o => o.id === simOrder.id || (simOrder.externalRef && o.externalRef === simOrder.externalRef))) {
+                orders.unshift(simOrder);
+            }
             safeSetStorage('fenix_orders', JSON.stringify(orders));
             sendNativeNotification(`💰 NOVO PEDIDO TESTE: R$ ${formatMoney(simOrder.financials.total)}`, `Cliente: ${simOrder.client.name}`);
             renderOrdersTable();
@@ -2831,9 +2833,25 @@
         }
         window.exportOrdersCsv = exportOrdersCsv;
 
+        function dedupeOrdersArray(list) {
+            const seenIds = new Set();
+            const seenRefs = new Set();
+            return (list || []).filter(o => {
+                if (!o) return false;
+                const oid = o.id ? String(o.id) : '';
+                const ref = o.externalRef ? String(o.externalRef) : '';
+                if (oid && seenIds.has(oid)) return false;
+                if (ref && seenRefs.has(ref)) return false;
+                if (oid) seenIds.add(oid);
+                if (ref) seenRefs.add(ref);
+                return true;
+            });
+        }
+
         function renderOrdersTable() {
             const tb = document.getElementById('admin-orders-table'); 
             if(!tb || !isAdminAuthenticated()) { if(tb) tb.innerHTML = ''; return; }
+            orders = dedupeOrdersArray(orders);
             tb.innerHTML = '';
             let rev = 0, prof = 0, count = 0;
 
@@ -4324,7 +4342,9 @@
                 activeOrderId = orderData.id;
             }
 
-            orders.unshift(orderData);
+            if (!orders.some(o => o.id === orderData.id || (orderData.externalRef && o.externalRef === orderData.externalRef))) {
+                orders.unshift(orderData);
+            }
             safeSetStorage('fenix_orders', JSON.stringify(orders));
 
             if (statusToSave === 'pago' && Array.isArray(orderData.items)) {
@@ -7021,9 +7041,12 @@ REMETENTE: ${senderName} (CENTRO DE DISTRIBUIÇÃO)`;
             }
         }
 
+        let isSavingExternalSale = false;
+
         async function saveExternalSale(e) {
             e.preventDefault();
             if (!requireAdminAuth()) return;
+            if (isSavingExternalSale) return;
             const prodVal = document.getElementById('ext-product-id')?.value;
             const isCustom = prodVal === '__custom__';
             const prod = !isCustom ? (products || []).find(x => String(x.id) === String(prodVal)) : null;
@@ -7076,32 +7099,51 @@ REMETENTE: ${senderName} (CENTRO DE DISTRIBUIÇÃO)`;
                 }
             };
 
-            let docId = 'local-' + Date.now();
-            if (window.db && window.firebaseFns) {
-                try {
-                    const ref = await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), orderObj);
-                    docId = ref.id;
-                } catch (err) {}
+            isSavingExternalSale = true;
+            const submitBtn = e.target?.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.dataset.origText = submitBtn.innerText;
+                submitBtn.innerText = 'Salvando...';
             }
 
-            orders.unshift({ ...orderObj, id: docId });
-            safeSetStorage('fenix_orders', JSON.stringify(orders));
-
-            if (deductStock && prod && prod.stock !== undefined) {
-                const newStock = Math.max(0, Number(prod.stock) - qty);
-                prod.stock = newStock;
-                safeSetStorage('fenix_products', JSON.stringify(products));
-                if (window.db && window.firebaseFns && !String(prod.id).startsWith('seed-')) {
-                    try { await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", prod.id), { stock: newStock }); } catch (err) {}
+            try {
+                let docId = 'local-' + Date.now();
+                if (window.db && window.firebaseFns) {
+                    try {
+                        const ref = await window.firebaseFns.addDoc(window.firebaseFns.collection(window.db, "orders"), orderObj);
+                        docId = ref.id;
+                    } catch (err) {}
                 }
-                renderAdminTable();
-                renderProducts();
-            }
 
-            renderOrdersTable();
-            renderCrmTable();
-            closeExternalSaleModal();
-            showToast(`Venda externa de R$ ${formatMoney(total)} (Lucro R$ ${formatMoney(estimatedProfit)}) somada aos ganhos!`, 'success');
+                if (!orders.some(o => o.id === docId || (orderObj.externalRef && o.externalRef === orderObj.externalRef))) {
+                    orders.unshift({ ...orderObj, id: docId });
+                }
+                orders = dedupeOrdersArray(orders);
+                safeSetStorage('fenix_orders', JSON.stringify(orders));
+
+                if (deductStock && prod && prod.stock !== undefined) {
+                    const newStock = Math.max(0, Number(prod.stock) - qty);
+                    prod.stock = newStock;
+                    safeSetStorage('fenix_products', JSON.stringify(products));
+                    if (window.db && window.firebaseFns && !String(prod.id).startsWith('seed-')) {
+                        try { await window.firebaseFns.updateDoc(window.firebaseFns.doc(window.db, "products", prod.id), { stock: newStock }); } catch (err) {}
+                    }
+                    renderAdminTable();
+                    renderProducts();
+                }
+
+                renderOrdersTable();
+                renderCrmTable();
+                closeExternalSaleModal();
+                showToast(`Venda externa de R$ ${formatMoney(total)} (Lucro R$ ${formatMoney(estimatedProfit)}) somada aos ganhos!`, 'success');
+            } finally {
+                isSavingExternalSale = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = submitBtn.dataset.origText || 'Somar nos Ganhos';
+                }
+            }
         }
 
         window.openExternalSaleModal = openExternalSaleModal;
